@@ -46,9 +46,9 @@ namespace StructureMap.Pipeline
             return _object.GetType().CanBeCastTo(family.PluginType);
         }
 
-        protected override string getDescription()
+        public override string Description
         {
-            return "Object:  " + _object;
+            get { return "Object:  " + _object; }
         }
 
         public override string ToString()

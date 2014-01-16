@@ -8,9 +8,9 @@ namespace StructureMap.Pipeline.Lazy
         {
         }
 
-        protected override string getDescription()
+        public override string Description
         {
-            return "Constructor for Func<{0}>".ToFormat(typeof(T).Name);
+            get { return "Constructor for Func<{0}>".ToFormat(typeof (T).Name); }
         }
     }
 }

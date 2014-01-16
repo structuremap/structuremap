@@ -284,9 +284,9 @@ namespace StructureMap.Testing.Graph
             get { return null; }
         }
 
-        protected override string getDescription()
+        public override string Description
         {
-            return "fake";
+            get { return "fake"; }
         }
 
         public void Dispose()

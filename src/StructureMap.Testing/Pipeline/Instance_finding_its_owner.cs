@@ -77,9 +77,9 @@ namespace StructureMap.Testing.Pipeline
             get { return null; }
         }
 
-        protected override string getDescription()
+        public override string Description
         {
-            return "simple";
+            get { return "simple"; }
         }
     }
 }

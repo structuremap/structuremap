@@ -39,9 +39,9 @@ namespace StructureMap.Testing.Pipeline
                 get { return _constructedObject.GetType(); }
             }
 
-            protected override string getDescription()
+            public override string Description
             {
-                return "Stubbed";
+                get { return "Stubbed"; }
             }
         }
 
@@ -124,11 +124,10 @@ namespace StructureMap.Testing.Pipeline
                 throw new NotImplementedException();
             }
 
-            protected override string getDescription()
+            public override string Description
             {
-                throw new NotImplementedException();
+                get { throw new NotImplementedException(); }
             }
-
         }
 
         [Test]

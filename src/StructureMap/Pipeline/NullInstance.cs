@@ -5,9 +5,9 @@ namespace StructureMap.Pipeline
 {
     public class NullInstance : Instance
     {
-        protected override string getDescription()
+        public override string Description
         {
-            return "NULL";
+            get { return "NULL"; }
         }
 
         public override IDependencySource ToDependencySource(Type pluginType)

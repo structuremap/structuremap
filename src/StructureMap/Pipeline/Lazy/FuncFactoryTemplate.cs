@@ -5,10 +5,9 @@ namespace StructureMap.Pipeline.Lazy
 {
     public class FuncFactoryTemplate : Instance
     {
-
-        protected override string getDescription()
+        public override string Description
         {
-            return "Open Generic Template for Func<>";
+            get { return "Open Generic Template for Func<>"; }
         }
 
         // This should never get called because it starts as an open type

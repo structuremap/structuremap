@@ -59,9 +59,9 @@ namespace StructureMap.Pipeline
 //            }
 //        }
 
-        protected override string getDescription()
+        public override string Description
         {
-            return "Instance is created by Func<object> function:  " + _builder;
+            get { return "Instance is created by Func<object> function:  " + _builder; }
         }
 
         public override Instance CloseType(Type[] types)

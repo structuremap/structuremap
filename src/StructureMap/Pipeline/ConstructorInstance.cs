@@ -51,12 +51,14 @@ namespace StructureMap.Pipeline
             return instance;
         }
 
-        protected override sealed string getDescription()
+        public override string Description
         {
-            return HasExplicitName() 
-                ? "{0} ('{1}')".ToFormat(_pluggedType.GetFullName(), Name) 
-                :  _pluggedType.GetFullName();
-
+            get
+            {
+                return HasExplicitName()
+                    ? "{0} ('{1}')".ToFormat(_pluggedType.GetFullName(), Name)
+                    : _pluggedType.GetFullName();
+            }
         }
 
         public override IDependencySource ToDependencySource(Type pluginType)

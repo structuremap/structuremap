@@ -113,9 +113,9 @@ namespace StructureMap.Testing.Building
             _returnedType = returnedType;
         }
 
-        protected override string getDescription()
+        public override string Description
         {
-            return "Nothing!";
+            get { return "Nothing!"; }
         }
 
         public override IDependencySource ToDependencySource(Type pluginType)

@@ -367,9 +367,9 @@ namespace StructureMap.Testing
 
     public class BuildSessionInstance1 : Instance
     {
-        protected override string getDescription()
+        public override string Description
         {
-            return string.Empty;
+            get { return string.Empty; }
         }
 
         public override IDependencySource ToDependencySource(Type pluginType)

@@ -10,9 +10,9 @@ namespace StructureMap.Pipeline
             get { return null; }
         }
 
-        protected override string getDescription()
+        public override string Description
         {
-            return "Default";
+            get { return "Default"; }
         }
 
         public override IDependencySource ToDependencySource(Type pluginType)

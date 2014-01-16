@@ -77,10 +77,8 @@ namespace StructureMap.Pipeline
             set { _name = value; }
         }
 
-        public string Description
-        {
-            get { return getDescription(); }
-        }
+        public abstract string Description { get; }
+
 
         bool IDiagnosticInstance.CanBePartOfPluginFamily(PluginFamily family)
         {
@@ -89,14 +87,13 @@ namespace StructureMap.Pipeline
 
         InstanceToken IDiagnosticInstance.CreateToken()
         {
-            return new InstanceToken(Name, getDescription());
+            return new InstanceToken(Name, Description);
         }
 
         #endregion
 
         public abstract Type ReturnedType { get; }
 
-        protected abstract string getDescription();
 
         protected void replaceNameIfNotAlreadySet(string name)
         {

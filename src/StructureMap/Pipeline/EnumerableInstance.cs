@@ -96,9 +96,9 @@ namespace StructureMap.Pipeline
                 : new ArrayDependencySource(elementType, items);
         }
 
-        protected override string getDescription()
+        public override string Description
         {
-            return "Enumerable Instance";
+            get { return "Enumerable Instance"; }
         }
 
         public static bool IsEnumerable(Type type)

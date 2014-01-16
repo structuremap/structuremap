@@ -50,9 +50,9 @@ namespace StructureMap.Pipeline
             get { return null; }
         }
 
-        protected override string getDescription()
+        public override string Description
         {
-            return string.Format("\"{0}\"", _referenceKey);
+            get { return string.Format("\"{0}\"", _referenceKey); }
         }
 
         public override Instance CloseType(Type[] types)
