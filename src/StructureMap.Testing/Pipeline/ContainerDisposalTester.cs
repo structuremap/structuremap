@@ -27,6 +27,34 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void something_in_the_middle_of_container_that_tries_to_dispose_container_will_not_blow_everything_up_with_a_stack_overflow_exception()
+        {
+            var container = new Container(x => {
+                x.ForSingletonOf<ITryToDisposeContainer>().Use<ITryToDisposeContainer>();
+            });
+
+            // just want it spun up
+            container.GetInstance<ITryToDisposeContainer>();
+        
+            container.Dispose();
+        }
+
+        public class ITryToDisposeContainer : IDisposable
+        {
+            private readonly IContainer _container;
+
+            public ITryToDisposeContainer(IContainer container)
+            {
+                _container = container;
+            }
+
+            public void Dispose()
+            {
+                _container.Dispose();
+            }
+        }
+
+        [Test]
         public void main_container_should_dispose_singletons()
         {
             var container = new Container(x => { x.ForSingletonOf<C1Yes>().Use<C1Yes>(); });

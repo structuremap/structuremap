@@ -396,8 +396,13 @@ namespace StructureMap
             return new Container(pipeine);
         }
 
+        private bool _disposedLatch;
         public void Dispose()
         {
+            
+            if (_disposedLatch) return;
+            _disposedLatch = true;
+
             _pipelineGraph.SafeDispose();
             _pipelineGraph = null;
         }
