@@ -1,6 +1,9 @@
 using System;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Building;
+using StructureMap.Building.Interception;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
@@ -49,6 +52,50 @@ namespace StructureMap.Testing.Pipeline
 
             widgets[0].ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
             widgets[2].ShouldBeOfType<AWidget>();
+        }
+
+        [Test]
+        public void constructor_instance_picks_up_InstanceAttributes()
+        {
+            var instance = new ConstructorInstance(typeof (ClassWithInstanceAttributes));
+
+
+            instance.Name.ShouldEqual("Steve Bono"); // hey, he had a couple good years for awhile
+            instance.Interceptors.Single()
+                .ShouldBeOfType<ActivatorInterceptor<ClassWithInstanceAttributes>>();
+        }
+    }
+
+    [InstanceName("Steve Bono")]
+    [TurnOn]
+    public class ClassWithInstanceAttributes
+    {
+        public void TurnOn()
+        {
+            
+        }
+    }
+
+    public class TurnOnAttribute : InstanceAttribute
+    {
+        public override void Alter(ConstructorInstance instance)
+        {
+            instance.AddInterceptor(new ActivatorInterceptor<ClassWithInstanceAttributes>(x => x.TurnOn()));
+        }
+    }
+
+    public class InstanceNameAttribute : InstanceAttribute
+    {
+        private readonly string _name;
+
+        public InstanceNameAttribute(string name)
+        {
+            _name = name;
+        }
+
+        public override void Alter(ConstructorInstance instance)
+        {
+            instance.Name = _name;
         }
     }
 
