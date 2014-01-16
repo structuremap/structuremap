@@ -66,6 +66,16 @@ namespace StructureMap.Graph
 
         public void AddInstance(Instance instance)
         {
+            if (instance == null) throw new ArgumentNullException("instance");
+
+            if (instance.ReturnedType != null && 
+                !instance.ReturnedType.CanBeCastTo(_pluginType))
+            {
+                throw new ArgumentOutOfRangeException(
+                    "instance '{0}' with ReturnType {1} cannot be cast to {2}".ToFormat(instance.Description,
+                        instance.ReturnedType.GetFullName(), _pluginType.GetFullName()));
+            }
+
             instance.Parent = this;
             _instances[instance.Name] = instance;
         }

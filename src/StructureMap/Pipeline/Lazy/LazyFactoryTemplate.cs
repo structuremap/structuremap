@@ -23,7 +23,7 @@ namespace StructureMap.Pipeline.Lazy
 
         public override Type ReturnedType
         {
-            get { return typeof(Func<>); }
+            get { return typeof(Lazy<>); }
         }
 
         public override Instance CloseType(Type[] types)

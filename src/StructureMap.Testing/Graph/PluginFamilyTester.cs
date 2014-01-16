@@ -4,6 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Graph
@@ -36,6 +37,16 @@ namespace StructureMap.Testing.Graph
             }
         }
 
+
+        [Test]
+        public void throw_exception_if_instance_is_not_compatible_with_PluginType_in_AddInstance()
+        {
+            var family = new PluginFamily(typeof(IGateway));
+            Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(() =>
+            {
+                family.AddInstance(new SmartInstance<ColorRule>());
+            });
+        }
 
         [Test]
         public void If_PluginFamily_only_has_one_instance_make_that_the_default()
@@ -179,7 +190,7 @@ namespace StructureMap.Testing.Graph
             family.SetFallback(new SmartInstance<DataSet>());
             family.SetDefault(instance);
 
-            family.AddInstance(new NullInstance());
+            family.AddInstance(new SmartInstance<IServiceProvider>());
             family.AddType(typeof (DataSet));
 
             family.RemoveAll();
