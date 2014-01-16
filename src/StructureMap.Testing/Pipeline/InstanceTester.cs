@@ -1,8 +1,14 @@
 using System;
+using System.Linq;
+using System.Runtime.InteropServices;
 using NUnit.Framework;
 using StructureMap.Building;
+using StructureMap.Building.Interception;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget3;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -107,6 +113,43 @@ namespace StructureMap.Testing.Pipeline
             i1.InstanceKey(GetType()).ShouldNotEqual(i2.InstanceKey(GetType()));
             i1.InstanceKey(typeof (InstanceUnderTest)).ShouldNotEqual(i1.InstanceKey(GetType()));
         }
+
+        [Test]
+        public void add_interceptor_when_the_accept_type_is_possible_on_the_return_type()
+        {
+            var instance = new InstanceUnderTest
+            {
+                Type = typeof (StubbedGateway)
+            };
+
+            var interceptor = new ActivatorInterceptor<IGateway>(g => g.DoSomething());
+
+            instance.ReturnedType.CanBeCastTo(interceptor.Accepts)
+                .ShouldBeTrue();
+
+            instance.AddInterceptor(interceptor);
+
+            instance.Interceptors.Single()
+                .ShouldBeTheSameAs(interceptor);
+        }
+
+        [Test]
+        public void add_interceptor_that_cannot_accept_the_returned_type()
+        {
+            var instance = new InstanceUnderTest
+            {
+                Type = typeof(ColorRule)
+            };
+
+            var interceptor = new ActivatorInterceptor<IGateway>(g => g.DoSomething());
+
+            instance.ReturnedType.CanBeCastTo(interceptor.Accepts)
+                .ShouldBeFalse();
+
+            Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(() => {
+                instance.AddInterceptor(interceptor);
+            });
+        }
     }
 
     public class InstanceUnderTest : Instance
@@ -118,9 +161,14 @@ namespace StructureMap.Testing.Pipeline
             return new Constant(pluginType, TheInstanceThatWasBuilt);
         }
 
+        public Type Type { get; set; }
+
         public override Type ReturnedType
         {
-            get { return null; }
+            get
+            {
+                return Type;
+            }
         }
 
         public override string Description

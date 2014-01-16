@@ -5,6 +5,7 @@ using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
@@ -20,7 +21,11 @@ namespace StructureMap.Pipeline
 
         public void AddInterceptor(IInterceptor interceptor)
         {
-            // TODO -- defensive check to blow up if the interceptor "Accepts" cannot handle the returned type
+            if (ReturnedType != null && !ReturnedType.CanBeCastTo(interceptor.Accepts))
+            {
+                throw new ArgumentOutOfRangeException("ReturnedType {0} cannot be cast to the Interceptor Accepts type {1}".ToFormat(ReturnedType.GetFullName(), interceptor.Accepts.GetFullName()));
+            }
+
             _interceptors.Add(interceptor);
         }
 
