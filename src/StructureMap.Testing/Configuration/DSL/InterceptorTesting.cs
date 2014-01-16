@@ -130,7 +130,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 _container.GetInstance<IService>("Bad");
             });
 
-            ex.Title.ShouldEqual("Failure at: \"Instance specific interception failed for Bad of PluginType StructureMap.Testing.Widget3.IService\"");
+            ex.Title.ShouldEqual("Failure at: \"throw exception\"");
         }
     }
 

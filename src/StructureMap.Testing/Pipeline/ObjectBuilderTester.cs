@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Pipeline
 
             });
 
-            ex.Title.ShouldContain("Failure at: \"A configured instance interceptor");
+            ex.Title.ShouldContain("Failure at: \"Invoke(value(StructureMap.Building.Interception.InterceptorFactory+<>c__DisplayClass2`1[StructureMap.Testing.Widget.Rule]).action, IBuildSession, Rule)\"");
 
         }
 

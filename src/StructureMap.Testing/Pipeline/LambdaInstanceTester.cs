@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Pipeline
                 instance.Build<IWidget>(new StubBuildSession());
             });
 
-            ex.Title.ShouldEqual("Failure at: \"Exception while trying to build 'Instance is created by Func<object> function:  System.Func`2[StructureMap.IContext,System.Object]', check the inner exception\"");
+            ex.Title.ShouldEqual("Failure at: \"Instance is created by Func<object> function:  System.Func`2[StructureMap.IBuildSession,System.Object]\"");
         }
     }
 }
