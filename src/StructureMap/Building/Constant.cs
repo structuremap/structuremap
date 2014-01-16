@@ -35,7 +35,14 @@ namespace StructureMap.Building
             get { return _value; }
         }
 
-        public string Description { get; private set; }
+        public string Description
+        {
+            get
+            {
+                return "Value: {0}".ToFormat(_value);
+
+            }
+        }
 
         public Expression ToExpression(ParameterExpression session)
         {

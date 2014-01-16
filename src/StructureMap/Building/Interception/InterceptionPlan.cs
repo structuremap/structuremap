@@ -149,7 +149,7 @@ namespace StructureMap.Building.Interception
         {
             get
             {
-                throw new NotImplementedException();
+                return "Interceptor Plan for " + _inner.Description;
             }
         }
     }

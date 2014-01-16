@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
@@ -22,7 +23,13 @@ namespace StructureMap.Building
             _elementType = EnumerableInstance.DetermineElementType(enumerationType);
         }
 
-        public string Description { get; private set; }
+        public string Description
+        {
+            get
+            {
+                return "Enumerable of {0} with all registered instances".ToFormat(_elementType.GetFullName());
+            }
+        }
 
         public Expression ToExpression(ParameterExpression session)
         {

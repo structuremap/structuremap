@@ -30,7 +30,13 @@ namespace StructureMap.Building
             get { return _name; }
         }
 
-        public string Description { get; private set; }
+        public string Description
+        {
+            get
+            {
+                return "Name='{0}'".ToFormat(_name);
+            }
+        }
 
         public Expression ToExpression(ParameterExpression session)
         {

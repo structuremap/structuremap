@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
     public class ArrayDependencySource : IDependencySource
     {
-        private readonly Type _itemType;
+        protected readonly Type _itemType;
         private readonly List<IDependencySource> _items = new List<IDependencySource>();
 
         public ArrayDependencySource(Type itemType, params IDependencySource[] items)
@@ -31,7 +32,13 @@ namespace StructureMap.Building
             get { return _items; }
         }
 
-        public string Description { get; private set; }
+        public virtual string Description
+        {
+            get
+            {
+                return "Array of all possible {0} values".ToFormat(_itemType.GetFullName());
+            }
+        }
 
         public virtual Expression ToExpression(ParameterExpression session)
         {

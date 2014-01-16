@@ -32,7 +32,13 @@ namespace StructureMap.Building
             }
         }
 
-        public string Description { get; private set; }
+        public string Description
+        {
+            get
+            {
+                return "*Default*";
+            }
+        }
 
         public Expression ToExpression(ParameterExpression session)
         {

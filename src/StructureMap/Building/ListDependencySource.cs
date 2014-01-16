@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
@@ -24,6 +25,14 @@ namespace StructureMap.Building
         public static Expression ToExpression(Type itemType, Expression arrayExpression)
         {
             return Expression.Call(null, ToListMethod.MakeGenericMethod(itemType), arrayExpression);
+        }
+
+        public override string Description
+        {
+            get
+            {
+                return "List of all possible {0} values".ToFormat(_itemType.GetFullName());
+            }
         }
     }
 }

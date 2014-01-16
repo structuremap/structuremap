@@ -29,7 +29,13 @@ namespace StructureMap.Building
             get { return _instance; }
         }
 
-        public string Description { get; private set; }
+        public string Description
+        {
+            get
+            {
+                return "Lifecyle resolution of " + _instance.Description;
+            }
+        }
 
         public Expression ToExpression(ParameterExpression session)
         {

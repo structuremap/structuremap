@@ -43,6 +43,7 @@ namespace StructureMap.Pipeline
 
         public override string Description
         {
+            // TODO -- make this better when we start using an Expression
             get { return "Instance is created by Func<object> function:  " + _builder; }
         }
 
