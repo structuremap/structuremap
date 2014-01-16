@@ -5,7 +5,7 @@ using StructureMap.Testing.Widget;
 namespace StructureMap.Testing.Pipeline
 {
     [TestFixture]
-    public class LazyFuncTester
+    public class Lazy_and_Func_construction_strategy_Tester
     {
         [Test]
         public void FactoryTemplateTester()
@@ -14,6 +14,13 @@ namespace StructureMap.Testing.Pipeline
                 new Container();
 
             container.GetInstance<Func<ConcreteClass>>()().ShouldNotBeNull();
+        }
+
+        [Test]
+        public void can_build_a_Lazy_of_T_automatically()
+        {
+            new Container().GetInstance<Lazy<ConcreteClass>>()
+                .Value.ShouldBeOfType<ConcreteClass>().ShouldNotBeNull();
         }
 
         [Test]

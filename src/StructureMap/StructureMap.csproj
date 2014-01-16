@@ -161,6 +161,8 @@
     <Compile Include="Building\TryCatchWrapper.cs" />
     <Compile Include="BuildSession.cs" />
     <Compile Include="Pipeline\Argument.cs" />
+    <Compile Include="Pipeline\Lazy\FuncInstance.cs" />
+    <Compile Include="Pipeline\Lazy\LazyFactoryTemplate.cs" />
     <Compile Include="Pipeline\Lazy\LazyInstance.cs" />
     <Compile Include="Pipeline\NullInstance.cs" />
     <Compile Include="Policies.cs" />

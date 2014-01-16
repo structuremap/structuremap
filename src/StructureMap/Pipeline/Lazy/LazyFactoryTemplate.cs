@@ -3,7 +3,7 @@ using StructureMap.Building;
 
 namespace StructureMap.Pipeline.Lazy
 {
-    public class FuncFactoryTemplate : Instance
+    public class LazyFactoryTemplate : Instance
     {
         public override string Description
         {
@@ -23,12 +23,12 @@ namespace StructureMap.Pipeline.Lazy
 
         public override Type ReturnedType
         {
-            get { return typeof (Func<>); }
+            get { return typeof(Func<>); }
         }
 
         public override Instance CloseType(Type[] types)
         {
-            var instanceType = typeof(FuncInstance<>).MakeGenericType(types);
+            var instanceType = typeof(LazyInstance<>).MakeGenericType(types);
             return Activator.CreateInstance(instanceType).As<Instance>();
         }
     }
