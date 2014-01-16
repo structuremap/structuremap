@@ -131,32 +131,6 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
-        public void Enrichment()
-        {
-            var container = new Container(r => {
-                r.For(typeof (ITarget)).EnrichAllWith(raw => new WrappedTarget((ITarget) raw))
-                    .Use(typeof (Target1));
-            });
-
-            var target = (WrappedTarget) container.GetInstance<ITarget>();
-
-            target.Inner.ShouldBeOfType<Target1>();
-        }
-
-        [Test]
-        public void On_creation()
-        {
-            ITarget created = null;
-
-            var container = new Container(r => {
-                r.For(typeof (ITarget)).OnCreationForAll(raw => created = (ITarget) raw)
-                    .Use(typeof (Target3));
-            });
-
-            container.GetInstance<ITarget>().ShouldBeOfType<Target3>();
-        }
-
-        [Test]
         public void Set_caching()
         {
             var registry = new Registry();

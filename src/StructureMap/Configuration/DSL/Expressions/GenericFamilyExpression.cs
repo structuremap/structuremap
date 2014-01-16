@@ -135,62 +135,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-
-        /// <summary>
-        /// Register an Action to run against any object of this PluginType immediately after
-        /// it is created, but before the new object is passed back to the caller
-        /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
-        public GenericFamilyExpression OnCreationForAll(Action<object> action)
-        {
-            Func<object, object> func = raw => {
-                action(raw);
-                return raw;
-            };
-            return EnrichAllWith(func);
-        }
-
-        /// <summary>
-        /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreationForAll">OnCreationForAll()</see>,
-        /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
-        /// scenarios or to return a decorator.
-        /// </summary>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        public GenericFamilyExpression EnrichAllWith(Func<object, object> func)
-        {
-            // TODO -- redo
-            throw new NotImplementedException();
-//            _registry.alter = graph => {
-//                var interceptor = new PluginTypeInterceptor(_pluginType, (c, o) => func(o));
-//                graph.InterceptorLibrary.AddInterceptor(interceptor);
-//            };
-
-            return this;
-        }
-
-        /// <summary>
-        /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreationForAll">OnCreationForAll()</see>,
-        /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
-        /// scenarios or to return a decorator.
-        /// </summary>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        public GenericFamilyExpression EnrichAllWith(Func<IContext, object, object> func)
-        {
-            // TODO -- redo
-            throw new NotImplementedException();
-//            _registry.alter = graph => {
-//                var interceptor = new PluginTypeInterceptor(_pluginType, func);
-//                graph.InterceptorLibrary.AddInterceptor(interceptor);
-//            };
-
-            return this;
-        }
-
         /// <summary>
         /// Registers an IBuildInterceptor for this Plugin Type that executes before
         /// any object of this PluginType is created.  IBuildInterceptor's can be

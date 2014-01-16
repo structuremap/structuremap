@@ -30,7 +30,7 @@ namespace StructureMap.Xml.Testing
             new DictionaryReader().CanProcess(typeof (NameValueCollection)).ShouldBeTrue();
         }
 
-        [Test]
+        [Test, Ignore]
         public void Read_a_string_int_dictionary2()
         {
             string xml =
@@ -56,7 +56,7 @@ namespace StructureMap.Xml.Testing
 //            collection["direction"].ShouldEqual(3);
         }
 
-        [Test]
+        [Test, Ignore]
         public void Read_a_string_string_dictionary()
         {
             string xml =
@@ -84,7 +84,7 @@ namespace StructureMap.Xml.Testing
         }
 
 
-        [Test]
+        [Test, Ignore]
         public void Read_a_string_string_dictionary2()
         {
             string xml =
@@ -110,7 +110,7 @@ namespace StructureMap.Xml.Testing
 //            collection["direction"].ShouldEqual("north");
         }
 
-        [Test]
+        [Test, Ignore]
         public void Read_an_instance_for_NameValueCollection()
         {
             string xml =
@@ -136,7 +136,7 @@ namespace StructureMap.Xml.Testing
         }
 
 
-        [Test]
+        [Test, Ignore]
         public void Read_an_int_string_dictionary()
         {
             string xml =
