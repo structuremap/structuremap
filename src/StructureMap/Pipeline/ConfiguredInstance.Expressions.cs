@@ -74,47 +74,47 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        /// Register a Func to potentially enrich or substitute for the object
+        /// Register a Func to potentially decorate or substitute for the object
         /// created by this Instance before it is returned to the caller
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public ConfiguredInstance EnrichWith<T>(Expression<Func<T, T>> handler)
+        public ConfiguredInstance DecorateWith<T>(Expression<Func<T, T>> handler)
         {
             return Interceptor(new FuncInterceptor<T>(handler));
         }
 
         /// <summary>
-        /// Register a Func to potentially enrich or substitute for the object
+        /// Register a Func to potentially decorate or substitute for the object
         /// created by this Instance before it is returned to the caller
         /// </summary>
         /// <param name="handler"></param>
         /// <param name="description">A description of the creation action for diagnostics</param>
         /// <returns></returns>
-        public ConfiguredInstance EnrichWith<T>(string description, Func<T, T> handler)
+        public ConfiguredInstance DecorateWith<T>(string description, Func<T, T> handler)
         {
             return Interceptor(InterceptorFactory.ForFunc(description, handler));
         }
 
         /// <summary>
-        /// Register a Func to potentially enrich or substitute for the object
+        /// Register a Func to potentially decorate or substitute for the object
         /// created by this Instance before it is returned to the caller
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        public ConfiguredInstance EnrichWith<T>(Expression<Func<IBuildSession, T, T>> func)
+        public ConfiguredInstance DecorateWith<T>(Expression<Func<IBuildSession, T, T>> func)
         {
             return Interceptor(new FuncInterceptor<T>(func));
         }
 
         /// <summary>
-        /// Register a Func to potentially enrich or substitute for the object
+        /// Register a Func to potentially decorate or substitute for the object
         /// created by this Instance before it is returned to the caller
         /// </summary>
         /// <param name="description">A description of the creation action for diagnostics</param>
         /// <param name="func"></param>
         /// <returns></returns>
-        public ConfiguredInstance EnrichWith<T>(string description, Func<IBuildSession, T, T> func)
+        public ConfiguredInstance DecorateWith<T>(string description, Func<IBuildSession, T, T> func)
         {
             return Interceptor(InterceptorFactory.ForFunc(description, func));
         }

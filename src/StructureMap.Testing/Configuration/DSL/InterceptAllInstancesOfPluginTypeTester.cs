@@ -65,10 +65,10 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
-        public void EnrichForAll()
+        public void DecorateForAll()
         {
             var green = getService("Green", r => {
-                r.For<IService>().EnrichAllWith(s => new DecoratorService(s))
+                r.For<IService>().DecorateAllWith(s => new DecoratorService(s))
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             });
 
@@ -144,10 +144,10 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
-        public void EnrichForAll()
+        public void DecorateForAll()
         {
             Action<Registry> action = r => {
-                r.For<IService>().EnrichAllWith(s => new DecoratorService(s))
+                r.For<IService>().DecorateAllWith(s => new DecoratorService(s))
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
 

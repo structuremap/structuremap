@@ -245,10 +245,10 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
         /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
-        /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// DecorateAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(Expression<Func<TPluginType, TPluginType>> handler)
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(Expression<Func<TPluginType, TPluginType>> handler)
         {
             return InterceptWith(new FuncInterceptor<TPluginType>(handler));
         }
@@ -256,11 +256,11 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
         /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
-        /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// DecorateAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
         /// <param name="description">Descriptive text for diagnostics</param>
-        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(string description, Func<TPluginType, TPluginType> handler)
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(string description, Func<TPluginType, TPluginType> handler)
         {
             return InterceptWith(InterceptorFactory.ForFunc(description, handler));
         }
@@ -268,10 +268,10 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
         /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
-        /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// DecorateAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(Expression<Func<IBuildSession, TPluginType, TPluginType>> handler)
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(Expression<Func<IBuildSession, TPluginType, TPluginType>> handler)
         {
             return InterceptWith(new FuncInterceptor<TPluginType>(handler));
         }
@@ -279,11 +279,11 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
         /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
-        /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// DecorateAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
         /// <param name="description">Descriptive text for diagnostics</param>
-        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(string description, Func<IBuildSession, TPluginType, TPluginType> handler)
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(string description, Func<IBuildSession, TPluginType, TPluginType> handler)
         {
             return InterceptWith(InterceptorFactory.ForFunc(description, handler));
         }

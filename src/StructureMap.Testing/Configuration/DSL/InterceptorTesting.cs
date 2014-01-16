@@ -41,15 +41,15 @@ namespace StructureMap.Testing.Configuration.DSL
                         .OnCreation<ColorService>("set the last service", s => _lastService = s);
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("Purple")
-                        .EnrichWith<IService>(s => new DecoratorService(s));
+                        .DecorateWith<IService>(s => new DecoratorService(s));
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("DecoratedWithContext")
-                        .EnrichWith<IService>("decorated with context", (c, s) => {
+                        .DecorateWith<IService>("decorated with context", (c, s) => {
                             c.GetInstance<ContextRecorder>().WasTouched = true;
                             return new DecoratorService(s);
                         });
 
-                    x.Type<ColorService>().Named("Decorated").EnrichWith<IService>(
+                    x.Type<ColorService>().Named("Decorated").DecorateWith<IService>(
                         s => new DecoratorService(s))
                         .Ctor<string>("color").Is("Orange");
 

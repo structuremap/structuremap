@@ -55,13 +55,13 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        ///     Register a Func to potentially enrich or substitute for the object
+        ///     Register a Func to potentially decorate or substitute for the object
         ///     created by this Instance before it is returned to the caller
         /// </summary>
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T EnrichWith<THandler>(Expression<Func<THandler, THandler>> handler)
+        public T DecorateWith<THandler>(Expression<Func<THandler, THandler>> handler)
         {
             AddInterceptor(new FuncInterceptor<THandler>(handler));
 
@@ -69,13 +69,13 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        ///     Register a Func to potentially enrich or substitute for the object
+        ///     Register a Func to potentially decorate or substitute for the object
         ///     created by this Instance before it is returned to the caller
         /// </summary>
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T EnrichWith<THandler>(string description, Func<THandler, THandler> handler)
+        public T DecorateWith<THandler>(string description, Func<THandler, THandler> handler)
         {
             AddInterceptor(InterceptorFactory.ForFunc(description, handler));
 
@@ -83,13 +83,13 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        ///     Register a Func to potentially enrich or substitute for the object
+        ///     Register a Func to potentially decorate or substitute for the object
         ///     created by this Instance before it is returned to the caller
         /// </summary>
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T EnrichWith<THandler>(Expression<Func<IBuildSession, THandler, THandler>> handler)
+        public T DecorateWith<THandler>(Expression<Func<IBuildSession, THandler, THandler>> handler)
         {
             AddInterceptor(new FuncInterceptor<THandler>(handler));
 
@@ -97,13 +97,13 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        ///     Register a Func to potentially enrich or substitute for the object
+        ///     Register a Func to potentially decorate or substitute for the object
         ///     created by this Instance before it is returned to the caller
         /// </summary>
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T EnrichWith<THandler>(string description, Func<IBuildSession, THandler, THandler> handler)
+        public T DecorateWith<THandler>(string description, Func<IBuildSession, THandler, THandler> handler)
         {
             AddInterceptor(InterceptorFactory.ForFunc(description, handler));
 
