@@ -42,6 +42,7 @@ namespace StructureMap.Graph
             get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; }
         }
 
+        // TODO -- defensive check here to verify that the instance can be used against PluginType
         public Instance MissingInstance { get; set; }
 
         /// <summary>
@@ -51,12 +52,6 @@ namespace StructureMap.Graph
         {
             get { return _pluginType; }
         }
-
-        public PluginGraph Root
-        {
-            get { return Owner.Root; }
-        }
-
 
         void IDisposable.Dispose()
         {
@@ -75,6 +70,7 @@ namespace StructureMap.Graph
             _instances[instance.Name] = instance;
         }
 
+        // TODO -- re-evaluate this
         public void SetDefault(Func<Instance> defaultInstance)
         {
             _defaultInstance = new Lazy<Instance>(defaultInstance);
@@ -122,11 +118,6 @@ namespace StructureMap.Graph
             }
 
             return null;
-        }
-
-        public Instance FirstInstance()
-        {
-            return _instances.First;
         }
 
         public PluginFamily CreateTemplatedClone(Type[] templateTypes)
@@ -196,14 +187,10 @@ namespace StructureMap.Graph
             }
         }
 
-        public void ForInstance(string name, Action<Instance> action)
-        {
-            _instances.WithValue(name, action);
-        }
-
         public void RemoveInstance(Instance instance)
         {
             _instances.Remove(instance.Name);
+            instance.Parent = null;
             if (instance == GetDefaultInstance())
             {
                 resetDefault();
@@ -214,21 +201,6 @@ namespace StructureMap.Graph
         {
             _instances.ClearAll();
             resetDefault();
-        }
-
-        /// <summary>
-        ///     Primarily for TESTING
-        /// </summary>
-        /// <param name="defaultKey"></param>
-        public void SetDefaultKey(string defaultKey)
-        {
-            var instance = _instances.FirstOrDefault(x => x.Name == defaultKey);
-            if (instance == null)
-            {
-                throw new ArgumentOutOfRangeException("Could not find an instance with name " + defaultKey);
-            }
-
-            SetDefault(instance);
         }
     }
 }
