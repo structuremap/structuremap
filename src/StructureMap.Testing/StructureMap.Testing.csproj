@@ -227,7 +227,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Examples\BuildUp.cs" />
-    <Compile Include="Examples\RegisteringWithTheAPI.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Graph\AssemblyScannerTester.cs" />
     <Compile Include="Graph\ContainerConstructorAttributeTester.cs">

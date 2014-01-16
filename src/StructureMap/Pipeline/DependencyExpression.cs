@@ -21,32 +21,6 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        /// Sets the value of the constructor argument to the key/value in the 
-        /// AppSettings
-        /// </summary>
-        /// <param name="appSettingKey">The key in appSettings for the value to use.</param>
-        /// <returns></returns>
-        public TInstance EqualToAppSetting(string appSettingKey)
-        {
-            return EqualToAppSetting(appSettingKey, null);
-        }
-
-        /// <summary>
-        /// Sets the value of the constructor argument to the key/value in the 
-        /// AppSettings when it exists. Otherwise uses the provided default value.
-        /// </summary>
-        /// <param name="appSettingKey">The key in appSettings for the value to use.</param>
-        /// <param name="defaultValue">The value to use if an entry for <paramref name="appSettingKey"/> does not exist in the appSettings section.</param>
-        /// <returns></returns>
-        public TInstance EqualToAppSetting(string appSettingKey, string defaultValue)
-        {
-            var propertyValue = ConfigurationManager.AppSettings[appSettingKey];
-            if (propertyValue == null) propertyValue = defaultValue;
-            _instance.Dependencies.Add(_propertyName, typeof (TChild), propertyValue);
-            return _instance;
-        }
-
-        /// <summary>
         /// Nested Closure to define a child dependency inline
         /// </summary>
         /// <param name="action"></param>

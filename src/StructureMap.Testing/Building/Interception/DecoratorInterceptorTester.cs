@@ -143,8 +143,6 @@ namespace StructureMap.Testing.Building.Interception
 
     public class ThrowsDecoratedTarget : ITarget
     {
-        private readonly ITarget _inner;
-
         public ThrowsDecoratedTarget(ITarget inner)
         {
             throw new DivideByZeroException("you failed!");
