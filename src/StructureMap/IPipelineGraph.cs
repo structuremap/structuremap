@@ -19,6 +19,8 @@ namespace StructureMap
         Instance GetDefault(Type pluginType);
         bool HasDefaultForPluginType(Type pluginType);
         bool HasInstance(Type pluginType, string instanceKey);
+
+        // TOO -- do we need this?
         void EachInstance(Action<Type, Instance> action);
         IEnumerable<Instance> GetAllInstances();
         IEnumerable<Instance> GetAllInstances(Type pluginType);

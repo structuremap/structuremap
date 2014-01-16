@@ -89,7 +89,12 @@ namespace StructureMap.Testing
         [Test]
         public void CanGetPluginFamilyFromPluginGraphWithNoParameters()
         {
-            var graph = PluginGraph.BuildGraphFromAssembly(GetType().Assembly);
+            var builder = new PluginGraphBuilder();
+            var scanner = new AssemblyScanner();
+            scanner.Assembly(GetType().Assembly);
+
+            builder.AddScanner(scanner);
+            var graph = builder.Build();
 
             graph.Families[typeof (IGenericService<int>)].ShouldBeTheSameAs(
                 graph.Families[typeof (IGenericService<int>)]);

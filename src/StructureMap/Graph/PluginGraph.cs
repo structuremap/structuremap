@@ -119,35 +119,12 @@ namespace StructureMap.Graph
             _families[pluginType].AddType(concreteType, name);
         }
 
-        /// <summary>
-        ///   Add configuration to a PluginGraph with the Registry DSL
-        /// </summary>
-        /// <param name = "action"></param>
-        public void Configure(Action<Registry> action)
-        {
-            var registry = new Registry();
-            action(registry);
-
-            registry.As<IPluginGraphConfiguration>().Configure(this);
-        }
-
         public void ImportRegistry(Type type)
         {
             if (Registries.Any(x => x.GetType() == type)) return;
 
             var registry = (Registry) Activator.CreateInstance(type);
             registry.As<IPluginGraphConfiguration>().Configure(this);
-        }
-
-        public static PluginGraph BuildGraphFromAssembly(Assembly assembly)
-        {
-            var builder = new PluginGraphBuilder();
-            var scanner = new AssemblyScanner();
-            scanner.Assembly(assembly);
-
-            builder.AddScanner(scanner);
-
-            return builder.Build();
         }
 
         public void AddFamily(PluginFamily family)
@@ -209,7 +186,7 @@ namespace StructureMap.Graph
 
         public void EachInstance(Action<Type, Instance> action)
         {
-            _families.Each(family => { family.Instances.Each(i => action(family.PluginType, i)); });
+            _families.Each(family => family.Instances.Each(i => action(family.PluginType, i)));
         }
 
         public Instance FindInstance(Type pluginType, string name)
