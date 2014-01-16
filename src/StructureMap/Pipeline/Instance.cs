@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
@@ -134,6 +135,14 @@ namespace StructureMap.Pipeline
         public virtual Instance CloseType(Type[] types)
         {
             return this;
+        }
+
+        public IBuildPlan CreatePlan(Type pluginType, Policies policies)
+        {
+            // TODO -- memoize this please!
+            var builderSource = ToBuilder(pluginType, policies);
+            var interceptors = policies.Interceptors.SelectInterceptors(ConcreteType).Union(_interceptors);
+            return new BuildPlan(pluginType, this, builderSource, interceptors);
         }
 
         public int InstanceKey(Type pluginType)

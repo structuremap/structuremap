@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using StructureMap.Building;
 using StructureMap.Graph;
@@ -99,11 +100,9 @@ namespace StructureMap
 
         public object BuildNewInSession(Type pluginType, Instance instance)
         {
-            throw new NotImplementedException("Find the IBuildPlan and use that");
-
-            // TODO -- test this after the IBuildPlan is in place
-            // Test that the interception takes place
-            //return instance.Build(pluginType, this);
+            // TODO -- this is horrendous.  Eliminate the Law of Demeter violation!
+            var plan = instance.CreatePlan(pluginType, _pipelineGraph.Root().PluginGraph.Policies);
+            return plan.Build(this);
         }
 
         public object BuildNewInOriginalContext(Type pluginType, Instance instance)
