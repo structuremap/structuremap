@@ -7,7 +7,8 @@ namespace StructureMap
 {
     public interface IPipelineGraph : ILifecycleContext, IDisposable
     {
-        PluginGraph Outer { get; }
+        [Obsolete("This smells to high heaven.  Nasty coupling, law of demeter")]
+        PluginGraph PluginGraph { get; }
 
         /// <summary>
         ///     Unwraps a nested container and/or profiles?

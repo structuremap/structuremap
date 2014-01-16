@@ -14,7 +14,7 @@ namespace StructureMap.AutoMocking
             nameContainer(this);
 
             _locator = locator;
-            Model.Pipeline.Outer.AddFamilyPolicy(this);
+            Model.Pipeline.PluginGraph.AddFamilyPolicy(this);
         }
 
         private void nameContainer(IContainer container)

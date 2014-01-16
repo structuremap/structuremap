@@ -13,7 +13,7 @@ namespace StructureMap.Query
         internal Model(IPipelineGraph graph)
         {
             _graph = graph;
-            PluginGraph = _graph.Outer;
+            PluginGraph = _graph.PluginGraph;
         }
 
         public IPipelineGraph Pipeline
@@ -105,7 +105,7 @@ namespace StructureMap.Query
         /// <param name="filter"></param>
         public void EjectAndRemovePluginTypes(Func<Type, bool> filter)
         {
-            new GraphEjector(_graph.Outer).Remove(filter);
+            new GraphEjector(_graph.PluginGraph).Remove(filter);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace StructureMap.Query
         /// <param name="pluginType"></param>
         public void EjectAndRemove(Type pluginType)
         {
-            new GraphEjector(_graph.Outer).Remove(pluginType);
+            new GraphEjector(_graph.PluginGraph).Remove(pluginType);
         }
 
         /// <summary>

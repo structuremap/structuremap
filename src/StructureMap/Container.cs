@@ -45,7 +45,7 @@ namespace StructureMap
             Name = Guid.NewGuid().ToString();
 
             _pipelineGraph = pipelineGraph;
-            _pipelineGraph.Outer.Families[typeof (IContainer)].SetDefault(new ObjectInstance(this));
+            _pipelineGraph.PluginGraph.Families[typeof (IContainer)].SetDefault(new ObjectInstance(this));
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace StructureMap
                 var registry = new ConfigurationExpression();
                 configure(registry);
 
-                var builder = new PluginGraphBuilder(_pipelineGraph.Outer);
+                var builder = new PluginGraphBuilder(_pipelineGraph.PluginGraph);
                 builder.Add(registry);
 
                 builder.RunConfigurations();
@@ -339,7 +339,7 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         public void EjectAllInstancesOf<T>()
         {
-            new GraphEjector(_pipelineGraph.Outer).EjectAllInstancesOf<T>();
+            new GraphEjector(_pipelineGraph.PluginGraph).EjectAllInstancesOf<T>();
         }
 
         /// <summary>

@@ -40,7 +40,7 @@ namespace StructureMap
             var instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
                            ?? new ConfiguredInstance(pluggedType);
 
-            var plan = ConcreteType.BuildUpPlan(pluggedType, instance.Dependencies, _pipelineGraph.Outer.Policies);
+            var plan = ConcreteType.BuildUpPlan(pluggedType, instance.Dependencies, _pipelineGraph.PluginGraph.Policies);
 
 
             plan.BuildUp(this, target);
@@ -154,7 +154,7 @@ namespace StructureMap
 
         public Policies Policies
         {
-            get { return _pipelineGraph.Outer.Policies; }
+            get { return _pipelineGraph.PluginGraph.Policies; }
         }
     }
 }

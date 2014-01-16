@@ -34,7 +34,7 @@ namespace StructureMap.Query
 
         public string ProfileName
         {
-            get { return _pipelineGraph.Outer.ProfileName; }
+            get { return _pipelineGraph.PluginGraph.ProfileName; }
         }
 
         Type IFamily.PluginType

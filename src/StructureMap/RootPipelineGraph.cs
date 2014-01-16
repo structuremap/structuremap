@@ -93,7 +93,7 @@ namespace StructureMap
             yield return _pluginGraph;
         }
 
-        public PluginGraph Outer
+        public PluginGraph PluginGraph
         {
             get { return _pluginGraph; }
         }

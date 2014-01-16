@@ -9,13 +9,13 @@ namespace StructureMap
     public class ComplexPipelineGraph : IPipelineGraph
     {
         private readonly IPipelineGraph _parent;
-        private readonly PluginGraph _outer;
+        private readonly PluginGraph _pluginGraph;
         private readonly IObjectCache _transientCache;
 
-        public ComplexPipelineGraph(IPipelineGraph parent, PluginGraph outer, IObjectCache transientCache)
+        public ComplexPipelineGraph(IPipelineGraph parent, PluginGraph pluginGraph, IObjectCache transientCache)
         {
             _parent = parent;
-            _outer = outer;
+            _pluginGraph = pluginGraph;
             _transientCache = transientCache;
         }
 
@@ -36,40 +36,40 @@ namespace StructureMap
 
         public Instance GetDefault(Type pluginType)
         {
-            return _outer.HasDefaultForPluginType(pluginType)
-                ? _outer.Families[pluginType].GetDefaultInstance()
+            return _pluginGraph.HasDefaultForPluginType(pluginType)
+                ? _pluginGraph.Families[pluginType].GetDefaultInstance()
                 : _parent.GetDefault(pluginType);
         }
 
         public bool HasDefaultForPluginType(Type pluginType)
         {
-            return _outer.HasDefaultForPluginType(pluginType) || _parent.HasDefaultForPluginType(pluginType);
+            return _pluginGraph.HasDefaultForPluginType(pluginType) || _parent.HasDefaultForPluginType(pluginType);
         }
 
         public bool HasInstance(Type pluginType, string instanceKey)
         {
-            return _outer.HasInstance(pluginType, instanceKey) || _parent.HasInstance(pluginType, instanceKey);
+            return _pluginGraph.HasInstance(pluginType, instanceKey) || _parent.HasInstance(pluginType, instanceKey);
         }
 
         public void EachInstance(Action<Type, Instance> action)
         {
-            _outer.EachInstance(action);
+            _pluginGraph.EachInstance(action);
             _parent.EachInstance(action);
         }
 
         public IEnumerable<Instance> GetAllInstances()
         {
-            return _outer.Families.SelectMany(x => x.Instances).Union(_parent.GetAllInstances());
+            return _pluginGraph.Families.SelectMany(x => x.Instances).Union(_parent.GetAllInstances());
         }
 
         public IEnumerable<Instance> GetAllInstances(Type pluginType)
         {
-            return _outer.AllInstances(pluginType).Union(_parent.GetAllInstances(pluginType));
+            return _pluginGraph.AllInstances(pluginType).Union(_parent.GetAllInstances(pluginType));
         }
 
         public Instance FindInstance(Type pluginType, string name)
         {
-            return _outer.FindInstance(pluginType, name) ?? _parent.FindInstance(pluginType, name);
+            return _pluginGraph.FindInstance(pluginType, name) ?? _parent.FindInstance(pluginType, name);
         }
 
         public IPipelineGraph ForProfile(string profile)
@@ -81,7 +81,7 @@ namespace StructureMap
         public void Dispose()
         {
             _transientCache.DisposeAndClear();
-            _outer.SafeDispose();
+            _pluginGraph.SafeDispose();
         }
 
         // Identical to RootPipelineGraph
@@ -97,22 +97,22 @@ namespace StructureMap
                 yield return pluginGraph;
             }
 
-            yield return _outer;
+            yield return _pluginGraph;
         }
 
-        public PluginGraph Outer
+        public PluginGraph PluginGraph
         {
-            get { return _outer; }
+            get { return _pluginGraph; }
         }
 
         public IEnumerable<PluginFamily> UniqueFamilies()
         {
-            foreach (var family in _outer.Families)
+            foreach (var family in _pluginGraph.Families)
             {
                 yield return family;
             }
 
-            foreach (var family in _parent.UniqueFamilies().Where(x => !_outer.Families.Has(x.PluginType)))
+            foreach (var family in _parent.UniqueFamilies().Where(x => !_pluginGraph.Families.Has(x.PluginType)))
             {
                 yield return family;
             }
