@@ -8,7 +8,7 @@ namespace StructureMap.Testing
     {
         public static TPluginType Build<TPluginType>(this Instance instance, IBuildSession session = null) where TPluginType : class
         {
-            var plan = instance.CreatePlan(typeof (TPluginType), new Policies());
+            var plan = instance.ResolveBuildPlan(typeof (TPluginType), new Policies());
             return plan.Build(session ?? new FakeBuildSession()).As<TPluginType>();
         }
     }

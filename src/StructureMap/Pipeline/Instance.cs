@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
@@ -95,9 +96,36 @@ namespace StructureMap.Pipeline
             return this;
         }
 
-        public IBuildPlan CreatePlan(Type pluginType, Policies policies)
+        private readonly object _buildLock = new object();
+        private IBuildPlan _plan;
+
+
+        public IBuildPlan ResolveBuildPlan(Type pluginType, Policies policies)
         {
-            // TODO -- memoize this please!
+            if (_plan == null)
+            {
+                lock (_buildLock)
+                {
+                    if (_plan == null)
+                    {
+                        _plan = buildPlan(pluginType, policies);
+                    }
+                }
+            }
+
+            return _plan;
+        }
+
+        public void ClearBuildPlan()
+        {
+            lock (_buildLock)
+            {
+                _plan = null;
+            }
+        }
+
+        private IBuildPlan buildPlan(Type pluginType, Policies policies)
+        {
             var builderSource = ToBuilder(pluginType, policies);
             var interceptors = policies.Interceptors.SelectInterceptors(ReturnedType ?? pluginType).Union(_interceptors);
             return new BuildPlan(pluginType, this, builderSource, interceptors);
