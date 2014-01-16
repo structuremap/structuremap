@@ -3,7 +3,7 @@ using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture, Ignore("just for now")]
+    [TestFixture]
     public class ConventionBasedSetterInjectionTester
     {
         public class ClassWithNamedProperties
