@@ -201,7 +201,6 @@
     <Compile Include="Building\Interception\InterceptionPolicyTester.cs" />
     <Compile Include="Building\LifecycleDependencySourceTester.cs" />
     <Compile Include="Building\list_expression_building.cs" />
-    <Compile Include="Building\LiteralPlanTester.cs" />
     <Compile Include="Building\mixed_constructor_setter_and_fields.cs" />
     <Compile Include="Building\setter_expression_building.cs" />
     <Compile Include="Building\TryCatchWrapperTester.cs" />

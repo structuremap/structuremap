@@ -153,7 +153,6 @@
     <Compile Include="Building\Interception\ParameterRewriter.cs" />
     <Compile Include="Building\LifecycleDependencySource.cs" />
     <Compile Include="Building\ListDependencySource.cs" />
-    <Compile Include="Building\LiteralPlan.cs" />
     <Compile Include="Building\Parameters.cs" />
     <Compile Include="Building\ReferencedDependencySource.cs" />
     <Compile Include="Building\Setter.cs" />
