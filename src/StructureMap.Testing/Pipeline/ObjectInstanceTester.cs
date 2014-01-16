@@ -3,6 +3,7 @@ using NUnit.Framework;
 using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.DocumentationExamples;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
@@ -61,6 +62,44 @@ namespace StructureMap.Testing.Pipeline
             Exception<ArgumentNullException>.ShouldBeThrownBy(() => {
                 new ObjectInstance(null);
             });
+        }
+
+        [Test]
+        public void object_instance_is_a_singleton()
+        {
+            new ObjectInstance(new DisposableGuy())
+                .Lifecycle.ShouldBeOfType<SingletonLifecycle>();
+        }
+
+        [Test]
+        public void object_is_not_disposed_in_nested_container()
+        {
+            var guy = new DisposableGuy();
+
+            var container = new Container(x => {
+                x.For<DisposableGuy>().Use(guy);
+            });
+
+            using (var nested = container.GetNestedContainer())
+            {
+                
+            }
+
+            guy.WasDisposed.ShouldBeFalse();
+
+            container.Dispose();
+
+            guy.WasDisposed.ShouldBeTrue();
+        }
+    }
+
+    public class DisposableGuy : IDisposable
+    {
+        public bool WasDisposed;
+
+        public void Dispose()
+        {
+            WasDisposed = true;
         }
     }
 }

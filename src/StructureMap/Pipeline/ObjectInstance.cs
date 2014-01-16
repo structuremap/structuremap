@@ -15,6 +15,8 @@ namespace StructureMap.Pipeline
             }
 
             _object = anObject;
+
+            SetLifecycleTo<SingletonLifecycle>();
         }
 
 
