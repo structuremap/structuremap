@@ -21,10 +21,8 @@ namespace StructureMap.Testing
             )]
         public void TheDefaultInstanceIsALambdaForGuidNewGuid()
         {
-            ObjectFactory.Initialize(x => { x.For<Guid>().Use(() => Guid.NewGuid()); });
-
-
-            Assert.That(ObjectFactory.GetInstance<Guid>() != Guid.Empty);
+            var container = new Container(x => x.For<Guid>().Use(Guid.NewGuid));
+            container.GetInstance<Guid>().ShouldNotEqual(Guid.Empty);
         }
 
         [Test(

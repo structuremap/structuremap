@@ -49,12 +49,19 @@ namespace StructureMap.Building
                 builder = Expression.Convert(builder, _pluginType);
             }
 
+
+
             var wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(_pluginType, builder, _instance);
             wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(_pluginType, wrapped, this);
 
             // TODO -- add the bi-directional checking too
 
-            var lambdaType = typeof (Func<,>).MakeGenericType(typeof (IBuildSession), _pluginType);
+            if (!wrapped.Type.IsClass)
+            {
+                wrapped = Expression.Convert(wrapped, typeof(object));
+            }
+
+            var lambdaType = typeof (Func<,>).MakeGenericType(typeof (IBuildSession), typeof(object));
 
             var lambda = Expression.Lambda(lambdaType, wrapped, Parameters.Session);
 
