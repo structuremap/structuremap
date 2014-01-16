@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -155,6 +157,43 @@ namespace StructureMap.Testing.Pipeline
             Assert.That(classA.B.B, Is.EqualTo("named"));
         }
 
+        [Test]
+        public void smart_instance_can_specify_the_constructor()
+        {
+            new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null)).Constructor.GetParameters().Select(x => x.ParameterType)
+                .ShouldHaveTheSameElementsAs(typeof(IGateway));
+
+            new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null, null)).Constructor.GetParameters().Select(x => x.ParameterType)
+                .ShouldHaveTheSameElementsAs(typeof(IGateway), typeof(IService));
+        }
+
+        [Test]
+        public void integrated_building_with_distinct_ctor_selection()
+        {
+            var container = new Container(x => {
+                x.For<ClassWithMultipleConstructors>().AddInstances(o => {
+                    o.Type<ClassWithMultipleConstructors>().SelectContstructor(() => new ClassWithMultipleConstructors(null)).Named("One");
+                    o.Type<ClassWithMultipleConstructors>().SelectContstructor(() => new ClassWithMultipleConstructors(null, null)).Named("Two");
+                    o.Type<ClassWithMultipleConstructors>().Named("Default");
+
+
+                });
+
+                x.For<IGateway>().Use<StubbedGateway>();
+                x.For<IService>().Use<WhateverService>();
+                x.For<IWidget>().Use<AWidget>();
+            });
+
+            container.GetInstance<ClassWithMultipleConstructors>("One")
+                .CtorUsed.ShouldEqual("One Arg");
+
+            container.GetInstance<ClassWithMultipleConstructors>("Two")
+                .CtorUsed.ShouldEqual("Two Args");
+
+            container.GetInstance<ClassWithMultipleConstructors>("Default")
+                .CtorUsed.ShouldEqual("Three Args");
+        }
+
         private class ClassA
         {
             public ClassB B { get; private set; }
@@ -225,5 +264,25 @@ namespace StructureMap.Testing.Pipeline
     public class ClassWithWidgetProperty
     {
         public IWidget Widget { get; set; }
+    }
+
+    public class ClassWithMultipleConstructors
+    {
+        public string CtorUsed;
+
+        public ClassWithMultipleConstructors(IGateway gateway, IService service, IWidget widget)
+        {
+            CtorUsed = "Three Args";
+        }
+
+        public ClassWithMultipleConstructors(IGateway gateway, IService service)
+        {
+            CtorUsed = "Two Args";
+        }
+
+        public ClassWithMultipleConstructors(IGateway gateway)
+        {
+            CtorUsed = "One Arg";
+        }
     }
 }

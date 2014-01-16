@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
@@ -25,6 +26,11 @@ namespace StructureMap.Pipeline
             Name = name;
         }
 
+        /// <summary>
+        /// Explicitly select a constructor
+        /// </summary>
+        public ConstructorInfo Constructor { get; set; }
+
         public Type PluggedType
         {
             get { return _pluggedType; }
@@ -32,7 +38,7 @@ namespace StructureMap.Pipeline
 
         public override IDependencySource ToBuilder(Type pluginType, Policies policies)
         {
-            return ConcreteType.BuildSource(_pluggedType, null, _dependencies, policies);
+            return ConcreteType.BuildSource(_pluggedType, Constructor, _dependencies, policies);
         }
 
         public ConstructorInstance Override(ExplicitArguments arguments)

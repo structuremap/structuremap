@@ -11,10 +11,24 @@ namespace StructureMap.Pipeline
     /// <typeparam name="T">The concrete type constructed by SmartInstance</typeparam>
     public class SmartInstance<T> : ConstructorInstance<SmartInstance<T>>
     {
-        public SmartInstance()
+        public SmartInstance(Expression<Func<T>> constructorSelection = null )
             : base(typeof (T))
         {
+            if (constructorSelection != null)
+            {
+                SelectContstructor(constructorSelection);
+            }
         }
+
+        public SmartInstance<T> SelectContstructor(Expression<Func<T>> constructor)
+        {
+            var finder = new ConstructorFinderVisitor();
+            finder.Visit(constructor);
+
+            Constructor = finder.Constructor;
+
+            return this;
+        } 
 
         /// <summary>
         ///     Sets the name of this Instance

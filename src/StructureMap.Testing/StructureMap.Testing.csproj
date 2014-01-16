@@ -168,6 +168,7 @@
     <Compile Include="AutoWiringExamples.cs" />
     <Compile Include="BidirectionalDependencies.cs" />
     <Compile Include="Bugs\AddValueDirectlyWithGenericUsage.cs" />
+    <Compile Include="Bugs\Bug_101.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
     <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
