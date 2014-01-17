@@ -78,7 +78,7 @@ namespace StructureMap.Testing.Pipeline
 
     public class TurnOnAttribute : InstanceAttribute
     {
-        public override void Alter(ConstructorInstance instance)
+        public override void Alter(IConfiguredInstance instance)
         {
             instance.AddInterceptor(new ActivatorInterceptor<ClassWithInstanceAttributes>(x => x.TurnOn()));
         }
@@ -93,7 +93,7 @@ namespace StructureMap.Testing.Pipeline
             _name = name;
         }
 
-        public override void Alter(ConstructorInstance instance)
+        public override void Alter(IConfiguredInstance instance)
         {
             instance.Name = _name;
         }

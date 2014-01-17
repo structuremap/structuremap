@@ -7,7 +7,29 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
-    public class ConstructorInstance : Instance, IConfiguredInstance
+    public class ConstructorInstance : ConstructorInstance<ConstructorInstance>
+    {
+        public ConstructorInstance(Type concreteType) : base(concreteType)
+        {
+        }
+
+        public ConstructorInstance(Type pluggedType, string name) : base(pluggedType, name)
+        {
+        }
+
+        protected override ConstructorInstance thisInstance
+        {
+            get { return this; }
+        }
+
+        protected override ConstructorInstance thisObject()
+        {
+            return this;
+        }
+    }
+
+
+    public abstract class ConstructorInstance<TThis> : ExpressedInstance<TThis>, IConfiguredInstance where TThis : ConstructorInstance<TThis>
     {
         private readonly Type _pluggedType;
         private readonly DependencyCollection _dependencies = new DependencyCollection();
@@ -16,7 +38,7 @@ namespace StructureMap.Pipeline
         {
             _pluggedType = concreteType;
 
-            _pluggedType.GetCustomAttributes(typeof (InstanceAttribute), false).OfType<InstanceAttribute>()
+            _pluggedType.GetCustomAttributes(typeof(InstanceAttribute), false).OfType<InstanceAttribute>()
                 .Each(x => x.Alter(this));
         }
 
@@ -74,7 +96,7 @@ namespace StructureMap.Pipeline
 
         public static ConstructorInstance For<T>()
         {
-            return new ConstructorInstance(typeof (T));
+            return new ConstructorInstance(typeof(T));
         }
 
         public override Instance CloseType(Type[] types)
@@ -107,18 +129,6 @@ namespace StructureMap.Pipeline
         public override string ToString()
         {
             return "'{0}' -> {1}".ToFormat(Name, _pluggedType.FullName);
-        }
-    }
-
-
-    public abstract class ConstructorInstance<TThis> : ConstructorInstance where TThis : ConstructorInstance
-    {
-        public ConstructorInstance(Type pluggedType) : base(pluggedType)
-        {
-        }
-
-        public ConstructorInstance(Type pluggedType, string name) : base(pluggedType, name)
-        {
         }
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace StructureMap.Pipeline
     /// </summary>
     /// <typeparam name="TElementType"></typeparam>
     /// <typeparam name="TInstance"></typeparam>
-    public class ArrayDefinitionExpression<TInstance, TElementType> where TInstance : ConstructorInstance
+    public class ArrayDefinitionExpression<TInstance, TElementType> where TInstance : ConstructorInstance<TInstance>
     {
         private readonly TInstance _instance;
         private readonly string _propertyName;

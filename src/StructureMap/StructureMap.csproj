@@ -199,7 +199,6 @@
     <Compile Include="IPipelineGraph.cs" />
     <Compile Include="Pipeline\ArrayDefinitionExpression.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
-    <Compile Include="Pipeline\ConfiguredInstance.Expressions.cs" />
     <Compile Include="Pipeline\ConstructorSelector.cs" />
     <Compile Include="Pipeline\AttributeConstructorSelector.cs" />
     <Compile Include="Pipeline\DependencyCollection.cs" />
@@ -323,7 +322,6 @@
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="InitializationExpression.cs" />
     <Compile Include="Query\Model.cs" />
-    <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />
     <Compile Include="Pipeline\SmartInstance.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="Util\Cache.cs" />

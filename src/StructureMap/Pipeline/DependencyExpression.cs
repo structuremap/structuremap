@@ -12,7 +12,7 @@ namespace StructureMap.Pipeline
     /// </summary>
     /// <typeparam name="TChild"></typeparam>
     /// <typeparam name="TInstance"></typeparam>
-    public class DependencyExpression<TInstance, TChild> where TInstance : ConstructorInstance
+    public class DependencyExpression<TInstance, TChild> where TInstance : ConstructorInstance<TInstance>
     {
         private readonly TInstance _instance;
         private readonly string _propertyName;

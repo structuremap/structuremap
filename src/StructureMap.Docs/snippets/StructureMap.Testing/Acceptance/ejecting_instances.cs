@@ -75,9 +75,10 @@ namespace StructureMap.Testing.Acceptance
         {
             CustomLifecycle.Cache.DisposeAndClear();
 
-            var container = new Container(x =>
-            {
-                x.For<DisposedGuy>().LifecycleIs(new CustomLifecycle()).AddInstances(guys =>
+            var customLifecycle = new CustomLifecycle();
+
+            var container = new Container(x => {
+                x.For<DisposedGuy>().LifecycleIs(customLifecycle).AddInstances(guys =>
                 {
                     guys.Type<DisposedGuy>().Named("A");
                     guys.Type<DisposedGuy>().Named("B");
@@ -103,6 +104,29 @@ namespace StructureMap.Testing.Acceptance
             // registrations for DisposedGuy
             container.GetAllInstances<DisposedGuy>()
                 .Any().ShouldBeFalse();
+        }
+
+        [Test]
+        public void eject_and_remove_will_eject_from_a_per_instance_lifecycle()
+        {
+            CustomLifecycle.Cache.DisposeAndClear();
+
+            var container = new Container(x =>
+            {
+                x.For<DisposedGuy>().AddInstances(guys =>
+                {
+                    guys.Type<DisposedGuy>().Named("A").SetLifecycleTo(new CustomLifecycle());
+                });
+            });
+
+            var guyA = container.GetInstance<DisposedGuy>("A");
+            CustomLifecycle.Cache.Count.ShouldEqual(1);
+
+            container.Model.For<DisposedGuy>().EjectAndRemove("A");
+
+            guyA.WasDisposed.ShouldBeTrue();
+
+            CustomLifecycle.Cache.Count.ShouldEqual(0);
         }
     }
 

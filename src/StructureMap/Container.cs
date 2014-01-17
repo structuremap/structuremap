@@ -450,7 +450,7 @@ namespace StructureMap
                 defaultInstance = new ConfiguredInstance(pluginType);
             }
 
-            var basicInstance = defaultInstance as ConstructorInstance;
+            var basicInstance = defaultInstance as IConfiguredInstance;
 
             var instance = basicInstance == null
                 ? defaultInstance

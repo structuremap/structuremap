@@ -7,7 +7,7 @@ namespace StructureMap.Pipeline
     /// and filling setter properties.  ConfiguredInstance should only be used for open generic types.
     /// Favor <see cref="SmartInstance{T}">SmartInstance{T}</see> for all other usages.
     /// </summary>
-    public partial class ConfiguredInstance : ConstructorInstance<ConfiguredInstance>
+    public class ConfiguredInstance : ConstructorInstance<ConfiguredInstance>
     {
         public ConfiguredInstance(Type pluggedType, string name)
             : base(pluggedType, name)
@@ -28,6 +28,11 @@ namespace StructureMap.Pipeline
         protected override ConfiguredInstance thisObject()
         {
             return this;
+        }
+
+        protected override ConfiguredInstance thisInstance
+        {
+            get { return this; }
         }
     }
 }

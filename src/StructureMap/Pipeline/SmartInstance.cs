@@ -28,18 +28,13 @@ namespace StructureMap.Pipeline
             Constructor = finder.Constructor;
 
             return this;
-        } 
-
-        /// <summary>
-        ///     Sets the name of this Instance
-        /// </summary>
-        /// <param name="instanceKey"></param>
-        /// <returns></returns>
-        public SmartInstance<T> Named(string instanceKey)
-        {
-            Name = instanceKey;
-            return this;
         }
+
+        protected override SmartInstance<T> thisInstance
+        {
+            get { return this; }
+        }
+
 
         /// <summary>
         ///     Register an Action to perform on the object created by this Instance
@@ -127,32 +122,6 @@ namespace StructureMap.Pipeline
             return this;
         }
 
-        /// <summary>
-        ///     Register a Func to potentially decorate or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public SmartInstance<T> DecorateWith<TPluginType>(Expression<Func<TPluginType, TPluginType>> handler)
-        {
-            AddInterceptor(new DecoratorInterceptor<TPluginType>(handler));
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Register a Func to potentially decorate or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <param name="description">Descriptive text for diagnostic purposes</param>
-        /// <returns></returns>
-        public SmartInstance<T> DecorateWith<TPluginType>(string description, Func<TPluginType, TPluginType> handler)
-        {
-            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
-
-            return this;
-        }
 
         /// <summary>
         ///     Register a Func to potentially decorate or substitute for the object
@@ -181,44 +150,7 @@ namespace StructureMap.Pipeline
             return this;
         }
 
-        /// <summary>
-        ///     Register a Func to potentially decorate or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public SmartInstance<T> DecorateWith<TPluginType>(Expression<Func<IBuildSession, TPluginType, TPluginType>> handler)
-        {
-            AddInterceptor(new DecoratorInterceptor<TPluginType>(handler));
 
-            return this;
-        }
-
-
-        /// <summary>
-        ///     Register a Func to potentially decorate or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <param name="description">Descriptive text for diagnostic purposes</param>
-        /// <returns></returns>
-        public SmartInstance<T> DecorateWith<TPluginType>(string description, Func<IBuildSession, TPluginType, TPluginType> handler)
-        {
-            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Register an <see cref="IInterceptor">IInterceptor</see> with this Instance
-        /// </summary>
-        /// <param name="interceptor"></param>
-        /// <returns></returns>
-        public SmartInstance<T> InterceptWith(IInterceptor interceptor)
-        {
-            AddInterceptor(interceptor);
-            return this;
-        }
 
         /// <summary>
         ///     Set simple setter properties

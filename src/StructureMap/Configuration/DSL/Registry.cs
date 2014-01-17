@@ -193,10 +193,6 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> For<TPluginType>(ILifecycle lifecycle = null)
         {
-            if (lifecycle == null)
-            {
-                lifecycle = Lifecycles.Transient;
-            }
             return new CreatePluginFamilyExpression<TPluginType>(this, lifecycle);
         }
 
