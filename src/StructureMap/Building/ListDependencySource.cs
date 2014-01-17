@@ -31,7 +31,7 @@ namespace StructureMap.Building
         {
             get
             {
-                return "List of all possible {0} values".ToFormat(_itemType.GetFullName());
+                return "List of all possible {0} values".ToFormat(ItemType.GetFullName());
             }
         }
     }

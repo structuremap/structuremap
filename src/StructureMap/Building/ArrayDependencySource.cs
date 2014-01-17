@@ -8,7 +8,7 @@ namespace StructureMap.Building
 {
     public class ArrayDependencySource : IDependencySource
     {
-        protected readonly Type _itemType;
+        private readonly Type _itemType;
         private readonly List<IDependencySource> _items = new List<IDependencySource>();
 
         public ArrayDependencySource(Type itemType, params IDependencySource[] items)
