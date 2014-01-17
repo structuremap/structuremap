@@ -4,6 +4,7 @@ using StructureMap.Building.Interception;
 
 namespace StructureMap.Pipeline
 {
+    [Obsolete("KILL THE DUPLICATION")]
     public partial class ConfiguredInstance
     {
         public ConfiguredInstance Named(string instanceKey)
@@ -17,7 +18,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="interceptor"></param>
         /// <returns></returns>
-        public ConfiguredInstance Interceptor(IInterceptor interceptor)
+        public ConfiguredInstance InterceptWith(IInterceptor interceptor)
         {
             AddInterceptor(interceptor);
             return this;
@@ -32,7 +33,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance OnCreation<T>(Expression<Action<T>> handler)
         {
-            return Interceptor(new ActivatorInterceptor<T>(handler));
+            return InterceptWith(new ActivatorInterceptor<T>(handler));
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance OnCreation<T>(string description, Action<T> handler)
         {
-            return Interceptor(InterceptorFactory.ForAction(description, handler));
+            return InterceptWith(InterceptorFactory.ForAction(description, handler));
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance OnCreation<T>(Expression<Action<IBuildSession, T>> handler)
         {
-            return Interceptor(new ActivatorInterceptor<T>(handler));
+            return InterceptWith(new ActivatorInterceptor<T>(handler));
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance OnCreation<T>(string description, Action<IBuildSession, T> handler)
         {
-            return Interceptor(InterceptorFactory.ForAction(description, handler));
+            return InterceptWith(InterceptorFactory.ForAction(description, handler));
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance DecorateWith<T>(Expression<Func<T, T>> handler)
         {
-            return Interceptor(new DecoratorInterceptor<T>(handler));
+            return InterceptWith(new DecoratorInterceptor<T>(handler));
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance DecorateWith<T>(string description, Func<T, T> handler)
         {
-            return Interceptor(InterceptorFactory.ForFunc(description, handler));
+            return InterceptWith(InterceptorFactory.ForFunc(description, handler));
         }
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance DecorateWith<T>(Expression<Func<IBuildSession, T, T>> func)
         {
-            return Interceptor(new DecoratorInterceptor<T>(func));
+            return InterceptWith(new DecoratorInterceptor<T>(func));
         }
 
         /// <summary>
@@ -116,7 +117,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance DecorateWith<T>(string description, Func<IBuildSession, T, T> func)
         {
-            return Interceptor(InterceptorFactory.ForFunc(description, func));
+            return InterceptWith(InterceptorFactory.ForFunc(description, func));
         }
     }
 }

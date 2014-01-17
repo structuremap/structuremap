@@ -143,7 +143,8 @@ namespace StructureMap.Graph
                 return _instances.Single();
             }
 
-            if (_pluginType.IsConcrete() && Policies.CanBeAutoFilled(_pluginType))
+            // ONLY decide on a default Instance if there is none
+            if (_instances.Count == 0 && _pluginType.IsConcrete() && Policies.CanBeAutoFilled(_pluginType))
             {
                 var instance = new ConfiguredInstance(_pluginType);
                 AddInstance(instance);

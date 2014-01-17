@@ -25,6 +25,22 @@ namespace StructureMap.Testing.Pipeline
         #endregion
 
         [Test]
+        public void IsSingleton_true()
+        {
+            var instance = new InstanceUnderTest();
+            instance.SetLifecycleTo(new SingletonLifecycle());
+
+            instance.IsSingleton().ShouldBeTrue();
+        }
+
+        [Test]
+        public void IsSingleton_false()
+        {
+            new InstanceUnderTest()
+                .IsSingleton().ShouldBeFalse();
+        }
+
+        [Test]
         public void Build_the_InstanceToken()
         {
             var instance = new InstanceUnderTest();

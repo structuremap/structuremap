@@ -10,6 +10,8 @@ namespace StructureMap
         [Obsolete("This smells to high heaven.  Nasty coupling, law of demeter")]
         PluginGraph PluginGraph { get; }
 
+        IGraphEjector Ejector { get; }
+
         /// <summary>
         ///     Unwraps a nested container and/or profiles?
         /// </summary>

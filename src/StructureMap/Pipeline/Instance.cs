@@ -181,5 +181,9 @@ namespace StructureMap.Pipeline
             return Lifecycle is UniquePerRequestLifecycle;
         }
 
+        public bool IsSingleton()
+        {
+            return Lifecycle is SingletonLifecycle;
+        }
     }
 }

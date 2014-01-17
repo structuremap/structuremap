@@ -3,6 +3,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Query
 {
+    // TODO -- add Xml comments here
     public class InstanceRef
     {
         private readonly IFamily _family;
@@ -49,6 +50,10 @@ namespace StructureMap.Query
             get { return _family.PluginType; }
         }
 
+        /// <summary>
+        /// Only ejects a cached version of the object build by this Instance
+        /// from its lifecycle.  
+        /// </summary>
         public void EjectObject()
         {
             _family.Eject(_instance);

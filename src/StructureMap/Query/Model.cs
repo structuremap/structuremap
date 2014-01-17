@@ -105,7 +105,7 @@ namespace StructureMap.Query
         /// <param name="filter"></param>
         public void EjectAndRemovePluginTypes(Func<Type, bool> filter)
         {
-            new GraphEjector(_graph.PluginGraph).Remove(filter);
+            new GraphEjector(_graph.PluginGraph, _graph).RemoveCompletely(filter);
         }
 
         /// <summary>
@@ -114,7 +114,12 @@ namespace StructureMap.Query
         /// <param name="pluginType"></param>
         public void EjectAndRemove(Type pluginType)
         {
-            new GraphEjector(_graph.PluginGraph).Remove(pluginType);
+            new GraphEjector(_graph.PluginGraph, _graph).RemoveCompletely(pluginType);
+        }
+
+        public void EjectAndRemove<TPluginType>()
+        {
+            EjectAndRemove(typeof(TPluginType));
         }
 
         /// <summary>

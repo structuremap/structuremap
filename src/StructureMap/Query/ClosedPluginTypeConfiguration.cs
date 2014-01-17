@@ -19,7 +19,7 @@ namespace StructureMap.Query
 
         public void Eject(Instance instance)
         {
-            instance.Lifecycle.FindCache(_pipelineGraph).Eject(_family.PluginType, instance);
+            _pipelineGraph.Ejector.RemoveFromLifecycle(_family.PluginType, instance);
         }
 
         public object Build(Instance instance)
@@ -79,9 +79,7 @@ namespace StructureMap.Query
 
         public void EjectAndRemove(InstanceRef instance)
         {
-            Eject(instance.Instance);
-            instance.Instance.SafeDispose();
-            _family.RemoveInstance(instance.Instance);
+            _pipelineGraph.Ejector.RemoveCompletely(_family.PluginType, instance.Instance);
         }
 
         public void EjectAndRemoveAll()

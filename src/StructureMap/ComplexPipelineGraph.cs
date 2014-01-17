@@ -29,6 +29,14 @@ namespace StructureMap
             get { return _transientCache; }
         }
 
+        public IGraphEjector Ejector
+        {
+            get
+            {
+                return new GraphEjector(_pluginGraph, this);
+            }
+        }
+
         public IPipelineGraph Root()
         {
             return _parent.Root();

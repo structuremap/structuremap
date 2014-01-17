@@ -55,6 +55,35 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
+        ///     Register an Action to perform on the object created by this Instance
+        ///     before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="THandler"></typeparam>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public T OnCreation<THandler>(Expression<Action<IBuildSession, THandler>> handler)
+        {
+            AddInterceptor(new ActivatorInterceptor<THandler>(handler));
+
+            return thisInstance;
+        }
+
+        /// <summary>
+        ///     Register an Action to perform on the object created by this Instance
+        ///     before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="THandler"></typeparam>
+        /// <param name="handler"></param>
+        /// <param name="description">A description of the action for diagnostic purposes</param>
+        /// <returns></returns>
+        public T OnCreation<THandler>(string description, Action<IBuildSession, THandler> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForAction(description, handler));
+
+            return thisInstance;
+        }
+
+        /// <summary>
         ///     Register a Func to potentially decorate or substitute for the object
         ///     created by this Instance before it is returned to the caller
         /// </summary>
@@ -118,6 +147,47 @@ namespace StructureMap.Pipeline
         public T InterceptWith(IInterceptor interceptor)
         {
             AddInterceptor(interceptor);
+            return thisInstance;
+        }
+
+        /// <summary>
+        /// Makes this and only this Instance a Singleton
+        /// </summary>
+        /// <returns></returns>
+        public T Singleton()
+        {
+            SetLifecycleTo<SingletonLifecycle>();
+            return thisInstance;
+        }
+
+        /// <summary>
+        /// Makes this and only this Instance "always unique"
+        /// </summary>
+        /// <returns></returns>
+        public T AlwaysUnique()
+        {
+            SetLifecycleTo<UniquePerRequestLifecycle>();
+            return thisInstance;
+        }
+
+        /// <summary>
+        /// Makes this and only this Instance a transient
+        /// </summary>
+        /// <returns></returns>
+        public T Transient()
+        {
+            SetLifecycleTo<TransientLifecycle>();
+            return thisInstance;
+        }
+
+        /// <summary>
+        /// Override the lifecycle on only this Instance
+        /// </summary>
+        /// <typeparam name="TLifecycle"></typeparam>
+        /// <returns></returns>
+        public T LifecycleIs<TLifecycle>() where TLifecycle : ILifecycle, new()
+        {
+            SetLifecycleTo<TLifecycle>();
             return thisInstance;
         }
     }

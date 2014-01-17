@@ -215,7 +215,7 @@ namespace StructureMap.Graph
 
         /// <summary>
         /// Removes a PluginFamily from this PluginGraph
-        /// and disposes that family
+        /// and disposes that family and all of its Instance's
         /// </summary>
         /// <param name="pluginType"></param>
         public void EjectFamily(Type pluginType)
@@ -223,6 +223,7 @@ namespace StructureMap.Graph
             if (_families.Has(pluginType))
             {
                 var family = _families[pluginType];
+
                 family.SafeDispose();
 
                 _families.Remove(pluginType);
