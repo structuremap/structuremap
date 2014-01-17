@@ -56,6 +56,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
+
         /// <summary>
         /// Access to all of the uncommon Instance types
         /// </summary>
@@ -365,6 +366,28 @@ namespace StructureMap.Configuration.DSL.Expressions
         public SmartInstance<TPluggedType> Add<TPluggedType>()
         {
             var instance = new SmartInstance<TPluggedType>();
+            Add(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Add an Instance to this type created by a Lambda
+        /// </summary>
+        public LambdaInstance<TPluginType> Add(Expression<Func<TPluginType>> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(func);
+            Add(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Add an Instance to this type created by a Lambda
+        /// </summary>
+        public LambdaInstance<TPluginType> Add(string description, Func<TPluginType> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(description, func);
             Add(instance);
 
             return instance;

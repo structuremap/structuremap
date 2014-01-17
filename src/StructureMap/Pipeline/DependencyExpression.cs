@@ -37,6 +37,18 @@ namespace StructureMap.Pipeline
             return _instance;
         }
 
+        public TInstance Is(Expression<Func<TChild>> func)
+        {
+            var child = new LambdaInstance<TChild>(func);
+            return Is(child);
+        }
+
+        public TInstance Is(string description, Func<TChild> func)
+        {
+            var child = new LambdaInstance<TChild>(description, func);
+            return Is(child);
+        }
+
         public TInstance Is(Expression<Func<IBuildSession, TChild>> func)
         {
             var child = new LambdaInstance<TChild>(func);

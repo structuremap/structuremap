@@ -1,0 +1,49 @@
+<!--Title: Building with Lambdas-->
+<!--Url: building-with-lambdas-->
+
+<markdown>
+
+TODO(more description of what you can do here)
+
+
+1. Expression&lt;Func&lt;T&gt;&gt;
+1. Expression&lt;Func&lt;IBuildSession, T&gt;&gt;
+1. Func&lt;T&gt; with a user-supplied description
+1. Func&lt;IBuildSession, T&gt; with a user-supplied description
+
+</markdown>
+
+<Section title="Instances with Lambda's" id="instances">
+
+So let's say that we have a simplistic class named <code>ColorRule</code>:
+
+<Snippet name="ColorRule" />
+
+And now let's say that we also have a concrete class that can build these simple <code>ColorRule</code> objects
+called <code>RuleBuilder</code>:
+
+<Snippet name="RuleBuilder" />
+
+<Snippet name="build-with-lambdas" />
+
+
+<Snippet name="build-with-lambdas-in-batch" />
+</Section>
+
+<Section title="Inline Dependencies with Lambda's" id="inline">
+
+<Snippet name="RuleHolder" />
+
+<Snippet name="lambdas-as-inline-dependency" />
+</Section>
+
+
+
+
+
+
+
+
+TODO(Write some content!)
+
+

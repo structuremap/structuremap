@@ -158,6 +158,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Acceptance\build_by_lambdas.cs" />
     <Compile Include="Acceptance\full_stack_container_usage.cs" />
     <Compile Include="Acceptance\lifecycle_creation.cs" />
     <Compile Include="AssemblyInfo.cs">
