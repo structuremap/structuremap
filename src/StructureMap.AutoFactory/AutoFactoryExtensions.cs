@@ -1,6 +1,7 @@
 using System;
 using Castle.DynamicProxy;
 using StructureMap.Configuration.DSL.Expressions;
+using StructureMap.TypeRules;
 
 namespace StructureMap.AutoFactory
 {
@@ -13,10 +14,10 @@ namespace StructureMap.AutoFactory
         {
             var callback = CreateFactoryCallback<TPluginType>();
 
-            expression.Use(callback);
+            expression.Use("AutoFactory builder for " + typeof(TPluginType).GetFullName(), callback);
         }
 
-        private static Func<IContext, TPluginType> CreateFactoryCallback<TPluginType>() 
+        private static Func<IBuildSession, TPluginType> CreateFactoryCallback<TPluginType>() 
             where TPluginType : class
         {
             return ctxt => 

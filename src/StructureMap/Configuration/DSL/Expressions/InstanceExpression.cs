@@ -1,8 +1,11 @@
 using System;
+using System.Linq.Expressions;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
+    // TODO -- need to add Xml comments
+
     /// <summary>
     /// Expression Builder to define an Instance
     /// </summary>
@@ -117,7 +120,16 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        LambdaInstance<T> ConstructedBy(Func<T> func);
+        LambdaInstance<T> ConstructedBy(Expression<Func<T>> func);
+
+        /// <summary>
+        /// Create an Instance that builds an object by calling a Lambda or
+        /// an anonymous delegate with no arguments
+        /// </summary>
+        /// <param name="func"></param>
+        /// <param name="description">Diagnostic description of func</param>
+        /// <returns></returns>
+        LambdaInstance<T> ConstructedBy(string description, Func<T> func);
 
         /// <summary>
         /// Create an Instance that builds an object by calling a Lambda or
@@ -126,7 +138,17 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        LambdaInstance<T> ConstructedBy(Func<IContext, T> func);
+        LambdaInstance<T> ConstructedBy(Expression<Func<IBuildSession, T>> func);
+
+        /// <summary>
+        /// Create an Instance that builds an object by calling a Lambda or
+        /// an anonymous delegate with the <see cref="IContext">IContext</see> representing
+        /// the current object graph.
+        /// </summary>
+        /// <param name="func"></param>
+        /// <param name="description">Diagnostic description of the func</param>
+        /// <returns></returns>
+        LambdaInstance<T> ConstructedBy(string description, Func<IBuildSession, T> func);
 
         /// <summary>
         /// Use the Instance of this PluginType with the specified name.  This is
@@ -206,14 +228,24 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new DefaultInstance());
         }
 
-        public LambdaInstance<T> ConstructedBy(Func<T> func)
+        public LambdaInstance<T> ConstructedBy(Expression<Func<T>> func)
         {
             return returnInstance(new LambdaInstance<T>(func));
         }
 
-        public LambdaInstance<T> ConstructedBy(Func<IContext, T> func)
+        public LambdaInstance<T> ConstructedBy(string description, Func<T> func)
+        {
+            return returnInstance(new LambdaInstance<T>(description, func));
+        }
+
+        public LambdaInstance<T> ConstructedBy(Expression<Func<IBuildSession, T>> func)
         {
             return returnInstance(new LambdaInstance<T>(func));
+        }
+
+        public LambdaInstance<T> ConstructedBy(string description, Func<IBuildSession, T> func)
+        {
+            return returnInstance(new LambdaInstance<T>(description, func));
         }
 
         private TInstance returnInstance<TInstance>(TInstance instance) where TInstance : Instance

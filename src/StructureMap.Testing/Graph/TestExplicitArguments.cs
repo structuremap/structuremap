@@ -77,7 +77,7 @@ namespace StructureMap.Testing.Graph
 
         public class SpecialInstance : LambdaInstance<ClassWithNoArgs>
         {
-            public SpecialInstance() : base(session => {
+            public SpecialInstance() : base("builds ClassWithNoArgs", session => {
                 return new ClassWithNoArgs
                 {
                     TheAddress = (Address) session.GetInstance(typeof (Address))

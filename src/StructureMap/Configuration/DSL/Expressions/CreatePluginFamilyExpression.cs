@@ -98,9 +98,23 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Use a lambda using the IContext to construct the default instance of the Plugin type
         /// 
         /// </summary>
-        public LambdaInstance<TPluginType> Use(Func<IContext, TPluginType> func)
+        public LambdaInstance<TPluginType> Use(Expression<Func<IBuildSession, TPluginType>> expression)
         {
-            var instance = new LambdaInstance<TPluginType>(func);
+            var instance = new LambdaInstance<TPluginType>(expression);
+
+            registerDefault(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Use a lambda using the IContext to construct the default instance of the Plugin type
+        /// Use this signature if your Func is too complicated to be an Expression
+        /// </summary>
+        /// <param name="description">Diagnostic description of the func</param>
+        public LambdaInstance<TPluginType> Use(string description, Func<IBuildSession, TPluginType> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(description, func);
 
             registerDefault(instance);
 
@@ -110,9 +124,23 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Use a lambda to construct the default instance of the Plugin type
         /// </summary>
-        public LambdaInstance<TPluginType> Use(Func<TPluginType> func)
+        public LambdaInstance<TPluginType> Use(Expression<Func<TPluginType>> expression)
         {
-            var instance = new LambdaInstance<TPluginType>(func);
+            var instance = new LambdaInstance<TPluginType>(expression);
+
+            registerDefault(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Use a lambda to construct the default instance of the Plugin type
+        /// Use this overload if your func is too complicated to be an expression
+        /// </summary>
+        /// <param name="description">Diagnostic description of the func</param>
+        public LambdaInstance<TPluginType> Use(string description, Func<TPluginType> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(description, func);
 
             registerDefault(instance);
 
@@ -161,16 +189,30 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-        public LambdaInstance<TPluginType> UseIfNone(Func<IContext, TPluginType> func)
+        public LambdaInstance<TPluginType> UseIfNone(Expression<Func<IBuildSession, TPluginType>> func)
         {
             var instance = new LambdaInstance<TPluginType>(func);
             registerFallBack(instance);
             return instance;
         }
 
-        public LambdaInstance<TPluginType> UseIfNone(Func<TPluginType> func)
+        public LambdaInstance<TPluginType> UseIfNone(string description, Func<IBuildSession, TPluginType> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(description, func);
+            registerFallBack(instance);
+            return instance;
+        }
+
+        public LambdaInstance<TPluginType> UseIfNone(Expression<Func<TPluginType>> func)
         {
             var instance = new LambdaInstance<TPluginType>(func);
+            registerFallBack(instance);
+            return instance;
+        }
+
+        public LambdaInstance<TPluginType> UseIfNone(string description, Func<TPluginType> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(description, func);
             registerFallBack(instance);
             return instance;
         }
@@ -331,9 +373,20 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Add an Instance to this type created by a Lambda
         /// </summary>
-        public LambdaInstance<TPluginType> Add(Func<IContext, TPluginType> func)
+        public LambdaInstance<TPluginType> Add(Expression<Func<IBuildSession, TPluginType>> func)
         {
             var instance = new LambdaInstance<TPluginType>(func);
+            Add(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Add an Instance to this type created by a Lambda
+        /// </summary>
+        public LambdaInstance<TPluginType> Add(string description, Func<IBuildSession, TPluginType> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(description, func);
             Add(instance);
 
             return instance;

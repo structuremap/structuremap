@@ -1,9 +1,12 @@
 using System;
+using System.Linq.Expressions;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
+    // TODO -- backfill Xml comments here
+
     /// <summary>
     /// Expression Builder that has grammars for defining policies at the 
     /// PluginType level.  This expression is used for registering 
@@ -63,7 +66,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
 
-        public LambdaInstance<object> Use(Func<IContext, object> func)
+        public LambdaInstance<object> Use(Expression<Func<IBuildSession, object>> func)
         {
             var instance = new LambdaInstance<object>(func);
             Use(instance);
@@ -71,9 +74,25 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-        public LambdaInstance<object> Add(Func<IContext, object> func)
+        public LambdaInstance<object> Use(string description, Func<IBuildSession, object> func)
+        {
+            var instance = new LambdaInstance<object>(description, func);
+            Use(instance);
+
+            return instance;
+        }
+
+        public LambdaInstance<object> Add(Expression<Func<IBuildSession, object>> func)
         {
             var instance = new LambdaInstance<object>(func);
+            Add(instance);
+
+            return instance;
+        }
+
+        public LambdaInstance<object> Add(string description, Func<IBuildSession, object> func)
+        {
+            var instance = new LambdaInstance<object>(description, func);
             Add(instance);
 
             return instance;

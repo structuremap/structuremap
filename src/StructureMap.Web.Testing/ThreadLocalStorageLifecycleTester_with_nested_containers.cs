@@ -31,7 +31,7 @@ namespace StructureMap.Web.Testing
             int count = 0;
             nestedContainer.Configure(x =>
             {
-                x.For<Rule>().Transient().Use(() =>
+                x.For<Rule>().Transient().Use("counting", () =>
                 {
                     count++;
                     return new ColorRule("Red" + count);

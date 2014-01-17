@@ -34,7 +34,7 @@ namespace StructureMap.Testing.Diagnostics
         private LambdaInstance<IWidget> errorInstance()
         {
             return
-                new LambdaInstance<IWidget>(delegate() { throw new NotSupportedException("You can't make me!"); });
+                new LambdaInstance<IWidget>("throwing up", delegate() { throw new NotSupportedException("You can't make me!"); });
         }
 
         [Test]

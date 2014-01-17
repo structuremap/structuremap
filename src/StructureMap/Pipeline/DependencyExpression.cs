@@ -1,9 +1,12 @@
 using System;
 using System.Configuration;
+using System.Linq.Expressions;
 using StructureMap.Configuration.DSL.Expressions;
 
 namespace StructureMap.Pipeline
 {
+    // TODO -- add Xml comments to the missing things
+
     /// <summary>
     /// Expression Builder that helps to define child dependencies inline 
     /// </summary>
@@ -34,9 +37,15 @@ namespace StructureMap.Pipeline
             return _instance;
         }
 
-        public TInstance Is(Func<IContext, TChild> func)
+        public TInstance Is(Expression<Func<IBuildSession, TChild>> func)
         {
             var child = new LambdaInstance<TChild>(func);
+            return Is(child);
+        }
+
+        public TInstance Is(string description, Func<IBuildSession, TChild> func)
+        {
+            var child = new LambdaInstance<TChild>(description, func);
             return Is(child);
         }
 

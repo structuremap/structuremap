@@ -5,6 +5,7 @@ using System.Reflection;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Configuration.DSL
 {
@@ -226,7 +227,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public LambdaInstance<T> Redirect<T, U>() where T : class where U : class
         {
-            return For<T>().Use(c => {
+            return For<T>().Use("Redirect requests for {0} to the configured default of {1} with a cast".ToFormat(typeof(T).GetFullName(), typeof(U).GetFullName()),c => {
                 var raw = c.GetInstance<U>();
                 var t = raw as T;
                 if (t == null)

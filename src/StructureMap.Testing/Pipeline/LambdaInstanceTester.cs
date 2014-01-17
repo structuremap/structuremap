@@ -13,14 +13,14 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Sad_path_inner_function_throws_exception_207_with_key_and_plugin_type()
         {
-            var instance = new LambdaInstance<object>(() => { throw new NotImplementedException(); });
+            var instance = new LambdaInstance<object>("throws", () => { throw new NotImplementedException(); });
 
             var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
 
                 instance.Build<IWidget>(new StubBuildSession());
             });
 
-            ex.Title.ShouldEqual("Failure at: \"Instance is created by Func<object> function:  System.Func`2[StructureMap.IBuildSession,System.Object]\"");
+            ex.Title.ShouldEqual("Failure at: \"throws\"");
         }
 
         [Test]

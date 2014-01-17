@@ -146,15 +146,13 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_constructor_dependency_by_name()
         {
             var container = new Container(r => {
-                //r.For<ClassA>().Use<ClassA>().Ctor<ClassB>().Is(c => c.GetInstance<ClassB>("classB"));
                 r.For<ClassA>().Use<ClassA>().Ctor<ClassB>().Named("classB");
                 r.For<ClassB>().Use<ClassB>().Named("classB").Ctor<string>("b").Is("named");
                 r.For<ClassB>().Use<ClassB>().Ctor<string>("b").Is("default");
             });
 
-            var classA = container.GetInstance<ClassA>();
-
-            Assert.That(classA.B.B, Is.EqualTo("named"));
+            container.GetInstance<ClassA>()
+                .B.B.ShouldEqual("named");
         }
 
         [Test]

@@ -21,7 +21,7 @@ namespace StructureMap.Testing
             )]
         public void TheDefaultInstanceIsALambdaForGuidNewGuid()
         {
-            var container = new Container(x => x.For<Guid>().Use(Guid.NewGuid));
+            var container = new Container(x => x.For<Guid>().Use(() => Guid.NewGuid()));
             container.GetInstance<Guid>().ShouldNotEqual(Guid.Empty);
         }
 

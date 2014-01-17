@@ -93,7 +93,7 @@ namespace StructureMap.Testing
 
             var session = BuildSession.Empty();
             var session2 = BuildSession.Empty();
-            var instance = new LambdaInstance<ColorRule>(() => {
+            var instance = new LambdaInstance<ColorRule>("counting",() => {
                 count++;
                 return new ColorRule("Red");
             });
@@ -131,7 +131,7 @@ namespace StructureMap.Testing
             var count = 0;
 
             var session = BuildSession.Empty();
-            var instance = new LambdaInstance<ColorRule>(() => {
+            var instance = new LambdaInstance<ColorRule>("counting", () => {
                 count++;
                 return new ColorRule("Red");
             });
@@ -153,7 +153,7 @@ namespace StructureMap.Testing
         {
             var count = 0;
 
-            var instance = new LambdaInstance<ColorRule>(() => {
+            var instance = new LambdaInstance<ColorRule>("counting", () => {
                 count++;
                 return new ColorRule("Red");
             });
