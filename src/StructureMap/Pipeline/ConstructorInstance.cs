@@ -36,7 +36,14 @@ namespace StructureMap.Pipeline
 
         public ConstructorInstance(Type concreteType)
         {
+            if (!concreteType.GetConstructors().Any())
+            {
+                throw new ArgumentOutOfRangeException("{0} must have at least one public constructor to be plugged in by StructureMap".ToFormat(concreteType.GetFullName()));
+            }
+            
             _pluggedType = concreteType;
+
+            
 
             _pluggedType.GetCustomAttributes(typeof(InstanceAttribute), false).OfType<InstanceAttribute>()
                 .Each(x => x.Alter(this));

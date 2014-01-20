@@ -180,7 +180,7 @@ namespace StructureMap.Testing.Graph
             family.SetFallback(new SmartInstance<DataSet>());
             family.SetDefault(instance);
 
-            family.AddInstance(new SmartInstance<IServiceProvider>());
+            family.AddInstance(new SmartInstance<FakeServiceProvider>());
             family.AddType(typeof (DataSet));
 
             family.RemoveAll();
@@ -188,6 +188,14 @@ namespace StructureMap.Testing.Graph
             family.GetDefaultInstance().ShouldBeNull();
 
             family.Instances.Count().ShouldEqual(0);
+        }
+
+        public class FakeServiceProvider : IServiceProvider
+        {
+            public object GetService(Type serviceType)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         [Test]

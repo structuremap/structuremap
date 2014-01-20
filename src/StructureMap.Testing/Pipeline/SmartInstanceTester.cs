@@ -170,8 +170,8 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container(x => {
                 x.For<ClassWithMultipleConstructors>().AddInstances(o => {
-                    o.Type<ClassWithMultipleConstructors>().SelectContstructor(() => new ClassWithMultipleConstructors(null)).Named("One");
-                    o.Type<ClassWithMultipleConstructors>().SelectContstructor(() => new ClassWithMultipleConstructors(null, null)).Named("Two");
+                    o.Type<ClassWithMultipleConstructors>().SelectConstructor(() => new ClassWithMultipleConstructors(null)).Named("One");
+                    o.Type<ClassWithMultipleConstructors>().SelectConstructor(() => new ClassWithMultipleConstructors(null, null)).Named("Two");
                     o.Type<ClassWithMultipleConstructors>().Named("Default");
 
 

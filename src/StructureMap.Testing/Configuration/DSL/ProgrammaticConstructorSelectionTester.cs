@@ -10,7 +10,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(x => {
                 x.ForConcreteType<ClassWithTwoConstructors>().Configure
-                    .SelectContstructor(() => new ClassWithTwoConstructors(34))
+                    .SelectConstructor(() => new ClassWithTwoConstructors(34))
                     .Ctor<int>("age").Is(34);
             });
 

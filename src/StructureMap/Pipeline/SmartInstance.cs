@@ -16,11 +16,11 @@ namespace StructureMap.Pipeline
         {
             if (constructorSelection != null)
             {
-                SelectContstructor(constructorSelection);
+                SelectConstructor(constructorSelection);
             }
         }
 
-        public SmartInstance<T> SelectContstructor(Expression<Func<T>> constructor)
+        public SmartInstance<T> SelectConstructor(Expression<Func<T>> constructor)
         {
             var finder = new ConstructorFinderVisitor();
             finder.Visit(constructor);
