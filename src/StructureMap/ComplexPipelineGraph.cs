@@ -8,7 +8,7 @@ using StructureMap.Query;
 namespace StructureMap
 {
     // TODO -- introduce a base class for PipelineGraph
-    public class ComplexPipelineGraph : IPipelineGraph
+    public class ComplexPipelineGraph : IPipelineGraph, IInstanceGraph
     {
         private readonly IPipelineGraph _parent;
         private readonly PluginGraph _pluginGraph;
@@ -21,21 +21,33 @@ namespace StructureMap
             _transientCache = transientCache;
         }
 
+        public IInstanceGraph Instances
+        {
+            get
+            {
+                return this;
+            }
+        }
+
+        // different, but inject into ctor
         public IObjectCache Singletons
         {
             get { return _parent.Singletons; }
         }
 
+        // Inject into ctor
         public IObjectCache Transients
         {
             get { return _transientCache; }
         }
 
+        // Same
         public IModel ToModel()
         {
             return new Model(this, _pluginGraph);
         }
 
+        // Same
         public string Profile
         {
             get
@@ -44,6 +56,7 @@ namespace StructureMap
             }
         }
 
+        // Same
         public IGraphEjector Ejector
         {
             get
@@ -52,6 +65,7 @@ namespace StructureMap
             }
         }
 
+        // Same
         public Policies Policies
         {
             get
@@ -60,55 +74,7 @@ namespace StructureMap
             }
         }
 
-        public IPipelineGraph Root()
-        {
-            return _parent.Root();
-        }
-
-        public Instance GetDefault(Type pluginType)
-        {
-            return _pluginGraph.HasDefaultForPluginType(pluginType)
-                ? _pluginGraph.Families[pluginType].GetDefaultInstance()
-                : _parent.GetDefault(pluginType);
-        }
-
-        public bool HasDefaultForPluginType(Type pluginType)
-        {
-            return _pluginGraph.HasDefaultForPluginType(pluginType) || _parent.HasDefaultForPluginType(pluginType);
-        }
-
-        public bool HasInstance(Type pluginType, string instanceKey)
-        {
-            return _pluginGraph.HasInstance(pluginType, instanceKey) || _parent.HasInstance(pluginType, instanceKey);
-        }
-
-        public void EachInstance(Action<Type, Instance> action)
-        {
-            _pluginGraph.EachInstance(action);
-            _parent.EachInstance(action);
-        }
-
-        public IEnumerable<Instance> GetAllInstances()
-        {
-            return _pluginGraph.Families.SelectMany(x => x.Instances).Union(_parent.GetAllInstances());
-        }
-
-        public IEnumerable<Instance> GetAllInstances(Type pluginType)
-        {
-            return _pluginGraph.AllInstances(pluginType).Union(_parent.GetAllInstances(pluginType));
-        }
-
-        public Instance FindInstance(Type pluginType, string name)
-        {
-            return _pluginGraph.FindInstance(pluginType, name) ?? _parent.FindInstance(pluginType, name);
-        }
-
-        public IPipelineGraph ForProfile(string profile)
-        {
-            return _parent.ForProfile(profile);
-        }
-
-
+        // Same
         public void Dispose()
         {
             _transientCache.DisposeAndClear();
@@ -121,34 +87,13 @@ namespace StructureMap
             return new ComplexPipelineGraph(this, new PluginGraph("Nested"), new NestedContainerTransientObjectCache());
         }
 
-        public IEnumerable<PluginGraph> AllGraphs()
-        {
-            foreach (var pluginGraph in _parent.AllGraphs())
-            {
-                yield return pluginGraph;
-            }
-
-            yield return _pluginGraph;
-        }
-
-        public IEnumerable<PluginFamily> UniqueFamilies()
-        {
-            foreach (var family in _pluginGraph.Families)
-            {
-                yield return family;
-            }
-
-            foreach (var family in _parent.UniqueFamilies().Where(x => !_pluginGraph.Families.Has(x.PluginType)))
-            {
-                yield return family;
-            }
-        }
-
+        // Same
         public void RegisterContainer(IContainer container)
         {
             _pluginGraph.Families[typeof(IContainer)].SetDefault(new ObjectInstance(container));
         }
 
+        // Same
         public void Configure(Action<ConfigurationExpression> configure)
         {
             var registry = new ConfigurationExpression();
@@ -158,6 +103,81 @@ namespace StructureMap
             builder.Add(registry);
 
             builder.RunConfigurations();
+        }
+
+
+
+        /******************************************************************/
+        // Different -- do with Func
+        public IPipelineGraph Root()
+        {
+            return _parent.Root();
+        }
+
+        // Different
+        public Instance GetDefault(Type pluginType)
+        {
+            return _pluginGraph.HasDefaultForPluginType(pluginType)
+                ? _pluginGraph.Families[pluginType].GetDefaultInstance()
+                : _parent.Instances.GetDefault(pluginType);
+        }
+
+        // Different
+        public bool HasDefaultForPluginType(Type pluginType)
+        {
+            return _pluginGraph.HasDefaultForPluginType(pluginType) || _parent.Instances.HasDefaultForPluginType(pluginType);
+        }
+
+        // Different
+        public bool HasInstance(Type pluginType, string instanceKey)
+        {
+            return _pluginGraph.HasInstance(pluginType, instanceKey) || _parent.Instances.HasInstance(pluginType, instanceKey);
+        }
+
+        // Different
+        public void EachInstance(Action<Type, Instance> action)
+        {
+            _pluginGraph.EachInstance(action);
+            _parent.Instances.EachInstance(action);
+        }
+
+        // Different
+        public IEnumerable<Instance> GetAllInstances()
+        {
+            return _pluginGraph.Families.SelectMany(x => x.Instances).Union(_parent.Instances.GetAllInstances());
+        }
+
+        // Different
+        public IEnumerable<Instance> GetAllInstances(Type pluginType)
+        {
+            return _pluginGraph.AllInstances(pluginType).Union(_parent.Instances.GetAllInstances(pluginType));
+        }
+
+        // Different
+        public Instance FindInstance(Type pluginType, string name)
+        {
+            return _pluginGraph.FindInstance(pluginType, name) ?? _parent.Instances.FindInstance(pluginType, name);
+        }
+
+        // Different -- but do w/ Func
+        public IPipelineGraph ForProfile(string profile)
+        {
+            return _parent.ForProfile(profile);
+        }
+
+
+        // Different
+        public IEnumerable<PluginFamily> UniqueFamilies()
+        {
+            foreach (var family in _pluginGraph.Families)
+            {
+                yield return family;
+            }
+
+            foreach (var family in _parent.Instances.UniqueFamilies().Where(x => !_pluginGraph.Families.Has(x.PluginType)))
+            {
+                yield return family;
+            }
         }
     }
 }

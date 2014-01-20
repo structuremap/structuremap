@@ -13,6 +13,7 @@ namespace StructureMap.Testing
         private IBuildSession theResolver;
         private SessionCache theCache;
         private IPipelineGraph thePipeline;
+        private IInstanceGraph theInstances;
 
         [SetUp]
         public void SetUp()
@@ -21,6 +22,9 @@ namespace StructureMap.Testing
             theCache = new SessionCache(theResolver);
 
             thePipeline = MockRepository.GenerateMock<IPipelineGraph>();
+
+            theInstances = MockRepository.GenerateMock<IInstanceGraph>();
+            thePipeline.Stub(x => x.Instances).Return(theInstances);
         }
 
         [Test]
@@ -75,7 +79,7 @@ namespace StructureMap.Testing
         public void get_default_if_it_does_not_already_exist()
         {
             var instance = new ConfiguredInstance(typeof (Foo));
-            thePipeline.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
+            theInstances.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
 
             var foo = new Foo();
 
@@ -89,7 +93,7 @@ namespace StructureMap.Testing
         public void get_default_is_cached()
         {
             var instance = new ConfiguredInstance(typeof (Foo));
-            thePipeline.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
+            theInstances.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
 
             var foo = new Foo();
 
@@ -115,7 +119,7 @@ namespace StructureMap.Testing
 
             theCache = new SessionCache(theResolver, args);
 
-            thePipeline.Stub(x => x.GetDefault(typeof (IFoo))).Throw(new NotImplementedException());
+            theInstances.Stub(x => x.GetDefault(typeof (IFoo))).Throw(new NotImplementedException());
 
             theCache.GetDefault(typeof (IFoo), thePipeline)
                 .ShouldBeTheSameAs(foo1);
@@ -145,7 +149,7 @@ namespace StructureMap.Testing
         public void try_get_default_with_a_default()
         {
             var instance = new ConfiguredInstance(typeof (Foo));
-            thePipeline.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
+            theInstances.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
 
             var foo = new Foo();
 
@@ -167,7 +171,7 @@ namespace StructureMap.Testing
             theCache = new SessionCache(theResolver, args);
 
             var instance = new ConfiguredInstance(typeof (Foo));
-            thePipeline.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
+            theInstances.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
 
             var foo2 = new Foo();
 

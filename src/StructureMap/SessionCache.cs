@@ -40,7 +40,7 @@ namespace StructureMap
                 return _defaults[pluginType];
             }
 
-            var instance = pipelineGraph.GetDefault(pluginType);
+            var instance = pipelineGraph.Instances.GetDefault(pluginType);
             if (instance == null)
             {
                 throw new StructureMapConfigurationException("No default Instance is registered and cannot be automatically determined for type '{0}'", pluginType.GetFullName());
@@ -80,7 +80,7 @@ namespace StructureMap
         {
             if (_defaults.ContainsKey(pluginType)) return _defaults[pluginType];
 
-            var instance = pipelineGraph.GetDefault(pluginType);
+            var instance = pipelineGraph.Instances.GetDefault(pluginType);
             if (instance == null) return null;
 
             var o = GetObject(pluginType, instance);

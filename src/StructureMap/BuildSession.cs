@@ -38,7 +38,7 @@ namespace StructureMap
             if (target == null) throw new ArgumentNullException("target");
 
             var pluggedType = target.GetType();
-            var instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
+            var instance = _pipelineGraph.Instances.GetDefault(pluggedType) as IConfiguredInstance
                            ?? new ConfiguredInstance(pluggedType);
 
             var plan = ConcreteType.BuildUpPlan(pluggedType, instance.Dependencies, _pipelineGraph.Policies);
@@ -84,7 +84,7 @@ namespace StructureMap
 
         public object TryGetInstance(Type pluginType, string name)
         {
-            return _pipelineGraph.HasInstance(pluginType, name) ? ((IContext) this).GetInstance(pluginType, name) : null;
+            return _pipelineGraph.Instances.HasInstance(pluginType, name) ? ((IContext) this).GetInstance(pluginType, name) : null;
         }
 
         public IEnumerable<T> All<T>() where T : class
@@ -112,12 +112,12 @@ namespace StructureMap
 
         public IEnumerable<T> GetAllInstances<T>()
         {
-            return _pipelineGraph.GetAllInstances(typeof (T)).Select(x => (T) FindObject(typeof (T), x)).ToArray();
+            return _pipelineGraph.Instances.GetAllInstances(typeof (T)).Select(x => (T) FindObject(typeof (T), x)).ToArray();
         }
 
         public IEnumerable<object> GetAllInstances(Type pluginType)
         {
-            var allInstances = _pipelineGraph.GetAllInstances(pluginType);
+            var allInstances = _pipelineGraph.Instances.GetAllInstances(pluginType);
             return allInstances.Select(x => FindObject(pluginType, x)).ToArray();
         }
 
@@ -134,7 +134,7 @@ namespace StructureMap
 
         public virtual object CreateInstance(Type pluginType, string name)
         {
-            var instance = _pipelineGraph.FindInstance(pluginType, name);
+            var instance = _pipelineGraph.Instances.FindInstance(pluginType, name);
             if (instance == null)
             {
                 // TODO -- make sure there is a UT on this behavior

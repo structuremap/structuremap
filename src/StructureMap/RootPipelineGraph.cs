@@ -8,7 +8,7 @@ using StructureMap.Util;
 
 namespace StructureMap
 {
-    public class RootPipelineGraph : IPipelineGraph
+    public class RootPipelineGraph : IPipelineGraph, IInstanceGraph
     {
         private readonly PluginGraph _pluginGraph;
         private readonly Cache<string, IPipelineGraph> _profiles;
@@ -21,6 +21,14 @@ namespace StructureMap
             _profiles =
                 new Cache<string, IPipelineGraph>(
                     name => new ComplexPipelineGraph(this, _pluginGraph.Profile(name), new NulloTransientCache()));
+        }
+
+        public IInstanceGraph Instances
+        {
+            get
+            {
+                return this;
+            }
         }
 
         public IObjectCache Singletons
@@ -116,11 +124,6 @@ namespace StructureMap
         public IPipelineGraph ToNestedGraph()
         {
             return new ComplexPipelineGraph(this, new PluginGraph("Nested"), new NestedContainerTransientObjectCache());
-        }
-
-        public IEnumerable<PluginGraph> AllGraphs()
-        {
-            yield return _pluginGraph;
         }
 
         public IEnumerable<PluginFamily> UniqueFamilies()

@@ -112,10 +112,10 @@ namespace StructureMap.Diagnostics
 
         public void PerformValidations()
         {
-            _explicitInstances = pipelineGraph.GetAllInstances();
+            _explicitInstances = pipelineGraph.Instances.GetAllInstances();
             _errors = new ErrorCollection();
 
-            pipelineGraph.EachInstance((t, i) => {
+            pipelineGraph.Instances.EachInstance((t, i) => {
                 if (t.IsOpenGeneric()) return;
 
                 validateInstance(t, i);

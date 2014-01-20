@@ -89,7 +89,7 @@ namespace StructureMap
 
         public T GetInstance<T>(ExplicitArguments args, string name)
         {
-            var namedInstance = _pipelineGraph.FindInstance(typeof (T), name);
+            var namedInstance = _pipelineGraph.Instances.FindInstance(typeof (T), name);
             return (T) buildInstanceWithArgs(typeof (T), namedInstance, args, name);
         }
 
@@ -101,7 +101,7 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, ExplicitArguments args)
         {
-            var defaultInstance = _pipelineGraph.GetDefault(pluginType);
+            var defaultInstance = _pipelineGraph.Instances.GetDefault(pluginType);
             var requestedName = BuildSession.DEFAULT;
 
             return buildInstanceWithArgs(pluginType, defaultInstance, args, requestedName);
@@ -168,7 +168,7 @@ namespace StructureMap
         /// <returns></returns>
         public object TryGetInstance(Type pluginType, string instanceKey)
         {
-            return !_pipelineGraph.HasInstance(pluginType, instanceKey)
+            return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
                 ? null
                 : GetInstance(pluginType, instanceKey);
         }
@@ -180,7 +180,7 @@ namespace StructureMap
         /// <returns></returns>
         public object TryGetInstance(Type pluginType)
         {
-            return !_pipelineGraph.HasDefaultForPluginType(pluginType)
+            return !_pipelineGraph.Instances.HasDefaultForPluginType(pluginType)
                 ? null
                 : GetInstance(pluginType);
         }

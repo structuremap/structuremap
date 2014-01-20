@@ -25,7 +25,7 @@ namespace StructureMap.Query
         {
             get
             {
-                foreach (var family in _graph.UniqueFamilies())
+                foreach (var family in _graph.Instances.UniqueFamilies())
                 {
                     if (family.IsGenericTemplate)
                     {
@@ -41,7 +41,7 @@ namespace StructureMap.Query
 
         public bool HasDefaultImplementationFor(Type pluginType)
         {
-            return _graph.HasDefaultForPluginType(pluginType);
+            return _graph.Instances.HasDefaultForPluginType(pluginType);
         }
 
         public bool HasDefaultImplementationFor<T>()
