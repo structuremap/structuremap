@@ -154,6 +154,7 @@
     <Compile Include="Building\LifecycleDependencySource.cs" />
     <Compile Include="Building\ListDependencySource.cs" />
     <Compile Include="Building\Parameters.cs" />
+    <Compile Include="Building\PushPopWrapper.cs" />
     <Compile Include="Building\ReferencedDependencySource.cs" />
     <Compile Include="Building\Setter.cs" />
     <Compile Include="Exceptions\StructureMapBuildException.cs" />

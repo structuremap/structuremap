@@ -50,12 +50,10 @@ namespace StructureMap.Testing.Building
 
         public void Push(Instance instance)
         {
-            throw new NotImplementedException();
         }
 
         public void Pop()
         {
-            throw new NotImplementedException();
         }
 
         public string RequestedName { get; set; }

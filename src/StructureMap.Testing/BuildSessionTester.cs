@@ -7,6 +7,7 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Configuration.DSL;
+using StructureMap.Testing.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 
@@ -343,9 +344,12 @@ namespace StructureMap.Testing
             var session = BuildSession.ForPluginGraph(new PluginGraph());
             session.Push(new LambdaInstance<StubbedGateway>(c => new StubbedGateway()));
 
+            session.ParentType.ShouldBeNull();
+            session.Push(new SmartInstance<ARule>());
+
             session.ParentType.ShouldEqual(typeof (StubbedGateway));
 
-            session.Push(new SmartInstance<ARule>());
+            session.Push(new SmartInstance<AWidget>());
 
             session.ParentType.ShouldEqual(typeof (ARule));
         }
@@ -354,13 +358,15 @@ namespace StructureMap.Testing
         public void push_and_pop_an_instance_onto_a_session()
         {
             var session = BuildSession.ForPluginGraph(new PluginGraph());
+
+            session.Push(new SmartInstance<AWidget>());
             session.Push(new LambdaInstance<StubbedGateway>(c => new StubbedGateway()));
 
             session.Push(new SmartInstance<ARule>());
 
             session.Pop();
 
-            session.ParentType.ShouldEqual(typeof(StubbedGateway));
+            session.ParentType.ShouldEqual(typeof(AWidget));
 
         }
 

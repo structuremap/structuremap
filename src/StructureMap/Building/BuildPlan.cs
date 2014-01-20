@@ -8,6 +8,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
+
     public class BuildPlan : IBuildPlan
     {
         private readonly Type _pluginType;
@@ -49,12 +50,12 @@ namespace StructureMap.Building
                 builder = Expression.Convert(builder, _pluginType);
             }
 
-
-
             var wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(_pluginType, builder, _instance);
+            
+            // Push/Pop for contextual construction and bi-directional dependency checking
+            wrapped = PushPopWrapper.WrapFunc(_pluginType,_instance, wrapped);
+            
             wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(_pluginType, wrapped, this);
-
-            // TODO -- add the bi-directional checking too
 
             if (!wrapped.Type.IsClass)
             {

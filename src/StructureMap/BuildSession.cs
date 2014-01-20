@@ -154,19 +154,31 @@ namespace StructureMap
                 throw new StructureMapBuildException("Bi-directional dependency relationship detected!" + Environment.NewLine + "Check the StructureMap stacktrace below:");
             }
 
+
+
             _instances.Push(instance);
         }
 
         public void Pop()
         {
-            _instances.Pop();
+            if (_instances.Any())
+            {
+                _instances.Pop();
+            }
+            
         }
 
         public Type ParentType
         {
             get
             {
-                return _instances.Any() ? _instances.Peek().ReturnedType : null;
+                if (_instances.Count > 1)
+                {
+                    return _instances.ToArray().Skip(1).First().ReturnedType;
+                }
+
+                return null;
+
             }
         }
 

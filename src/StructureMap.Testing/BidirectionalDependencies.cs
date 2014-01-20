@@ -4,7 +4,7 @@ using StructureMap.Building;
 
 namespace StructureMap.Testing
 {
-    [TestFixture, Ignore("No longer working.  Will need to fix")]
+    [TestFixture]
     public class BidirectionalDependencies
     {
         #region Setup/Teardown
@@ -15,6 +15,10 @@ namespace StructureMap.Testing
             container = new Container(x => {
                 x.For<IBiView>().Use<BiView>();
                 x.For<IBiPresenter>().Use<BiPresenter>();
+
+                x.For<IBiGrandparent>().Use<BiGrandparent>();
+                x.For<IBiHolder>().Use<BiHolder>();
+                x.For<IBiLeaf>().Use<BiLeaf>();
             });
         }
 
@@ -25,13 +29,62 @@ namespace StructureMap.Testing
         [Test]
         public void do_not_blow_up_with_a_stack_overflow_problem()
         {
+            // TODO -- make the exceptions better
             var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
-
+                container.GetInstance<IBiPresenter>();
             });
 
-            Debug.WriteLine(ex.Title);
+            ex.Title.ShouldContain("Bi-directional dependency relationship detected!");
+        }
 
-            ex.Title.ShouldEqual("Something that is adequately explanatory");
+        [Test]
+        public void do_not_blow_up_with_a_stack_overflow_problem_2()
+        {
+            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() =>
+            {
+                container.GetInstance<IBiHolder>();
+            });
+
+            Debug.WriteLine(ex);
+
+            ex.Title.ShouldContain("Bi-directional dependency relationship detected!");
+        }
+    }
+
+    public interface IBiHolder
+    {
+        
+    }
+
+    public interface IBiGrandparent
+    {
+        
+    }
+
+    public interface IBiLeaf
+    {
+        
+    }
+
+    public class BiHolder : IBiHolder
+    {
+        public BiHolder(IBiGrandparent grandparent)
+        {
+        }
+    }
+
+    public class BiGrandparent : IBiGrandparent
+    {
+        public BiGrandparent(IBiLeaf leaf)
+        {
+        }
+
+    }
+
+    public class BiLeaf : IBiLeaf
+    {
+        public BiLeaf(IBiHolder holder)
+        {
         }
     }
 
