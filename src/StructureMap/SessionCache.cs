@@ -10,7 +10,7 @@ namespace StructureMap
     public interface ISessionCache
     {
         object GetDefault(Type pluginType, IPipelineGraph pipelineGraph);
-        object GetObject(Type pluginType, Instance instance);
+        object GetObject(Type pluginType, Instance instance, ILifecycle lifecycle);
         object TryGetDefault(Type pluginType, IPipelineGraph pipelineGraph);
 
         IEnumerable<T> All<T>();
@@ -46,10 +46,11 @@ namespace StructureMap
                 throw new StructureMapConfigurationException("No default Instance is registered and cannot be automatically determined for type '{0}'", pluginType.GetFullName());
             }
 
+            var lifecycle = pipelineGraph.DetermineLifecycle(pluginType, instance);
 
-            var o = GetObject(pluginType, instance);
+            var o = GetObject(pluginType, instance, lifecycle);
 
-            if (!instance.IsUnique())
+            if (!(lifecycle is UniquePerRequestLifecycle))
             {
                 _defaults.Add(pluginType, o);
             }
@@ -57,9 +58,9 @@ namespace StructureMap
             return o;
         }
 
-        public object GetObject(Type pluginType, Instance instance)
+        public object GetObject(Type pluginType, Instance instance, ILifecycle lifecycle)
         {
-            if (instance.IsUnique())
+            if (lifecycle is UniquePerRequestLifecycle)
             {
                 return _resolver.BuildNewInSession(pluginType, instance);
             }
@@ -83,7 +84,8 @@ namespace StructureMap
             var instance = pipelineGraph.Instances.GetDefault(pluginType);
             if (instance == null) return null;
 
-            var o = GetObject(pluginType, instance);
+            var lifecycle = pipelineGraph.DetermineLifecycle(pluginType, instance);
+            var o = GetObject(pluginType, instance, lifecycle);
             _defaults.Add(pluginType, o);
 
             return o;

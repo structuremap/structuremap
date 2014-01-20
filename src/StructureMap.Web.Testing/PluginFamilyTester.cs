@@ -17,7 +17,7 @@ namespace StructureMap.Web.Testing
         public void SetScopeToHttpContext()
         {
             var family = new PluginFamily(typeof(IServiceProvider));
-            family.Lifecycle.ShouldBeOfType<TransientLifecycle>();
+            family.Lifecycle.ShouldBeNull();
 
             family.SetLifecycleTo(WebLifecycles.HttpContext);
             family.Lifecycle.ShouldBeOfType<HttpContextLifecycle>();

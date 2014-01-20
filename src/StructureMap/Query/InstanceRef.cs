@@ -20,9 +20,10 @@ namespace StructureMap.Query
             get { return _instance; }
         }
 
+        // TODO -- get a UT on this puppy
         public ILifecycle Lifecycle
         {
-            get { return _instance.Lifecycle; }
+            get { return _instance.Lifecycle ?? _family.Lifecycle ?? Lifecycles.Transient; }
         }
 
         public string Name

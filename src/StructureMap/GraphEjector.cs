@@ -42,7 +42,7 @@ namespace StructureMap
 
         public void RemoveFromLifecycle(Type pluginType, Instance instance)
         {
-            instance.Lifecycle.FindCache(_lifecycles).Eject(pluginType, instance);
+            _lifecycles.DetermineLifecycle(pluginType, instance).FindCache(_lifecycles).Eject(pluginType, instance);
         }
 
         public void RemoveCompletely(Type pluginType, Instance instance)

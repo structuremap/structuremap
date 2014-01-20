@@ -13,10 +13,6 @@ namespace StructureMap.Pipeline
         void AddInterceptor(IInterceptor interceptor);
         ConstructorInstance Override(ExplicitArguments arguments);
 
-        bool IsUnique();
-
-        bool IsSingleton();
-
         void SetLifecycleTo<T>() where T : ILifecycle, new();
 
         void SetLifecycleTo(ILifecycle lifecycle);

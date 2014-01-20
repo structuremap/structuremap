@@ -94,7 +94,7 @@ namespace StructureMap
 
         public object ResolveFromLifecycle(Type pluginType, Instance instance)
         {
-            var cache = instance.Lifecycle.FindCache(_pipelineGraph);
+            var cache = _pipelineGraph.DetermineLifecycle(pluginType, instance).FindCache(_pipelineGraph);
             return cache.Get(pluginType, instance, this);
         }
 
@@ -148,7 +148,8 @@ namespace StructureMap
         // This is where all Creation happens
         public virtual object FindObject(Type pluginType, Instance instance)
         {
-            return _sessionCache.GetObject(pluginType, instance);
+            var lifecycle = _pipelineGraph.DetermineLifecycle(pluginType, instance);
+            return _sessionCache.GetObject(pluginType, instance, lifecycle);
         }
 
         public Policies Policies

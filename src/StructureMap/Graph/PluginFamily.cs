@@ -94,7 +94,6 @@ namespace StructureMap.Graph
 
             assertInstanceIsValidForThisPluginType(instance);
 
-            instance.Parent = this;
             _instances[instance.Name] = instance;
         }
 
@@ -243,7 +242,6 @@ namespace StructureMap.Graph
         public void RemoveInstance(Instance instance)
         {
             _instances.Remove(instance.Name);
-            instance.Parent = null;
             if (instance == GetDefaultInstance())
             {
                 resetDefault();

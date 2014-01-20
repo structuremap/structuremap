@@ -24,21 +24,6 @@ namespace StructureMap.Testing.Pipeline
 
         #endregion
 
-        [Test]
-        public void IsSingleton_true()
-        {
-            var instance = new InstanceUnderTest();
-            instance.SetLifecycleTo(new SingletonLifecycle());
-
-            instance.IsSingleton().ShouldBeTrue();
-        }
-
-        [Test]
-        public void IsSingleton_false()
-        {
-            new InstanceUnderTest()
-                .IsSingleton().ShouldBeFalse();
-        }
 
         [Test]
         public void Build_the_InstanceToken()
@@ -63,13 +48,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void default_scope_is_PerRequest()
-        {
-            var i1 = new ConfiguredInstance(GetType()).Named("foo");
-            i1.Lifecycle.ShouldBeOfType<TransientLifecycle>();
-        }
-
-        [Test]
         public void can_set_scope_directly_on_the_instance()
         {
             var i1 = new ConfiguredInstance(GetType()).Named("foo");
@@ -90,31 +68,6 @@ namespace StructureMap.Testing.Pipeline
             family.AddInstance(i1);
 
             i1.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
-        }
-
-        [Test]
-        public void uses_parent_lifecycle_if_none_is_set_on_instance()
-        {
-            var family = new PluginFamily(GetType());
-            family.SetLifecycleTo(Lifecycles.Singleton);
-
-            var i1 = new ConfiguredInstance(GetType()).Named("foo");
-
-            family.AddInstance(i1);
-
-            i1.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
-        }
-
-        [Test]
-        public void still_chooses_PerRequest_if_nothing_is_selected_on_either_family_or_instance()
-        {
-            var family = new PluginFamily(GetType());
-
-            var i1 = new ConfiguredInstance(GetType()).Named("foo");
-
-            family.AddInstance(i1);
-
-            i1.Lifecycle.ShouldBeOfType<TransientLifecycle>();
         }
 
 

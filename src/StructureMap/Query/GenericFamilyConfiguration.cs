@@ -59,7 +59,7 @@ namespace StructureMap.Query
         /// </summary>
         public ILifecycle Lifecycle
         {
-            get { return _family.Lifecycle; }
+            get { return _family.Lifecycle ?? Lifecycles.Transient; }
         }
 
         /// <summary>

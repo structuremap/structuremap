@@ -172,16 +172,6 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void adding_an_instance_sets_itself_as_the_parent()
-        {
-            var family = new PluginFamily(typeof (IGateway));
-            var instance = new ConfiguredInstance(typeof (TheGateway));
-
-            family.AddInstance(instance);
-            instance.Parent.ShouldBeTheSameAs(family);
-        }
-
-        [Test]
         public void remove_all_clears_the_defaul_and_removes_all_plugins_instances()
         {
             var family = new PluginFamily(typeof (IServiceProvider));

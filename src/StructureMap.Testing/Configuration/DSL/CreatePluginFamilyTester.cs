@@ -113,7 +113,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var pluginGraph = registry.Build();
 
             var family = pluginGraph.Families[typeof (IGateway)];
-            family.Lifecycle.ShouldBeOfType<TransientLifecycle>();
+            family.Lifecycle.ShouldBeNull();
         }
 
         [Test]
@@ -181,8 +181,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var pluginGraph = registry.Build();
 
-            pluginGraph.Families[typeof (IGateway)]
-                .Lifecycle.ShouldBeTheSameAs(lifecycle);
+            pluginGraph.Families[typeof (IGateway)].Lifecycle.ShouldBeTheSameAs(lifecycle);
         }
 
         [Test]

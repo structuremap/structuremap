@@ -137,8 +137,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For(typeof (ITarget), Lifecycles.ThreadLocal);
             var graph = registry.Build();
 
-            graph.Families[typeof (ITarget)]
-                .Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
+            graph.Families[typeof (ITarget)].Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
     }
 }

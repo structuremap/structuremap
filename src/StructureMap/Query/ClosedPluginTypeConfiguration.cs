@@ -29,7 +29,7 @@ namespace StructureMap.Query
 
         public bool HasBeenCreated(Instance instance)
         {
-            return instance.Lifecycle.FindCache(_pipelineGraph).Has(_family.PluginType, instance);
+            return _pipelineGraph.DetermineLifecycle(_family.PluginType, instance).FindCache(_pipelineGraph).Has(_family.PluginType, instance);
         }
 
         public string ProfileName
@@ -58,7 +58,7 @@ namespace StructureMap.Query
 
         public ILifecycle Lifecycle
         {
-            get { return _family.Lifecycle; }
+            get { return _pipelineGraph.Instances.DefaultLifecycleFor(_family.PluginType) ?? Lifecycles.Transient; }
         }
 
         public IEnumerable<InstanceRef> Instances

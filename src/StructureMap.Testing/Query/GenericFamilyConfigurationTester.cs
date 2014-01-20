@@ -123,7 +123,7 @@ namespace StructureMap.Testing.Query
         }
 
         [Test]
-        public void lifecycle_is_transient()
+        public void lifecycle_is_transient_by_default()
         {
             configuration.Lifecycle.ShouldBeOfType<TransientLifecycle>();
         }

@@ -15,9 +15,6 @@ namespace StructureMap.Pipeline
         private readonly string _originalName;
         private string _name = Guid.NewGuid().ToString();
 
-
-        private PluginFamily _parent;
-
         private readonly IList<IInterceptor> _interceptors = new List<IInterceptor>();
 
         /// <summary>
@@ -58,17 +55,6 @@ namespace StructureMap.Pipeline
         public virtual IDependencySource ToBuilder(Type pluginType, Policies policies)
         {
             return ToDependencySource(pluginType);
-        }
-
-        [Obsolete("Try to eliminate the bi-directional dependency here.")]
-        public PluginFamily Parent
-        {
-            get { return _parent; }
-            internal set
-            {
-                _parent = value;
-                scopedParent = _parent;
-            }
         }
 
         public IEnumerable<IInterceptor> Interceptors
@@ -172,18 +158,6 @@ namespace StructureMap.Pipeline
             }
         }
 
-        /// <summary>
-        /// Is this Instance created uniquely upon each request?
-        /// </summary>
-        /// <returns></returns>
-        public bool IsUnique()
-        {
-            return Lifecycle is UniquePerRequestLifecycle;
-        }
 
-        public bool IsSingleton()
-        {
-            return Lifecycle is SingletonLifecycle;
-        }
     }
 }

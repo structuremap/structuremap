@@ -36,6 +36,7 @@ namespace StructureMap.Query
         bool HasBeenCreated(Instance instance);
 
 
+        ILifecycle Lifecycle { get; }
 
         Type PluginType { get; }
     }

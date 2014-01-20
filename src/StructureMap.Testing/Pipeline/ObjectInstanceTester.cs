@@ -67,8 +67,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void object_instance_is_a_singleton()
         {
-            new ObjectInstance(new DisposableGuy())
-                .Lifecycle.ShouldBeOfType<SingletonLifecycle>();
+            new ObjectInstance(new DisposableGuy()).Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
         [Test]

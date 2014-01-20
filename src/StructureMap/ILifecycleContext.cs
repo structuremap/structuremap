@@ -1,3 +1,4 @@
+using System;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -6,5 +7,7 @@ namespace StructureMap
     {
         IObjectCache Singletons { get; }
         IObjectCache Transients { get; }
+
+        ILifecycle DetermineLifecycle(Type pluginType, Instance instance);
     }
 }

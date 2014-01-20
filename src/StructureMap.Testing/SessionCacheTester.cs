@@ -37,7 +37,7 @@ namespace StructureMap.Testing
             theResolver.Stub(x => x.ResolveFromLifecycle(typeof (IFoo), instance)).Return(foo);
 
 
-            theCache.GetObject(typeof (IFoo), instance).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof (IFoo), instance, new TransientLifecycle()).ShouldBeTheSameAs(foo);
         }
 
         [Test]
@@ -52,8 +52,8 @@ namespace StructureMap.Testing
             theResolver.Stub(x => x.BuildNewInSession(typeof (IFoo), instance)).Return(foo).Repeat.Once();
             theResolver.Stub(x => x.BuildNewInSession(typeof (IFoo), instance)).Return(foo2).Repeat.Once();
 
-            theCache.GetObject(typeof (IFoo), instance).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof (IFoo), instance).ShouldBeTheSameAs(foo2);
+            theCache.GetObject(typeof (IFoo), instance, new UniquePerRequestLifecycle()).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof (IFoo), instance, new UniquePerRequestLifecycle()).ShouldBeTheSameAs(foo2);
         }
 
         [Test]
@@ -65,12 +65,12 @@ namespace StructureMap.Testing
 
             theResolver.Expect(x => x.ResolveFromLifecycle(typeof (IFoo), instance)).Return(foo).Repeat.Once();
 
-
-            theCache.GetObject(typeof (IFoo), instance).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof (IFoo), instance).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof (IFoo), instance).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof (IFoo), instance).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof (IFoo), instance).ShouldBeTheSameAs(foo);
+           
+            theCache.GetObject(typeof (IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
 
             theResolver.VerifyAllExpectations();
         }

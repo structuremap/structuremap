@@ -137,5 +137,10 @@ namespace StructureMap
 
             builder.RunConfigurations();
         }
+
+        public ILifecycle DetermineLifecycle(Type pluginType, Instance instance)
+        {
+            return instance.Lifecycle ?? _instances.DefaultLifecycleFor(pluginType) ?? Lifecycles.Transient;
+        }
     }
 }
