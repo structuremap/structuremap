@@ -6,6 +6,7 @@ using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 
@@ -327,6 +328,60 @@ namespace StructureMap.Testing
 
             instance.ShouldNotBeNull();
             instance.ShouldBeOfType<Service>();
+        }
+
+        [Test]
+        public void parent_type_is_null_in_the_initial_state()
+        {
+            var session = BuildSession.ForPluginGraph(new PluginGraph());
+            session.ParentType.ShouldBeNull();
+        }
+
+        [Test]
+        public void push_an_instance_onto_a_session()
+        {
+            var session = BuildSession.ForPluginGraph(new PluginGraph());
+            session.Push(new LambdaInstance<StubbedGateway>(c => new StubbedGateway()));
+
+            session.ParentType.ShouldEqual(typeof (StubbedGateway));
+
+            session.Push(new SmartInstance<ARule>());
+
+            session.ParentType.ShouldEqual(typeof (ARule));
+        }
+
+        [Test]
+        public void push_and_pop_an_instance_onto_a_session()
+        {
+            var session = BuildSession.ForPluginGraph(new PluginGraph());
+            session.Push(new LambdaInstance<StubbedGateway>(c => new StubbedGateway()));
+
+            session.Push(new SmartInstance<ARule>());
+
+            session.Pop();
+
+            session.ParentType.ShouldEqual(typeof(StubbedGateway));
+
+        }
+
+        [Test]
+        public void pushing_the_same_instance_will_throw_a_bidirectional_dependency_exception()
+        {
+            var session = BuildSession.ForPluginGraph(new PluginGraph());
+
+            var instance1 = new SmartInstance<StubbedGateway>();
+            var instance2 = new SmartInstance<ARule>();
+            var instance3 = new SmartInstance<AWidget>();
+
+            session.Push(instance1);
+            session.Push(instance2);
+            session.Push(instance3);
+
+            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
+                session.Push(instance1);
+            });
+
+            ex.Message.ShouldContain("Bi-directional dependency relationship detected!");
         }
 
         public interface IFooService

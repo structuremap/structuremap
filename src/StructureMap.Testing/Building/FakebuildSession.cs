@@ -48,6 +48,16 @@ namespace StructureMap.Testing.Building
             throw new NotImplementedException();
         }
 
+        public void Push(Instance instance)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Pop()
+        {
+            throw new NotImplementedException();
+        }
+
         public string RequestedName { get; set; }
 
         public void BuildUp(object target)
@@ -109,5 +119,7 @@ namespace StructureMap.Testing.Building
         {
             throw new NotImplementedException();
         }
+
+        public Type ParentType { get; private set; }
     }
 }

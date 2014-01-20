@@ -16,6 +16,8 @@ namespace StructureMap
         private readonly IPipelineGraph _pipelineGraph;
         private readonly ISessionCache _sessionCache;
 
+        private readonly Stack<Instance> _instances = new Stack<Instance>(); 
+
         public BuildSession(IPipelineGraph pipelineGraph, string requestedName = null, ExplicitArguments args = null)
         {
             _pipelineGraph = pipelineGraph;
@@ -145,6 +147,29 @@ namespace StructureMap
             return FindObject(pluginType, instance);
         }
 
+        public void Push(Instance instance)
+        {
+            if (_instances.Contains(instance))
+            {
+                throw new StructureMapBuildException("Bi-directional dependency relationship detected!" + Environment.NewLine + "Check the StructureMap stacktrace below:");
+            }
+
+            _instances.Push(instance);
+        }
+
+        public void Pop()
+        {
+            _instances.Pop();
+        }
+
+        public Type ParentType
+        {
+            get
+            {
+                return _instances.Any() ? _instances.Peek().ReturnedType : null;
+            }
+        }
+
         // This is where all Creation happens
         public virtual object FindObject(Type pluginType, Instance instance)
         {
@@ -157,4 +182,5 @@ namespace StructureMap
             get { return _pipelineGraph.Policies; }
         }
     }
+
 }

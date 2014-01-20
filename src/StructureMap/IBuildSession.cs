@@ -10,5 +10,8 @@ namespace StructureMap
         object ResolveFromLifecycle(Type pluginType, Instance instance);
         Policies Policies { get; }
         object CreateInstance(Type pluginType, string name);
+
+        void Push(Instance instance);
+        void Pop();
     }
 }

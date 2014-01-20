@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 namespace StructureMap
 {
@@ -96,5 +97,11 @@ namespace StructureMap
         /// <param name="pluginType"></param>
         /// <returns></returns>
         IEnumerable<object> GetAllInstances(Type pluginType);
+
+        /// <summary>
+        /// The type of the parent object.  Useful for constructing
+        /// contextual logging dependencies
+        /// </summary>
+        Type ParentType { get; }
     }
 }
