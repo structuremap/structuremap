@@ -1,12 +1,42 @@
 ﻿using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class RootInstanceGraphTester
     {
+        [Test]
+        public void default_lifecycle_by_default_is_null()
+        {
+            var root = new RootInstanceGraph(new PluginGraph());
+            root.DefaultLifecycleFor(typeof(IGateway)).ShouldBeNull();
+        }
+
+        [Test]
+        public void default_lifecycle_is_null_if_family_has_no_lifecycle()
+        {
+            var graph = new PluginGraph();
+            graph.Families[typeof (IGateway)].SetDefault(new SmartInstance<StubbedGateway>());
+
+            var root = new RootInstanceGraph(graph);
+            root.DefaultLifecycleFor(typeof(IGateway)).ShouldBeNull();
+        }
+
+        [Test]
+        public void default_lifecycle_is_explicitly_set()
+        {
+            var graph = new PluginGraph();
+            graph.Families[typeof(IGateway)].SetLifecycleTo<SingletonLifecycle>();
+
+            var root = new RootInstanceGraph(graph);
+            root.DefaultLifecycleFor(typeof(IGateway)).ShouldBeOfType<SingletonLifecycle>();
+        }
+
+
+
         [Test]
         public void singleton_is_just_the_plugin_graph_singletons()
         {

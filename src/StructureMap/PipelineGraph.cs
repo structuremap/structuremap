@@ -39,6 +39,7 @@ namespace StructureMap
         {
             _pluginGraph = pluginGraph;
             _instances = instances;
+
             if (root == null)
             {
                 _root = this;
@@ -49,6 +50,7 @@ namespace StructureMap
                 _root = root.Root();
                 _profiles = root.Profiles;
             }
+
             _singletons = singletons;
             _transients = transients;
         }

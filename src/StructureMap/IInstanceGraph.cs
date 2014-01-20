@@ -15,5 +15,7 @@ namespace StructureMap
         IEnumerable<Instance> GetAllInstances(Type pluginType);
         Instance FindInstance(Type pluginType, string name);
         IEnumerable<PluginFamily> UniqueFamilies();
+
+        ILifecycle DefaultLifecycleFor(Type pluginType);
     }
 }

@@ -67,5 +67,16 @@ namespace StructureMap
                 yield return family;
             }
         }
+
+        public ILifecycle DefaultLifecycleFor(Type pluginType)
+        {
+            if (_pluginGraph.Families.Has(pluginType))
+            {
+                var family = _pluginGraph.Families[pluginType];
+                if (family.Lifecycle != null) return family.Lifecycle;
+            }
+
+            return _parent.Instances.DefaultLifecycleFor(pluginType);
+        }
     }
 }

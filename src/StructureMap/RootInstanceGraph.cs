@@ -57,6 +57,11 @@ namespace StructureMap
             return _pluginGraph.Families;
         }
 
+        public ILifecycle DefaultLifecycleFor(Type pluginType)
+        {
+            if (!_pluginGraph.HasFamily(pluginType)) return null;
 
+            return _pluginGraph.Families[pluginType].Lifecycle;
+        }
     }
 }

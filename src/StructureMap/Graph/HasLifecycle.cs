@@ -17,7 +17,7 @@ namespace StructureMap.Graph
         {
             _lifecycle =
                 new Lazy<ILifecycle>(
-                    () => { return scopedParent == null ? Lifecycles.Transient : scopedParent.Lifecycle; });
+                    () => { return scopedParent == null ? null : scopedParent.Lifecycle; });
         }
 
         protected HasLifecycle scopedParent { get; set; }
