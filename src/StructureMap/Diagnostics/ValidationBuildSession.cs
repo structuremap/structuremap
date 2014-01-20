@@ -40,7 +40,7 @@ namespace StructureMap.Diagnostics
 
         public static ValidationBuildSession ValidateForPluginGraph(PluginGraph graph)
         {
-            var pipeline = new RootPipelineGraph(graph);
+            var pipeline = PipelineGraph.BuildRoot(graph);
 
             return new ValidationBuildSession(pipeline);
         }

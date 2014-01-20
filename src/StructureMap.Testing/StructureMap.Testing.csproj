@@ -233,7 +233,7 @@
     <Compile Include="Examples\BuildUp.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Graph\AssemblyScannerTester.cs" />
-    <Compile Include="Graph\ComplexPipelineGraphTester.cs" />
+    <Compile Include="Graph\ComplexInstanceGraphTester.cs" />
     <Compile Include="Graph\ContainerConstructorAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -246,7 +246,7 @@
     <Compile Include="Graph\FindAllTypesFilterTester.cs" />
     <Compile Include="Graph\FirstInterfaceConventionTester.cs" />
     <Compile Include="Graph\GenericConnectionScannerTester.cs" />
-    <Compile Include="Graph\RootPipelineGraphTester.cs" />
+    <Compile Include="Graph\RootInstanceGraphTester.cs" />
     <Compile Include="Graph\SingleImplementationScannerTester.cs" />
     <Compile Include="Graph\TestExplicitArguments.cs" />
     <Compile Include="Graph\FillDependenciesTester.cs">

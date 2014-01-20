@@ -10,15 +10,6 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class BuildStrategiesTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
         public class StubInstance : Instance
         {
             private readonly object _constructedObject;
@@ -84,7 +75,7 @@ namespace StructureMap.Testing.Pipeline
             disposable1 = new StubDisposable();
             disposable2 = new StubDisposable();
 
-            pipeline = new RootPipelineGraph(new PluginGraph());
+            pipeline = PipelineGraph.BuildRoot(new PluginGraph());
 
             lifecycle.FindCache(pipeline)
                 .As<LifecycleObjectCache>()
@@ -105,7 +96,7 @@ namespace StructureMap.Testing.Pipeline
         private SingletonLifecycle lifecycle;
         private StubDisposable disposable1;
         private StubDisposable disposable2;
-        private RootPipelineGraph pipeline;
+        private IPipelineGraph pipeline;
 
         public class StubInstance : Instance
         {

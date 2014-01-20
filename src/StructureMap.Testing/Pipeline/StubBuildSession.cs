@@ -11,7 +11,7 @@ namespace StructureMap.Testing.Pipeline
 
         static StubBuildSession()
         {
-            _pipeline = new RootPipelineGraph(_pluginGraph);
+            _pipeline = PipelineGraph.BuildRoot(_pluginGraph);
         }
 
         public StubBuildSession()

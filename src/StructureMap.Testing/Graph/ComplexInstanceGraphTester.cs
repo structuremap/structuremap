@@ -3,7 +3,7 @@
 namespace StructureMap.Testing.Graph
 {
     [TestFixture, Ignore("not ready to do this yet")]
-    public class ComplexPipelineGraphTester
+    public class ComplexInstanceGraphTester
     {
         [Test]
         public void lifecycle_for_pluginType_explicitly_set()

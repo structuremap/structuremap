@@ -52,7 +52,7 @@ namespace StructureMap.Testing
             var func = DeepException.Wrap(topLevelBuilder, "new TopLevel(Leaf)");
 
 
-            func(new BuildSession(new RootPipelineGraph(new PluginGraph())));
+            func(new BuildSession(PipelineGraph.BuildEmpty()));
         }
     }
 

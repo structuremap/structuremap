@@ -179,7 +179,7 @@ namespace StructureMap.Testing
         [Test]
         public void Throw_exception_When_trying_to_build_an_instance_that_cannot_be_found()
         {
-            var graph = new RootPipelineGraph(new PluginGraph());
+            var graph = PipelineGraph.BuildEmpty();
 
             var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
                 var session = new BuildSession(graph);
@@ -193,7 +193,7 @@ namespace StructureMap.Testing
         [Test]
         public void When_calling_GetInstance_if_no_default_can_be_found_throw_202()
         {
-            var graph = new RootPipelineGraph(new PluginGraph());
+            var graph = PipelineGraph.BuildEmpty();
 
 
             var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {

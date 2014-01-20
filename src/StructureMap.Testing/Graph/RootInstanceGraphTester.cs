@@ -5,7 +5,7 @@ using StructureMap.Pipeline;
 namespace StructureMap.Testing.Graph
 {
     [TestFixture]
-    public class RootPipelineGraphTester
+    public class RootInstanceGraphTester
     {
         [Test]
         public void singleton_is_just_the_plugin_graph_singletons()
@@ -13,7 +13,8 @@ namespace StructureMap.Testing.Graph
             var plugins = new PluginGraph();
             plugins.SingletonCache.ShouldNotBeNull();
 
-            var pipeline = new RootPipelineGraph(plugins);
+            var pipeline = PipelineGraph.BuildRoot(plugins);
+            
             pipeline.Singletons.ShouldBeTheSameAs(plugins.SingletonCache);
         }
 
@@ -22,7 +23,7 @@ namespace StructureMap.Testing.Graph
         {
             var plugins = new PluginGraph();
 
-            var pipeline = new RootPipelineGraph(plugins);
+            var pipeline = PipelineGraph.BuildRoot(plugins);
             pipeline.Transients.ShouldBeOfType<NulloTransientCache>();
         }
 
@@ -31,8 +32,7 @@ namespace StructureMap.Testing.Graph
         {
             var plugins = new PluginGraph();
 
-            var pipeline = new RootPipelineGraph(plugins);
-
+            var pipeline = PipelineGraph.BuildRoot(plugins);
             pipeline.ToNestedGraph().Transients.ShouldBeOfType<LifecycleObjectCache>();
         }
     }

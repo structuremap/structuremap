@@ -123,7 +123,8 @@ namespace StructureMap
 
         public static BuildSession ForPluginGraph(PluginGraph graph, ExplicitArguments args = null)
         {
-            var pipeline = new RootPipelineGraph(graph);
+            var pipeline = PipelineGraph.BuildRoot(graph);
+            
             return new BuildSession(pipeline, args: args);
         }
 

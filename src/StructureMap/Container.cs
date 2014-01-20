@@ -15,7 +15,7 @@ namespace StructureMap
     {
         private IPipelineGraph _pipelineGraph;
 
-        public Container(Action<ConfigurationExpression> action) : this(RootPipelineGraph.For(action))
+        public Container(Action<ConfigurationExpression> action) : this(PipelineGraph.For(action))
         {
         }
 
@@ -36,8 +36,9 @@ namespace StructureMap
         ///     PluginGraph containing the instance and type definitions
         ///     for the Container
         /// </param>
-        public Container(PluginGraph pluginGraph) : this(new RootPipelineGraph(pluginGraph))
+        public Container(PluginGraph pluginGraph) : this(PipelineGraph.BuildRoot(pluginGraph))
         {
+            
         }
 
         internal Container(IPipelineGraph pipelineGraph)

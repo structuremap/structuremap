@@ -160,13 +160,15 @@
     <Compile Include="Exceptions\StructureMapConfigurationException.cs" />
     <Compile Include="Building\TryCatchWrapper.cs" />
     <Compile Include="BuildSession.cs" />
+    <Compile Include="IInstanceGraph.cs" />
+    <Compile Include="PipelineGraph.cs" />
     <Compile Include="Pipeline\Argument.cs" />
     <Compile Include="Pipeline\Lazy\FuncInstance.cs" />
     <Compile Include="Pipeline\Lazy\LazyFactoryTemplate.cs" />
     <Compile Include="Pipeline\Lazy\LazyInstance.cs" />
     <Compile Include="Pipeline\NullInstance.cs" />
     <Compile Include="Policies.cs" />
-    <Compile Include="ComplexPipelineGraph.cs" />
+    <Compile Include="ComplexInstanceGraph.cs" />
     <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />
     <Compile Include="Configuration\IPluginGraphConfiguration.cs" />
     <Compile Include="Configuration\MalformedAliasException.cs" />
@@ -216,6 +218,7 @@
     <Compile Include="Pipeline\ReaderWriterLockExtensions.cs" />
     <Compile Include="Pipeline\ReferencedInstance.cs" />
     <Compile Include="Pipeline\NestedContainerTransientObjectCache.cs" />
+    <Compile Include="Profiles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -270,7 +273,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Query\ClosedPluginTypeConfiguration.cs" />
-    <Compile Include="RootPipelineGraph.cs" />
+    <Compile Include="RootInstanceGraph.cs" />
     <Compile Include="SessionCache.cs" />
     <Compile Include="Diagnostics\ValidationBuildSession.cs" />
     <Compile Include="Util\LightweightCache.cs" />
