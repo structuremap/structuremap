@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Bugs
                 //x.ForConcreteType<SomeWebPage>().Configure.
                 //  SetterDependency<SomeDbRepository>().Is<SomeDbRepository>();
 
-                x.SetAllProperties(o => o.OfType<SomeDbRepository>());
+                x.Polices.SetAllProperties(o => o.OfType<SomeDbRepository>());
             });
 
             var webPage = new SomeWebPage();

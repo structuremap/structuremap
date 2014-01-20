@@ -118,21 +118,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         void Scan(Action<IAssemblyScanner> action);
 
-        /// <summary>
-        /// Directs StructureMap to always inject dependencies into any and all public Setter properties
-        /// of the type TPluginType.
-        /// </summary>
-        /// <typeparam name="TPluginType"></typeparam>
-        /// <returns></returns>
-        CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>();
 
-        /// <summary>
-        /// Creates automatic "policies" for which public setters are considered mandatory
-        /// properties by StructureMap that will be "setter injected" as part of the 
-        /// construction process.
-        /// </summary>
-        /// <param name="action"></param>
-        void SetAllProperties(Action<SetterConvention> action);
 
         /// <summary>
         /// Advanced Usage Only!  Skips the Registry and goes right to the inner
@@ -141,28 +127,6 @@ namespace StructureMap.Configuration.DSL
         /// <param name="configure"></param>
         void Configure(Action<PluginGraph> configure);
 
-        /// <summary>
-        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the current <see cref="PluginGraphBuilder"/>
-        /// via <see cref="IPluginGraphConfiguration.Register"/>.
-        /// </summary>
-        void RegisterPluginGraphConfiguration<T>() where T : IPluginGraphConfiguration, new();
-
-        /// <summary>
-        /// See <see cref="Registry.RegisterPluginGraphConfiguration{T}"/>
-        /// </summary>
-        void RegisterPluginGraphConfiguration(IPluginGraphConfiguration pluginGraphConfig);
-
-        /// <summary>
-        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the resulting <see cref="PluginGraph"/>,
-        /// i.e. as opposed to <see cref="Registry.RegisterPluginGraphConfiguration"/>, the PluginGraph is built, and the provided
-        /// PluginGraph config obtains access to saig graph.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void ConfigurePluginGraph<T>() where T : IPluginGraphConfiguration, new();
-
-        /// <summary>
-        /// <see cref="Registry.ConfigurePluginGraph{T}"/>
-        /// </summary>
-        void ConfigurePluginGraph(IPluginGraphConfiguration pluginGraphConfig);
+        Registry.PoliciesExpression Polices { get; }
     }
 }

@@ -12,7 +12,7 @@ namespace StructureMap.Testing
             var theGateway = new DefaultGateway();
             var container = new Container(x => {
                 x.For<IGateway>().Use(theGateway);
-                x.SetAllProperties(y => { y.OfType<IGateway>(); });
+                x.Polices.SetAllProperties(y => { y.OfType<IGateway>(); });
             });
 
             var target = new BuildUpTarget1();
@@ -32,7 +32,7 @@ namespace StructureMap.Testing
                 // First we create a new Setter Injection Policy that
                 // forces StructureMap to inject all public properties
                 // where the PropertyType is IGateway
-                x.SetAllProperties(y => { y.OfType<IGateway>(); });
+                x.Polices.SetAllProperties(y => { y.OfType<IGateway>(); });
             });
 
             // Create an instance of BuildUpTarget1

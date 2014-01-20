@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Graph
                 x.For<IService>().Use(theService);
                 x.For<IGateway>().Use<DefaultGateway>();
 
-                x.SetAllProperties(policy => { policy.WithAnyTypeFromNamespace("StructureMap.Testing.Widget3"); });
+                x.Polices.SetAllProperties(policy => { policy.WithAnyTypeFromNamespace("StructureMap.Testing.Widget3"); });
             });
 
             var target = container.GetInstance<ClassWithNamedProperties>();
@@ -42,7 +42,7 @@ namespace StructureMap.Testing.Graph
                 x.For<IService>().Use(theService);
                 x.For<IGateway>().Use<DefaultGateway>();
 
-                x.SetAllProperties(policy => { policy.TypeMatches(type => type == typeof (IService)); });
+                x.Polices.SetAllProperties(policy => { policy.TypeMatches(type => type == typeof (IService)); });
             });
 
             var target = container.GetInstance<ClassWithNamedProperties>();

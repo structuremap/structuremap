@@ -15,7 +15,7 @@ namespace StructureMap.Configuration.Xml
         public static void IncludeConfigurationFromConfigFile(this IRegistry registry)
         {
             foreach (var parser in ConfigurationParser.FromApplicationConfig())
-              registry.ConfigurePluginGraph(parser);
+              registry.Polices.Configure(parser);
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace StructureMap.Configuration.Xml
         /// </summary>
         public static void AddConfigurationFromXmlFile(this IRegistry registry, string fileName)
         {
-            registry.ConfigurePluginGraph(ConfigurationParser.FromFile(fileName));
+            registry.Polices.Configure(ConfigurationParser.FromFile(fileName));
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace StructureMap.Configuration.Xml
         /// </summary>
         public static void AddConfigurationFromNode(this IRegistry registry, XmlNode node)
         {
-            registry.ConfigurePluginGraph(new ConfigurationParser(node));
+            registry.Polices.Configure(new ConfigurationParser(node));
         }
     }
 }

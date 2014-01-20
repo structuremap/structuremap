@@ -142,34 +142,7 @@ namespace StructureMap.Configuration.DSL
             register = x => x.AddScanner(scanner);
         }
 
-        /// <summary>
-        /// Directs StructureMap to always inject dependencies into any and all public Setter properties
-        /// of the type TPluginType.
-        /// </summary>
-        /// <typeparam name="TPluginType"></typeparam>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>()
-        {
-            Func<PropertyInfo, bool> predicate = prop => { return prop.PropertyType == typeof (TPluginType); };
 
-            alter = graph => { graph.Policies.SetterRules.Add(predicate); };
-
-            return For<TPluginType>();
-        }
-
-        /// <summary>
-        /// Creates automatic "policies" for which public setters are considered mandatory
-        /// properties by StructureMap that will be "setter injected" as part of the 
-        /// construction process.
-        /// </summary>
-        /// <param name="action"></param>
-        public void SetAllProperties(Action<SetterConvention> action)
-        {
-            var convention = new SetterConvention();
-            action(convention);
-
-            alter = graph => convention.As<SetterConventionRule>().Configure(graph.Policies.SetterRules);
-        }
 
         /// <summary>
         /// All requests For the "TO" types will be filled by fetching the "FROM"
@@ -330,45 +303,93 @@ namespace StructureMap.Configuration.DSL
             }
         }
 
-        /// <summary>
-        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the current <see cref="PluginGraphBuilder"/>
-        /// via <see cref="IPluginGraphConfiguration.Register"/>.
-        /// </summary>
-        public void RegisterPluginGraphConfiguration<T>() where T : IPluginGraphConfiguration, new()
+
+
+
+
+
+        public PoliciesExpression Polices
         {
-            RegisterPluginGraphConfiguration(new T());
+            get
+            {
+                return new PoliciesExpression(this);
+            }
         }
 
-        /// <summary>
-        /// See <see cref="RegisterPluginGraphConfiguration{T}"/>
-        /// </summary>
-        public void RegisterPluginGraphConfiguration(IPluginGraphConfiguration pluginGraphConfig)
+        // TODO -- add Xml comments
+        public class PoliciesExpression
         {
-            register = pluginGraphConfig.Register;
-        }
+            private readonly Registry _parent;
 
-        /// <summary>
-        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the resulting <see cref="PluginGraph"/>,
-        /// i.e. as opposed to <see cref="RegisterPluginGraphConfiguration"/>, the PluginGraph is built, and the provided
-        /// PluginGraph config obtains access to saig graph.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public void ConfigurePluginGraph<T>() where T : IPluginGraphConfiguration, new()
-        {
-            ConfigurePluginGraph(new T());
-        }
+            public PoliciesExpression(Registry parent)
+            {
+                _parent = parent;
+            }
 
-        /// <summary>
-        /// <see cref="ConfigurePluginGraph{T}"/>
-        /// </summary>
-        public void ConfigurePluginGraph(IPluginGraphConfiguration pluginGraphConfig)
-        {
-            alter = pluginGraphConfig.Configure;
-        }
+            public void OnMissingFamily<T>() where T : IFamilyPolicy, new()
+            {
+                _parent.alter = graph => graph.AddFamilyPolicy(new T());
+            }
 
-        public void AddConstructorSelector(IConstructorSelector constructorSelector)
-        {
-            alter = x => x.Policies.ConstructorSelector.Add(constructorSelector);
+            /// <summary>
+            /// <see cref="Configure{T}"/>
+            /// </summary>
+            public void Configure(IPluginGraphConfiguration pluginGraphConfig)
+            {
+                _parent.alter = pluginGraphConfig.Configure;
+                _parent.register = pluginGraphConfig.Register;
+            }
+
+            public void ConstructorSelector<T>() where T : IConstructorSelector, new()
+            {
+                ConstructorSelector(new T());
+            }
+
+            public void ConstructorSelector(IConstructorSelector constructorSelector)
+            {
+                _parent.alter = x => x.Policies.ConstructorSelector.Add(constructorSelector);
+            }
+
+            /// <summary>
+            /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the resulting <see cref="PluginGraph"/>,
+            /// i.e. as opposed to <see cref="RegisterPluginGraphConfiguration"/>, the PluginGraph is built, and the provided
+            /// PluginGraph config obtains access to saig graph.
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            public void Configure<T>() where T : IPluginGraphConfiguration, new()
+            {
+                Configure(new T());
+            }
+
+
+            /// <summary>
+            /// Creates automatic "policies" for which public setters are considered mandatory
+            /// properties by StructureMap that will be "setter injected" as part of the 
+            /// construction process.
+            /// </summary>
+            /// <param name="action"></param>
+            public void SetAllProperties(Action<SetterConvention> action)
+            {
+                var convention = new SetterConvention();
+                action(convention);
+
+                _parent.alter = graph => convention.As<SetterConventionRule>().Configure(graph.Policies.SetterRules);
+            }
+
+            /// <summary>
+            /// Directs StructureMap to always inject dependencies into any and all public Setter properties
+            /// of the type TPluginType.
+            /// </summary>
+            /// <typeparam name="TPluginType"></typeparam>
+            /// <returns></returns>
+            public CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>()
+            {
+                Func<PropertyInfo, bool> predicate = prop => prop.PropertyType == typeof(TPluginType);
+
+                _parent.alter = graph => graph.Policies.SetterRules.Add(predicate);
+
+                return _parent.For<TPluginType>();
+            }
         }
     }
 }
