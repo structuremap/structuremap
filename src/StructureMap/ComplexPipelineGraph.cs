@@ -21,6 +21,14 @@ namespace StructureMap
             _transientCache = transientCache;
         }
 
+        public Profiles Profiles
+        {
+            get
+            {
+                return _parent.Profiles;
+            }
+        }
+
         public IInstanceGraph Instances
         {
             get
@@ -157,12 +165,6 @@ namespace StructureMap
         public Instance FindInstance(Type pluginType, string name)
         {
             return _pluginGraph.FindInstance(pluginType, name) ?? _parent.Instances.FindInstance(pluginType, name);
-        }
-
-        // Different -- but do w/ Func
-        public IPipelineGraph ForProfile(string profile)
-        {
-            return _parent.ForProfile(profile);
         }
 
 

@@ -263,7 +263,7 @@ namespace StructureMap
 
         public IContainer GetProfile(string profileName)
         {
-            var pipeline = _pipelineGraph.ForProfile(profileName);
+            var pipeline = _pipelineGraph.Profiles.For(profileName);
             return new Container(pipeline);
         }
 
@@ -386,7 +386,7 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer(string profileName)
         {
-            var pipeine = _pipelineGraph.ForProfile(profileName).ToNestedGraph();
+            var pipeine = _pipelineGraph.Profiles.For(profileName).ToNestedGraph();
             return new Container(pipeine);
         }
 

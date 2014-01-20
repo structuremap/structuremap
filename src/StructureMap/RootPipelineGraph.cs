@@ -8,27 +8,46 @@ using StructureMap.Util;
 
 namespace StructureMap
 {
+    public class Profiles
+    {
+        private readonly Cache<string, IPipelineGraph> _profiles;
+
+        public Profiles(PluginGraph pluginGraph, IPipelineGraph root)
+        {
+            _profiles =
+                new Cache<string, IPipelineGraph>(
+                    name => new ComplexPipelineGraph(root, pluginGraph.Profile(name), new NulloTransientCache()));
+        }
+
+        public IPipelineGraph For(string profileName)
+        {
+            return _profiles[profileName];
+        }
+    }
+
     public class RootPipelineGraph : IPipelineGraph, IInstanceGraph
     {
         private readonly PluginGraph _pluginGraph;
-        private readonly Cache<string, IPipelineGraph> _profiles;
+
         private readonly IObjectCache _transientCache;
+        private readonly Profiles _profiles;
 
         public RootPipelineGraph(PluginGraph pluginGraph)
         {
             _pluginGraph = pluginGraph;
             _transientCache = new NulloTransientCache();
-            _profiles =
-                new Cache<string, IPipelineGraph>(
-                    name => new ComplexPipelineGraph(this, _pluginGraph.Profile(name), new NulloTransientCache()));
+            _profiles = new Profiles(_pluginGraph, this);
+        }
+
+        // Same
+        public Profiles Profiles
+        {
+            get { return _profiles; }
         }
 
         public IInstanceGraph Instances
         {
-            get
-            {
-                return this;
-            }
+            get { return this; }
         }
 
         public IObjectCache Singletons
@@ -48,26 +67,17 @@ namespace StructureMap
 
         public string Profile
         {
-            get
-            {
-                return _pluginGraph.ProfileName;
-            }
+            get { return _pluginGraph.ProfileName; }
         }
 
         public IGraphEjector Ejector
         {
-            get
-            {
-                return new GraphEjector(_pluginGraph, this);
-            }
+            get { return new GraphEjector(_pluginGraph, this); }
         }
 
         public Policies Policies
         {
-            get
-            {
-                return _pluginGraph.Root.Policies;
-            }
+            get { return _pluginGraph.Root.Policies; }
         }
 
         public IPipelineGraph Root()
@@ -110,11 +120,6 @@ namespace StructureMap
             return _pluginGraph.FindInstance(pluginType, name);
         }
 
-        public IPipelineGraph ForProfile(string profile)
-        {
-            return _profiles[profile];
-        }
-
         public void Dispose()
         {
             _pluginGraph.SafeDispose();
@@ -133,7 +138,7 @@ namespace StructureMap
 
         public void RegisterContainer(IContainer container)
         {
-            _pluginGraph.Families[typeof(IContainer)].SetDefault(new ObjectInstance(container));
+            _pluginGraph.Families[typeof (IContainer)].SetDefault(new ObjectInstance(container));
         }
 
         public void Configure(Action<ConfigurationExpression> configure)

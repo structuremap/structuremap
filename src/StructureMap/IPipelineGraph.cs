@@ -6,6 +6,27 @@ using StructureMap.Query;
 
 namespace StructureMap
 {
+    public class PipelineGraph
+    {
+        private readonly PluginGraph _pluginGraph;
+        private readonly IInstanceGraph _instances;
+        private readonly IPipelineGraph _root;
+
+        public PipelineGraph(PluginGraph pluginGraph, IInstanceGraph instances, IPipelineGraph root)
+        {
+            _pluginGraph = pluginGraph;
+            _instances = instances;
+            _root = root;
+        }
+
+        public IPipelineGraph Root()
+        {
+            return _root;
+        }
+    }
+
+
+
     public interface IInstanceGraph
     {
         Instance GetDefault(Type pluginType);
@@ -36,9 +57,7 @@ namespace StructureMap
         /// <returns></returns>
         IPipelineGraph Root();
 
-        // TOO -- do we need this?
-
-        IPipelineGraph ForProfile(string profile);
+        Profiles Profiles { get; }
 
         IPipelineGraph ToNestedGraph();
 
