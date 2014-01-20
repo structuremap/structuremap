@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Diagnostics;
+using NUnit.Framework;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Bugs
 {
@@ -19,19 +21,25 @@ namespace StructureMap.Testing.Bugs
     }
 
 
-    [TestFixture, Ignore("til 1/17/2014")]
+    [TestFixture]
     public class Bug_101
     {
         [Test]
         public void open_generic_scanning()
         {
+
             var container = new Container(i => i.Scan(s => {
                 s.AssemblyContainingType<Bug_101>();
-                s.WithDefaultConventions();
+                //s.WithDefaultConventions();
                 s.AddAllTypesOf(typeof (ISomeInterface<>));
             }));
 
+            container.GetInstance<ISomeInterface<Base>>()
+                .ShouldNotBeNull();
+
+
             container.GetInstance<ISomeInterface<Derived>>()
+                .ShouldBeOfType<Foo>()
                 .ShouldNotBeNull();
         }
     }
