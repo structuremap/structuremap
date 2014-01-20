@@ -71,6 +71,57 @@ namespace StructureMap.Testing.Acceptance
         }
 
         [Test]
+        public void eject_and_remove_a_single_instance_2()
+        {
+            var container = new Container(x =>
+            {
+                x.For<DisposedGuy>().Singleton().AddInstances(guys =>
+                {
+                    guys.Type<DisposedGuy>().Named("A");
+                    guys.Type<DisposedGuy>().Named("B");
+                    guys.Type<DisposedGuy>().Named("C");
+                });
+            });
+
+            // Fetch all the singleton objects
+            var guyA = container.GetInstance<DisposedGuy>("A");
+            var guyB = container.GetInstance<DisposedGuy>("B");
+            var guyC = container.GetInstance<DisposedGuy>("C");
+
+            // Eject *only* guyA
+            container.Model.For<DisposedGuy>().Find("A").EjectAndRemove();
+
+            // Only guyA should be disposed
+            guyA.WasDisposed.ShouldBeTrue();
+            guyB.WasDisposed.ShouldBeFalse();
+            guyC.WasDisposed.ShouldBeFalse();
+
+            // Now, see that guyA is really gone
+            container.GetAllInstances<DisposedGuy>()
+                .ShouldHaveTheSameElementsAs(guyB, guyC);
+        }
+
+        [Test]
+        public void obly_eject_a_single_instance()
+        {
+            var container = new Container(x => {
+                x.For<DisposedGuy>().Singleton().Use<DisposedGuy>();
+            });
+
+            var first = container.GetInstance<DisposedGuy>();
+            var second = container.GetInstance<DisposedGuy>();
+
+            first.ShouldBeTheSameAs(second);
+
+            container.Model.For<DisposedGuy>().Default.EjectObject();
+
+            first.WasDisposed.ShouldBeTrue();
+
+            var third = container.GetInstance<DisposedGuy>();
+            third.ShouldNotBeTheSameAs(first);
+        }
+
+        [Test]
         public void eject_with_custom_lifecycle()
         {
             CustomLifecycle.Cache.DisposeAndClear();

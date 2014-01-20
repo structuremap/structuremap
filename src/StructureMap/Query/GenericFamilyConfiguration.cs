@@ -83,7 +83,13 @@ namespace StructureMap.Query
         public void EjectAndRemove(InstanceRef instance)
         {
             if (instance == null) return;
-            _family.RemoveInstance(instance.Instance);
+            EjectAndRemove(instance.Instance);
+        }
+
+        public void EjectAndRemove(Instance instance)
+        {
+            if (instance == null) return;
+            _family.RemoveInstance(instance);
         }
 
         public void EjectAndRemoveAll()

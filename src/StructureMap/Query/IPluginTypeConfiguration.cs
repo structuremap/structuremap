@@ -15,6 +15,13 @@ namespace StructureMap.Query
         void Eject(Instance instance);
 
         /// <summary>
+        /// Ejects any existing object for this Instance from its lifecycle
+        /// and permanently removes the configured Instance from the container
+        /// </summary>
+        /// <param name="instance"></param>
+        void EjectAndRemove(Instance instance);
+
+        /// <summary>
         /// Builds the object
         /// </summary>
         /// <param name="instance"></param>
@@ -27,6 +34,8 @@ namespace StructureMap.Query
         /// <param name="instance"></param>
         /// <returns></returns>
         bool HasBeenCreated(Instance instance);
+
+
 
         Type PluginType { get; }
     }

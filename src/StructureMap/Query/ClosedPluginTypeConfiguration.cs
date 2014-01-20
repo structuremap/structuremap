@@ -77,6 +77,11 @@ namespace StructureMap.Query
             return _family.Instances.Any();
         }
 
+        public void EjectAndRemove(Instance instance)
+        {
+            _pipelineGraph.Ejector.RemoveCompletely(_family.PluginType, instance);
+        }
+
         public void EjectAndRemove(InstanceRef instance)
         {
             _pipelineGraph.Ejector.RemoveCompletely(_family.PluginType, instance.Instance);

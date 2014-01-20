@@ -51,12 +51,21 @@ namespace StructureMap.Query
         }
 
         /// <summary>
-        /// Only ejects a cached version of the object build by this Instance
+        /// Only ejects a cached version of the object built by this Instance
         /// from its lifecycle.  
         /// </summary>
         public void EjectObject()
         {
             _family.Eject(_instance);
+        }
+
+        /// <summary>
+        /// Ejects any cached version of the object built by this Instance
+        /// and removes the configured Instance completely from this Container
+        /// </summary>
+        public void EjectAndRemove()
+        {
+            _family.EjectAndRemove(_instance);
         }
 
         public T Get<T>() where T : class
