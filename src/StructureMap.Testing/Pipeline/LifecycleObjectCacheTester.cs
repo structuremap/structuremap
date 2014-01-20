@@ -72,25 +72,6 @@ namespace StructureMap.Testing.Pipeline
             cache.Has(typeof (IWidget), instance).ShouldBeTrue();
         }
 
-        [Test, Ignore("Not now")]
-        public void can_serialize()
-        {
-            var widget = new ColorWidget("blue");
-            var instance = new ObjectInstance(widget);
-            cache.Set(typeof (Rule), instance, widget);
 
-            var formatter = new BinaryFormatter();
-            var stream = new MemoryStream();
-            formatter.Serialize(stream, cache);
-
-            stream.Position = 0;
-
-            var deserializedCache = (LifecycleObjectCache) formatter.Deserialize(stream);
-            Assert.AreNotSame(cache, deserializedCache);
-
-            var cachedWidget = deserializedCache.Get(typeof (Rule), instance, null) as ColorWidget;
-            cachedWidget.ShouldNotBeNull();
-            cachedWidget.Color.ShouldEqual("blue");
-        }
     }
 }

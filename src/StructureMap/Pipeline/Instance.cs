@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
@@ -25,7 +24,9 @@ namespace StructureMap.Pipeline
         {
             if (ReturnedType != null && !ReturnedType.CanBeCastTo(interceptor.Accepts))
             {
-                throw new ArgumentOutOfRangeException("ReturnedType {0} cannot be cast to the Interceptor Accepts type {1}".ToFormat(ReturnedType.GetFullName(), interceptor.Accepts.GetFullName()));
+                throw new ArgumentOutOfRangeException(
+                    "ReturnedType {0} cannot be cast to the Interceptor Accepts type {1}".ToFormat(
+                        ReturnedType.GetFullName(), interceptor.Accepts.GetFullName()));
             }
 
             _interceptors.Add(interceptor);
@@ -157,7 +158,5 @@ namespace StructureMap.Pipeline
                        (pluginType != null ? pluginType.AssemblyQualifiedName.GetHashCode() : 0);
             }
         }
-
-
     }
 }

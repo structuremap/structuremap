@@ -1,8 +1,5 @@
-using System.Collections.Generic;
-using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -14,7 +11,6 @@ namespace StructureMap
     public class ConfigurationExpression : Registry
     {
         private readonly PluginGraphBuilder _builder = new PluginGraphBuilder();
-        private readonly List<IPluginGraphConfiguration> _pluginGraphConfigs = new List<IPluginGraphConfiguration>();
 
         internal ConfigurationExpression()
         {

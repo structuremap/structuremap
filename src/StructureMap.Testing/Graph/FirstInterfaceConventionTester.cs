@@ -92,7 +92,7 @@ namespace StructureMap.Testing.Graph
             container.Model.HasImplementationsFor<I3>().ShouldBeFalse();
         }
 
-        [Test, Explicit("Does NOT work in Mono")]
+        [Test]
         public void simple_case()
         {
             container.Model.For<I1>().Instances.Any(x => x.ReturnedType == typeof (C1)).ShouldBeTrue();
