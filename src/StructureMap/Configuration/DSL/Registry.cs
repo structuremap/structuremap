@@ -331,6 +331,11 @@ namespace StructureMap.Configuration.DSL
                 _parent.alter = graph => graph.AddFamilyPolicy(new T());
             }
 
+            public void OnMissingFamily(IFamilyPolicy policy)
+            {
+                _parent.alter = graph => graph.AddFamilyPolicy(policy);
+            }
+
             /// <summary>
             /// <see cref="Configure{T}"/>
             /// </summary>

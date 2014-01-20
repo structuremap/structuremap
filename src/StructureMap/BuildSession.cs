@@ -41,7 +41,7 @@ namespace StructureMap
             var instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
                            ?? new ConfiguredInstance(pluggedType);
 
-            var plan = ConcreteType.BuildUpPlan(pluggedType, instance.Dependencies, _pipelineGraph.PluginGraph.Policies);
+            var plan = ConcreteType.BuildUpPlan(pluggedType, instance.Dependencies, _pipelineGraph.Policies);
 
 
             plan.BuildUp(this, target);
@@ -100,8 +100,7 @@ namespace StructureMap
 
         public object BuildNewInSession(Type pluginType, Instance instance)
         {
-            // TODO -- this is horrendous.  Eliminate the Law of Demeter violation!
-            var plan = instance.ResolveBuildPlan(pluginType, _pipelineGraph.Root().PluginGraph.Policies);
+            var plan = instance.ResolveBuildPlan(pluginType, _pipelineGraph.Policies);
             return plan.Build(this);
         }
 
@@ -153,7 +152,7 @@ namespace StructureMap
 
         public Policies Policies
         {
-            get { return _pipelineGraph.PluginGraph.Policies; }
+            get { return _pipelineGraph.Policies; }
         }
     }
 }

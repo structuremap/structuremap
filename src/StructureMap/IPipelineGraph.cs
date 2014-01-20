@@ -2,15 +2,19 @@ using System;
 using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Query;
 
 namespace StructureMap
 {
     public interface IPipelineGraph : ILifecycleContext, IDisposable
     {
-        [Obsolete("This smells to high heaven.  Nasty coupling, law of demeter")]
-        PluginGraph PluginGraph { get; }
+        IModel ToModel();
+
+        string Profile { get; }
 
         IGraphEjector Ejector { get; }
+
+        Policies Policies { get; }
 
         /// <summary>
         ///     Unwraps a nested container and/or profiles?
@@ -37,5 +41,9 @@ namespace StructureMap
 
 
         IEnumerable<PluginFamily> UniqueFamilies();
+        void RegisterContainer(IContainer container);
+
+
+        void Configure(Action<ConfigurationExpression> configure);
     }
 }

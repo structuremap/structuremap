@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Query;
 using StructureMap.Util;
 
 namespace StructureMap
@@ -32,11 +33,32 @@ namespace StructureMap
             get { return _transientCache; }
         }
 
+        public IModel ToModel()
+        {
+            return new Model(this, _pluginGraph);
+        }
+
+        public string Profile
+        {
+            get
+            {
+                return _pluginGraph.ProfileName;
+            }
+        }
+
         public IGraphEjector Ejector
         {
             get
             {
                 return new GraphEjector(_pluginGraph, this);
+            }
+        }
+
+        public Policies Policies
+        {
+            get
+            {
+                return _pluginGraph.Root.Policies;
             }
         }
 
@@ -101,14 +123,25 @@ namespace StructureMap
             yield return _pluginGraph;
         }
 
-        public PluginGraph PluginGraph
-        {
-            get { return _pluginGraph; }
-        }
-
         public IEnumerable<PluginFamily> UniqueFamilies()
         {
             return _pluginGraph.Families;
+        }
+
+        public void RegisterContainer(IContainer container)
+        {
+            _pluginGraph.Families[typeof(IContainer)].SetDefault(new ObjectInstance(container));
+        }
+
+        public void Configure(Action<ConfigurationExpression> configure)
+        {
+            var registry = new ConfigurationExpression();
+            configure(registry);
+
+            var builder = new PluginGraphBuilder(_pluginGraph);
+            builder.Add(registry);
+
+            builder.RunConfigurations();
         }
 
         public static RootPipelineGraph For(Action<ConfigurationExpression> action)

@@ -233,6 +233,7 @@
     <Compile Include="Examples\BuildUp.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Graph\AssemblyScannerTester.cs" />
+    <Compile Include="Graph\ComplexPipelineGraphTester.cs" />
     <Compile Include="Graph\ContainerConstructorAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>

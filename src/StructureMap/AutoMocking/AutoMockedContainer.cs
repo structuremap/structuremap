@@ -13,8 +13,9 @@ namespace StructureMap.AutoMocking
         {
             nameContainer(this);
 
+            Configure(x => x.Polices.OnMissingFamily(this));
+
             _locator = locator;
-            Model.Pipeline.PluginGraph.AddFamilyPolicy(this);
         }
 
         private void nameContainer(IContainer container)
