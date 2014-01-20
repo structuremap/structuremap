@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
+using StructureMap.Util;
 
 namespace StructureMap
 {
@@ -15,6 +18,28 @@ namespace StructureMap
         public readonly SetterRules SetterRules = new SetterRules();
         public readonly ConstructorSelector ConstructorSelector = new ConstructorSelector();
         public readonly InterceptorPolicies Interceptors = new InterceptorPolicies();
+
+        private readonly object _buildLock = new object();
+        private readonly IDictionary<Type, BuildUpPlan> _buildUpPlans 
+            = new Dictionary<Type, BuildUpPlan>();
+
+        public BuildUpPlan ToBuildUpPlan(Type pluggedType, Func<IConfiguredInstance> findInstance)
+        {
+            if (!_buildUpPlans.ContainsKey(pluggedType))
+            {
+                lock (_buildLock)
+                {
+                    if (!_buildUpPlans.ContainsKey(pluggedType))
+                    {
+                        var instance = findInstance();
+                        var plan = ConcreteType.BuildUpPlan(pluggedType, instance.Dependencies, this);
+                        _buildUpPlans.Add(pluggedType, plan);
+                    }
+                }
+            }
+
+            return _buildUpPlans[pluggedType];
+        }
 
         public bool CanBeAutoFilled(Type concreteType)
         {

@@ -38,11 +38,11 @@ namespace StructureMap
             if (target == null) throw new ArgumentNullException("target");
 
             var pluggedType = target.GetType();
-            var instance = _pipelineGraph.Instances.GetDefault(pluggedType) as IConfiguredInstance
+
+            var plan = _pipelineGraph.Policies.ToBuildUpPlan(pluggedType, () => {
+                return _pipelineGraph.Instances.GetDefault(pluggedType) as IConfiguredInstance
                            ?? new ConfiguredInstance(pluggedType);
-
-            var plan = ConcreteType.BuildUpPlan(pluggedType, instance.Dependencies, _pipelineGraph.Policies);
-
+            });
 
             plan.BuildUp(this, target);
         }
