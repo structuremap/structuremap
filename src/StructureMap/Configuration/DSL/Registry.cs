@@ -360,8 +360,8 @@ namespace StructureMap.Configuration.DSL
 
             /// <summary>
             /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the resulting <see cref="PluginGraph"/>,
-            /// i.e. as opposed to <see cref="RegisterPluginGraphConfiguration"/>, the PluginGraph is built, and the provided
-            /// PluginGraph config obtains access to saig graph.
+            /// i.e. as opposed to Register(), the PluginGraph is built, and the provided
+            /// PluginGraph config obtains access to said graph.
             /// </summary>
             /// <typeparam name="T"></typeparam>
             public void Configure<T>() where T : IPluginGraphConfiguration, new()

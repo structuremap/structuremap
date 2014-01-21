@@ -122,7 +122,6 @@ namespace StructureMap.Query
         /// <summary>
         /// Eject all objects and Instance configuration for this PluginType
         /// </summary>
-        /// <param name="pluginType"></param>
         void EjectAndRemove<TPluginType>();
 
         /// <summary>
