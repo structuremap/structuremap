@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Pipeline
                 instance.Build<IWidget>(new StubBuildSession());
             });
 
-            ex.Title.ShouldEqual("Failure at: \"throws\"");
+            ex.Title.ShouldEqual("Failure at: \"Lambda: throws\"");
         }
 
         [Test]

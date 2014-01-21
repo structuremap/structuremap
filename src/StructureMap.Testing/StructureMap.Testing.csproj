@@ -332,6 +332,7 @@
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeExtensionsTester.cs" />
     <Compile Include="Util\LightweightCacheTester.cs" />
+    <Compile Include="WhatDoIHave_Smoke_Tester.cs" />
     <None Include="..\structuremap.snk">
       <Link>structuremap.snk</Link>
     </None>

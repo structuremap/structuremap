@@ -196,7 +196,19 @@ namespace StructureMap
                 {
                     var parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
                     string parameterList = String.Join(", ", parameters);
-                    return "{0}<{1}>".ToFormat(type.Name, parameterList);
+                    return "{0}<{1}>".ToFormat(type.Name.Split('`').First(), parameterList);
+                }
+
+                return type.Name;
+            }
+
+            public static string GetTypeName(this Type type)
+            {
+                if (type.IsGenericType)
+                {
+                    var parameters = type.GetGenericArguments().Select(x => x.Name).ToArray();
+                    string parameterList = String.Join(", ", parameters);
+                    return "{0}<{1}>".ToFormat(type.Name.Split('`').First(), parameterList);
                 }
 
                 return type.Name;
@@ -208,7 +220,7 @@ namespace StructureMap
                 {
                     var parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
                     string parameterList = String.Join(", ", parameters);
-                    return "{0}<{1}>".ToFormat(type.Name, parameterList);
+                    return "{0}<{1}>".ToFormat(type.FullName.Split('`').First(), parameterList);
                 }
 
                 return type.FullName;

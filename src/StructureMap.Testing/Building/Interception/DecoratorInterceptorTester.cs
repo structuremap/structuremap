@@ -132,6 +132,11 @@ namespace StructureMap.Testing.Building.Interception
         {
             
         }
+
+        public void Debug()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class BorderedTarget : DecoratedTarget
@@ -155,7 +160,10 @@ namespace StructureMap.Testing.Building.Interception
 
         }
 
-
+        public void Debug()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class ContextKeepingTarget : ITarget
@@ -180,6 +188,11 @@ namespace StructureMap.Testing.Building.Interception
         }
 
         public void Activate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Debug()
         {
             throw new NotImplementedException();
         }

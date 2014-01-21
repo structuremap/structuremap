@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.TypeRules;
 
@@ -9,7 +12,7 @@ namespace StructureMap.Diagnostics
     public class WhatDoIHaveWriter
     {
         private readonly IPipelineGraph _graph;
-        private List<InstanceRef> _instances;
+        private List<Instance> _instances;
         private TextReportWriter _writer;
 
         public WhatDoIHaveWriter(IPipelineGraph graph)
@@ -29,18 +32,15 @@ namespace StructureMap.Diagnostics
 
         private void writeContentsOfPluginTypes(StringWriter stringWriter)
         {
-            _writer = new TextReportWriter(3);
-            _instances = new List<InstanceRef>();
+            _writer = new TextReportWriter(5);
+            _instances = new List<Instance>();
 
             _writer.AddDivider('=');
-            _writer.AddText("PluginType", "Name", "Description");
+            _writer.AddText("PluginType", "Namespace", "Lifecycle", "Name", "Description");
 
             var model = _graph.ToModel();
 
-            foreach (var pluginType in model.PluginTypes)
-            {
-                writePluginType(pluginType);
-            }
+            model.PluginTypes.OrderBy(x => x.PluginType.Name).Each(writePluginType);
 
             _writer.AddDivider('=');
 
@@ -52,7 +52,9 @@ namespace StructureMap.Diagnostics
             _writer.AddDivider('-');
             var contents = new[]
             {
-                "{0} ({1})".ToFormat(pluginType.PluginType.GetName(), pluginType.PluginType.GetFullName()),
+                "{0}".ToFormat(pluginType.PluginType.GetTypeName()),
+                pluginType.PluginType.Namespace,
+                string.Empty,
                 string.Empty,
                 string.Empty
             };
@@ -60,18 +62,18 @@ namespace StructureMap.Diagnostics
             if (pluginType.Default != null)
             {
                 setContents(contents, pluginType.Default);
+                if (contents[3].IsEmpty())
+                {
+                    contents[3] = "(Default)";
+                }
+                else
+                {
+                    contents[3] += " (Default)";
+                }
+
             }
 
             _writer.AddText(contents);
-
-            if (pluginType.Lifecycle != null)
-            {
-                _writer.AddContent("Lifecycle:  " + pluginType.Lifecycle);
-            }
-            else
-            {
-                _writer.AddContent("Lifecycle:  PerRequest/Transient");
-            }
 
             foreach (var instance in pluginType.Instances)
             {
@@ -81,12 +83,12 @@ namespace StructureMap.Diagnostics
 
         private void writeInstance(InstanceRef instance)
         {
-            if (_instances.Contains(instance))
+            if (_instances.Contains(instance.Instance))
             {
                 return;
             }
 
-            var contents = new[] {string.Empty, string.Empty, string.Empty};
+            var contents = new[] {string.Empty, string.Empty, string.Empty, string.Empty, string.Empty};
             setContents(contents, instance);
 
             _writer.AddText(contents);
@@ -95,10 +97,16 @@ namespace StructureMap.Diagnostics
 
         private void setContents(string[] contents, InstanceRef instance)
         {
-            contents[1] = instance.Name;
-            contents[2] = instance.Description;
+            contents[2] = instance.Lifecycle.ToName();
 
-            _instances.Add(instance);
+            if (instance.Instance.HasExplicitName())
+            {
+                contents[3] = instance.Name;
+            }
+
+            contents[4] = instance.Description;
+
+            _instances.Add(instance.Instance);
         }
     }
 }

@@ -121,6 +121,7 @@ namespace StructureMap.Testing.Building.Interception
     public interface ITarget
     {
         void Activate();
+        void Debug();
     }
 
     public class Target : ITarget
@@ -130,6 +131,11 @@ namespace StructureMap.Testing.Building.Interception
         void ITarget.Activate()
         {
             HasBeenActivated = true;
+        }
+
+        public void Debug()
+        {
+            throw new NotImplementedException();
         }
 
         public void TurnGreen()

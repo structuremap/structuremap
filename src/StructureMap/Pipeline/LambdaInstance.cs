@@ -61,7 +61,7 @@ namespace StructureMap.Pipeline
 
         public override string Description
         {
-            get { return _description; }
+            get { return "Lambda: " + _description; }
         }
 
         public override Instance CloseType(Type[] types)
