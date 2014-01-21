@@ -74,6 +74,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuMVC.StructureMap3.Testi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.LegacyAttributeSupport", "StructureMap.LegacyAttributeSupport\StructureMap.LegacyAttributeSupport.csproj", "{840415D3-247D-449A-BC79-605D0A1C6F81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Net4", "StructureMap.Net4\StructureMap.Net4.csproj", "{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Build|.NET = Build|.NET
@@ -414,6 +416,21 @@ Global
 		{840415D3-247D-449A-BC79-605D0A1C6F81}.Release|Any CPU.Build.0 = Release|Any CPU
 		{840415D3-247D-449A-BC79-605D0A1C6F81}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{840415D3-247D-449A-BC79-605D0A1C6F81}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Build|.NET.ActiveCfg = Release|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Build|Any CPU.ActiveCfg = Release|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Build|Any CPU.Build.0 = Release|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Build|Mixed Platforms.Build.0 = Release|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Release|.NET.ActiveCfg = Release|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,8 +6,6 @@ namespace StructureMap.Graph
 {
     public interface IAssemblyScanner
     {
-        #region Designating Assemblies
-
         /// <summary>
         /// Add an Assembly to the scanning operation
         /// </summary>
@@ -21,11 +19,6 @@ namespace StructureMap.Graph
         void Assembly(string assemblyName);
 
         /// <summary>
-        /// Add the currently executing Assembly to the scanning operation
-        /// </summary>
-        void TheCallingAssembly();
-
-        /// <summary>
         /// Add the Assembly that contains type T to the scanning operation
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -36,39 +29,6 @@ namespace StructureMap.Graph
         /// </summary>
         /// <param name="type"></param>
         void AssemblyContainingType(Type type);
-
-        /// <summary>
-        /// Sweep the designated path and add any Assembly's found in this folder to the
-        /// scanning operation
-        /// </summary>
-        /// <param name="path"></param>
-        void AssembliesFromPath(string path);
-
-        /// <summary>
-        /// Sweep the designated path and add any Assembly's found in this folder to the
-        /// scanning operation.  The assemblyFilter can be used to filter or limit the 
-        /// Assembly's that are picked up.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="assemblyFilter"></param>
-        void AssembliesFromPath(string path, Predicate<Assembly> assemblyFilter);
-
-        /// <summary>
-        /// Sweep the application base directory of current app domain and add any Assembly's 
-        /// found to the scanning operation.
-        /// </summary>
-        void AssembliesFromApplicationBaseDirectory();
-
-        /// <summary>
-        /// Sweep the application base directory of current app domain and add any Assembly's 
-        /// found to the scanning operation. The assemblyFilter can be used to filter or limit the 
-        /// Assembly's that are picked up.
-        /// </summary>
-        void AssembliesFromApplicationBaseDirectory(Predicate<Assembly> assemblyFilter);
-
-        #endregion
-
-        #region Other options
 
         /// <summary>
         /// Directs the scanning operation to automatically detect and include any Registry
@@ -87,10 +47,6 @@ namespace StructureMap.Graph
         /// </summary>
         /// <param name="pluginType"></param>
         FindAllTypesFilter AddAllTypesOf(Type pluginType);
-
-        #endregion
-
-        #region Filtering types
 
         /// <summary>
         /// Exclude types that match the Predicate from being scanned
@@ -138,8 +94,6 @@ namespace StructureMap.Graph
         void ExcludeType<T>();
 
         // ... Other methods
-
-        #endregion
 
         // ... Other methods
 

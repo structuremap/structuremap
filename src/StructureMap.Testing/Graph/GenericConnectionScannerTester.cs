@@ -44,7 +44,7 @@ namespace StructureMap.Testing.Graph
         }
 
 
-        [Test, ExpectedException(typeof (ApplicationException))]
+        [Test, ExpectedException(typeof (InvalidOperationException))]
         public void fails_on_closed_type()
         {
             new GenericConnectionScanner(typeof (double));
