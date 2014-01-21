@@ -33,8 +33,8 @@ namespace StructureMap.Testing.Building.Interception
             var activator1 = new ActivatorInterceptor<ITarget>(x => x.Activate());
             var activator2 = new ActivatorInterceptor<Target>(x => x.UseSession(null));
             var activator3 = new ActivatorInterceptor<Target>(x => x.ThrowUp());
-            var activator4 = new ActivatorInterceptor<ITarget>(x => { Debug.WriteLine(x);  });
-            var activator5 = new ActivatorInterceptor<IGateway>(x => { Debug.WriteLine(x); });
+            var activator4 = new ActivatorInterceptor<ITarget>(x => Debug.WriteLine(x));
+            var activator5 = new ActivatorInterceptor<IGateway>(x => Debug.WriteLine(x));
 
             var policies = new InterceptorPolicies();
             policies.Add(activator1.ToPolicy());
