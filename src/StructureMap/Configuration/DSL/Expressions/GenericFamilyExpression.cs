@@ -33,7 +33,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         private GenericFamilyExpression alterAndContinue(Action<PluginFamily> action)
         {
             _registry.alter = graph => {
-                var family = graph.Families[_pluginType];
+                var family = graph.FindExistingOrCreateFamily(_pluginType);
+
                 action(family);
             };
 

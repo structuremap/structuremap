@@ -33,6 +33,14 @@ namespace StructureMap.Testing
 
     public static class SpecificationExtensions
     {
+        public static void ShouldContain<T>(this IEnumerable<T> actual, Func<T, bool> expected)
+        {
+            actual.Count().ShouldBeGreaterThan(0);
+            T result = actual.FirstOrDefault(expected);
+            Assert.That(result, Is.Not.EqualTo(default(T)), "Expected item was not found in the actual sequence");
+        }
+
+
         public static void ShouldHaveTheSameElementsAs<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
         {
             var actualList = (actual is IList) ? (IList) actual : actual.ToList();

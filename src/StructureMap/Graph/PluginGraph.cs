@@ -182,6 +182,16 @@ namespace StructureMap.Graph
             return _families[pluginType].GetInstance(name) != null;
         }
 
+        public PluginFamily FindExistingOrCreateFamily(Type pluginType)
+        {
+            if (_families.Has(pluginType)) return _families[pluginType];
+
+            var family = new PluginFamily(pluginType);
+            _families[pluginType] = family;
+
+            return family;
+        }
+
         public bool HasFamily(Type pluginType)
         {
             if (_families.Has(pluginType)) return true;

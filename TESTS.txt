@@ -3,3 +3,4 @@ StructureMap.Xml.Testing
 StructureMap.Web.Testing
 StructureMap.AutoMocking.Testing
 StructureMap.AutoMocking.Moq.Testing
+FubuMVC.StructureMap3.Testing

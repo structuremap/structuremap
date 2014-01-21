@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
@@ -11,10 +13,16 @@ namespace StructureMap
     public class ConfigurationExpression : Registry
     {
         private readonly PluginGraphBuilder _builder = new PluginGraphBuilder();
+        private readonly IList<Registry> _registries = new List<Registry>();
 
         internal ConfigurationExpression()
         {
             _builder.Add(this);
+        }
+
+        internal IList<Registry> Registries
+        {
+            get { return _registries; }
         }
 
         /// <summary>
@@ -32,6 +40,7 @@ namespace StructureMap
         /// <param name="registry"></param>
         public void AddRegistry(Registry registry)
         {
+            _registries.Add(registry);
             _builder.Add(registry);
         }
 

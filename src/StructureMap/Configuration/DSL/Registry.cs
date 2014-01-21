@@ -76,7 +76,10 @@ namespace StructureMap.Configuration.DSL
         /// <param name="registry"></param>
         public void IncludeRegistry(Registry registry)
         {
-            alter = graph => { registry.As<IPluginGraphConfiguration>().Configure(graph); };
+            var pluginGraphConfiguration = registry.As<IPluginGraphConfiguration>();
+
+            alter = pluginGraphConfiguration.Configure;
+            register = pluginGraphConfiguration.Register;
         }
 
         /// <summary>
