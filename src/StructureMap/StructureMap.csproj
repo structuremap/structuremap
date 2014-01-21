@@ -168,6 +168,10 @@
     <Compile Include="Pipeline\InstanceMementoPropertyReader.cs" />
     <Compile Include="Pipeline\IObjectCache.cs" />
     <Compile Include="Pipeline\LambdaInstance.cs" />
+    <Compile Include="Pipeline\Lazy\FuncFactoryTemplate.cs" />
+    <Compile Include="Pipeline\Lazy\FuncInstance.cs" />
+    <Compile Include="Pipeline\Lazy\LazyFactoryTemplate.cs" />
+    <Compile Include="Pipeline\Lazy\LazyInstance.cs" />
     <Compile Include="Pipeline\LifecycleObjectCache.cs" />
     <Compile Include="Pipeline\Lifecycles.cs" />
     <Compile Include="Pipeline\ListCoercion.cs" />
