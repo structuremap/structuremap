@@ -52,7 +52,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             var child = new InstanceExpression<TPluginType>(list.Add);
             action(child);
 
-            alter = family => list.ForEach(family.AddInstance);
+            alter = family => list.Each(family.AddInstance);
             return this;
         }
 

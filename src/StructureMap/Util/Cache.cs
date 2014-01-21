@@ -6,7 +6,6 @@ using System.Linq;
 namespace StructureMap.Util
 {
     // TODO -- at least use reader/writer locks
-    [Serializable]
     public class Cache<TKey, TValue> : IEnumerable<TValue>
     {
         private readonly object _locker = new object();

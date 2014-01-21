@@ -16,7 +16,7 @@ namespace StructureMap.Graph
                     string.Format("Could not Determine Whether Type '{0}' plugs into Type '{1}'",
                         pluginType.Name,
                         pluggedType.Name);
-                throw new ApplicationException(message, e);
+                throw new ArgumentException(message, e);
             }
         }
 

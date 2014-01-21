@@ -72,13 +72,13 @@ namespace StructureMap
     {
         public static class TypeExtensions
         {
-            internal static bool HasAttribute<T>(this ICustomAttributeProvider provider) where T : Attribute
+            internal static bool HasAttribute<T>(this MemberInfo provider) where T : Attribute
             {
                 var atts = provider.GetCustomAttributes(typeof (T), true);
                 return atts.Length > 0;
             }
 
-            internal static void ForAttribute<T>(this ICustomAttributeProvider provider, Action<T> action)
+            internal static void ForAttribute<T>(this MemberInfo provider, Action<T> action)
                 where T : Attribute
             {
                 foreach (T attribute in provider.GetCustomAttributes(typeof (T), true))
@@ -192,26 +192,19 @@ namespace StructureMap
 
             public static string GetName(this Type type)
             {
-                if (type.IsGenericType)
-                {
-                    var parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
-                    string parameterList = String.Join(", ", parameters);
-                    return "{0}<{1}>".ToFormat(type.Name, parameterList);
-                }
-
-                return type.Name;
+                return type.IsGenericType ? GetGenericName(type) : type.Name;
             }
 
             public static string GetFullName(this Type type)
             {
-                if (type.IsGenericType)
-                {
-                    var parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
-                    string parameterList = String.Join(", ", parameters);
-                    return "{0}<{1}>".ToFormat(type.Name, parameterList);
-                }
+                return type.IsGenericType ? GetGenericName(type) : type.FullName;
+            }
 
-                return type.FullName;
+            private static string GetGenericName(Type type)
+            {
+                var parameters = type.GetGenericArguments().Select(t => t.GetName());
+                string parameterList = String.Join(", ", parameters);
+                return "{0}<{1}>".ToFormat(type.Name, parameterList);
             }
 
             public static bool CanBeCreated(this Type type)

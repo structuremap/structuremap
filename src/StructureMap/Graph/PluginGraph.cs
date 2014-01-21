@@ -16,7 +16,6 @@ namespace StructureMap.Graph
     /// <summary>
     ///   Models the runtime configuration of a StructureMap Container
     /// </summary>
-    [Serializable]
     public class PluginGraph : IPluginGraph, IDisposable
     {
         private readonly Cache<Type, PluginFamily> _families;

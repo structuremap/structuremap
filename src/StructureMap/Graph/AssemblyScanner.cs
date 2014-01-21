@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Configuration;
@@ -35,7 +33,7 @@ namespace StructureMap.Graph
 
         public void Assembly(string assemblyName)
         {
-            Assembly(AppDomain.CurrentDomain.Load(assemblyName));
+            Assembly(System.Reflection.Assembly.Load(assemblyName));
         }
 
         public void Convention<T>() where T : IRegistrationConvention, new()
@@ -50,16 +48,6 @@ namespace StructureMap.Graph
         public void LookForRegistries()
         {
             Convention<FindRegistriesScanner>();
-        }
-
-        public void TheCallingAssembly()
-        {
-            var callingAssembly = findTheCallingAssembly();
-
-            if (callingAssembly != null)
-            {
-                _assemblies.Add(callingAssembly);
-            }
         }
 
         public void AssemblyContainingType<T>()
@@ -126,54 +114,7 @@ namespace StructureMap.Graph
             _postScanningActions.Add(modifyGraph);
         }
 
-        public void AssembliesFromApplicationBaseDirectory()
-        {
-            AssembliesFromApplicationBaseDirectory(a => true);
-        }
-
-        public void AssembliesFromApplicationBaseDirectory(Predicate<Assembly> assemblyFilter)
-        {
-            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-            AssembliesFromPath(baseDirectory, assemblyFilter);
-            var binPath = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
-            if (Directory.Exists(binPath))
-            {
-                AssembliesFromPath(binPath, assemblyFilter);
-            }
-        }
-
-        public void AssembliesFromPath(string path)
-        {
-            AssembliesFromPath(path, a => true);
-        }
-
-        public void AssembliesFromPath(string path, Predicate<Assembly> assemblyFilter)
-        {
-            var assemblyPaths = Directory.GetFiles(path)
-                .Where(file =>
-                    Path.GetExtension(file).Equals(
-                        ".exe",
-                        StringComparison.OrdinalIgnoreCase)
-                    ||
-                    Path.GetExtension(file).Equals(
-                        ".dll",
-                        StringComparison.OrdinalIgnoreCase));
-
-            foreach (var assemblyPath in assemblyPaths)
-            {
-                Assembly assembly = null;
-                try
-                {
-                    assembly = System.Reflection.Assembly.LoadFrom(assemblyPath);
-                }
-                catch
-                {
-                }
-                if (assembly != null && assemblyFilter(assembly)) Assembly(assembly);
-            }
-        }
-
+        
         public void With(IRegistrationConvention convention)
         {
             _conventions.Fill(convention);
@@ -193,34 +134,9 @@ namespace StructureMap.Graph
 
         public bool Contains(string assemblyName)
         {
-            foreach (var assembly in _assemblies)
-            {
-                if (assembly.GetName().Name == assemblyName)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private static Assembly findTheCallingAssembly()
-        {
-            var trace = new StackTrace(false);
-
-            var thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
-            Assembly callingAssembly = null;
-            for (var i = 0; i < trace.FrameCount; i++)
-            {
-                var frame = trace.GetFrame(i);
-                var assembly = frame.GetMethod().DeclaringType.Assembly;
-                if (assembly != thisAssembly)
-                {
-                    callingAssembly = assembly;
-                    break;
-                }
-            }
-            return callingAssembly;
+            return _assemblies
+                .Select(assembly => new AssemblyName(assembly.FullName))
+                .Any(aName => aName.Name == assemblyName);
         }
 
 
