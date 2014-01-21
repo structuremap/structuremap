@@ -196,7 +196,7 @@ namespace StructureMap.Pipeline
         {
             if (typeof (TElement).IsArray)
             {
-                throw new ApplicationException("Please specify the element type in the call to TheArrayOf");
+                throw new ArgumentException("Please specify the element type in the call to TheArrayOf");
             }
 
             return new ArrayDefinitionExpression<TThis, TElement>(thisObject(), null);

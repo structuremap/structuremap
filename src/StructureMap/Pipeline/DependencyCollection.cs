@@ -119,8 +119,7 @@ namespace StructureMap.Pipeline
                 {
                     try
                     {
-                        var converter = TypeDescriptor.GetConverter(type);
-                        @dependency = converter.ConvertFrom(null, CultureInfo.InvariantCulture, @dependency);
+                        @dependency = Convert.ChangeType(@dependency, type, CultureInfo.InvariantCulture);
                     }
                     catch (Exception e)
                     {

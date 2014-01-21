@@ -127,7 +127,7 @@ namespace StructureMap.Diagnostics
             var builder = new StringBuilder();
             var writer = new StringWriter(builder);
 
-            _validationErrors.ForEach(e => e.Write(writer));
+            _validationErrors.Each(e => e.Write(writer));
             _errors.ForEach(e => e.Write(writer));
 
             writer.WriteLine();
