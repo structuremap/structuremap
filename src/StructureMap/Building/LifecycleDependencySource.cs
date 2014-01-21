@@ -37,7 +37,7 @@ namespace StructureMap.Building
             }
         }
 
-        public Expression ToExpression(ParameterExpression session)
+        public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
             var typeArg = Expression.Constant(_pluginType);
             var instanceArg = Expression.Constant(_instance);

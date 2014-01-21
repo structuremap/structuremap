@@ -12,7 +12,7 @@ namespace StructureMap.Building
         private readonly Type _concreteType;
         private readonly ConstructorStep _constructor;
         private readonly IList<Setter> _setters = new List<Setter>();
-        private readonly Lazy<Func<IBuildSession, object>> _func;
+        private readonly Lazy<Func<IBuildSession, IContext, object>> _func;
 
 
         public ConcreteBuild(Type concreteType) : this(concreteType, new ConstructorSelector().Select(concreteType))
@@ -24,9 +24,9 @@ namespace StructureMap.Building
             _concreteType = concreteType;
             _constructor = constructor;
 
-            _func = new Lazy<Func<IBuildSession, object>>(() => {
+            _func = new Lazy<Func<IBuildSession, IContext, object>>(() => {
                 var @delegate = ToDelegate();
-                return @delegate as Func<IBuildSession, object>;
+                return @delegate as Func<IBuildSession, IContext, object>;
             });
         }
 
@@ -55,9 +55,9 @@ namespace StructureMap.Building
             get { return _constructor; }
         }
 
-        public object Build(IBuildSession session)
+        public object Build(IBuildSession session, IContext context)
         {
-            return _func.Value(session);
+            return _func.Value(session, context);
         }
 
         public string Description
@@ -73,26 +73,24 @@ namespace StructureMap.Building
 
         public Delegate ToDelegate()
         {
-            var inner = ToExpression(Parameters.Session);
+            var inner = ToExpression(Parameters.Session, Parameters.Context);
 
-            
+            var lambdaType = typeof (Func<,,>).MakeGenericType(typeof (IBuildSession), typeof(IContext), _concreteType);
 
-            var lambdaType = typeof (Func<,>).MakeGenericType(typeof (IBuildSession), _concreteType);
-
-            var lambda = Expression.Lambda(lambdaType, inner, Parameters.Session);
+            var lambda = Expression.Lambda(lambdaType, inner, Parameters.Session, Parameters.Context);
 
             return lambda.Compile();
         }
 
-        public Expression ToExpression(ParameterExpression session)
+        public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
-            var expression = buildInnerExpression(session);
+            var expression = buildInnerExpression(session, context);
             return TryCatchWrapper.WrapFunc<StructureMapBuildException>(_concreteType, expression, this);
         }
 
-        private Expression buildInnerExpression(ParameterExpression session)
+        private Expression buildInnerExpression(ParameterExpression session, ParameterExpression context)
         {
-            var newExpr = _constructor.ToExpression(session);
+            var newExpr = _constructor.ToExpression(session, context);
 
             if (!_setters.Any())
             {
@@ -100,7 +98,7 @@ namespace StructureMap.Building
             }
 
 
-            return Expression.MemberInit(newExpr, _setters.Select(x => x.ToBinding(session)));
+            return Expression.MemberInit(newExpr, _setters.Select(x => x.ToBinding(session, context)));
         }
 
         public Type ReturnedType

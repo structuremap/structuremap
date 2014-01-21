@@ -54,7 +54,7 @@ namespace StructureMap.Testing.Building.Interception
         {
             theInterceptor = new DecoratorInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t));
 
-            theInterceptor.Description.ShouldContain("new ContextKeepingTarget(IBuildSession, ITarget)");
+            theInterceptor.Description.ShouldContain("new ContextKeepingTarget(IContext, ITarget)");
         }
 
         [Test]
@@ -87,18 +87,18 @@ namespace StructureMap.Testing.Building.Interception
 
 
         [Test]
-        public void compile_and_use_by_itself_using_IBuildSession()
+        public void compile_and_use_by_itself_using_IContext()
         {
             theInterceptor = new DecoratorInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t));
 
             var variable = Expression.Variable(typeof(ITarget), "target");
 
-            var expression = theInterceptor.ToExpression(Parameters.Session, variable);
+            var expression = theInterceptor.ToExpression(Parameters.Context, variable);
 
-            var lambdaType = typeof(Func<IBuildSession, ITarget, ITarget>);
-            var lambda = Expression.Lambda(lambdaType, expression, Parameters.Session, variable);
+            var lambdaType = typeof(Func<IContext, ITarget, ITarget>);
+            var lambda = Expression.Lambda(lambdaType, expression, Parameters.Context, variable);
 
-            var func = lambda.Compile().As<Func<IBuildSession, ITarget, ITarget>>();
+            var func = lambda.Compile().As<Func<IContext, ITarget, ITarget>>();
 
             var target = new Target();
             var session = new FakeBuildSession();
@@ -160,16 +160,16 @@ namespace StructureMap.Testing.Building.Interception
 
     public class ContextKeepingTarget : ITarget
     {
-        private readonly IBuildSession _session;
+        private readonly IContext _session;
         private readonly ITarget _inner;
 
-        public ContextKeepingTarget(IBuildSession session, ITarget inner)
+        public ContextKeepingTarget(IContext session, ITarget inner)
         {
             _session = session;
             _inner = inner;
         }
 
-        public IBuildSession Session
+        public IContext Session
         {
             get { return _session; }
         }
@@ -187,7 +187,7 @@ namespace StructureMap.Testing.Building.Interception
 
     public class SadContextKeepingTarget : ContextKeepingTarget
     {
-        public SadContextKeepingTarget(IBuildSession session, ITarget inner) : base(session, inner)
+        public SadContextKeepingTarget(IContext session, ITarget inner) : base(session, inner)
         {
             throw new DivideByZeroException("no soup for you!");
         }

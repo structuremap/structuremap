@@ -14,7 +14,8 @@ namespace StructureMap.Testing.Building
         {
             var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
                 var build = new ConcreteBuild<ClassThatBlowsUp>();
-                build.Build(new StubBuildSession());
+                var session = new StubBuildSession();
+                build.Build(session, session);
             });
 
             Debug.WriteLine(ex);

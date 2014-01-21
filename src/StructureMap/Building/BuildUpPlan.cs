@@ -52,33 +52,33 @@ namespace StructureMap.Building
             Add(new Setter(member, value));
         }
 
-        public void BuildUp(IBuildSession session, object @object)
+        public void BuildUp(IBuildSession session, IContext context, object @object)
         {
-            _buildups.Value.BuildUp(session, @object);
+            _buildups.Value.BuildUp(session, context, @object);
         }
 
         public interface ISetterActions
         {
-            void BuildUp(IBuildSession session, object @object);
+            void BuildUp(IBuildSession session, IContext context, object @object);
         }
 
         public class SetterActions<T> : ISetterActions where T : class
         {
-            private readonly IEnumerable<Action<IBuildSession, T>> _actions;
+            private readonly IEnumerable<Action<IBuildSession, IContext, T>> _actions;
 
             public SetterActions(IEnumerable<Setter> setters)
             {
                 var target = Expression.Parameter(typeof (T), "target");
                 _actions = setters.Select(x => {
                     var lambda = x.ToSetterLambda(typeof (T), target);
-                    return lambda.Compile().As<Action<IBuildSession, T>>();
+                    return lambda.Compile().As<Action<IBuildSession, IContext, T>>();
                 }).ToArray();
             }
 
-            public void BuildUp(IBuildSession session, object @object)
+            public void BuildUp(IBuildSession session, IContext context, object @object)
             {
                 var target = @object.As<T>();
-                _actions.Each(x => x(session, target));
+                _actions.Each(x => x(session, context, target));
             }
         }
     }

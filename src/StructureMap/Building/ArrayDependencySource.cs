@@ -40,9 +40,9 @@ namespace StructureMap.Building
             }
         }
 
-        public virtual Expression ToExpression(ParameterExpression session)
+        public virtual Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
-            return Expression.NewArrayInit(_itemType, _items.Select(x => x.ToExpression(session)));
+            return Expression.NewArrayInit(_itemType, _items.Select(x => x.ToExpression(session, context)));
         }
 
         public Type ReturnedType

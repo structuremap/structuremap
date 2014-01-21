@@ -99,7 +99,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Use a lambda using the IContext to construct the default instance of the Plugin type
         /// 
         /// </summary>
-        public LambdaInstance<TPluginType> Use(Expression<Func<IBuildSession, TPluginType>> expression)
+        public LambdaInstance<TPluginType> Use(Expression<Func<IContext, TPluginType>> expression)
         {
             var instance = new LambdaInstance<TPluginType>(expression);
 
@@ -113,7 +113,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Use this signature if your Func is too complicated to be an Expression
         /// </summary>
         /// <param name="description">Diagnostic description of the func</param>
-        public LambdaInstance<TPluginType> Use(string description, Func<IBuildSession, TPluginType> func)
+        public LambdaInstance<TPluginType> Use(string description, Func<IContext, TPluginType> func)
         {
             var instance = new LambdaInstance<TPluginType>(description, func);
 
@@ -190,14 +190,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-        public LambdaInstance<TPluginType> UseIfNone(Expression<Func<IBuildSession, TPluginType>> func)
+        public LambdaInstance<TPluginType> UseIfNone(Expression<Func<IContext, TPluginType>> func)
         {
             var instance = new LambdaInstance<TPluginType>(func);
             registerFallBack(instance);
             return instance;
         }
 
-        public LambdaInstance<TPluginType> UseIfNone(string description, Func<IBuildSession, TPluginType> func)
+        public LambdaInstance<TPluginType> UseIfNone(string description, Func<IContext, TPluginType> func)
         {
             var instance = new LambdaInstance<TPluginType>(description, func);
             registerFallBack(instance);
@@ -257,7 +257,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Register an Action to run against any object of this PluginType immediately after
         /// it is created, but before the new object is passed back to the caller
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Expression<Action<IBuildSession, TPluginType>> handler)
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Expression<Action<IContext, TPluginType>> handler)
         {
             return InterceptWith(new ActivatorInterceptor<TPluginType>(handler));
         }
@@ -267,7 +267,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// it is created, but before the new object is passed back to the caller
         /// </summary>
         /// <param name="description">Descriptive text for diagnostics</param>
-        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(string description, Action<IBuildSession, TPluginType> handler)
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(string description, Action<IContext, TPluginType> handler)
         {
             return InterceptWith(InterceptorFactory.ForAction(description, handler));
         }
@@ -314,7 +314,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// DecorateAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(Expression<Func<IBuildSession, TPluginType, TPluginType>> handler)
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(Expression<Func<IContext, TPluginType, TPluginType>> handler)
         {
             return InterceptWith(new DecoratorInterceptor<TPluginType>(handler));
         }
@@ -326,7 +326,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// scenarios or to return a decorator.
         /// </summary>
         /// <param name="description">Descriptive text for diagnostics</param>
-        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(string description, Func<IBuildSession, TPluginType, TPluginType> handler)
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(string description, Func<IContext, TPluginType, TPluginType> handler)
         {
             return InterceptWith(InterceptorFactory.ForFunc(description, handler));
         }
@@ -396,7 +396,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Add an Instance to this type created by a Lambda
         /// </summary>
-        public LambdaInstance<TPluginType> Add(Expression<Func<IBuildSession, TPluginType>> func)
+        public LambdaInstance<TPluginType> Add(Expression<Func<IContext, TPluginType>> func)
         {
             var instance = new LambdaInstance<TPluginType>(func);
             Add(instance);
@@ -407,7 +407,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Add an Instance to this type created by a Lambda
         /// </summary>
-        public LambdaInstance<TPluginType> Add(string description, Func<IBuildSession, TPluginType> func)
+        public LambdaInstance<TPluginType> Add(string description, Func<IContext, TPluginType> func)
         {
             var instance = new LambdaInstance<TPluginType>(description, func);
             Add(instance);

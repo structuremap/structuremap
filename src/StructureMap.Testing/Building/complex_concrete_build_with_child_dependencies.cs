@@ -22,7 +22,8 @@ namespace StructureMap.Testing.Building
 
             build.Set(x => x.Referee, new ConcreteBuild<Referee>().ConstructorArgs("John", "Smith"));
 
-            game = build.Build(new FakeBuildSession()).As<Game>();
+            var session = new FakeBuildSession();
+            game = build.Build(session, session).As<Game>();
         }
 
         [Test]

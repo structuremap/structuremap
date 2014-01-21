@@ -3,7 +3,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-    public interface IBuildSession : IContext
+    public interface IBuildSession
     {
         object BuildNewInSession(Type pluginType, Instance instance);
         object BuildNewInOriginalContext(Type pluginType, Instance instance);
@@ -13,5 +13,6 @@ namespace StructureMap
 
         void Push(Instance instance);
         void Pop();
+
     }
 }

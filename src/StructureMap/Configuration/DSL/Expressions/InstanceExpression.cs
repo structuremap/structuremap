@@ -138,7 +138,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        LambdaInstance<T> ConstructedBy(Expression<Func<IBuildSession, T>> func);
+        LambdaInstance<T> ConstructedBy(Expression<Func<IContext, T>> func);
 
         /// <summary>
         /// Create an Instance that builds an object by calling a Lambda or
@@ -148,7 +148,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="func"></param>
         /// <param name="description">Diagnostic description of the func</param>
         /// <returns></returns>
-        LambdaInstance<T> ConstructedBy(string description, Func<IBuildSession, T> func);
+        LambdaInstance<T> ConstructedBy(string description, Func<IContext, T> func);
 
         /// <summary>
         /// Use the Instance of this PluginType with the specified name.  This is
@@ -238,12 +238,12 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new LambdaInstance<T>(description, func));
         }
 
-        public LambdaInstance<T> ConstructedBy(Expression<Func<IBuildSession, T>> func)
+        public LambdaInstance<T> ConstructedBy(Expression<Func<IContext, T>> func)
         {
             return returnInstance(new LambdaInstance<T>(func));
         }
 
-        public LambdaInstance<T> ConstructedBy(string description, Func<IBuildSession, T> func)
+        public LambdaInstance<T> ConstructedBy(string description, Func<IContext, T> func)
         {
             return returnInstance(new LambdaInstance<T>(description, func));
         }

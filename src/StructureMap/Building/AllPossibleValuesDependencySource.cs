@@ -10,7 +10,7 @@ namespace StructureMap.Building
 {
     public class AllPossibleValuesDependencySource : IDependencySource
     {
-        public static readonly MethodInfo SessionMethod = typeof (IContext).GetMethod("GetAllInstances", new Type[0]);
+        public static readonly MethodInfo ContextMethod = typeof (IContext).GetMethod("GetAllInstances", new Type[0]);
         public static readonly MethodInfo ToArrayMethod = typeof (Enumerable).GetMethod("ToArray");
 
 
@@ -31,9 +31,9 @@ namespace StructureMap.Building
             }
         }
 
-        public Expression ToExpression(ParameterExpression session)
+        public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
-            var getData = Expression.Call(session, SessionMethod.MakeGenericMethod(_elementType));
+            var getData = Expression.Call(context, ContextMethod.MakeGenericMethod(_elementType));
 
             if (_enumerationType.IsArray || _enumerationType.GetGenericTypeDefinition() == typeof (IList<>))
             {

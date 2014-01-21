@@ -9,12 +9,12 @@ namespace StructureMap.Pipeline
         private readonly Expression _builder;
         private readonly string _description;
 
-        public LambdaInstance(Expression<Func<IBuildSession, T>> builder)
+        public LambdaInstance(Expression<Func<IContext, T>> builder)
         {
-            _builder = builder.ReplaceParameter(typeof(IBuildSession), Parameters.Session).Body;
+            _builder = builder.ReplaceParameter(typeof(IContext), Parameters.Context).Body;
 
             _description = builder
-                .ReplaceParameter(typeof (IBuildSession), Expression.Parameter(typeof (IBuildSession), "IBuildSession"))
+                .ReplaceParameter(typeof (IContext), Expression.Parameter(typeof(IContext), "IContext"))
                 .Body.ToString();
         }
 
@@ -24,10 +24,10 @@ namespace StructureMap.Pipeline
             _builder = func.Body;
         }
 
-        public LambdaInstance(string description, Func<IBuildSession, T> builder)
+        public LambdaInstance(string description, Func<IContext, T> builder)
         {
             _description = description;
-            _builder = Expression.Invoke(Expression.Constant(builder), Parameters.Session);
+            _builder = Expression.Invoke(Expression.Constant(builder), Parameters.Context);
         }
 
         public LambdaInstance(string description, Func<T> builder)
@@ -46,7 +46,7 @@ namespace StructureMap.Pipeline
             return this;
         }
 
-        public Expression ToExpression(ParameterExpression session)
+        public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
             return _builder;
         }

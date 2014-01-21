@@ -22,17 +22,17 @@ namespace StructureMap.Building.Interception
             // TODO -- blow up if any decorates interceptors cannot be cast to pluginType
         }
 
-        public Func<IBuildSession, T> ToBuilder<T>()
+        public Func<IBuildSession, IContext, T> ToBuilder<T>()
         {
-            var lambdaType = typeof (Func<IBuildSession, T>);
-            var lambda = Expression.Lambda(lambdaType, ToExpression(Parameters.Session), Parameters.Session);
-            return (Func<IBuildSession, T>) lambda.Compile();
+            var lambdaType = typeof (Func<IBuildSession, IContext, T>);
+            var lambda = Expression.Lambda(lambdaType, ToExpression(Parameters.Session, Parameters.Context), Parameters.Session, Parameters.Context);
+            return (Func<IBuildSession, IContext, T>) lambda.Compile();
         } 
 
-        public Expression ToExpression(ParameterExpression session)
+        public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
             // Seed the plan with the inner value
-            var inner = _inner.ToExpression(session);
+            var inner = _inner.ToExpression(session, context);
             var plan = new BlockPlan();
             plan.AddVariable(_variable);
             var assignment = Expression.Assign(_variable, inner);
@@ -42,7 +42,7 @@ namespace StructureMap.Building.Interception
 
             var pluginTypeVariable = addPluginTypeVariable(plan);
 
-            addDecorators(session, pluginTypeVariable, plan);
+            addDecorators(context, pluginTypeVariable, plan);
 
             createTheReturnValue(pluginTypeVariable, plan);
 
@@ -58,10 +58,10 @@ namespace StructureMap.Building.Interception
             }
         }
 
-        private void addDecorators(ParameterExpression session, ParameterExpression pluginTypeVariable, BlockPlan plan)
+        private void addDecorators(ParameterExpression context, ParameterExpression pluginTypeVariable, BlockPlan plan)
         {
             _interceptors.Where(x => x.Role == InterceptorRole.Decorates).Each(decorator => {
-                var decoratedExpression = decorator.ToExpression(session, pluginTypeVariable);
+                var decoratedExpression = decorator.ToExpression(context, pluginTypeVariable);
                 var wrapped = TryCatchWrapper.WrapFunc<StructureMapInterceptorException>(_pluginType,
                     decoratedExpression, decorator);
                 
@@ -136,7 +136,7 @@ namespace StructureMap.Building.Interception
 
                 foreach (var interceptor in _group)
                 {
-                    var interceptionExpression = interceptor.ToExpression(Parameters.Session, variable);
+                    var interceptionExpression = interceptor.ToExpression(Parameters.Context, variable);
 
                     yield return
                         TryCatchWrapper.WrapAction<StructureMapInterceptorException>(interceptionExpression, interceptor);

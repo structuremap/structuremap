@@ -15,10 +15,8 @@ namespace StructureMap.Testing.Acceptance
                 x.For<Rule>().Add(() => new ColorRule("Red")).Named("Red");
 
                 // Build by a simple Expression<Func<IBuildSession, T>>
-                x.For<Rule>().Add("Blue", () => {
-                    return new ColorRule("Blue");
-                })
-                .Named("Blue");
+                x.For<Rule>().Add("Blue", () => { return new ColorRule("Blue"); })
+                    .Named("Blue");
 
                 // Build by Func<T> with a user supplied description
                 x.For<Rule>()
@@ -27,9 +25,7 @@ namespace StructureMap.Testing.Acceptance
 
                 // Build by Func<IBuildSession, T> with a user description
                 x.For<Rule>()
-                    .Add("Purple", s => {
-                        return s.GetInstance<RuleBuilder>().ForColor("Purple");
-                    })
+                    .Add("Purple", s => { return s.GetInstance<RuleBuilder>().ForColor("Purple"); })
                     .Named("Purple");
             });
 
@@ -38,6 +34,7 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<Rule>("Green").ShouldBeOfType<ColorRule>().Color.ShouldEqual("Green");
             container.GetInstance<Rule>("Purple").ShouldBeOfType<ColorRule>().Color.ShouldEqual("Purple");
         }
+
         // ENDSAMPLE
 
         // SAMPLE: build-with-lambdas-in-batch
@@ -46,14 +43,11 @@ namespace StructureMap.Testing.Acceptance
         {
             var container = new Container(x => {
                 x.For<Rule>().AddInstances(rules => {
-
                     // Build by a simple Expression<Func<T>>
                     rules.ConstructedBy(() => new ColorRule("Red")).Named("Red");
 
                     // Build by a simple Expression<Func<IBuildSession, T>>
-                    rules.ConstructedBy("Blue", () => {
-                        return new ColorRule("Blue");
-                    }).Named("Blue");
+                    rules.ConstructedBy("Blue", () => { return new ColorRule("Blue"); }).Named("Blue");
 
                     // Build by Func<T> with a user supplied description
                     rules
@@ -61,9 +55,7 @@ namespace StructureMap.Testing.Acceptance
                         .Named("Green");
 
                     // Build by Func<IBuildSession, T> with a user description
-                    rules.ConstructedBy("Purple", s => {
-                        return s.GetInstance<RuleBuilder>().ForColor("Purple");
-                    })
+                    rules.ConstructedBy("Purple", s => { return s.GetInstance<RuleBuilder>().ForColor("Purple"); })
                         .Named("Purple");
                 });
             });
@@ -73,6 +65,7 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<Rule>("Green").ShouldBeOfType<ColorRule>().Color.ShouldEqual("Green");
             container.GetInstance<Rule>("Purple").ShouldBeOfType<ColorRule>().Color.ShouldEqual("Purple");
         }
+
         // ENDSAMPLE
 
         // SAMPLE: lambdas-as-inline-dependency
@@ -90,9 +83,7 @@ namespace StructureMap.Testing.Acceptance
                 x.For<RuleHolder>()
                     .Add<RuleHolder>()
                     .Named("Blue").
-                    Ctor<Rule>().Is("The Blue One", () => {
-                        return new ColorRule("Blue");
-                    });
+                    Ctor<Rule>().Is("The Blue One", () => { return new ColorRule("Blue"); });
 
                 // Build by Func<T> with a user supplied description
                 x.For<RuleHolder>()
@@ -101,10 +92,11 @@ namespace StructureMap.Testing.Acceptance
                     .Ctor<Rule>().Is("The Green One", s => s.GetInstance<RuleBuilder>().ForColor("Green"));
 
                 // Build by Func<IBuildSession, T> with a user description
-                x.For<RuleHolder>().Add<RuleHolder>().Named("Purple").Ctor<Rule>().Is("The Purple One", s => {
-                    return s.GetInstance<RuleBuilder>().ForColor("Purple");
-                });
-
+                x.For<RuleHolder>()
+                    .Add<RuleHolder>()
+                    .Named("Purple")
+                    .Ctor<Rule>()
+                    .Is("The Purple One", s => { return s.GetInstance<RuleBuilder>().ForColor("Purple"); });
             });
 
 
@@ -113,6 +105,7 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<RuleHolder>("Green").Rule.ShouldBeOfType<ColorRule>().Color.ShouldEqual("Green");
             container.GetInstance<RuleHolder>("Purple").Rule.ShouldBeOfType<ColorRule>().Color.ShouldEqual("Purple");
         }
+
         // ENDSAMPLE
     }
 
@@ -131,6 +124,7 @@ namespace StructureMap.Testing.Acceptance
             get { return _rule; }
         }
     }
+
     // ENDSAMPLE
 
     // SAMPLE: RuleBuilder
@@ -141,5 +135,6 @@ namespace StructureMap.Testing.Acceptance
             return new ColorRule(color);
         }
     }
+
     // ENDSAMPLE
 }

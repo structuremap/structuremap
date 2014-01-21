@@ -14,9 +14,9 @@ namespace StructureMap.Building
         {
         }
 
-        public override Expression ToExpression(ParameterExpression session)
+        public override Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
-            var arrayExpression = base.ToExpression(session);
+            var arrayExpression = base.ToExpression(session, context);
             var itemType = ItemType;
 
             return ToExpression(itemType, arrayExpression);

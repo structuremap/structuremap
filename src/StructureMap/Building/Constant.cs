@@ -44,7 +44,7 @@ namespace StructureMap.Building
             }
         }
 
-        public Expression ToExpression(ParameterExpression session)
+        public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
             return Expression.Constant(_value, _argumentType);
         }

@@ -10,7 +10,7 @@ namespace StructureMap.Building
         private readonly Type _dependencyType;
         private readonly string _name;
 
-        public static MethodInfo SessionMethod =
+        public static MethodInfo ContextMethod =
             typeof (IContext).GetMethods()
                 .FirstOrDefault(x => x.Name == "GetInstance" && x.IsGenericMethod && x.GetParameters().Count() == 1);
 
@@ -38,9 +38,9 @@ namespace StructureMap.Building
             }
         }
 
-        public Expression ToExpression(ParameterExpression session)
+        public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
-            return Expression.Call(session, SessionMethod.MakeGenericMethod(_dependencyType), Expression.Constant(_name));
+            return Expression.Call(context, ContextMethod.MakeGenericMethod(_dependencyType), Expression.Constant(_name));
         }
 
         public Type ReturnedType { get { return DependencyType; } }

@@ -49,13 +49,13 @@ namespace StructureMap.Pipeline
             return Is(child);
         }
 
-        public TInstance Is(Expression<Func<IBuildSession, TChild>> func)
+        public TInstance Is(Expression<Func<IContext, TChild>> func)
         {
             var child = new LambdaInstance<TChild>(func);
             return Is(child);
         }
 
-        public TInstance Is(string description, Func<IBuildSession, TChild> func)
+        public TInstance Is(string description, Func<IContext, TChild> func)
         {
             var child = new LambdaInstance<TChild>(description, func);
             return Is(child);

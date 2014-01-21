@@ -20,7 +20,8 @@ namespace StructureMap.Testing.Building.Interception
                     new ActivatorInterceptor<ITarget>(x => x.Activate())
                 });
 
-            plan.ToBuilder<ITarget>()(new StubBuildSession())
+            var session = new StubBuildSession();
+            plan.ToBuilder<ITarget>()(session, session)
                 .ShouldBeTheSameAs(target);
 
             target.HasBeenActivated.ShouldBeTrue();
@@ -36,7 +37,7 @@ namespace StructureMap.Testing.Building.Interception
                 new IInterceptor[] {new ActivatorInterceptor<Target>((session, x) => x.UseSession(session))});
 
             var theSession = new StubBuildSession();
-            plan.ToBuilder<ITarget>()(theSession)
+            plan.ToBuilder<ITarget>()(theSession, theSession)
                 .ShouldBeTheSameAs(target);
 
             target.Session.ShouldBeTheSameAs(theSession);
@@ -55,9 +56,9 @@ namespace StructureMap.Testing.Building.Interception
 
             var ex =
                 Exception<StructureMapInterceptorException>.ShouldBeThrownBy(
-                    () => { plan.ToBuilder<ITarget>()(theSession); });
+                    () => { plan.ToBuilder<ITarget>()(theSession, theSession); });
 
-            ex.Message.ShouldContain("Target.BlowUpOnSession(IBuildSession)");
+            ex.Message.ShouldContain("Target.BlowUpOnSession(IContext)");
         }
 
         [Test]
@@ -73,7 +74,8 @@ namespace StructureMap.Testing.Building.Interception
                     new ActivatorInterceptor<Target>(x => x.TurnGreen())
                 });
 
-            plan.ToBuilder<ITarget>()(new StubBuildSession())
+            var session = new StubBuildSession();
+            plan.ToBuilder<ITarget>()(session, session)
                 .ShouldBeTheSameAs(target);
 
             target.HasBeenActivated.ShouldBeTrue();
@@ -95,7 +97,10 @@ namespace StructureMap.Testing.Building.Interception
 
             var ex =
                 Exception<StructureMapInterceptorException>.ShouldBeThrownBy(
-                    () => { plan.ToBuilder<ITarget>()(new StubBuildSession()); });
+                    () => {
+                        var session = new StubBuildSession();
+                        plan.ToBuilder<ITarget>()(session, session);
+                    });
 
             ex.Title.ShouldContain(interceptor.Description);
         }
@@ -109,7 +114,8 @@ namespace StructureMap.Testing.Building.Interception
             var decorator = new DecoratorInterceptor<ITarget>(t => new DecoratedTarget(t));
             var plan = new InterceptionPlan(typeof (ITarget), inner, new IInterceptor[] {decorator});
 
-            plan.ToBuilder<ITarget>()(new StubBuildSession())
+            var session = new StubBuildSession();
+            plan.ToBuilder<ITarget>()(session, session)
                 .ShouldBeOfType<DecoratedTarget>()
                 .Inner.ShouldBeTheSameAs(target);
         }
@@ -124,7 +130,8 @@ namespace StructureMap.Testing.Building.Interception
             var decorator2 = new DecoratorInterceptor<ITarget>(t => new BorderedTarget(t));
             var plan = new InterceptionPlan(typeof (ITarget), inner, new IInterceptor[] {decorator1, decorator2});
 
-            plan.ToBuilder<ITarget>()(new StubBuildSession())
+            var session = new StubBuildSession();
+            plan.ToBuilder<ITarget>()(session, session)
                 .ShouldBeOfType<BorderedTarget>()
                 .Inner.ShouldBeOfType<DecoratedTarget>()
                 .Inner.ShouldBeTheSameAs(target);
@@ -146,7 +153,8 @@ namespace StructureMap.Testing.Building.Interception
                 new ActivatorInterceptor<Target>(x => x.TurnGreen())
             });
 
-            plan.ToBuilder<ITarget>()(new StubBuildSession())
+            var session = new StubBuildSession();
+            plan.ToBuilder<ITarget>()(session, session)
                 .ShouldBeOfType<BorderedTarget>()
                 .Inner.ShouldBeOfType<DecoratedTarget>()
                 .Inner.ShouldBeTheSameAs(target);
@@ -166,7 +174,10 @@ namespace StructureMap.Testing.Building.Interception
 
             var ex =
                 Exception<StructureMapInterceptorException>.ShouldBeThrownBy(
-                    () => { plan.ToBuilder<ITarget>()(new StubBuildSession()); });
+                    () => {
+                        var session = new StubBuildSession();
+                        plan.ToBuilder<ITarget>()(session, session);
+                    });
 
             ex.Message.ShouldContain("new ThrowsDecoratedTarget(ITarget)");
         }
@@ -182,7 +193,7 @@ namespace StructureMap.Testing.Building.Interception
             var plan = new InterceptionPlan(typeof (ITarget), inner, new IInterceptor[] {decorator});
 
             var theSession = new StubBuildSession();
-            var result = plan.ToBuilder<ITarget>()(theSession)
+            var result = plan.ToBuilder<ITarget>()(theSession, theSession)
                 .ShouldBeOfType<ContextKeepingTarget>();
 
             result.Inner.ShouldBeTheSameAs(target);
@@ -203,9 +214,9 @@ namespace StructureMap.Testing.Building.Interception
 
             var ex =
                 Exception<StructureMapInterceptorException>.ShouldBeThrownBy(
-                    () => { plan.ToBuilder<ITarget>()(theSession); });
+                    () => { plan.ToBuilder<ITarget>()(theSession, theSession); });
 
-            ex.Message.ShouldContain("new SadContextKeepingTarget(IBuildSession, ITarget)");
+            ex.Message.ShouldContain("new SadContextKeepingTarget(IContext, ITarget)");
         }
     }
 }

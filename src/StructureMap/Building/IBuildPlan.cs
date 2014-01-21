@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Linq.Expressions;
-using StructureMap.Pipeline;
 
 namespace StructureMap.Building
 {
     public interface IBuildPlan : IDescribed
     {
-        object Build(IBuildSession session);
+        object Build(IBuildSession session, IContext context);
 
-        Expression ToExpression(ParameterExpression session);
+        Expression ToExpression(ParameterExpression session, ParameterExpression context);
 
         Type ReturnedType { get; }
     }

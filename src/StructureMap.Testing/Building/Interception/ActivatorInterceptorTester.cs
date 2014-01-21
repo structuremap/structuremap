@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Building.Interception
         {
             var activator = new ActivatorInterceptor<Target>((s, t) => t.UseSession(s));
 
-            activator.Description.ShouldContain("Target.UseSession(IBuildSession)");
+            activator.Description.ShouldContain("Target.UseSession(IContext)");
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace StructureMap.Testing.Building.Interception
         {
             var variable = Expression.Variable(typeof(ITarget), "target");
 
-            var expression = theActivator.ToExpression(Parameters.Session, variable);
+            var expression = theActivator.ToExpression(Parameters.Context, variable);
 
             var lambdaType = typeof (Action<ITarget>);
             var lambda = Expression.Lambda(lambdaType, expression, variable);
@@ -102,12 +102,12 @@ namespace StructureMap.Testing.Building.Interception
 
 
 
-            var expression = activator.ToExpression(Parameters.Session, variable);
+            var expression = activator.ToExpression(Parameters.Context, variable);
 
-            var lambdaType = typeof(Action<IBuildSession, Target>);
-            var lambda = Expression.Lambda(lambdaType, expression, Parameters.Session, variable);
+            var lambdaType = typeof(Action<IContext, Target>);
+            var lambda = Expression.Lambda(lambdaType, expression, Parameters.Context, variable);
 
-            var action = lambda.Compile().As<Action<IBuildSession, Target>>();
+            var action = lambda.Compile().As<Action<IContext, Target>>();
 
             var target = new Target();
             var session = new FakeBuildSession();
@@ -137,12 +137,12 @@ namespace StructureMap.Testing.Building.Interception
             Color = "Green";
         }
 
-        public void UseSession(IBuildSession session)
+        public void UseSession(IContext session)
         {
             Session = session;
         }
 
-        public IBuildSession Session;
+        public IContext Session;
 
         public string Color = "Red";
 
@@ -151,7 +151,7 @@ namespace StructureMap.Testing.Building.Interception
             throw new DivideByZeroException("you stink!");
         }
 
-        public void BlowUpOnSession(IBuildSession session)
+        public void BlowUpOnSession(IContext session)
         {
             throw new NotImplementedException();
         }

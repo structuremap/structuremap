@@ -28,9 +28,14 @@ namespace StructureMap.Building.Interception
             _after = after;
         }
 
+
         protected override Expression VisitParameter(ParameterExpression node)
         {
-            return node == _before ? _after : node;
+            if (node != _before) return node;
+
+            if (_after.Type == _before.Type) return _after;
+
+            return Expression.Convert(_after, _before.Type);
         }
 
 

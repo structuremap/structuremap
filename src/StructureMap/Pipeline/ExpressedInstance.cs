@@ -61,7 +61,7 @@ namespace StructureMap.Pipeline
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T OnCreation<THandler>(Expression<Action<IBuildSession, THandler>> handler)
+        public T OnCreation<THandler>(Expression<Action<IContext, THandler>> handler)
         {
             AddInterceptor(new ActivatorInterceptor<THandler>(handler));
 
@@ -76,7 +76,7 @@ namespace StructureMap.Pipeline
         /// <param name="handler"></param>
         /// <param name="description">A description of the action for diagnostic purposes</param>
         /// <returns></returns>
-        public T OnCreation<THandler>(string description, Action<IBuildSession, THandler> handler)
+        public T OnCreation<THandler>(string description, Action<IContext, THandler> handler)
         {
             AddInterceptor(InterceptorFactory.ForAction(description, handler));
 
@@ -118,7 +118,7 @@ namespace StructureMap.Pipeline
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T DecorateWith<THandler>(Expression<Func<IBuildSession, THandler, THandler>> handler)
+        public T DecorateWith<THandler>(Expression<Func<IContext, THandler, THandler>> handler)
         {
             AddInterceptor(new DecoratorInterceptor<THandler>(handler));
 
@@ -132,7 +132,7 @@ namespace StructureMap.Pipeline
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T DecorateWith<THandler>(string description, Func<IBuildSession, THandler, THandler> handler)
+        public T DecorateWith<THandler>(string description, Func<IContext, THandler, THandler> handler)
         {
             AddInterceptor(InterceptorFactory.ForFunc(description, handler));
 

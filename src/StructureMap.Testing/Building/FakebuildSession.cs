@@ -6,7 +6,7 @@ using StructureMap.Util;
 
 namespace StructureMap.Testing.Building
 {
-    public class FakeBuildSession : IBuildSession
+    public class FakeBuildSession : IBuildSession, IContext
     {
         public readonly Cache<Type, Cache<Instance, object>> LifecycledObjects =
             new Cache<Type, Cache<Instance, object>>(type => new Cache<Instance, object>());
@@ -54,6 +54,11 @@ namespace StructureMap.Testing.Building
 
         public void Pop()
         {
+        }
+
+        public void Describe()
+        {
+            throw new NotImplementedException();
         }
 
         public string RequestedName { get; set; }

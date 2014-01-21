@@ -16,7 +16,7 @@ namespace StructureMap.Building.Interception
             _description = description;
         }
 
-        public DecoratorInterceptor(Expression<Func<IBuildSession, T, T>> expression, string description = null)
+        public DecoratorInterceptor(Expression<Func<IContext, T, T>> expression, string description = null)
         {
             _expression = expression;
             _description = description;
@@ -28,7 +28,7 @@ namespace StructureMap.Building.Interception
             {
                 var bodyDescription = _description ?? _expression
                     .ReplaceParameter(Accepts, Expression.Parameter(Accepts, Accepts.Name))
-                    .ReplaceParameter(typeof(IBuildSession), Expression.Parameter(typeof(IBuildSession), "IBuildSession"))
+                    .ReplaceParameter(typeof(IContext), Expression.Parameter(typeof(IContext), "IContext"))
                     .Body.ToString();
 
                 return "DecoratorInterceptor of {0}: {1}".ToFormat(typeof(T).GetFullName(), bodyDescription);
@@ -36,10 +36,10 @@ namespace StructureMap.Building.Interception
         }
         public InterceptorRole Role { get { return InterceptorRole.Decorates; } }
 
-        public Expression ToExpression(ParameterExpression session, ParameterExpression variable)
+        public Expression ToExpression(ParameterExpression context, ParameterExpression variable)
         {
             var body = _expression.ReplaceParameter(Accepts, variable)
-                .ReplaceParameter(typeof (IBuildSession), session).Body;
+                .ReplaceParameter(typeof (IContext), context).Body;
 
             return Expression.Convert(body, typeof (T));
         }

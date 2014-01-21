@@ -17,7 +17,7 @@ namespace StructureMap.AutoFactory
             expression.Use("AutoFactory builder for " + typeof(TPluginType).GetFullName(), callback);
         }
 
-        private static Func<IBuildSession, TPluginType> CreateFactoryCallback<TPluginType>() 
+        private static Func<IContext, TPluginType> CreateFactoryCallback<TPluginType>() 
             where TPluginType : class
         {
             return ctxt => 

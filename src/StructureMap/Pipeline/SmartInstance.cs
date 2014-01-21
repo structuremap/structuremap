@@ -74,7 +74,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public SmartInstance<T> OnCreation(Expression<Action<IBuildSession, T>> handler)
+        public SmartInstance<T> OnCreation(Expression<Action<IContext, T>> handler)
         {
             AddInterceptor(new ActivatorInterceptor<T>(handler));
 
@@ -88,7 +88,7 @@ namespace StructureMap.Pipeline
         /// <param name="handler"></param>
         /// <param name="description">Descriptive text for diagnostic purposes</param>
         /// <returns></returns>
-        public SmartInstance<T> OnCreation(string description, Action<IBuildSession, T> handler)
+        public SmartInstance<T> OnCreation(string description, Action<IContext, T> handler)
         {
             AddInterceptor(InterceptorFactory.ForAction(description, handler));
 
@@ -129,7 +129,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public SmartInstance<T> DecorateWith(Expression<Func<IBuildSession, T, T>> handler)
+        public SmartInstance<T> DecorateWith(Expression<Func<IContext, T, T>> handler)
         {
             AddInterceptor(new DecoratorInterceptor<T>(handler));
 
@@ -143,7 +143,7 @@ namespace StructureMap.Pipeline
         /// <param name="handler"></param>
         /// <param name="description">Descriptive text for diagnostic purposes</param>
         /// <returns></returns>
-        public SmartInstance<T> DecorateWith(string description, Func<IBuildSession, T, T> handler)
+        public SmartInstance<T> DecorateWith(string description, Func<IContext, T, T> handler)
         {
             AddInterceptor(InterceptorFactory.ForFunc(description, handler));
 

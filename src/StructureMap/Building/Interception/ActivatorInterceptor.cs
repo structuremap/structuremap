@@ -16,7 +16,7 @@ namespace StructureMap.Building.Interception
             _description = description;
         }
 
-        public ActivatorInterceptor(Expression<Action<IBuildSession, T>> action, string description = null)
+        public ActivatorInterceptor(Expression<Action<IContext, T>> action, string description = null)
         {
             _action = action;
             _description = description;
@@ -33,7 +33,7 @@ namespace StructureMap.Building.Interception
             {
                 var bodyDescription = _description ?? _action
                     .ReplaceParameter(Accepts, Expression.Parameter(Accepts, Accepts.Name))
-                    .ReplaceParameter(typeof(IBuildSession), Expression.Parameter(typeof(IBuildSession), "IBuildSession"))
+                    .ReplaceParameter(typeof(IContext), Expression.Parameter(typeof(IContext), "IContext"))
                     .Body.ToString();
 
                 return "ActivatorInterceptor of {0}: {1}".ToFormat(typeof (T).GetFullName(), bodyDescription);
@@ -48,11 +48,11 @@ namespace StructureMap.Building.Interception
             }
         }
 
-        public Expression ToExpression(ParameterExpression session, ParameterExpression variable)
+        public Expression ToExpression(ParameterExpression context, ParameterExpression variable)
         {
             return _action
                 .ReplaceParameter(Accepts, variable)
-                .ReplaceParameter(typeof (IBuildSession), session)
+                .ReplaceParameter(typeof (IContext), context)
                 .Body;
         }
 

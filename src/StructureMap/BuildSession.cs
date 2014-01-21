@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using StructureMap.Building;
 using StructureMap.Graph;
@@ -9,7 +8,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap
 {
-    public class BuildSession : IBuildSession
+    public class BuildSession : IBuildSession, IContext
     {
         public static readonly string DEFAULT = "Default";
 
@@ -46,7 +45,7 @@ namespace StructureMap
                            ?? new ConfiguredInstance(pluggedType);
             });
 
-            plan.BuildUp(this, target);
+            plan.BuildUp(this, this, target);
         }
 
         public T GetInstance<T>()
@@ -103,7 +102,7 @@ namespace StructureMap
         public object BuildNewInSession(Type pluginType, Instance instance)
         {
             var plan = instance.ResolveBuildPlan(pluginType, _pipelineGraph.Policies);
-            return plan.Build(this);
+            return plan.Build(this, this);
         }
 
         public object BuildNewInOriginalContext(Type pluginType, Instance instance)

@@ -38,9 +38,9 @@ namespace StructureMap.Building
             get { return _constructor.ToString(); } // TODO -- much more here
         }
 
-        public NewExpression ToExpression(ParameterExpression session)
+        public NewExpression ToExpression(ParameterExpression session, ParameterExpression context)
         {
-            return Expression.New(_constructor, _arguments.Select(x => x.ToExpression(session)));
+            return Expression.New(_constructor, _arguments.Select(x => x.ToExpression(session, context)));
         }
 
         public void Add(IEnumerable<IDependencySource> arguments)

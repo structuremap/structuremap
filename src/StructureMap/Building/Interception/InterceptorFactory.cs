@@ -10,7 +10,7 @@ namespace StructureMap.Building.Interception
             return new ActivatorInterceptor<T>(x => action(x), description);
         }
 
-        public static IInterceptor ForAction<T>(string description, Action<IBuildSession, T> action)
+        public static IInterceptor ForAction<T>(string description, Action<IContext, T> action)
         {
             return new ActivatorInterceptor<T>((s, x) => action(s, x));
         }
@@ -20,7 +20,7 @@ namespace StructureMap.Building.Interception
             return new DecoratorInterceptor<T>(x => func(x), description);
         }
 
-        public static IInterceptor ForFunc<T>(string description, Func<IBuildSession, T, T> func)
+        public static IInterceptor ForFunc<T>(string description, Func<IContext, T, T> func)
         {
             return new DecoratorInterceptor<T>((s, x) => func(s, x), description);
         }

@@ -251,7 +251,7 @@ namespace StructureMap.Testing.Graph
     {
         public string Description { get; private set; }
 
-        public Expression ToExpression(ParameterExpression session)
+        public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
             throw new NotImplementedException();
         }

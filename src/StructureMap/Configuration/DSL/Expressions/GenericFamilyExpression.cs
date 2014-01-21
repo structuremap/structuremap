@@ -66,7 +66,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
 
-        public LambdaInstance<object> Use(Expression<Func<IBuildSession, object>> func)
+        public LambdaInstance<object> Use(Expression<Func<IContext, object>> func)
         {
             var instance = new LambdaInstance<object>(func);
             Use(instance);
@@ -74,7 +74,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-        public LambdaInstance<object> Use(string description, Func<IBuildSession, object> func)
+        public LambdaInstance<object> Use(string description, Func<IContext, object> func)
         {
             var instance = new LambdaInstance<object>(description, func);
             Use(instance);
@@ -82,7 +82,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-        public LambdaInstance<object> Add(Expression<Func<IBuildSession, object>> func)
+        public LambdaInstance<object> Add(Expression<Func<IContext, object>> func)
         {
             var instance = new LambdaInstance<object>(func);
             Add(instance);
@@ -90,7 +90,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-        public LambdaInstance<object> Add(string description, Func<IBuildSession, object> func)
+        public LambdaInstance<object> Add(string description, Func<IContext, object> func)
         {
             var instance = new LambdaInstance<object>(description, func);
             Add(instance);

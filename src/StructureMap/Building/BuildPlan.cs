@@ -15,7 +15,7 @@ namespace StructureMap.Building
         private readonly Instance _instance;
         private readonly IDependencySource _inner;
         private readonly InterceptionPlan _interceptionPlan;
-        private readonly Lazy<Func<IBuildSession, object>> _func;
+        private readonly Lazy<Func<IBuildSession, IContext, object>> _func;
 
 
         public BuildPlan(Type pluginType, Instance instance, IDependencySource inner, IEnumerable<IInterceptor> interceptors)
@@ -31,9 +31,9 @@ namespace StructureMap.Building
 
 
 
-            _func = new Lazy<Func<IBuildSession, object>>(() => {
+            _func = new Lazy<Func<IBuildSession, IContext, object>>(() => {
                 var @delegate = ToDelegate();
-                return @delegate as Func<IBuildSession, object>;
+                return @delegate as Func<IBuildSession, IContext, object>;
             });
 
         }
@@ -43,7 +43,7 @@ namespace StructureMap.Building
             // TODO -- will add decorator later
             var innerSource = _interceptionPlan ?? _inner;
 
-            var builder = innerSource.ToExpression(Parameters.Session);
+            var builder = innerSource.ToExpression(Parameters.Session, Parameters.Context);
 
             if (builder.Type != _pluginType)
             {
@@ -62,9 +62,9 @@ namespace StructureMap.Building
                 wrapped = Expression.Convert(wrapped, typeof(object));
             }
 
-            var lambdaType = typeof (Func<,>).MakeGenericType(typeof (IBuildSession), typeof(object));
+            var lambdaType = typeof (Func<,,>).MakeGenericType(typeof (IBuildSession), typeof(IContext), typeof(object));
 
-            var lambda = Expression.Lambda(lambdaType, wrapped, Parameters.Session);
+            var lambda = Expression.Lambda(lambdaType, wrapped, Parameters.Session, Parameters.Context);
 
             return lambda.Compile();
         }
@@ -85,12 +85,12 @@ namespace StructureMap.Building
             }
         }
 
-        public object Build(IBuildSession session)
+        public object Build(IBuildSession session, IContext context)
         {
-            return _func.Value(session);
+            return _func.Value(session, context);
         }
 
-        public Expression ToExpression(ParameterExpression session)
+        public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
             throw new NotImplementedException();
         }

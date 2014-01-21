@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void create_happy_path_with_no_interceptors()
         {
-            thePlan.Build(theSession).ShouldBeTheSameAs(theTarget);
+            thePlan.Build(theSession, theSession).ShouldBeTheSameAs(theTarget);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace StructureMap.Testing.Building
                 new DecoratorInterceptor<IBuildTarget>(x => new TargetDecorator(x))
             };
 
-            thePlan.Build(theSession)
+            thePlan.Build(theSession, theSession)
                 .ShouldBeOfType<TargetDecorator>()
                 .Inner.ShouldBeTheSameAs(theTarget);
         }
@@ -67,7 +67,7 @@ namespace StructureMap.Testing.Building
             theInner = new ConcreteBuild<ThrowsUpTarget>();
 
             var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
-                thePlan.Build(theSession);
+                thePlan.Build(theSession, theSession);
             });
 
             ex.Message.ShouldContain(theInstance.Description);

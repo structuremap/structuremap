@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Building
             plan.Set(x => x.Direction, "Green");
             plan.Set(x => x.Gateway, new DefaultDependencySource(typeof (IGateway)));
 
-            plan.BuildUp(session, target);
+            plan.BuildUp(session, session, target);
 
             target.Color.ShouldEqual("Red");
             target.Direction.ShouldEqual("Green");
@@ -70,7 +70,7 @@ namespace StructureMap.Testing.Building
                     var thePlan = ConcreteType.BuildUpPlan(typeof (ClassWithMixOfSetters), theDependencies,
                         new Policies());
 
-                    thePlan.BuildUp(_session, _target);
+                    thePlan.BuildUp(_session, _session, _target);
                 }
 
                 return _target;
