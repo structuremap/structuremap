@@ -29,23 +29,6 @@ namespace StructureMap.Xml.Testing
             
         }
 
-        [Test]
-        public void CanSerialize()
-        {
-            var ex = new ApplicationException("Oh no!");
-            var smapEx = new StructureMapException("some error message", ex);
-
-            var formatter = new BinaryFormatter();
-            var stream = new MemoryStream();
-            formatter.Serialize(stream, smapEx);
-
-            stream.Position = 0;
-
-            var smapEx2 = (StructureMapException) formatter.Deserialize(stream);
-            Assert.AreNotSame(smapEx, smapEx2);
-
-            Assert.AreEqual(smapEx.Message, smapEx2.Message);
-        }
 
         [Test, Ignore("Will have to be redone")]
         public void CouldNotFindInstanceKey()

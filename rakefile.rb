@@ -16,8 +16,8 @@ FubuRake::Solution.new do |sln|
 	}
 				 
 	sln.assembly_info = {
-		:product_name => "FubuMVC.CodeSnippets",
-		:copyright => 'Copyright 2004-2013 Jeremy D. Miller, Joshua Flanagan, et al. All rights reserved.'
+		:product_name => "StructureMap",
+		:copyright => 'Copyright 2004-2014 Jeremy D. Miller, Joshua Flanagan, Frank Quednau, Tim Kellogg, et al. All rights reserved.'
 	}
 	
 	sln.ripple_enabled = true

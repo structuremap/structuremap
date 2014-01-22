@@ -209,14 +209,7 @@ namespace StructureMap
             {
                 var parameters = type.GetGenericArguments().Select(t => t.GetName());
                 string parameterList = String.Join(", ", parameters);
-                return "{0}<{1}>".ToFormat(type.Name, parameterList);
-            }
-
-            private static string GetGenericName(Type type)
-            {
-                var parameters = type.GetGenericArguments().Select(t => t.GetName());
-                string parameterList = String.Join(", ", parameters);
-                return "{0}<{1}>".ToFormat(type.Name, parameterList);
+                return "{0}<{1}>".ToFormat(type.Name.Split('`').First(), parameterList);
             }
 
             public static bool CanBeCreated(this Type type)
