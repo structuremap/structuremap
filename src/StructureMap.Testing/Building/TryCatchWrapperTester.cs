@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using NUnit.Framework;
 using StructureMap.Building;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Building
 {
@@ -32,7 +33,9 @@ namespace StructureMap.Testing.Building
             throwSM = Expression.Block(Expression.Throw(Expression.Constant(smEx)),
                 Expression.Constant("bar"));
 
-            Expression<Action> goodExpr = () => Debug.WriteLine("It's all good");
+            var gateway = new StubbedGateway();
+
+            Expression<Action> goodExpr = () => gateway.DoSomething();
 
             goodVoid = Expression.Block(goodExpr.Body);
             badVoid = Expression.Block(Expression.Throw(Expression.Constant(genericEx)));

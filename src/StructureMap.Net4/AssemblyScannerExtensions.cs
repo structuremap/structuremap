@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
 namespace StructureMap
@@ -73,12 +74,14 @@ namespace StructureMap
             var trace = new StackTrace(false);
 
             var thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var smAssembly = typeof (Registry).Assembly;
+
             Assembly callingAssembly = null;
             for (var i = 0; i < trace.FrameCount; i++)
             {
                 var frame = trace.GetFrame(i);
                 var assembly = frame.GetMethod().DeclaringType.Assembly;
-                if (assembly != thisAssembly)
+                if (assembly != thisAssembly && assembly != smAssembly)
                 {
                     callingAssembly = assembly;
                     break;
