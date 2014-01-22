@@ -92,6 +92,10 @@
       <Project>{dbd5c763-0a1a-49f3-8be1-e197ff721b43}</Project>
       <Name>FubuMVC.StructureMap3</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Net4\StructureMap.Net4.csproj">
+      <Project>{6d812b81-cf2e-4df1-9f73-bc19e5a6a019}</Project>
+      <Name>StructureMap.Net4</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StructureMap.Testing\StructureMap.Testing.csproj">
       <Project>{63c2742d-b6e2-484f-afdb-346873075c5e}</Project>
       <Name>StructureMap.Testing</Name>

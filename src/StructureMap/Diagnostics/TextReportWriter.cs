@@ -63,11 +63,6 @@ namespace StructureMap.Diagnostics
             return sb.ToString();
         }
 
-        public void DumpToConsole()
-        {
-            Console.WriteLine(Write());
-        }
-
         public void DumpToDebug()
         {
             Debug.WriteLine(Write());

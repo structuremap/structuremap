@@ -203,7 +203,7 @@ namespace StructureMap.Configuration.DSL
                 var raw = c.GetInstance<U>();
                 var t = raw as T;
                 if (t == null)
-                    throw new ApplicationException(raw.GetType().AssemblyQualifiedName + " could not be cast to " +
+                    throw new InvalidCastException(raw.GetType().AssemblyQualifiedName + " could not be cast to " +
                                                    typeof (T).AssemblyQualifiedName);
 
                 return t;
@@ -231,8 +231,8 @@ namespace StructureMap.Configuration.DSL
 
             graph.Log.StartSource("Registry:  " + GetType().AssemblyQualifiedName);
 
-            _basicActions.ForEach(action => action());
-            _actions.ForEach(action => action(graph));
+            _basicActions.Each(action => action());
+            _actions.Each(action => action(graph));
 
             graph.Registries.Add(this);
         }

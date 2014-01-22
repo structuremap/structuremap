@@ -14,7 +14,7 @@ namespace StructureMap.Graph
 
             if (!_openType.IsOpenGeneric())
             {
-                throw new ApplicationException("This scanning convention can only be used with open generic types");
+                throw new InvalidOperationException("This scanning convention can only be used with open generic types");
             }
         }
 

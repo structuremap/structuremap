@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace StructureMap
@@ -19,7 +19,7 @@ namespace StructureMap
         /// <returns></returns>
         public static MethodInfo[] GetValidationMethods(Type objectType)
         {
-            var methodList = new ArrayList();
+            var methodList = new List<MethodInfo>();
 
             var methods = objectType.GetMethods();
             foreach (var method in methods)
@@ -35,7 +35,7 @@ namespace StructureMap
                             string.Format(
                                 "Method *{0}* in Class *{1}* cannot be a validation method because it has parameters",
                                 method.Name, objectType.AssemblyQualifiedName);
-                        throw new ApplicationException(msg);
+                        throw new ArgumentException(msg);
                     }
 
                     methodList.Add(method);

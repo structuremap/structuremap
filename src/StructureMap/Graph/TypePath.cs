@@ -5,7 +5,6 @@ namespace StructureMap.Graph
     /// <summary>
     /// Designates a CLR type that is loaded by name.
     /// </summary>
-    [Serializable]
     public class TypePath
     {
         public TypePath(string assemblyName, string className)
@@ -35,7 +34,7 @@ namespace StructureMap.Graph
             catch (Exception e)
             {
                 var message = string.Format("Could not create a Type for '{0}'", AssemblyQualifiedName);
-                throw new ApplicationException(message, e);
+                throw new ArgumentException(message, e);
             }
         }
 

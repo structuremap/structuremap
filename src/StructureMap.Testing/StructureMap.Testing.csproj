@@ -93,6 +93,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\StructureMap.Net4\StructureMap.Net4.csproj">
+      <Project>{6d812b81-cf2e-4df1-9f73-bc19e5a6a019}</Project>
+      <Name>StructureMap.Net4</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StructureMap\StructureMap.csproj">
       <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
       <Name>StructureMap</Name>

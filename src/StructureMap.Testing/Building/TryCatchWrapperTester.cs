@@ -212,9 +212,6 @@ namespace StructureMap.Testing.Building
 
     public class FakeStructureMapException : StructureMapException
     {
-        protected FakeStructureMapException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
 
         public FakeStructureMapException(string message) : base(message)
         {

@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Linq.Expressions;
 using StructureMap.Configuration.DSL.Expressions;
 
@@ -10,8 +9,6 @@ namespace StructureMap.Pipeline
     /// <summary>
     /// Expression Builder that helps to define child dependencies inline 
     /// </summary>
-    /// <typeparam name="TChild"></typeparam>
-    /// <typeparam name="TInstance"></typeparam>
     public class DependencyExpression<TInstance, TChild> where TInstance : ConstructorInstance<TInstance>
     {
         private readonly TInstance _instance;
@@ -26,8 +23,6 @@ namespace StructureMap.Pipeline
         /// <summary>
         /// Nested Closure to define a child dependency inline
         /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
         public TInstance IsSpecial(Action<IInstanceExpression<TChild>> action)
         {
             var expression =
