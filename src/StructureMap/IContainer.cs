@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 
@@ -144,7 +145,11 @@ namespace StructureMap
         /// Returns a report detailing the complete configuration of all PluginTypes and Instances
         /// </summary>
         /// <returns></returns>
-        string WhatDoIHave();
+        /// <param name="pluginType">Optional parameter to filter the results down to just this plugin type</param>
+        /// <param name="assembly">Optional parameter to filter the results down to only plugin types from this Assembly</param>
+        /// <param name="@namespace">Optional parameter to filter the results down to only plugin types from this namespace</param>
+        /// <param name="typeName">Optional parameter to filter the results down to any plugin type whose name contains this text</param>
+        string WhatDoIHave(Type pluginType = null, Assembly assembly = null, string @namespace = null, string typeName = null);
 
         /// <summary>
         /// Use with caution!  Does a full environment test of the configuration of this container.  Will try to create every configured

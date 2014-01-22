@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using StructureMap.Pipeline;
 using StructureMap.Query;
@@ -9,28 +10,65 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Diagnostics
 {
+    public class ModelQuery
+    {
+        public string Namespace;
+        public Type PluginType;
+        public Assembly Assembly;
+        public string TypeName;
+
+        public IEnumerable<IPluginTypeConfiguration> Query(IModel model)
+        {
+            var enumerable = model.PluginTypes;
+
+            if (Namespace.IsNotEmpty())
+            {
+                enumerable = enumerable.Where(x => x.PluginType.IsInNamespace(Namespace));
+            }
+
+            if (PluginType != null)
+            {
+                enumerable = enumerable.Where(x => x.PluginType == PluginType);
+            }
+
+            if (Assembly != null)
+            {
+                enumerable = enumerable.Where(x => x.PluginType.Assembly == Assembly);
+            }
+
+            if (TypeName.IsNotEmpty())
+            {
+                enumerable = enumerable.Where(x => x.PluginType.Name.ToLower().Contains(TypeName.ToLower()));
+            }
+
+            return enumerable;
+        } 
+    }
+
     public class WhatDoIHaveWriter
     {
         private readonly IPipelineGraph _graph;
         private List<Instance> _instances;
         private TextReportWriter _writer;
+        private StringWriter _stringWriter = new StringWriter();
 
         public WhatDoIHaveWriter(IPipelineGraph graph)
         {
             _graph = graph;
         }
 
-        public string GetText()
+        public string GetText(ModelQuery query)
         {
-            var sb = new StringBuilder();
-            var writer = new StringWriter(sb);
+            var model = _graph.ToModel();
 
-            writeContentsOfPluginTypes(writer);
+            var pluginTypes = query.Query(model);
 
-            return sb.ToString();
+            writeContentsOfPluginTypes(pluginTypes);
+
+            return _stringWriter.ToString();
         }
 
-        private void writeContentsOfPluginTypes(StringWriter stringWriter)
+        private void writeContentsOfPluginTypes(IEnumerable<IPluginTypeConfiguration> pluginTypes)
         {
             _writer = new TextReportWriter(5);
             _instances = new List<Instance>();
@@ -38,13 +76,11 @@ namespace StructureMap.Diagnostics
             _writer.AddDivider('=');
             _writer.AddText("PluginType", "Namespace", "Lifecycle", "Name", "Description");
 
-            var model = _graph.ToModel();
-
-            model.PluginTypes.OrderBy(x => x.PluginType.Name).Each(writePluginType);
+            pluginTypes.OrderBy(x => x.PluginType.Name).Each(writePluginType);
 
             _writer.AddDivider('=');
 
-            _writer.Write(stringWriter);
+            _writer.Write(_stringWriter);
         }
 
         private void writePluginType(IPluginTypeConfiguration pluginType)

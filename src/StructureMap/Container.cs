@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
@@ -11,6 +12,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap
 {
+    // TODO -- fill in all Xml comments
     public class Container : IContainer
     {
         private IPipelineGraph _pipelineGraph;
@@ -271,11 +273,22 @@ namespace StructureMap
         /// <summary>
         ///     Returns a report detailing the complete configuration of all PluginTypes and Instances
         /// </summary>
-        public string WhatDoIHave()
+        /// <param name="pluginType">Optional parameter to filter the results down to just this plugin type</param>
+        /// <param name="assembly">Optional parameter to filter the results down to only plugin types from this Assembly</param>
+        /// <param name="@namespace">Optional parameter to filter the results down to only plugin types from this namespace</param>
+        /// <param name="typeName">Optional parameter to filter the results down to any plugin type whose name contains this text</param>
+        public string WhatDoIHave(Type pluginType = null, Assembly assembly = null, string @namespace = null, string typeName = null)
         {
             var writer = new WhatDoIHaveWriter(_pipelineGraph);
-            return writer.GetText();
+            return writer.GetText(new ModelQuery
+            {
+                Assembly = assembly,
+                Namespace = @namespace,
+                PluginType = pluginType,
+                TypeName = typeName
+            });
         }
+
 
         /// <summary>
         ///     Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
