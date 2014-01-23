@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
@@ -36,7 +37,7 @@ namespace StructureMap.Building
         {
             get
             {
-                return "*Default*";
+                return "*Default of {0}*".ToFormat(_dependencyType.GetName());
             }
         }
 

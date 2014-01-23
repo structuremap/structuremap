@@ -67,7 +67,17 @@ namespace StructureMap.Pipeline
 
         public override IDependencySource ToBuilder(Type pluginType, Policies policies)
         {
-            return ConcreteType.BuildSource(_pluggedType, Constructor, _dependencies, policies);
+            var plan = ConcreteType.BuildSource(_pluggedType, Constructor, _dependencies, policies);
+            if (!plan.IsValid())
+            {
+                var message = "Unable to create a build plan for concrete type " + PluggedType.GetFullName();
+                var exception = new StructureMapConfigurationException(message);
+                exception.Push(plan.Description);
+
+                throw exception;
+            }
+
+            return plan;
         }
 
         public ConstructorInstance Override(ExplicitArguments arguments)

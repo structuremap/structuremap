@@ -138,11 +138,35 @@ namespace StructureMap.Pipeline
             }
         }
 
+        private string toDescription(Type pluginType)
+        {
+            if (HasExplicitName())
+            {
+                return "Instance of {0} ({1}) -- {2}".ToFormat(pluginType.GetFullName(), Name, Description);
+            }
+
+            return "Instance of {0} -- {1}".ToFormat(pluginType.GetFullName(), Description);
+        }
+
         private IBuildPlan buildPlan(Type pluginType, Policies policies)
         {
-            var builderSource = ToBuilder(pluginType, policies);
-            var interceptors = policies.Interceptors.SelectInterceptors(ReturnedType ?? pluginType).Union(_interceptors);
-            return new BuildPlan(pluginType, this, builderSource, interceptors);
+            try
+            {
+                var builderSource = ToBuilder(pluginType, policies);
+                var interceptors =
+                    policies.Interceptors.SelectInterceptors(ReturnedType ?? pluginType).Union(_interceptors);
+
+                return new BuildPlan(pluginType, this, builderSource, interceptors);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Attempting to create a BuildPlan for " + toDescription(pluginType));
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapException("Error while trying to create the BuildPlan for {0}.\nPlease check the inner exception".ToFormat(toDescription(pluginType)), e);
+            }
         }
 
         /// <summary>

@@ -52,6 +52,7 @@
     <Compile Include="Building\ConstructorStep.cs" />
     <Compile Include="Building\DefaultDependencySource.cs" />
     <Compile Include="Building\DelegateExtensions.cs" />
+    <Compile Include="Building\DependencyProblem.cs" />
     <Compile Include="Building\IBuildPlan.cs" />
     <Compile Include="Building\IDependencySource.cs" />
     <Compile Include="Building\IDescribed.cs" />

@@ -13,5 +13,6 @@ namespace StructureMap
         public StructureMapConfigurationException(string message, Exception innerException) : base(message, innerException)
         {
         }
+
     }
 }

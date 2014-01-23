@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using StructureMap.Building;
 
 namespace StructureMap
 {
@@ -15,7 +16,7 @@ namespace StructureMap
             typeof (StructureMapException).GetConstructor(new[] {typeof (string), typeof (Exception)});
 
         public static readonly MethodInfo PushMethod = typeof (StructureMapException).GetMethod("Push",
-            new [] {typeof (string)});
+            new[] {typeof (string)});
 
         private readonly Queue<string> _descriptions = new Queue<string>();
         private readonly string _title;
@@ -53,10 +54,12 @@ namespace StructureMap
             Push(message);
         }
 
-        public string Title
+
+
+
+    public string Title
         {
             get { return _title; }
         }
-
     }
 }

@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace StructureMap.Building
 {
-    public class Setter
+    public class Setter : IDescribed
     {
         private readonly MemberInfo _member;
 
@@ -16,7 +16,13 @@ namespace StructureMap.Building
 
         public IDependencySource AssignedValue { get; private set; }
 
-        public string Description { get; private set; }
+        public string Description
+        {
+            get
+            {
+                return _member.Name + " = " + AssignedValue.Description;
+            }
+        }
 
         public MemberBinding ToBinding(ParameterExpression session, ParameterExpression context)
         {

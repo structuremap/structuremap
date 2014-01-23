@@ -103,6 +103,11 @@ namespace StructureMap.Testing.Widget
         public int Age { get; set; }
 
         public string Color { get { return _color; } }
+
+        public override string ToString()
+        {
+            return string.Format("The '{0}' Rule", _color);
+        }
     }
     // ENDSAMPLE
 

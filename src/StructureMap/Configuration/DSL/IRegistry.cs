@@ -127,6 +127,6 @@ namespace StructureMap.Configuration.DSL
         /// <param name="configure"></param>
         void Configure(Action<PluginGraph> configure);
 
-        Registry.PoliciesExpression Polices { get; }
+        Registry.PoliciesExpression Policies { get; }
     }
 }

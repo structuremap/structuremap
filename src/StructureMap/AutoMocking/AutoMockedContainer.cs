@@ -13,7 +13,7 @@ namespace StructureMap.AutoMocking
         {
             nameContainer(this);
 
-            Configure(x => x.Polices.OnMissingFamily(this));
+            Configure(x => x.Policies.OnMissingFamily(this));
 
             _locator = locator;
         }

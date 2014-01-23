@@ -311,7 +311,7 @@ namespace StructureMap.Configuration.DSL
 
 
 
-        public PoliciesExpression Polices
+        public PoliciesExpression Policies
         {
             get
             {

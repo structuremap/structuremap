@@ -197,6 +197,7 @@
     <Compile Include="Building\array_expression_building.cs" />
     <Compile Include="Building\BuildPlanTester.cs" />
     <Compile Include="Building\BuildUpPlanTester.cs" />
+    <Compile Include="Building\ConcreteBuild_description_building_Tester.cs" />
     <Compile Include="Building\ConcreteBuild_exception_throwing_Tester.cs" />
     <Compile Include="Building\ConcreteTypeTester.cs" />
     <Compile Include="Building\constructor_expression_building.cs" />
@@ -287,6 +288,7 @@
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
+    <Compile Include="Pipeline\ConstructorInstance_throws_informative_exception_on_build_plan_failures.cs" />
     <Compile Include="Pipeline\ConstructorSelectorTester.cs" />
     <Compile Include="Pipeline\DependencyCollectionTester.cs" />
     <Compile Include="Pipeline\EnumerableInstanceTester.cs" />

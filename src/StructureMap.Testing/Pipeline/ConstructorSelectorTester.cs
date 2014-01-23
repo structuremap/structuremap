@@ -49,7 +49,7 @@ namespace StructureMap.Testing.Pipeline
         public void integration_test_with_custom_rule_in_container()
         {
             var container = new Container(x => {
-                x.Polices.ConstructorSelector<PickTheFirstOne>();
+                x.Policies.ConstructorSelector<PickTheFirstOne>();
 
                 x.For<IGateway>().Use<StubbedGateway>();
                 x.For<IService>().Use<WhateverService>();

@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Bugs
                 x.For<ISomeDependency>()
                     .Use<ClassThatImplementsDependency>();
 
-                x.Polices.FillAllPropertiesOfType<ISomeDependency>();
+                x.Policies.FillAllPropertiesOfType<ISomeDependency>();
             });
 
 

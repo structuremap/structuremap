@@ -10,14 +10,40 @@ namespace StructureMap.Building
 {
     public static class ConcreteType
     {
+        public const string ConstructorArgument = "Constructor Argument";
+        public const string SetterProperty = "Setter Property";
+        public const string MissingPrimitiveWarning = "Required primitive dependency is not explicitly defined";
+        public const string CastingError = "Could not convert value '{0}' of type {1} into the dependency type {2}";
+
+        public const string UnableToDetermineDependency =
+            "Unable to determine how to source dependency for type {0} and value '{1}'";
+
         public static ConcreteBuild BuildSource(Type pluggedType, ConstructorInfo constructor,
             DependencyCollection dependencies, Policies policies)
         {
-            var ctorStep = BuildConstructorStep(pluggedType, constructor, dependencies, policies);
+            ConcreteBuild plan = null;
 
-            var plan = new ConcreteBuild(pluggedType, ctorStep);
+            try
+            {
+                var ctorStep = BuildConstructorStep(pluggedType, constructor, dependencies, policies);
 
-            determineSetterSources(pluggedType, dependencies, policies, plan);
+                plan = new ConcreteBuild(pluggedType, ctorStep);
+
+                determineSetterSources(pluggedType, dependencies, policies, plan);
+
+
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Attempting to create a build plan for concrete type " + pluggedType.GetFullName());
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapConfigurationException("Attempting to create a build plan for concrete type " + pluggedType.GetFullName(), e);
+            }
+
+
 
             return plan;
         }
@@ -54,7 +80,7 @@ namespace StructureMap.Building
 
             if (dependency == null && !policies.IsMandatorySetter(setter)) return;
 
-            var source = SourceFor(setter.PropertyType, dependency);
+            var source = SourceFor(SetterProperty, setter.Name, setter.PropertyType, dependency);
             plan.Add(setter, source);
         }
 
@@ -62,28 +88,36 @@ namespace StructureMap.Building
             DependencyCollection dependencies, Policies policies)
         {
             var ctor = constructor ?? policies.SelectConstructor(pluggedType);
-            // TODO -- throw if doesn't exist
+            if (ctor == null)
+            {
+                throw new StructureMapConfigurationException("No public constructor could be selected for concrete type " + pluggedType.GetFullName());
+            }
 
             var ctorStep = new ConstructorStep(ctor);
             var ctorDependencies = ctor
                 .GetParameters()
                 .Select(x => {
                     var dependency = dependencies.FindByTypeOrName(x.ParameterType, x.Name);
-                    return SourceFor(x.ParameterType, dependency);
+                    return SourceFor(ConstructorArgument, x.Name, x.ParameterType, dependency);
                 });
 
             ctorStep.Add(ctorDependencies);
             return ctorStep;
         }
 
-        public static IDependencySource SourceFor(Type dependencyType, object value)
+        public static IDependencySource SourceFor(string ctorOrSetter, string name, Type dependencyType, object value)
         {
             if (value == null)
             {
                 if (dependencyType.IsSimple())
                 {
-                    // TODO -- unit test this
-                    throw new StructureMapConfigurationException("Missing a value for primitive dependency of type '{0}'", dependencyType.GetFullName());
+                    return new DependencyProblem
+                    {
+                        Message = MissingPrimitiveWarning,
+                        Type = ctorOrSetter,
+                        Name = name,
+                        ReturnedType = dependencyType
+                    };
                 }
 
                 if (EnumerableInstance.IsEnumerable(dependencyType))
@@ -106,7 +140,20 @@ namespace StructureMap.Building
 
             if (dependencyType.IsSimple())
             {
-                return new Constant(dependencyType, ConvertType(value, dependencyType));
+                try
+                {
+                    return new Constant(dependencyType, ConvertType(value, dependencyType));
+                }
+                catch (Exception e)
+                {
+                    return new DependencyProblem
+                    {
+                        Type = ctorOrSetter,
+                        Name = name,
+                        ReturnedType = dependencyType,
+                        Message = CastingError.ToFormat(value, value.GetType().GetFullName(), dependencyType.GetFullName())
+                    };
+                }
             }
 
             if (EnumerableInstance.IsEnumerable(dependencyType))
@@ -117,8 +164,14 @@ namespace StructureMap.Building
                 return new Constant(dependencyType, coercedValue);
             }
 
-            throw new NotSupportedException(
-                "Unable to determine how to source dependency {0} and value '{1}'".ToFormat(dependencyType, value));
+
+            return new DependencyProblem
+            {
+                Type = ctorOrSetter,
+                Name = name,
+                ReturnedType = dependencyType,
+                Message = UnableToDetermineDependency.ToFormat(dependencyType.GetFullName(), value)
+            };
         }
 
         public static object ConvertType(object value, Type dependencyType)
@@ -130,5 +183,4 @@ namespace StructureMap.Building
             return Convert.ChangeType(value, dependencyType);
         }
     }
-
 }
