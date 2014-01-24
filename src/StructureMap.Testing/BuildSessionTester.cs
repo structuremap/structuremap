@@ -50,6 +50,32 @@ namespace StructureMap.Testing
             container.GetInstance<TopClass>().Widgets.Count().ShouldEqual(4);
         }
 
+        [Test]
+        public void descriptive_exception_when_a_named_instance_cannot_be_found()
+        {
+            var container = new Container(x => {
+                x.For<IWidget>().AddInstances(o =>
+                {
+                    o.Type<AWidget>();
+                    o.ConstructedBy(() => new ColorWidget("red")).Named("red");
+                    o.ConstructedBy(() => new ColorWidget("blue")).Named("blue");
+                    o.ConstructedBy(() => new ColorWidget("green")).Named("green");
+                });
+
+            });
+
+            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                container.GetInstance<IWidget>("purple");
+            });
+
+            Debug.WriteLine(ex.ToString());
+
+            ex.Context.ShouldContain("The current configuration for type StructureMap.Testing.Widget.IWidget is:");
+
+            ex.Title.ShouldEqual(
+                "Could not find an Instance named 'purple' for PluginType StructureMap.Testing.Widget.IWidget");
+        }
+
 
         [Test]
         public void can_get_all_of_a_type_during_object_creation_as_generic_type()
@@ -202,6 +228,8 @@ namespace StructureMap.Testing
                 var session = new BuildSession(graph);
                 session.GetInstance(typeof(IGateway));
             });
+
+            ex.Context.ShouldContain("The current configuration for type StructureMap.Testing.Widget3.IGateway is");
 
             ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Widget3.IGateway'");
         }

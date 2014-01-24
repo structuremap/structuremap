@@ -49,15 +49,20 @@ namespace StructureMap.Diagnostics
         private readonly IPipelineGraph _graph;
         private List<Instance> _instances;
         private TextReportWriter _writer;
-        private StringWriter _stringWriter = new StringWriter();
+        private readonly StringWriter _stringWriter = new StringWriter();
 
         public WhatDoIHaveWriter(IPipelineGraph graph)
         {
             _graph = graph;
         }
 
-        public string GetText(ModelQuery query)
+        public string GetText(ModelQuery query, string title = null)
         {
+            if (title.IsNotEmpty())
+            {
+                _stringWriter.WriteLine(title);
+            }
+
             switch (_graph.Role)
             {
                 case ContainerRole.Root:
@@ -132,7 +137,7 @@ namespace StructureMap.Diagnostics
 
         private void writeInstance(InstanceRef instance)
         {
-            if (_instances.Contains(instance.Instance))
+            if (_instances.Contains(instance.Instance) || instance.Instance == null)
             {
                 return;
             }

@@ -19,9 +19,11 @@ namespace StructureMap.Testing
         public void SetUp()
         {
             theResolver = MockRepository.GenerateMock<IBuildSession>();
+
             theCache = new SessionCache(theResolver);
 
             thePipeline = MockRepository.GenerateMock<IPipelineGraph>();
+            thePipeline.Stub(x => x.ToModel()).Return(new Container().Model);
 
             theInstances = MockRepository.GenerateMock<IInstanceGraph>();
             thePipeline.Stub(x => x.Instances).Return(theInstances);

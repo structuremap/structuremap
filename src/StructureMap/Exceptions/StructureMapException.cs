@@ -30,12 +30,21 @@ namespace StructureMap
 
                 writer.WriteLine(_title);
 
+                if (Context.IsNotEmpty())
+                {
+                    writer.WriteLine();
+                    writer.WriteLine(Context);
+                    writer.WriteLine();
+                }
+
                 var i = 0;
                 _descriptions.Each(x => writer.WriteLine(++i + ".) " + x));
 
                 return writer.ToString();
             }
         }
+
+        public string Context { get; set; }
 
         public void Push(string description)
         {

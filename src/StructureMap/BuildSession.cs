@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Building;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
@@ -139,8 +140,12 @@ namespace StructureMap
             var instance = _pipelineGraph.Instances.FindInstance(pluginType, name);
             if (instance == null)
             {
-                // TODO -- make sure there is a UT on this behavior
-                throw new StructureMapConfigurationException("Could not find an Instance named '{0}' for PluginType {1}", name, pluginType.GetFullName());
+                var ex = new StructureMapConfigurationException("Could not find an Instance named '{0}' for PluginType {1}", name, pluginType.GetFullName());
+
+                ex.Context = new WhatDoIHaveWriter(_pipelineGraph).GetText(new ModelQuery {PluginType = pluginType},
+                    "The current configuration for type {0} is:".ToFormat(pluginType.GetFullName()));
+
+                throw ex;
             }
 
             return FindObject(pluginType, instance);
