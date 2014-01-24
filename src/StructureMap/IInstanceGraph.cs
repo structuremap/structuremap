@@ -17,5 +17,6 @@ namespace StructureMap
         IEnumerable<PluginFamily> UniqueFamilies();
 
         ILifecycle DefaultLifecycleFor(Type pluginType);
+        ContainerRole Role { get; }
     }
 }

@@ -12,7 +12,7 @@ namespace StructureMap
             _profiles = new Cache<string, IPipelineGraph>(name => {
                 var profileGraph = pluginGraph.Profile(name);
 
-                var instances = new ComplexInstanceGraph(root, profileGraph);
+                var instances = new ComplexInstanceGraph(root, profileGraph, ContainerRole.ProfileOrChild);
                 return new PipelineGraph(profileGraph, instances, root, root.Singletons, root.Transients);
             });
         }

@@ -279,5 +279,15 @@ namespace StructureMap
         /// as this is not used in any logic.
         /// </summary>
         string Name { get; set; }
+
+        /// <summary>
+        /// Is this container the root, a profile or child, or a nested container?
+        /// </summary>
+        ContainerRole Role { get; }
+
+        /// <summary>
+        /// The profile name of this container
+        /// </summary>
+        string ProfileName { get; }
     }
 }

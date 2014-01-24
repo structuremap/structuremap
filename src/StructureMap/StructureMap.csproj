@@ -93,6 +93,7 @@
     <Compile Include="Configuration\ITypeReader.cs" />
     <Compile Include="Configuration\MalformedAliasException.cs" />
     <Compile Include="Container.cs" />
+    <Compile Include="ContainerRole.cs" />
     <Compile Include="Diagnostics\BuildError.cs" />
     <Compile Include="Diagnostics\CharacterWidth.cs" />
     <Compile Include="Diagnostics\DividerLine.cs" />

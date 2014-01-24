@@ -11,10 +11,11 @@ namespace StructureMap
         private readonly IPipelineGraph _parent;
         private readonly PluginGraph _pluginGraph;
 
-        public ComplexInstanceGraph(IPipelineGraph parent, PluginGraph pluginGraph)
+        public ComplexInstanceGraph(IPipelineGraph parent, PluginGraph pluginGraph, ContainerRole role)
         {
             _parent = parent;
             _pluginGraph = pluginGraph;
+            Role = role;
         }
 
         public Instance GetDefault(Type pluginType)
@@ -78,5 +79,7 @@ namespace StructureMap
 
             return _parent.Instances.DefaultLifecycleFor(pluginType);
         }
+
+        public ContainerRole Role { get; private set; }
     }
 }

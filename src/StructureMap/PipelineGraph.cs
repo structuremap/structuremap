@@ -94,6 +94,14 @@ namespace StructureMap
             }
         }
 
+        public ContainerRole Role
+        {
+            get
+            {
+                return _instances.Role;
+            }
+        }
+
         public IGraphEjector Ejector
         {
             get
@@ -123,8 +131,8 @@ namespace StructureMap
 
         public IPipelineGraph ToNestedGraph()
         {
-            var nestedPluginGraph = new PluginGraph("Nested");
-            var instances = new ComplexInstanceGraph(this, nestedPluginGraph);
+            var nestedPluginGraph = new PluginGraph(Profile + " - Nested");
+            var instances = new ComplexInstanceGraph(this, nestedPluginGraph, ContainerRole.Nested);
             return new PipelineGraph(nestedPluginGraph, instances, this, _singletons, new NestedContainerTransientObjectCache());
         }
 

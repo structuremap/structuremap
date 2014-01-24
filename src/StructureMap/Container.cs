@@ -264,10 +264,26 @@ namespace StructureMap
             }
         }
 
+        /// <summary>
+        /// Get the child container for the named profile
+        /// </summary>
+        /// <param name="profileName"></param>
+        /// <returns></returns>
         public IContainer GetProfile(string profileName)
         {
             var pipeline = _pipelineGraph.Profiles.For(profileName);
             return new Container(pipeline);
+        }
+
+        /// <summary>
+        /// The profile name of this container
+        /// </summary>
+        public string ProfileName
+        {
+            get
+            {
+                return _pipelineGraph.Profile;
+            }
         }
 
         /// <summary>
@@ -485,6 +501,14 @@ namespace StructureMap
         public void Inject(Type pluginType, Instance instance)
         {
             Configure(x => x.For(pluginType).Use(instance));
+        }
+
+        public ContainerRole Role
+        {
+            get
+            {
+                return _pipelineGraph.Role;
+            }
         }
 
 

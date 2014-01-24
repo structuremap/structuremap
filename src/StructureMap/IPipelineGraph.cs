@@ -11,6 +11,7 @@ namespace StructureMap
         IModel ToModel();
 
         string Profile { get; }
+        ContainerRole Role { get; }
 
         IGraphEjector Ejector { get; }
 

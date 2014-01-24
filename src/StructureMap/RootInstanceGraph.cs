@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
-using StructureMap.Query;
 
 namespace StructureMap
 {
@@ -62,6 +61,11 @@ namespace StructureMap
             if (!_pluginGraph.HasFamily(pluginType)) return null;
 
             return _pluginGraph.Families[pluginType].Lifecycle;
+        }
+
+        public ContainerRole Role
+        {
+            get { return ContainerRole.Root; }
         }
     }
 }

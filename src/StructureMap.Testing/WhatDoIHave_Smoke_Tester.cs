@@ -28,6 +28,50 @@ namespace StructureMap.Testing
         }
 
         [Test]
+        public void display_one_service_for__a_nested_container()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IEngine>().Use<Hemi>().Named("The Hemi");
+
+                x.For<IEngine>().Add<VEight>().Singleton().Named("V8");
+                x.For<IEngine>().Add<FourFiftyFour>().AlwaysUnique();
+                x.For<IEngine>().Add<StraightSix>().LifecycleIs<ThreadLocalStorageLifecycle>();
+
+                x.For<IEngine>().Add(() => new Rotary()).Named("Rotary");
+                x.For<IEngine>().Add(c => c.GetInstance<PluginElectric>());
+
+                x.For<IEngine>().Add(new InlineFour());
+            });
+
+            Debug.WriteLine(container.GetNestedContainer().WhatDoIHave());
+        }
+
+        [Test]
+        public void display_one_service_for__a_profile_container()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IEngine>().Use<Hemi>().Named("The Hemi");
+
+                x.For<IEngine>().Add<VEight>().Singleton().Named("V8");
+                x.For<IEngine>().Add<FourFiftyFour>().AlwaysUnique();
+                x.For<IEngine>().Add<StraightSix>().LifecycleIs<ThreadLocalStorageLifecycle>();
+
+                x.For<IEngine>().Add(() => new Rotary()).Named("Rotary");
+                x.For<IEngine>().Add(c => c.GetInstance<PluginElectric>());
+
+                x.For<IEngine>().Add(new InlineFour());
+
+                x.Profile("Blue", blue => {
+                    blue.For<IEngine>().Use<FourFiftyFour>().Named("Gas Guzzler");
+                });
+            });
+
+            Debug.WriteLine(container.GetProfile("Blue").WhatDoIHave());
+        }
+
+        [Test]
         public void filter_by_assembly()
         {
             var container = new Container(x =>

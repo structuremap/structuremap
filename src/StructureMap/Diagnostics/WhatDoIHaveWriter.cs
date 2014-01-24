@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.TypeRules;
@@ -42,7 +41,7 @@ namespace StructureMap.Diagnostics
             }
 
             return enumerable;
-        } 
+        }
     }
 
     public class WhatDoIHaveWriter
@@ -59,6 +58,21 @@ namespace StructureMap.Diagnostics
 
         public string GetText(ModelQuery query)
         {
+            switch (_graph.Role)
+            {
+                case ContainerRole.Root:
+                    break;
+                case ContainerRole.ProfileOrChild:
+                    _stringWriter.WriteLine("Profile is '{0}'", _graph.Profile);
+                    break;
+
+                case ContainerRole.Nested:
+                    _stringWriter.WriteLine("Nested Container: " + _graph.Profile);
+                    break;
+            }
+
+            _stringWriter.WriteLine("");
+
             var model = _graph.ToModel();
 
             var pluginTypes = query.Query(model);
@@ -106,7 +120,6 @@ namespace StructureMap.Diagnostics
                 {
                     contents[4] += " (Default)";
                 }
-
             }
 
             _writer.AddText(contents);
@@ -148,7 +161,6 @@ namespace StructureMap.Diagnostics
                 contents[4] = contents[4].Substring(0, 27) + "...";
             }
 
-            
 
             _instances.Add(instance.Instance);
         }
