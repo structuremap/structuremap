@@ -207,6 +207,35 @@ namespace FubuMVC.StructureMap3.Testing.Compliance
                 .Services.Select(x => x.GetType())
                 .ShouldHaveTheSameElementsAs(typeof(OddballService), typeof(DifferentService));
         }
+
+        [Test]
+        public void explicit_registration_of_a_primitive_argument()
+        {
+            var container = ContainerFacilitySource.New(x => {
+                var def = ObjectDef.ForType<GuyWithPrimitive>();
+                def.DependencyByValue("Jeremy");
+
+                x.Register(typeof(GuyWithPrimitive), def);
+            });
+
+            container.Get<GuyWithPrimitive>()
+                .Name.ShouldEqual("Jeremy");
+        }
+    }
+
+    public class GuyWithPrimitive
+    {
+        private readonly string _name;
+
+        public GuyWithPrimitive(string name)
+        {
+            _name = name;
+        }
+
+        public string Name
+        {
+            get { return _name; }
+        }
     }
 
     public class ThingThatUsesLotsOfServices

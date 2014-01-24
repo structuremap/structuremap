@@ -15,7 +15,7 @@ namespace StructureMap.Building
         private readonly Instance _instance;
         private readonly IDependencySource _inner;
         private readonly InterceptionPlan _interceptionPlan;
-        private readonly Lazy<Func<IBuildSession, IContext, object>> _func;
+        private readonly Func<IBuildSession, IContext, object> _func;
 
 
         public BuildPlan(Type pluginType, Instance instance, IDependencySource inner, IEnumerable<IInterceptor> interceptors)
@@ -29,13 +29,8 @@ namespace StructureMap.Building
                 _interceptionPlan = new InterceptionPlan(pluginType, _inner, interceptors);
             }
 
-
-
-            _func = new Lazy<Func<IBuildSession, IContext, object>>(() => {
-                var @delegate = ToDelegate();
-                return @delegate as Func<IBuildSession, IContext, object>;
-            });
-
+            var @delegate = ToDelegate();
+            _func = @delegate as Func<IBuildSession, IContext, object>;
         }
 
         public Delegate ToDelegate()
@@ -87,12 +82,7 @@ namespace StructureMap.Building
 
         public object Build(IBuildSession session, IContext context)
         {
-            return _func.Value(session, context);
-        }
-
-        public Expression ToExpression(ParameterExpression session, ParameterExpression context)
-        {
-            throw new NotImplementedException();
+            return _func(session, context);
         }
 
         public Type ReturnedType

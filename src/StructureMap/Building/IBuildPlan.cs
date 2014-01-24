@@ -7,8 +7,6 @@ namespace StructureMap.Building
     {
         object Build(IBuildSession session, IContext context);
 
-        Expression ToExpression(ParameterExpression session, ParameterExpression context);
-
         Type ReturnedType { get; }
     }
 }

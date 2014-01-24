@@ -259,19 +259,19 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void OverrideAPrimitiveWithObjectFactory()
         {
-            ObjectFactory.Initialize(x => {
+            var container = new Container(x => {
                 x.ForConcreteType<ExplicitTarget>().Configure
                     .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").Is("Jeremy");
             });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
-            var firstTarget = ObjectFactory.GetInstance<ExplicitTarget>();
-            Assert.AreEqual("Jeremy", firstTarget.Name);
+            container.GetInstance<ExplicitTarget>()
+                .Name.ShouldEqual("Jeremy");
 
             // Now, set the explicit arg for IProvider
-            var secondTarget = ObjectFactory.Container.With("name").EqualTo("Julia").GetInstance<ExplicitTarget>();
-            Assert.AreEqual("Julia", secondTarget.Name);
+            container.With("name").EqualTo("Lindsey").GetInstance<ExplicitTarget>()
+                .Name.ShouldEqual("Lindsey");
         }
 
         [Test]

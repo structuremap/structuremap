@@ -23,7 +23,8 @@ namespace StructureMap.Pipeline
 
             if (argumentType.IsSimple())
             {
-                argument = findByName(name);
+                argument = findByName(name)
+                           ?? findByTypeOnly(argumentType);
             }
             else
             {
@@ -97,6 +98,11 @@ namespace StructureMap.Pipeline
         public void Add(string name, object @dependency)
         {
             Add(name, null, dependency);
+        }
+
+        public void Insert(Argument argument)
+        {
+            _dependencies.Insert(0, argument);
         }
 
         // TODO -- add some defensive programming checks here.

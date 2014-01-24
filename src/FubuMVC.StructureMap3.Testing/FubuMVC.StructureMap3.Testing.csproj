@@ -66,6 +66,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bugs\Picking_up_primitive_ctor_argument_from_FubuMVC_ObjectDef.cs" />
     <Compile Include="Compliance\Does_not_require_explicit_registration_in_order_to_retrieve_a_concrete_type.cs" />
     <Compile Include="Compliance\IServiceLocator_Compliance.cs" />
     <Compile Include="Compliance\Lifecycle_Scoping_Compliance.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Compliance\ServiceArgument_Injection_Compliance.cs" />
     <Compile Include="Compliance\Setter_Injection_from_ObjectDef_Dependency.cs" />
     <Compile Include="ContainerFacilitySource.cs" />
+    <Compile Include="end_to_end_testing.cs" />
     <Compile Include="Internals\AppSettingProviderRegistrySmokeTester.cs" />
     <Compile Include="Internals\Include_StructureMap_registrys.cs" />
     <Compile Include="Internals\ObjectDefInstanceTester.cs" />

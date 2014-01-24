@@ -7,13 +7,11 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Building
 {
-    public class ConcreteBuild : IBuildPlan, IHasSetters, IDependencySource
+    public class ConcreteBuild : IHasSetters, IDependencySource
     {
         private readonly Type _concreteType;
         private readonly ConstructorStep _constructor;
         private readonly IList<Setter> _setters = new List<Setter>();
-        private readonly Lazy<Func<IBuildSession, IContext, object>> _func;
-
 
         public ConcreteBuild(Type concreteType) : this(concreteType, new ConstructorSelector().Select(concreteType))
         {
@@ -23,11 +21,6 @@ namespace StructureMap.Building
         {
             _concreteType = concreteType;
             _constructor = constructor;
-
-            _func = new Lazy<Func<IBuildSession, IContext, object>>(() => {
-                var @delegate = ToDelegate();
-                return @delegate as Func<IBuildSession, IContext, object>;
-            });
         }
 
         protected ConcreteBuild(Type concreteType, ConstructorInfo constructor)
@@ -58,7 +51,14 @@ namespace StructureMap.Building
 
         public object Build(IBuildSession session, IContext context)
         {
-            return _func.Value(session, context);
+            var @delegate = ToDelegate() as Func<IBuildSession, IContext, object>;
+
+            return @delegate(session, context);
+        }
+
+        public T Build<T>(IBuildSession session) where T : class
+        {
+            return Build(session, session.As<IContext>()) as T;
         }
 
         public string Description

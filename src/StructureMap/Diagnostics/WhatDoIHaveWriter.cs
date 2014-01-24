@@ -74,7 +74,7 @@ namespace StructureMap.Diagnostics
             _instances = new List<Instance>();
 
             _writer.AddDivider('=');
-            _writer.AddText("PluginType", "Namespace", "Lifecycle", "Name", "Description");
+            _writer.AddText("PluginType", "Namespace", "Lifecycle", "Description", "Name");
 
             pluginTypes.OrderBy(x => x.PluginType.Name).Each(writePluginType);
 
@@ -98,13 +98,13 @@ namespace StructureMap.Diagnostics
             if (pluginType.Default != null)
             {
                 setContents(contents, pluginType.Default);
-                if (contents[3].IsEmpty())
+                if (contents[4].IsEmpty())
                 {
-                    contents[3] = "(Default)";
+                    contents[4] = "(Default)";
                 }
                 else
                 {
-                    contents[3] += " (Default)";
+                    contents[4] += " (Default)";
                 }
 
             }
@@ -135,12 +135,20 @@ namespace StructureMap.Diagnostics
         {
             contents[2] = instance.Lifecycle.ToName();
 
-            if (instance.Instance.HasExplicitName())
+            contents[3] = instance.Description;
+
+            Guid assignedName;
+            if (instance.Instance.HasExplicitName() && !Guid.TryParse(instance.Name, out assignedName))
             {
-                contents[3] = instance.Name;
+                contents[4] = instance.Name;
             }
 
-            contents[4] = instance.Description;
+            if (contents[4].Length > 30)
+            {
+                contents[4] = contents[4].Substring(0, 27) + "...";
+            }
+
+            
 
             _instances.Add(instance.Instance);
         }
