@@ -75,7 +75,7 @@ namespace StructureMap.Testing.Pipeline
             var instance = ComplexRule.GetInstance();
             instance.Dependencies.RemoveByName("String");
 
-            Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
+            Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() => {
                 instance.As<Instance>().Build<Rule>(_session);
             });
         }

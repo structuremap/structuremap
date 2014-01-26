@@ -82,7 +82,15 @@ namespace StructureMap.Building
 
         public object Build(IBuildSession session, IContext context)
         {
-            return _func(session, context);
+            try
+            {
+                return _func(session, context);
+            }
+            catch (StructureMapException e)
+            {
+                e.Instances.Add(_instance.Id);
+                throw;
+            }
         }
 
         public Type ReturnedType

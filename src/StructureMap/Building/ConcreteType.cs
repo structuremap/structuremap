@@ -102,6 +102,7 @@ namespace StructureMap.Building
                 });
 
             ctorStep.Add(ctorDependencies);
+
             return ctorStep;
         }
 

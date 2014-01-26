@@ -16,14 +16,6 @@ namespace StructureMap.Testing.Graph
             return new PluginGraphBuilder().Build();
         }
 
-        [Test, ExpectedException(typeof (StructureMapConfigurationException))]
-        public void AssertErrors_throws_StructureMapConfigurationException_if_there_is_an_error()
-        {
-            var graph = new PluginGraph();
-            graph.Log.RegisterError(new ApplicationException("Bad!"));
-
-            graph.Log.AssertFailures();
-        }
 
         [Test]
         public void add_type_adds_an_instance_for_type_once_and_only_once()

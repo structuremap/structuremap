@@ -22,25 +22,16 @@ namespace StructureMap.Configuration
 
         public void AddRegistry(string registryTypeName)
         {
-            _pluginGraph.Log.Try(() => {
-                var type = new TypePath(registryTypeName).FindType();
-                var registry = (Registry) Activator.CreateInstance(type);
-                registry.As<IPluginGraphConfiguration>().Configure(_pluginGraph);
-            }).AndReportErrorAs(290, registryTypeName);
+            var type = new TypePath(registryTypeName).FindType();
+            var registry = (Registry)Activator.CreateInstance(type);
+            registry.As<IPluginGraphConfiguration>().Configure(_pluginGraph);
         }
 
         public void ConfigureFamily(TypePath pluginTypePath, Action<PluginFamily> action)
         {
-            try
-            {
-                var pluginType = pluginTypePath.FindType();
-                var family = _pluginGraph.Families[pluginType];
-                action(family);
-            }
-            catch (Exception ex)
-            {
-                _pluginGraph.Log.RegisterError(ex);
-            }
+            var pluginType = pluginTypePath.FindType();
+            var family = _pluginGraph.Families[pluginType];
+            action(family);
         }
     }
 }

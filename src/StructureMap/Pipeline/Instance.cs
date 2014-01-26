@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
@@ -13,7 +12,7 @@ namespace StructureMap.Pipeline
     public abstract class Instance : HasLifecycle, IDescribed
     {
         private readonly string _originalName;
-        private string _name = Guid.NewGuid().ToString();
+        private string _name;
 
         private readonly IList<IInterceptor> _interceptors = new List<IInterceptor>();
 
@@ -35,7 +34,8 @@ namespace StructureMap.Pipeline
 
         protected Instance()
         {
-            _originalName = _name;
+            Id = Guid.NewGuid();
+            _originalName = _name = Id.ToString();
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace StructureMap.Pipeline
             }
             catch (Exception e)
             {
-                throw new StructureMapException("Error while trying to create the BuildPlan for {0}.\nPlease check the inner exception".ToFormat(toDescription(pluginType)), e);
+                throw new StructureMapBuildPlanException("Error while trying to create the BuildPlan for {0}.\nPlease check the inner exception".ToFormat(toDescription(pluginType)), e);
             }
         }
 
@@ -183,5 +183,25 @@ namespace StructureMap.Pipeline
                        (pluginType != null ? pluginType.AssemblyQualifiedName.GetHashCode() : 0);
             }
         }
+
+        protected bool Equals(Instance other)
+        {
+            return string.Equals(_originalName, other._originalName);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Instance) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_originalName != null ? _originalName.GetHashCode() : 0);
+        }
+
+        public Guid Id { get; private set; }
     }
 }

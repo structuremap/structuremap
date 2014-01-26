@@ -14,7 +14,7 @@ namespace StructureMap.Testing.Pipeline
             var instance = new ConstructorInstance(typeof(GuyWithPrimitives));
             instance.Dependencies.Add("name", "Jeremy");
 
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
+            var ex = Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() =>
             {
                 instance.ToBuilder(typeof(GuyWithPrimitives), new Policies());
 

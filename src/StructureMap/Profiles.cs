@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Util;
 
@@ -15,6 +17,11 @@ namespace StructureMap
                 var instances = new ComplexInstanceGraph(root, profileGraph, ContainerRole.ProfileOrChild);
                 return new PipelineGraph(profileGraph, instances, root, root.Singletons, root.Transients);
             });
+        }
+
+        public IEnumerable<IPipelineGraph> AllProfiles()
+        {
+            return _profiles;
         }
 
         public IPipelineGraph For(string profileName)

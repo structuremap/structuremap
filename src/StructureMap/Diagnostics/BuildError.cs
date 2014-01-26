@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Diagnostics
 {
@@ -38,6 +40,15 @@ namespace StructureMap.Diagnostics
             return (Instance != null ? Instance.GetHashCode() : 0) +
                    29*(PluginType != null ? PluginType.GetHashCode() : 0);
         }
+
+        public override string ToString()
+        {
+            var format = Instance.HasExplicitName()
+                ? "Instance '{0}' ({2}) for PluginType {1}"
+                : "Instance '{0}' for PluginType {1}";
+
+            return format.ToFormat(Instance.Description, PluginType, Instance.Name);
+        }
     }
 
     public class BuildError
@@ -69,6 +80,14 @@ namespace StructureMap.Diagnostics
 
         public StructureMapException Exception { get; set; }
 
+        public Guid RootInstance
+        {
+            get
+            {
+                return Exception.Instances.FirstOrDefault();
+            }
+        }
+
         public void AddDependency(BuildDependency dependency)
         {
             if (!_dependencies.Contains(dependency))
@@ -79,16 +98,33 @@ namespace StructureMap.Diagnostics
 
         public void Write(StringWriter writer)
         {
-            var description = Instance.CreateToken().Description;
-
             writer.WriteLine();
             writer.WriteLine(
                 "-----------------------------------------------------------------------------------------------------");
-            writer.WriteLine("Build Error on Instance '{0}' ({1})\n    for PluginType {2}", Instance.Name, description,
-                PluginType.AssemblyQualifiedName);
+
+            var format = Instance.HasExplicitName()
+                ? "Build Error on Instance '{0}' ({2})\n    for PluginType {1}"
+                : "Build Error on Instance '{0}' \n    for PluginType {1}";
+
+            
+
+            writer.WriteLine(format, Instance.Description, PluginType.GetFullName(), Instance.Name);
+            _dependencies.Each(x => writer.WriteLine(" - and " + x));
             writer.WriteLine();
 
-            if (Exception != null) writer.WriteLine(Exception.ToString());
+            if (Exception != null)
+            {
+                if (Exception is StructureMapBuildPlanException || Exception is StructureMapConfigurationException)
+                {
+                    writer.WriteLine(Exception.Title);
+                    writer.WriteLine(Exception.Context);
+                }
+                else
+                {
+                    writer.WriteLine(Exception.ToString());
+                }
+                
+            }
             writer.WriteLine();
         }
     }

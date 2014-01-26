@@ -71,10 +71,11 @@ namespace StructureMap.Pipeline
             if (!plan.IsValid())
             {
                 var message = "Unable to create a build plan for concrete type " + PluggedType.GetFullName();
-                var exception = new StructureMapConfigurationException(message);
-                exception.Push(plan.Description);
 
-                throw exception;
+                throw new StructureMapBuildPlanException(message)
+                {
+                    Context = plan.Description
+                };
             }
 
             return plan;

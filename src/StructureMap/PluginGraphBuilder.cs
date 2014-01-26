@@ -47,8 +47,6 @@ namespace StructureMap
 
             setupFuncAndLazyConstruction();
 
-            _graph.Log.AssertFailures();
-
             return _graph;
         }
 
@@ -69,13 +67,11 @@ namespace StructureMap
         public void RunConfigurations()
         {
             _configurations.Each(x => {
-                // Change this to using the FubuCore.Description later
-                _graph.Log.StartSource(x.ToString());
                 x.Register(this);
                 x.Configure(_graph);
             });
 
-            var types = new TypePool(_graph);
+            var types = new TypePool();
             _scanners.Each(x => x.ScanForTypes(types, _graph));
         }
 

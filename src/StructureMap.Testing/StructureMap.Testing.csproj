@@ -232,6 +232,7 @@
     <Compile Include="Configuration\DSL\UseIfNoneTests.cs" />
     <Compile Include="Configuration\GraphBuilderTester.cs" />
     <Compile Include="Container_role_assignment_and_profile_name_Tester.cs" />
+    <Compile Include="Diagnostics\AssertConfigurationIsValid_Smoke_Tester.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
     <Compile Include="Examples.cs">
       <SubType>Form</SubType>
@@ -328,14 +329,12 @@
     <Compile Include="Query\ClosedTypeConfigurationIntegrationTester.cs" />
     <Compile Include="Query\InstanceRefTester.cs" />
     <Compile Include="Query\ModelIntegrationTester.cs" />
-    <Compile Include="ReadingRegistriesFromXmlTester.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="RegistryExtensions.cs" />
     <Compile Include="SessionCacheTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
     <Compile Include="PerRequestInterceptorTester.cs" />
-    <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeExtensionsTester.cs" />
     <Compile Include="Util\LightweightCacheTester.cs" />

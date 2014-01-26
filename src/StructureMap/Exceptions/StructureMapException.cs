@@ -26,7 +26,6 @@ namespace StructureMap
             get
             {
                 var writer = new StringWriter();
-                //writer.WriteLine("StructureMap Context from inner to outer:");
 
                 writer.WriteLine(_title);
 
@@ -64,9 +63,10 @@ namespace StructureMap
         }
 
 
+        
+        public IList<Guid> Instances = new List<Guid>(); 
 
-
-    public string Title
+        public string Title
         {
             get { return _title; }
         }

@@ -56,7 +56,7 @@ namespace StructureMap.Configuration.Xml
             return new XmlAttributeInstanceMemento(clonedNode);
         }
 
-        public void ForEachFile(GraphLog log, Action<string> action)
+        public void ForEachFile(Action<string> action)
         {
             string includePath = getIncludePath();
 

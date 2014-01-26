@@ -22,7 +22,6 @@ namespace StructureMap.Graph
         private readonly IList<IFamilyPolicy> _policies = new List<IFamilyPolicy>();
 
         private readonly List<Registry> _registries = new List<Registry>();
-        private GraphLog _log = new GraphLog();
         private readonly LifecycleObjectCache _singletonCache = new LifecycleObjectCache();
 
         private readonly LightweightCache<string, PluginGraph> _profiles;
@@ -101,12 +100,6 @@ namespace StructureMap.Graph
         public List<Registry> Registries
         {
             get { return _registries; }
-        }
-
-        public GraphLog Log
-        {
-            get { return _log; }
-            set { _log = value; }
         }
 
         /// <summary>

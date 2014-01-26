@@ -229,8 +229,6 @@ namespace StructureMap.Configuration.DSL
         {
             if (graph.Registries.Contains(this)) return;
 
-            graph.Log.StartSource("Registry:  " + GetType().AssemblyQualifiedName);
-
             _basicActions.Each(action => action());
             _actions.Each(action => action(graph));
 

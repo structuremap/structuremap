@@ -73,8 +73,6 @@ namespace StructureMap.Testing.Graph
             var builder = new PluginGraphBuilder();
             builder.AddScanner(scanner);
             theGraph = builder.Build();
-
-            theGraph.Log.AssertFailures();
         }
 
         public class FakeConvention : IRegistrationConvention

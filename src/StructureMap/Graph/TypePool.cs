@@ -10,19 +10,9 @@ namespace StructureMap.Graph
     {
         private readonly Cache<Assembly, Type[]> _types = new Cache<Assembly, Type[]>();
 
-        public TypePool(PluginGraph graph)
+        public TypePool()
         {
-            _types.OnMissing = assembly => {
-                try
-                {
-                    return assembly.GetExportedTypes();
-                }
-                catch (Exception ex)
-                {
-                    graph.Log.RegisterError(ex);
-                    return new Type[0];
-                }
-            };
+            _types.OnMissing = assembly => assembly.GetExportedTypes();
         }
 
         public IEnumerable<Type> For(IEnumerable<Assembly> assemblies, CompositeFilter<Type> filter)

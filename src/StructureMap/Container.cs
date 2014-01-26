@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
@@ -40,7 +39,6 @@ namespace StructureMap
         /// </param>
         public Container(PluginGraph pluginGraph) : this(PipelineGraph.BuildRoot(pluginGraph))
         {
-            
         }
 
         internal Container(IPipelineGraph pipelineGraph)
@@ -280,10 +278,7 @@ namespace StructureMap
         /// </summary>
         public string ProfileName
         {
-            get
-            {
-                return _pipelineGraph.Profile;
-            }
+            get { return _pipelineGraph.Profile; }
         }
 
         /// <summary>
@@ -293,7 +288,8 @@ namespace StructureMap
         /// <param name="assembly">Optional parameter to filter the results down to only plugin types from this Assembly</param>
         /// <param name="@namespace">Optional parameter to filter the results down to only plugin types from this namespace</param>
         /// <param name="typeName">Optional parameter to filter the results down to any plugin type whose name contains this text</param>
-        public string WhatDoIHave(Type pluginType = null, Assembly assembly = null, string @namespace = null, string typeName = null)
+        public string WhatDoIHave(Type pluginType = null, Assembly assembly = null, string @namespace = null,
+            string typeName = null)
         {
             var writer = new WhatDoIHaveWriter(_pipelineGraph);
             return writer.GetText(new ModelQuery
@@ -348,13 +344,7 @@ namespace StructureMap
         /// </summary>
         public void AssertConfigurationIsValid()
         {
-            var session = new ValidationBuildSession(_pipelineGraph);
-            session.PerformValidations();
-
-            if (!session.Success)
-            {
-                throw new StructureMapConfigurationException(session.BuildErrorMessages());
-            }
+            PipelineGraphValidator.AssertNoErrors(_pipelineGraph);
         }
 
         /// <summary>
@@ -421,9 +411,9 @@ namespace StructureMap
         }
 
         private bool _disposedLatch;
+
         public void Dispose()
         {
-            
             if (_disposedLatch) return;
             _disposedLatch = true;
 
@@ -505,12 +495,8 @@ namespace StructureMap
 
         public ContainerRole Role
         {
-            get
-            {
-                return _pipelineGraph.Role;
-            }
+            get { return _pipelineGraph.Role; }
         }
-
 
         #region Nested type: GetInstanceAsExpression
 
@@ -533,7 +519,8 @@ namespace StructureMap
             {
                 if (!templateType.IsOpenGeneric())
                 {
-                    throw new StructureMapConfigurationException("Type '{0}' is not an open generic type".ToFormat(templateType.GetFullName()));
+                    throw new StructureMapConfigurationException(
+                        "Type '{0}' is not an open generic type".ToFormat(templateType.GetFullName()));
                 }
 
                 _templateType = templateType;

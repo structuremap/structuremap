@@ -25,11 +25,5 @@ namespace StructureMap.Testing.Configuration
         }
 
 
-        [Test]
-        public void Do_not_call_the_action_on_ConfigureFamily_if_the_type_path_blows_up()
-        {
-            var builder = new GraphBuilder(new PluginGraph());
-            builder.ConfigureFamily(new TypePath("a,a"), obj => Assert.Fail("Should not be called"));
-        }
     }
 }
