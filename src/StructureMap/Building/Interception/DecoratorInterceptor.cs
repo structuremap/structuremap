@@ -30,6 +30,11 @@ namespace StructureMap.Building.Interception
             }
         }
 
+        public IConfiguredInstance Instance
+        {
+            get { return _instance; }
+        }
+
         public InterceptorRole Role
         {
             get

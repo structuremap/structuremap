@@ -5,11 +5,12 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Building.Interception
 {
-    public class InterceptionPolicy<T> : IInterceptorPolicy
+    public class InterceptorPolicy<T> : IInterceptorPolicy
     {
         private readonly IInterceptor _interceptor;
+        private Func<Instance, bool> _filter;
 
-        public InterceptionPolicy(IInterceptor interceptor, Func<Instance, bool> filter = null)
+        public InterceptorPolicy(IInterceptor interceptor, Func<Instance, bool> filter = null)
         {
             if (!interceptor.Accepts.CanBeCastTo<T>())
             {
@@ -20,7 +21,11 @@ namespace StructureMap.Building.Interception
             Filter = filter;
         }
 
-        public Func<Instance, bool> Filter { get; set; }
+        public Func<Instance, bool> Filter
+        {
+            get { return _filter ?? (i => true); }
+            set { _filter = value; }
+        }
 
         public string Description
         {
@@ -32,18 +37,24 @@ namespace StructureMap.Building.Interception
             }
         }
 
-        // TODO -- need to take in PluginType.
-        // Decorators only apply when the PluginType == typeof(T)
-        // activators are easier
-        public IEnumerable<IInterceptor> DetermineInterceptors(Instance instance)
+        public IEnumerable<IInterceptor> DetermineInterceptors(Type pluginType, Instance instance)
         {
-            if (instance.ReturnedType.CanBeCastTo<T>() && (Filter ?? (i => true))(instance))
+            if (!Filter(instance))
+            {
+                yield break;
+            }
+
+            if (_interceptor.Role == InterceptorRole.Decorates && typeof (T) == pluginType)
+            {
+                yield return _interceptor;
+            }
+            else if (_interceptor.Role == InterceptorRole.Activates && instance.ReturnedType.CanBeCastTo<T>())
             {
                 yield return _interceptor;
             }
         }
 
-        protected bool Equals(InterceptionPolicy<T> other)
+        protected bool Equals(InterceptorPolicy<T> other)
         {
             return Equals(_interceptor, other._interceptor);
         }
@@ -53,7 +64,7 @@ namespace StructureMap.Building.Interception
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((InterceptionPolicy<T>) obj);
+            return Equals((InterceptorPolicy<T>) obj);
         }
 
         public override int GetHashCode()

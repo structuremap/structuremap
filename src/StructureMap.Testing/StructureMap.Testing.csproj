@@ -207,10 +207,11 @@
     <Compile Include="Building\FakeBuildSession.cs" />
     <Compile Include="Building\Interception\ActivatorInterceptorTester.cs" />
     <Compile Include="Building\Interception\DecoratorInterceptorTester.cs" />
+    <Compile Include="Building\Interception\DecoratorPolicyTester.cs" />
     <Compile Include="Building\Interception\FuncInterceptorTester.cs" />
     <Compile Include="Building\Interception\InterceptionPlanTester.cs" />
     <Compile Include="Building\Interception\InterceptionPoliciesTester.cs" />
-    <Compile Include="Building\Interception\InterceptionPolicyTester.cs" />
+    <Compile Include="Building\Interception\InterceptorPolicyTester.cs" />
     <Compile Include="Building\LifecycleDependencySourceTester.cs" />
     <Compile Include="Building\list_expression_building.cs" />
     <Compile Include="Building\mixed_constructor_setter_and_fields.cs" />

@@ -14,8 +14,8 @@ namespace StructureMap.Testing.Building.Interception
         public void do_not_duplicate_interceptor_policies()
         {
             var theActivator = new ActivatorInterceptor<ITarget>(x => x.Activate());
-            var policy1 = new InterceptionPolicy<ITarget>(theActivator);
-            var policy2 = new InterceptionPolicy<ITarget>(theActivator);
+            var policy1 = new InterceptorPolicy<ITarget>(theActivator);
+            var policy2 = new InterceptorPolicy<ITarget>(theActivator);
 
             policy1.ShouldEqual(policy2);
 
@@ -47,13 +47,13 @@ namespace StructureMap.Testing.Building.Interception
 
 
 
-            policies.SelectInterceptors(new SmartInstance<Target>())
+            policies.SelectInterceptors(typeof(ITarget), new SmartInstance<Target>())
                 .ShouldHaveTheSameElementsAs(activator1, activator2, activator3, activator4);
 
-            policies.SelectInterceptors(new SmartInstance<ATarget>())
+            policies.SelectInterceptors(typeof(ITarget), new SmartInstance<ATarget>())
                 .ShouldHaveTheSameElementsAs(activator1, activator4);
 
-            policies.SelectInterceptors(new SmartInstance<StubbedGateway>())
+            policies.SelectInterceptors(typeof(ITarget), new SmartInstance<StubbedGateway>())
                 .ShouldHaveTheSameElementsAs(activator5);
         }
 
@@ -61,7 +61,7 @@ namespace StructureMap.Testing.Building.Interception
         public void apply_policy_selectively_with_a_func()
         {
             var activator1 = new ActivatorInterceptor<ITarget>(x => x.Activate());
-            var policy = new InterceptionPolicy<ITarget>(activator1, i => i.Name.StartsWith("A"));
+            var policy = new InterceptorPolicy<ITarget>(activator1, i => i.Name.StartsWith("A"));
 
             var container = new Container(x => {
                 x.Policies.Interceptors(policy);

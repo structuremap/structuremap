@@ -6,6 +6,6 @@ namespace StructureMap.Building.Interception
 {
     public interface IInterceptorPolicy : IDescribed
     {
-        IEnumerable<IInterceptor> DetermineInterceptors(Instance returnedType);
+        IEnumerable<IInterceptor> DetermineInterceptors(Type pluginType, Instance instance);
     }
 }

@@ -24,7 +24,7 @@ namespace StructureMap.Building.Interception
 
         public IInterceptorPolicy ToPolicy()
         {
-            return new InterceptionPolicy<T>(this);
+            return new InterceptorPolicy<T>(this);
         }
 
         public string Description

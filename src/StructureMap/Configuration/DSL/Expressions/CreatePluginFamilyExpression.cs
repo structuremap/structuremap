@@ -294,7 +294,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             var instance = new SmartInstance<TDecoratorType>();
             var interceptor = new DecoratorInterceptor(typeof (TPluginType), instance);
-            var policy = new InterceptionPolicy<TPluginType>(interceptor, filter);
+            var policy = new InterceptorPolicy<TPluginType>(interceptor, filter);
 
             alter = graph => graph.Policies.Interceptors.Add(policy);
 

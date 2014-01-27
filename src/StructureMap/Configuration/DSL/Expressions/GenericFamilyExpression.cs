@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using StructureMap.Building.Interception;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -174,6 +175,17 @@ namespace StructureMap.Configuration.DSL.Expressions
         public GenericFamilyExpression Singleton()
         {
             return LifecycleIs(Lifecycles.Singleton);
+        }
+
+        // TODO -- xml comments
+        public ConfiguredInstance DecorateAllWith(Type decoratorType, Func<Instance, bool> filter = null)
+        {
+            var instance = new ConfiguredInstance(decoratorType);
+            var policy = new DecoratorPolicy(_pluginType, instance, filter);
+
+            _registry.alter = graph => graph.Policies.Interceptors.Add(policy);
+
+            return instance;
         }
     }
 }

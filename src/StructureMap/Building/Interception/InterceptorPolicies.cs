@@ -16,7 +16,7 @@ namespace StructureMap.Building.Interception
 
         public void Add<T>(IInterceptor interceptor, Func<Instance, bool> filter = null)
         {
-            Add(new InterceptionPolicy<T>(interceptor, filter));
+            Add(new InterceptorPolicy<T>(interceptor, filter));
         }
 
         public IList<IInterceptorPolicy> Policies
@@ -24,11 +24,11 @@ namespace StructureMap.Building.Interception
             get { return _policies; }
         }
 
-        public IEnumerable<IInterceptor> SelectInterceptors(Instance instance)
+        public IEnumerable<IInterceptor> SelectInterceptors(Type pluginType, Instance instance)
         {
             if (instance == null) throw new ArgumentNullException("instance");
 
-            return _policies.SelectMany(x => x.DetermineInterceptors(instance)).ToArray();
+            return _policies.SelectMany(x => x.DetermineInterceptors(pluginType, instance)).ToArray();
         } 
     }
 }

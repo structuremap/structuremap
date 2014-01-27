@@ -221,6 +221,25 @@ namespace StructureMap.Testing.Acceptance
                 .Inner
                 .ShouldBeOfType<AWidget>();
         }
+
+        [Test]
+        public void decorate_with_open_generics()
+        {
+            var container = new Container(x => {
+                x.For<IWidget>().Use<AWidget>();
+                x.For<IService>().Use<AService>();
+
+                x.For(typeof (IFoo<,>)).DecorateAllWith(typeof (DecoratedFoo<,>));
+
+                x.For(typeof (IFoo<,>)).Use(typeof (Foo<,>));
+            });
+
+            var decorator = container.GetInstance<IFoo<IWidget, IService>>()
+                .ShouldBeOfType<DecoratedFoo<IWidget, IService>>();
+
+            decorator.One.ShouldBeOfType<AWidget>();
+            decorator.Two.ShouldBeOfType<AService>();
+        }
     }
 
     public abstract class Activateable
@@ -317,4 +336,61 @@ namespace StructureMap.Testing.Acceptance
             get { return _inner; }
         }
     }
+
+    public interface IFoo<T1, T2>
+    {
+        T1 One { get; }
+        T2 Two { get; }
+    }
+
+    public class Foo<T1, T2> : IFoo<T1, T2>
+    {
+        private readonly T1 _one;
+        private readonly T2 _two;
+
+        public Foo(T1 one, T2 two)
+        {
+            _one = one;
+            _two = two;
+        }
+
+        public T1 One
+        {
+            get { return _one; }
+        }
+
+        public T2 Two
+        {
+            get { return _two; }
+        }
+    }
+
+    public class DecoratedFoo<T1, T2> : IFoo<T1, T2>
+    {
+        private readonly IFoo<T1, T2> _inner;
+
+        public DecoratedFoo(IFoo<T1, T2> inner)
+        {
+            _inner = inner;
+        }
+
+        public T1 One
+        {
+            get
+            {
+                return _inner.One;
+            }
+        }
+
+        public T2 Two
+        {
+            get
+            {
+                return _inner.Two;
+            }
+        }
+    }
+
+    public interface IService{}
+    public class AService : IService{}
 }
