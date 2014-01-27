@@ -169,6 +169,7 @@
     <Compile Include="Acceptance\interception_acceptance_tests.cs" />
     <Compile Include="Acceptance\lifecycle_creation.cs" />
     <Compile Include="Acceptance\nested_registry_declarations.cs" />
+    <Compile Include="Acceptance\setter_rules_are_reset_by_configure.cs" />
     <Compile Include="Acceptance\setting_lifecycle_scope.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
