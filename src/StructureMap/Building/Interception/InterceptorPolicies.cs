@@ -14,9 +14,9 @@ namespace StructureMap.Building.Interception
             _policies.Fill(policy);
         }
 
-        public void Add<T>(IInterceptor interceptor)
+        public void Add<T>(IInterceptor interceptor, Func<Instance, bool> filter = null)
         {
-            Add(new InterceptionPolicy<T>(interceptor));
+            Add(new InterceptionPolicy<T>(interceptor, filter));
         }
 
         public IList<IInterceptorPolicy> Policies

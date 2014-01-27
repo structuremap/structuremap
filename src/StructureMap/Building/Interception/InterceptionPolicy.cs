@@ -8,7 +8,6 @@ namespace StructureMap.Building.Interception
     public class InterceptionPolicy<T> : IInterceptorPolicy
     {
         private readonly IInterceptor _interceptor;
-        private readonly Func<Instance, bool> _filter;
 
         public InterceptionPolicy(IInterceptor interceptor, Func<Instance, bool> filter = null)
         {
@@ -18,8 +17,10 @@ namespace StructureMap.Building.Interception
             }
 
             _interceptor = interceptor;
-            _filter = filter ?? (i => true);
+            Filter = filter;
         }
+
+        public Func<Instance, bool> Filter { get; set; }
 
         public string Description
         {
@@ -36,7 +37,7 @@ namespace StructureMap.Building.Interception
         // activators are easier
         public IEnumerable<IInterceptor> DetermineInterceptors(Instance instance)
         {
-            if (instance.ReturnedType.CanBeCastTo<T>() && _filter(instance))
+            if (instance.ReturnedType.CanBeCastTo<T>() && (Filter ?? (i => true))(instance))
             {
                 yield return _interceptor;
             }

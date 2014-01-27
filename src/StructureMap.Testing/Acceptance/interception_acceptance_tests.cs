@@ -137,6 +137,30 @@ namespace StructureMap.Testing.Acceptance
         }
 
         [Test]
+        public void decorate_with_additional_filter_on_instance_with_func()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IWidget>()
+                    .DecorateAllWith(w => new WidgetHolder(w), i => i.ReturnedType.Name.StartsWith("B"));
+
+                x.For<IWidget>().AddInstances(widgets =>
+                {
+                    widgets.Type<AWidget>().Named("A");
+                    widgets.Type<BWidget>().Named("B");
+                    widgets.Type<CWidget>().Named("C");
+                });
+            });
+
+            container.GetInstance<IWidget>("A").ShouldBeOfType<AWidget>();
+            container.GetInstance<IWidget>("B")
+                .ShouldBeOfType<WidgetHolder>()
+                .Inner.ShouldBeOfType<BWidget>();
+
+            container.GetInstance<IWidget>("C").ShouldBeOfType<CWidget>();
+        }
+
+        [Test]
         public void decorate_by_func()
         {
             var container = new Container(x => {
