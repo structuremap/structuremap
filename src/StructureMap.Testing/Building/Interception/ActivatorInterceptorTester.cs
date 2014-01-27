@@ -71,7 +71,7 @@ namespace StructureMap.Testing.Building.Interception
         {
             var variable = Expression.Variable(typeof (ITarget), "target");
 
-            var expression = theActivator.ToExpression(Parameters.Session, variable);
+            var expression = theActivator.ToExpression(new Policies(), Parameters.Session, variable);
 
             expression.ToString().ShouldEqual("target.Activate()");
         }
@@ -81,7 +81,7 @@ namespace StructureMap.Testing.Building.Interception
         {
             var variable = Expression.Variable(typeof(ITarget), "target");
 
-            var expression = theActivator.ToExpression(Parameters.Context, variable);
+            var expression = theActivator.ToExpression(new Policies(), Parameters.Context, variable);
 
             var lambdaType = typeof (Action<ITarget>);
             var lambda = Expression.Lambda(lambdaType, expression, variable);
@@ -102,7 +102,7 @@ namespace StructureMap.Testing.Building.Interception
 
 
 
-            var expression = activator.ToExpression(Parameters.Context, variable);
+            var expression = activator.ToExpression(new Policies(), Parameters.Context, variable);
 
             var lambdaType = typeof(Action<IContext, Target>);
             var lambda = Expression.Lambda(lambdaType, expression, Parameters.Context, variable);

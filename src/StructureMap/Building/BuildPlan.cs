@@ -18,7 +18,7 @@ namespace StructureMap.Building
         private readonly Func<IBuildSession, IContext, object> _func;
 
 
-        public BuildPlan(Type pluginType, Instance instance, IDependencySource inner, IEnumerable<IInterceptor> interceptors)
+        public BuildPlan(Type pluginType, Instance instance, IDependencySource inner, Policies policies, IEnumerable<IInterceptor> interceptors)
         {
             _pluginType = pluginType;
             _instance = instance;
@@ -26,7 +26,7 @@ namespace StructureMap.Building
 
             if (interceptors.Any())
             {
-                _interceptionPlan = new InterceptionPlan(pluginType, _inner, interceptors);
+                _interceptionPlan = new InterceptionPlan(pluginType, _inner, policies, interceptors);
             }
 
             var @delegate = ToDelegate();

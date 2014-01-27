@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
 using StructureMap.TypeRules;
 
@@ -28,15 +27,19 @@ namespace StructureMap.Building.Interception
             {
                 var bodyDescription = _description ?? _expression
                     .ReplaceParameter(Accepts, Expression.Parameter(Accepts, Accepts.Name))
-                    .ReplaceParameter(typeof(IContext), Expression.Parameter(typeof(IContext), "IContext"))
+                    .ReplaceParameter(typeof (IContext), Expression.Parameter(typeof (IContext), "IContext"))
                     .Body.ToString();
 
-                return "FuncInterceptor of {0}: {1}".ToFormat(typeof(T).GetFullName(), bodyDescription);
+                return "FuncInterceptor of {0}: {1}".ToFormat(typeof (T).GetFullName(), bodyDescription);
             }
         }
-        public InterceptorRole Role { get { return InterceptorRole.Decorates; } }
 
-        public Expression ToExpression(ParameterExpression context, ParameterExpression variable)
+        public InterceptorRole Role
+        {
+            get { return InterceptorRole.Decorates; }
+        }
+
+        public Expression ToExpression(Policies policies, ParameterExpression context, ParameterExpression variable)
         {
             var body = _expression.ReplaceParameter(Accepts, variable)
                 .ReplaceParameter(typeof (IContext), context).Body;
@@ -49,8 +52,15 @@ namespace StructureMap.Building.Interception
             return new InterceptionPolicy<T>(this);
         }
 
-        public Type Accepts { get { return typeof (T); } }
-        public Type Returns { get { return typeof (T); } }
+        public Type Accepts
+        {
+            get { return typeof (T); }
+        }
+
+        public Type Returns
+        {
+            get { return typeof (T); }
+        }
 
         protected bool Equals(FuncInterceptor<T> other)
         {
@@ -72,7 +82,7 @@ namespace StructureMap.Building.Interception
 
         public override string ToString()
         {
-            return "Interceptor of {0}: {1}".ToFormat(typeof(T).GetFullName(), Description);
+            return "Interceptor of {0}: {1}".ToFormat(typeof (T).GetFullName(), Description);
         }
     }
 }

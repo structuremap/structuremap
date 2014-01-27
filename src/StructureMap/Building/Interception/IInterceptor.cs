@@ -8,7 +8,7 @@ namespace StructureMap.Building.Interception
         // "activates" or "decorates"
         InterceptorRole Role { get; }
 
-        Expression ToExpression(ParameterExpression session, ParameterExpression variable);
+        Expression ToExpression(Policies policies, ParameterExpression session, ParameterExpression variable);
 
         Type Accepts { get; }
         Type Returns { get; }

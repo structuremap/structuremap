@@ -29,7 +29,7 @@ namespace StructureMap.Testing.Building
             theInner = Constant.For(theTarget);
 
             _plan =
-                new Lazy<BuildPlan>(() => new BuildPlan(typeof (IBuildTarget), theInstance, theInner, theInterceptors));
+                new Lazy<BuildPlan>(() => new BuildPlan(typeof (IBuildTarget), theInstance, theInner, new Policies(), theInterceptors));
 
             theSession = new FakeBuildSession();
         }

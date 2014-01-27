@@ -48,7 +48,7 @@ namespace StructureMap.Building.Interception
             }
         }
 
-        public Expression ToExpression(ParameterExpression context, ParameterExpression variable)
+        public Expression ToExpression(Policies policies, ParameterExpression context, ParameterExpression variable)
         {
             return _action
                 .ReplaceParameter(Accepts, variable)

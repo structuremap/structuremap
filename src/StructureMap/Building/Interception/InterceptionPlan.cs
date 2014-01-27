@@ -9,13 +9,15 @@ namespace StructureMap.Building.Interception
     {
         private readonly Type _pluginType;
         private readonly IDependencySource _inner;
+        private readonly Policies _policies;
         private readonly IEnumerable<IInterceptor> _interceptors;
         private readonly ParameterExpression _variable;
 
-        public InterceptionPlan(Type pluginType, IDependencySource inner, IEnumerable<IInterceptor> interceptors)
+        public InterceptionPlan(Type pluginType, IDependencySource inner, Policies policies, IEnumerable<IInterceptor> interceptors)
         {
             _pluginType = pluginType;
             _inner = inner;
+            _policies = policies;
             _interceptors = interceptors;
             _variable = Expression.Variable(_inner.ReturnedType, "x");
 
@@ -61,7 +63,7 @@ namespace StructureMap.Building.Interception
         private void addDecorators(ParameterExpression context, ParameterExpression pluginTypeVariable, BlockPlan plan)
         {
             _interceptors.Where(x => x.Role == InterceptorRole.Decorates).Each(decorator => {
-                var decoratedExpression = decorator.ToExpression(context, pluginTypeVariable);
+                var decoratedExpression = decorator.ToExpression(_policies, context, pluginTypeVariable);
                 var wrapped = TryCatchWrapper.WrapFunc<StructureMapInterceptorException>(_pluginType,
                     decoratedExpression, decorator);
                 
@@ -94,7 +96,7 @@ namespace StructureMap.Building.Interception
         {
             var activators = findActivatorGroups();
             plan.AddVariables(activators.SelectMany(x => x.ToParameterExpressions(_inner.ReturnedType)));
-            plan.Add(activators.SelectMany(x => x.CreateExpressions(_variable)).ToArray());
+            plan.Add(activators.SelectMany(x => x.CreateExpressions(_policies, _variable)).ToArray());
         }
 
         private IEnumerable<ActivatorGroup> findActivatorGroups()
@@ -125,7 +127,7 @@ namespace StructureMap.Building.Interception
                 }
             }
 
-            public IEnumerable<Expression> CreateExpressions(ParameterExpression originalVariable)
+            public IEnumerable<Expression> CreateExpressions(Policies policies, ParameterExpression originalVariable)
             {
                 var variable = _variable ?? originalVariable;
 
@@ -136,7 +138,7 @@ namespace StructureMap.Building.Interception
 
                 foreach (var interceptor in _group)
                 {
-                    var interceptionExpression = interceptor.ToExpression(Parameters.Context, variable);
+                    var interceptionExpression = interceptor.ToExpression(policies, Parameters.Context, variable);
 
                     yield return
                         TryCatchWrapper.WrapAction<StructureMapInterceptorException>(interceptionExpression, interceptor);

@@ -157,7 +157,7 @@ namespace StructureMap.Pipeline
                 var interceptors =
                     policies.Interceptors.SelectInterceptors(ReturnedType ?? pluginType).Union(_interceptors);
 
-                return new BuildPlan(pluginType, this, builderSource, interceptors);
+                return new BuildPlan(pluginType, this, builderSource, policies, interceptors);
             }
             catch (StructureMapException e)
             {
