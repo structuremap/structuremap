@@ -7,19 +7,6 @@ namespace StructureMap.Testing.Diagnostics
     [TestFixture]
     public class AssertConfigurationIsValid_Smoke_Tester
     {
-        /*
-         * TODO
-         * missing primitives
-         * missing default
-         * multiple failures with one cause
-         * validation failures
-         * profile
-         * ctor errors
-         * 
-         * 
-         * 
-         */
-
         [Test]
         public void happy_path_with_build_plans_all_good()
         {

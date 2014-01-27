@@ -54,7 +54,6 @@
     <Compile Include="AppSettingProviderRegistry.cs" />
     <Compile Include="BootstrappingExtensions.cs" />
     <Compile Include="ContainerExtensions.cs" />
-    <Compile Include="IContainerExtension.cs" />
     <Compile Include="NestedStructureMapContainerBehavior.cs" />
     <Compile Include="ObjectDefInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

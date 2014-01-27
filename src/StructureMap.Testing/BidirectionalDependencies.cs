@@ -29,7 +29,6 @@ namespace StructureMap.Testing
         [Test]
         public void do_not_blow_up_with_a_stack_overflow_problem()
         {
-            // TODO -- make the exceptions better
             var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
                 container.GetInstance<IBiPresenter>();
             });

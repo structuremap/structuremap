@@ -105,11 +105,7 @@ namespace StructureMap.Pipeline
             _dependencies.Insert(0, argument);
         }
 
-        // TODO -- add some defensive programming checks here.
-        // @dependency has to be null, castable to type, or Instance
-        // check that Instance is pluggable
-        // TODO -- if enumerable of Instance, correct to EnumerableInstance
-        // TODO -- UT the defensive programming checks
+
         public void Add(string name, Type type, object @dependency)
         {
             if (type.IsSimple())

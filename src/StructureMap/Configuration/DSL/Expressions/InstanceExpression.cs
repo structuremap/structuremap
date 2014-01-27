@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
@@ -201,11 +202,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             _action(instance);
         }
 
-        public SmartInstance<TTPluggedType> Type<TTPluggedType>()
+        public SmartInstance<TPluggedType> Type<TPluggedType>()
         {
-            // TODO -- this needs to blow up if it's not a concrete type
+            if (!typeof (TPluggedType).IsConcrete())
+            {
+                throw new InvalidOperationException("This class can only be created for concrete TPluginType types");
+            }
 
-            return returnInstance(new SmartInstance<TTPluggedType>());
+            return returnInstance(new SmartInstance<TPluggedType>());
         }
 
         public ConfiguredInstance Type(Type type)

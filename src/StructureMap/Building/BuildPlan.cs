@@ -35,7 +35,6 @@ namespace StructureMap.Building
 
         public Delegate ToDelegate()
         {
-            // TODO -- will add decorator later
             var innerSource = _interceptionPlan ?? _inner;
 
             var builder = innerSource.ToExpression(Parameters.Session, Parameters.Context);

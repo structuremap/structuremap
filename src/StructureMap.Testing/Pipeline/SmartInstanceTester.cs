@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Castle.DynamicProxy.Contributors;
 using NUnit.Framework;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;

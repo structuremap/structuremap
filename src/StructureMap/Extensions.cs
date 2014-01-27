@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace StructureMap
 {
-    // TODO -- eliminate in SM3
     internal static class StringExtensions
     {
         public static IEnumerable<T> Each<T>(this IEnumerable<T> enumerable, Action<T> action)

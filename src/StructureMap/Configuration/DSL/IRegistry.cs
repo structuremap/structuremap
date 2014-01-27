@@ -46,7 +46,6 @@ namespace StructureMap.Configuration.DSL
         LambdaInstance<T> Redirect<T, U>() where T : class where U : class;
     }
 
-    // TODO -- add a new method for global IInterceptionPolicy
     public interface IRegistry : IProfileRegistry
     {
         /// <summary>

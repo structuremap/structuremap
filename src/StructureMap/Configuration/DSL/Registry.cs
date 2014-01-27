@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using StructureMap.Building.Interception;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -325,6 +326,11 @@ namespace StructureMap.Configuration.DSL
             public PoliciesExpression(Registry parent)
             {
                 _parent = parent;
+            }
+
+            public void Interceptors(IInterceptorPolicy policy)
+            {
+                _parent.alter = graph => graph.Policies.Interceptors.Add(policy);
             }
 
             public void OnMissingFamily<T>() where T : IFamilyPolicy, new()
