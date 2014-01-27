@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using NUnit.Framework;
-using Rhino.Mocks.Constraints;
+using Rhino.Mocks;
 using StructureMap.Attributes;
 using StructureMap.Building;
 using StructureMap.Pipeline;
@@ -16,6 +15,14 @@ namespace StructureMap.Testing.Building
     [TestFixture]
     public class ConcreteTypeTester
     {
+        [Test]
+        public void if_a_dependency_value_is_IDependencySource_just_use_that()
+        {
+            var source = MockRepository.GenerateMock<IDependencySource>();
+            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeArg", typeof (IGateway), source)
+                .ShouldBeTheSameAs(source);
+        }
+
         [Test]
         public void no_value_for_non_simple_resolves_to_default_source()
         {
@@ -45,7 +52,8 @@ namespace StructureMap.Testing.Building
 
             // My dad raises registered Beefmasters and he'd be disappointed
             // if the default here was anything else
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (BreedEnum), BreedEnum.Beefmaster)
+            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (BreedEnum),
+                BreedEnum.Beefmaster)
                 .ShouldEqual(Constant.For(BreedEnum.Beefmaster));
 
             var gateway = new StubbedGateway();
@@ -82,8 +90,9 @@ namespace StructureMap.Testing.Building
         public void array_can_be_coerced_to_concrete_list()
         {
             var array = new IGateway[] {new StubbedGateway(), new StubbedGateway()};
-            var constant = ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), array)
-                .ShouldBeOfType<Constant>();
+            var constant =
+                ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), array)
+                    .ShouldBeOfType<Constant>();
 
             constant.ReturnedType.ShouldEqual(typeof (List<IGateway>));
             constant.Value.As<List<IGateway>>()
@@ -94,8 +103,9 @@ namespace StructureMap.Testing.Building
         public void array_can_be_coerced_to_concrete_ilist()
         {
             var array = new IGateway[] {new StubbedGateway(), new StubbedGateway()};
-            var constant = ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IList<IGateway>), array)
-                .ShouldBeOfType<Constant>();
+            var constant =
+                ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IList<IGateway>), array)
+                    .ShouldBeOfType<Constant>();
 
             constant.ReturnedType.ShouldEqual(typeof (IList<IGateway>));
             constant.Value.As<IList<IGateway>>()
@@ -106,8 +116,9 @@ namespace StructureMap.Testing.Building
         public void array_can_be_coerced_to_enumerable()
         {
             var list = new IGateway[] {new StubbedGateway(), new StubbedGateway()};
-            var constant = ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), list)
-                .ShouldBeOfType<Constant>();
+            var constant =
+                ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), list)
+                    .ShouldBeOfType<Constant>();
 
             constant.ReturnedType.ShouldEqual(typeof (List<IGateway>));
             constant.Value.As<List<IGateway>>()
@@ -118,8 +129,9 @@ namespace StructureMap.Testing.Building
         public void list_can_be_coerced_to_array()
         {
             var list = new List<IGateway> {new StubbedGateway(), new StubbedGateway()};
-            var constant = ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof(IGateway[]), list)
-                .ShouldBeOfType<Constant>();
+            var constant =
+                ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IGateway[]), list)
+                    .ShouldBeOfType<Constant>();
 
             constant.ReturnedType.ShouldEqual(typeof (IGateway[]));
             constant.Value.As<IGateway[]>()
@@ -173,13 +185,13 @@ namespace StructureMap.Testing.Building
         [Test]
         public void source_for_missing_string_setter_arg()
         {
-            var source = ConcreteType.SourceFor(ConcreteType.SetterProperty, "SomeProp", typeof(string), null)
+            var source = ConcreteType.SourceFor(ConcreteType.SetterProperty, "SomeProp", typeof (string), null)
                 .ShouldBeOfType<DependencyProblem>();
 
             source.Name.ShouldEqual("SomeProp");
             source.Type.ShouldEqual(ConcreteType.SetterProperty);
             source.Message.ShouldEqual("Required primitive dependency is not explicitly defined");
-            source.ReturnedType.ShouldEqual(typeof(string));
+            source.ReturnedType.ShouldEqual(typeof (string));
         }
 
         [Test]
@@ -187,8 +199,8 @@ namespace StructureMap.Testing.Building
         {
             var colorRule = new ColorRule("Red");
             var source = ConcreteType.SourceFor(
-                ConcreteType.SetterProperty, 
-                "SomeProp", 
+                ConcreteType.SetterProperty,
+                "SomeProp",
                 typeof (IGateway),
                 colorRule)
                 .ShouldBeOfType<DependencyProblem>();
@@ -214,7 +226,6 @@ namespace StructureMap.Testing.Building
         }
 
 
-
         [Test]
         public void throw_a_description_exception_when_no_suitable_ctor_can_be_found()
         {
@@ -223,7 +234,8 @@ namespace StructureMap.Testing.Building
                     new Policies());
             });
 
-            ex.Message.ShouldContain("No public constructor could be selected for concrete type " + typeof(GuyWithNoSuitableCtor).GetFullName());
+            ex.Message.ShouldContain("No public constructor could be selected for concrete type " +
+                                     typeof (GuyWithNoSuitableCtor).GetFullName());
         }
 
         [Test]
@@ -235,7 +247,7 @@ namespace StructureMap.Testing.Building
             dependencies.Add("age", 40);
             dependencies.Add("isAwake", true);
 
-            ConcreteType.BuildSource(typeof(GuyWithPrimitives), null, dependencies, new Policies())
+            ConcreteType.BuildSource(typeof (GuyWithPrimitives), null, dependencies, new Policies())
                 .IsValid().ShouldBeTrue();
         }
 
@@ -248,10 +260,9 @@ namespace StructureMap.Testing.Building
             dependencies.Add("age", 40);
             //dependencies.Add("isAwake", true);
 
-            ConcreteType.BuildSource(typeof(GuyWithPrimitives), null, dependencies, new Policies())
+            ConcreteType.BuildSource(typeof (GuyWithPrimitives), null, dependencies, new Policies())
                 .IsValid().ShouldBeFalse();
         }
-
 
 
         [Test]
@@ -263,7 +274,7 @@ namespace StructureMap.Testing.Building
             dependencies.Add("Age", 40);
             dependencies.Add("IsAwake", true);
 
-            ConcreteType.BuildSource(typeof(GuyWithPrimitiveSetters), null, dependencies, new Policies())
+            ConcreteType.BuildSource(typeof (GuyWithPrimitiveSetters), null, dependencies, new Policies())
                 .IsValid().ShouldBeTrue();
         }
 
@@ -276,13 +287,9 @@ namespace StructureMap.Testing.Building
             dependencies.Add("Age", 40);
             //dependencies.Add("IsAwake", true);
 
-            ConcreteType.BuildSource(typeof(GuyWithPrimitiveSetters), null, dependencies, new Policies())
+            ConcreteType.BuildSource(typeof (GuyWithPrimitiveSetters), null, dependencies, new Policies())
                 .IsValid().ShouldBeFalse();
         }
-
-
-
-
     }
 
     public class GuyWithNoSuitableCtor
@@ -291,7 +298,6 @@ namespace StructureMap.Testing.Building
         {
         }
     }
-
 
 
     public class GuyWithPrimitives
@@ -323,7 +329,7 @@ namespace StructureMap.Testing.Building
 
         [SetterProperty]
         public string Direction { get; set; }
-    
+
         [SetterProperty]
         public string Description { get; set; }
     }

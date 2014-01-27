@@ -129,6 +129,11 @@ namespace StructureMap.Building
                 return new DefaultDependencySource(dependencyType);
             }
 
+            if (value is IDependencySource)
+            {
+                return value as IDependencySource;
+            }
+
             if (value is Instance)
             {
                 return value.As<Instance>().ToDependencySource(dependencyType);
