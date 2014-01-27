@@ -46,7 +46,16 @@ namespace StructureMap
             {
                 var ex = new StructureMapConfigurationException("No default Instance is registered and cannot be automatically determined for type '{0}'", pluginType.GetFullName());
 
-                ex.Context = new WhatDoIHaveWriter(pipelineGraph).GetText(new ModelQuery {PluginType = pluginType}, "The current configuration for type {0} is:".ToFormat(pluginType.GetFullName()));
+                if (pipelineGraph.ToModel().HasImplementationsFor(pluginType))
+                {
+                    ex.Context = new WhatDoIHaveWriter(pipelineGraph).GetText(new ModelQuery {PluginType = pluginType}, "No default instance is specified.  The current configuration for type {0} is:".ToFormat(pluginType.GetFullName()));
+
+                }
+                else
+                {
+                    ex.Context = "There is no configuration specified for " + pluginType.GetFullName();
+                }
+
 
                 throw ex;
             }

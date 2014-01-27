@@ -229,7 +229,7 @@ namespace StructureMap.Testing
                 session.GetInstance(typeof(IGateway));
             });
 
-            ex.Context.ShouldContain("The current configuration for type StructureMap.Testing.Widget3.IGateway is");
+            ex.Context.ShouldContain("There is no configuration specified for StructureMap.Testing.Widget3.IGateway");
 
             ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Widget3.IGateway'");
         }

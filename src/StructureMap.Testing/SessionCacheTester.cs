@@ -189,7 +189,25 @@ namespace StructureMap.Testing
         {
             var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => theCache.GetDefault(typeof (IFoo), thePipeline));
 
+            ex.Context.ShouldEqual(
+                "There is no configuration specified for StructureMap.Testing.SessionCacheTester+IFoo");
+
             ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.SessionCacheTester+IFoo'");
+        }
+
+        [Test]
+        public void should_throw_configuration_exception_if_you_try_to_build_the_default_when_there_is_configuration_by_no_default()
+        {
+            var container = new Container(x => {
+                x.For<IFoo>().Add<Foo>().Named("one");
+                x.For<IFoo>().Add<Foo>().Named("two");
+            });
+
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
+                container.GetInstance<IFoo>();
+            });
+
+            ex.Context.ShouldContain("No default instance is specified.  The current configuration for type StructureMap.Testing.SessionCacheTester+IFoo is:");
         }
 
 
