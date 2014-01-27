@@ -286,6 +286,20 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
+        /// Decorates all instances of TPluginType with the concrete type TDecoratorType
+        /// </summary>
+        public SmartInstance<TDecoratorType> DecorateAllWith<TDecoratorType>(Func<Instance, bool> filter = null) where TDecoratorType : TPluginType
+        {
+            var instance = new SmartInstance<TDecoratorType>();
+            var interceptor = new DecoratorInterceptor(typeof (TPluginType), instance);
+            var policy = new InterceptionPolicy<TPluginType>(interceptor, filter);
+
+            alter = graph => graph.Policies.Interceptors.Add(policy);
+
+            return instance;
+        }
+
+        /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
         /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
         /// DecorateAllWith() gives the the ability to return a different object.  Use this method for runtime AOP

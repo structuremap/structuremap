@@ -8,9 +8,9 @@ namespace StructureMap.Building.Interception
     public class DecoratorInterceptor : IInterceptor
     {
         private readonly Type _pluginType;
-        private readonly ConstructorInstance _instance;
+        private readonly IConfiguredInstance _instance;
 
-        public DecoratorInterceptor(Type pluginType, ConstructorInstance instance)
+        public DecoratorInterceptor(Type pluginType, IConfiguredInstance instance)
         {
             _pluginType = pluginType;
             _instance = instance;

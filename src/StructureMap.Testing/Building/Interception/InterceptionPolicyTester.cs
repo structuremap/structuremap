@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Building.Interception;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
 
@@ -30,14 +31,14 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void determine_interceptors_positive_match()
         {
-            thePolicy.DetermineInterceptors(typeof (Target))
+            thePolicy.DetermineInterceptors(new SmartInstance<Target>())
                 .Single().ShouldBeTheSameAs(theActivator);
         }
 
         [Test]
         public void determine_interceptions_negative_match()
         {
-            thePolicy.DetermineInterceptors(GetType())
+            thePolicy.DetermineInterceptors(new ConstructorInstance(GetType()))
                 .Any().ShouldBeFalse();
         }
 

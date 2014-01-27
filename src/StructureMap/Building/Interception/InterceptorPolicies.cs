@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Building.Interception
 {
@@ -23,11 +24,11 @@ namespace StructureMap.Building.Interception
             get { return _policies; }
         }
 
-        public IEnumerable<IInterceptor> SelectInterceptors(Type returnedType)
+        public IEnumerable<IInterceptor> SelectInterceptors(Instance instance)
         {
-            if (returnedType == null) throw new ArgumentNullException("returnedType");
+            if (instance == null) throw new ArgumentNullException("instance");
 
-            return _policies.SelectMany(x => x.DetermineInterceptors(returnedType)).ToArray();
+            return _policies.SelectMany(x => x.DetermineInterceptors(instance)).ToArray();
         } 
     }
 }

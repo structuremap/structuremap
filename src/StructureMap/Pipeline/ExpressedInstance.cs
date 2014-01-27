@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using StructureMap.Building.Interception;
 
 namespace StructureMap.Pipeline
@@ -12,6 +13,7 @@ namespace StructureMap.Pipeline
     public abstract class ExpressedInstance<T> : Instance
     {
         protected abstract T thisInstance { get; }
+
 
 
         /// <summary>

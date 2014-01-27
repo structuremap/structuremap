@@ -60,6 +60,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         public ConstructorInfo Constructor { get; set; }
 
+
         public Type PluggedType
         {
             get { return _pluggedType; }

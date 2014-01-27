@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Building.Interception
@@ -7,8 +8,9 @@ namespace StructureMap.Building.Interception
     public class InterceptionPolicy<T> : IInterceptorPolicy
     {
         private readonly IInterceptor _interceptor;
+        private readonly Func<Instance, bool> _filter;
 
-        public InterceptionPolicy(IInterceptor interceptor)
+        public InterceptionPolicy(IInterceptor interceptor, Func<Instance, bool> filter = null)
         {
             if (!interceptor.Accepts.CanBeCastTo<T>())
             {
@@ -16,6 +18,7 @@ namespace StructureMap.Building.Interception
             }
 
             _interceptor = interceptor;
+            _filter = filter ?? (i => true);
         }
 
         public string Description
@@ -28,9 +31,12 @@ namespace StructureMap.Building.Interception
             }
         }
 
-        public IEnumerable<IInterceptor> DetermineInterceptors(Type returnedType)
+        // TODO -- need to take in PluginType.
+        // Decorators only apply when the PluginType == typeof(T)
+        // activators are easier
+        public IEnumerable<IInterceptor> DetermineInterceptors(Instance instance)
         {
-            if (returnedType.CanBeCastTo<T>())
+            if (instance.ReturnedType.CanBeCastTo<T>() && _filter(instance))
             {
                 yield return _interceptor;
             }

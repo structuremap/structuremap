@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Building.Interception;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Building.Interception
@@ -44,14 +45,61 @@ namespace StructureMap.Testing.Building.Interception
             policies.Add(activator4.ToPolicy());
             policies.Add(activator5.ToPolicy());
 
-            policies.SelectInterceptors(typeof(Target))
+
+
+            policies.SelectInterceptors(new SmartInstance<Target>())
                 .ShouldHaveTheSameElementsAs(activator1, activator2, activator3, activator4);
 
-            policies.SelectInterceptors(typeof(ITarget))
+            policies.SelectInterceptors(new SmartInstance<ATarget>())
                 .ShouldHaveTheSameElementsAs(activator1, activator4);
 
-            policies.SelectInterceptors(typeof(IGateway))
+            policies.SelectInterceptors(new SmartInstance<StubbedGateway>())
                 .ShouldHaveTheSameElementsAs(activator5);
         }
+
+        [Test]
+        public void apply_policy_selectively_with_a_func()
+        {
+            var activator1 = new ActivatorInterceptor<ITarget>(x => x.Activate());
+            var policy = new InterceptionPolicy<ITarget>(activator1, i => i.Name.StartsWith("A"));
+
+            var container = new Container(x => {
+                x.Policies.Interceptors(policy);
+                x.For<ITarget>().AddInstances(targets => {
+                    targets.Type<ATarget>().Named("A");
+                    targets.Type<ATarget>().Named("A1");
+                    targets.Type<ATarget>().Named("A2");
+                    targets.Type<ATarget>().Named("B");
+                    targets.Type<ATarget>().Named("C");
+                    targets.Type<ATarget>().Named("D");
+                });
+            });
+
+            container.GetInstance<ITarget>("A").ShouldBeOfType<ATarget>().WasActivated.ShouldBeTrue();
+            container.GetInstance<ITarget>("A1").ShouldBeOfType<ATarget>().WasActivated.ShouldBeTrue();
+            container.GetInstance<ITarget>("A2").ShouldBeOfType<ATarget>().WasActivated.ShouldBeTrue();
+            container.GetInstance<ITarget>("B").ShouldBeOfType<ATarget>().WasActivated.ShouldBeFalse();
+            container.GetInstance<ITarget>("C").ShouldBeOfType<ATarget>().WasActivated.ShouldBeFalse();
+            container.GetInstance<ITarget>("D").ShouldBeOfType<ATarget>().WasActivated.ShouldBeFalse();
+        }
     }
+
+    public class ATarget : ITarget
+    {
+        public void Activate()
+        {
+            WasActivated = true;
+        }
+
+        public bool WasActivated { get; set; }
+
+        public void Debug()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public class BTarget : ATarget{}
+    public class CTarget : ATarget{}
+    public class DTarget : ATarget{}
 }
