@@ -5,18 +5,18 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Building.Interception
 {
-    public class DecoratorInterceptor<T> : IInterceptor
+    public class FuncInterceptor<T> : IInterceptor
     {
         private readonly LambdaExpression _expression;
         private readonly string _description;
 
-        public DecoratorInterceptor(Expression<Func<T, T>> expression, string description = null)
+        public FuncInterceptor(Expression<Func<T, T>> expression, string description = null)
         {
             _expression = expression;
             _description = description;
         }
 
-        public DecoratorInterceptor(Expression<Func<IContext, T, T>> expression, string description = null)
+        public FuncInterceptor(Expression<Func<IContext, T, T>> expression, string description = null)
         {
             _expression = expression;
             _description = description;
@@ -31,7 +31,7 @@ namespace StructureMap.Building.Interception
                     .ReplaceParameter(typeof(IContext), Expression.Parameter(typeof(IContext), "IContext"))
                     .Body.ToString();
 
-                return "DecoratorInterceptor of {0}: {1}".ToFormat(typeof(T).GetFullName(), bodyDescription);
+                return "FuncInterceptor of {0}: {1}".ToFormat(typeof(T).GetFullName(), bodyDescription);
             }
         }
         public InterceptorRole Role { get { return InterceptorRole.Decorates; } }
@@ -52,7 +52,7 @@ namespace StructureMap.Building.Interception
         public Type Accepts { get { return typeof (T); } }
         public Type Returns { get { return typeof (T); } }
 
-        protected bool Equals(DecoratorInterceptor<T> other)
+        protected bool Equals(FuncInterceptor<T> other)
         {
             return Equals(_expression, other._expression);
         }
@@ -62,7 +62,7 @@ namespace StructureMap.Building.Interception
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((DecoratorInterceptor<T>) obj);
+            return Equals((FuncInterceptor<T>) obj);
         }
 
         public override int GetHashCode()

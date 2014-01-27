@@ -148,6 +148,14 @@ namespace StructureMap.Pipeline
             return _dependencies.Any(x => x.Name == propertyName);
         }
 
+        public DependencyCollection Clone()
+        {
+            var peer = new DependencyCollection();
+            CopyTo(peer);
+
+            return peer;
+        }
+
         public void CopyTo(DependencyCollection peer)
         {
             peer._dependencies.AddRange(_dependencies);

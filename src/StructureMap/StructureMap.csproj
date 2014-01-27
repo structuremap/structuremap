@@ -59,7 +59,7 @@
     <Compile Include="Building\IHasSetters.cs" />
     <Compile Include="Building\Interception\ActivatorInterceptor.cs" />
     <Compile Include="Building\Interception\BlockPlan.cs" />
-    <Compile Include="Building\Interception\DecoratorInterceptor.cs" />
+    <Compile Include="Building\Interception\FuncInterceptor.cs" />
     <Compile Include="Building\Interception\IInterceptor.cs" />
     <Compile Include="Building\Interception\IInterceptorPolicy.cs" />
     <Compile Include="Building\Interception\InterceptionPlan.cs" />

@@ -7,14 +7,14 @@ using StructureMap.Building.Interception;
 namespace StructureMap.Testing.Building.Interception
 {
     [TestFixture]
-    public class DecoratorInterceptorTester
+    public class FuncInterceptorTester
     {
-        private DecoratorInterceptor<ITarget> theInterceptor;
+        private FuncInterceptor<ITarget> theInterceptor;
 
         [SetUp]
         public void SetUp()
         {
-            theInterceptor = new DecoratorInterceptor<ITarget>(x => new DecoratedTarget(x));
+            theInterceptor = new FuncInterceptor<ITarget>(x => new DecoratedTarget(x));
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void explicit_description()
         {
-            theInterceptor = new DecoratorInterceptor<ITarget>(x => new DecoratedTarget(x), "decorating the target");
+            theInterceptor = new FuncInterceptor<ITarget>(x => new DecoratedTarget(x), "decorating the target");
 
             theInterceptor.Description.ShouldContain("decorating the target");
         }
@@ -52,7 +52,7 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void description_when_uses_IContext_too()
         {
-            theInterceptor = new DecoratorInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t));
+            theInterceptor = new FuncInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t));
 
             theInterceptor.Description.ShouldContain("new ContextKeepingTarget(IContext, ITarget)");
         }
@@ -60,7 +60,7 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void explicit_description_with_icontext()
         {
-            theInterceptor = new DecoratorInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t), "context keeping");
+            theInterceptor = new FuncInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t), "context keeping");
 
             theInterceptor.Description.ShouldContain("context keeping");
         }
@@ -89,7 +89,7 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void compile_and_use_by_itself_using_IContext()
         {
-            theInterceptor = new DecoratorInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t));
+            theInterceptor = new FuncInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t));
 
             var variable = Expression.Variable(typeof(ITarget), "target");
 

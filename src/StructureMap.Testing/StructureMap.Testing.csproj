@@ -205,7 +205,7 @@
     <Compile Include="Building\DefaultDependencySourceTester.cs" />
     <Compile Include="Building\FakeBuildSession.cs" />
     <Compile Include="Building\Interception\ActivatorInterceptorTester.cs" />
-    <Compile Include="Building\Interception\DecoratorInterceptorTester.cs" />
+    <Compile Include="Building\Interception\FuncInterceptorTester.cs" />
     <Compile Include="Building\Interception\InterceptionPlanTester.cs" />
     <Compile Include="Building\Interception\InterceptionPoliciesTester.cs" />
     <Compile Include="Building\Interception\InterceptionPolicyTester.cs" />

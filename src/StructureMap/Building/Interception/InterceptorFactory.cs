@@ -17,12 +17,12 @@ namespace StructureMap.Building.Interception
 
         public static IInterceptor ForFunc<T>(string description, Func<T, T> func)
         {
-            return new DecoratorInterceptor<T>(x => func(x), description);
+            return new FuncInterceptor<T>(x => func(x), description);
         }
 
         public static IInterceptor ForFunc<T>(string description, Func<IContext, T, T> func)
         {
-            return new DecoratorInterceptor<T>((s, x) => func(s, x), description);
+            return new FuncInterceptor<T>((s, x) => func(s, x), description);
         }
 
     }

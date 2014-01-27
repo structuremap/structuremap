@@ -103,7 +103,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public SmartInstance<T> DecorateWith(Expression<Func<T, T>> handler)
         {
-            AddInterceptor(new DecoratorInterceptor<T>(handler));
+            AddInterceptor(new FuncInterceptor<T>(handler));
 
             return this;
         }
@@ -131,7 +131,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public SmartInstance<T> DecorateWith(Expression<Func<IContext, T, T>> handler)
         {
-            AddInterceptor(new DecoratorInterceptor<T>(handler));
+            AddInterceptor(new FuncInterceptor<T>(handler));
 
             return this;
         }

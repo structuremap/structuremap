@@ -53,7 +53,7 @@ namespace StructureMap.Testing.Building
         {
             theInterceptors = new IInterceptor[]
             {
-                new DecoratorInterceptor<IBuildTarget>(x => new TargetDecorator(x))
+                new FuncInterceptor<IBuildTarget>(x => new TargetDecorator(x))
             };
 
             thePlan.Build(theSession, theSession)
