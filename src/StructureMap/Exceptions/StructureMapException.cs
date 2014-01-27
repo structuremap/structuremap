@@ -53,13 +53,11 @@ namespace StructureMap
         public StructureMapException(string message) : base(message)
         {
             _title = message;
-            Push(message);
         }
 
         public StructureMapException(string message, Exception innerException) : base(message, innerException)
         {
-            _title = "Failure at: \"{0}\"".ToFormat(message);
-            Push(message);
+            _title = message;
         }
 
 

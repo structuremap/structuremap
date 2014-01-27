@@ -64,7 +64,7 @@ namespace StructureMap.Building.Interception
         {
             _interceptors.Where(x => x.Role == InterceptorRole.Decorates).Each(decorator => {
                 var decoratedExpression = decorator.ToExpression(_policies, context, pluginTypeVariable);
-                var wrapped = TryCatchWrapper.WrapFunc<StructureMapInterceptorException>(_pluginType,
+                var wrapped = TryCatchWrapper.WrapFunc<StructureMapInterceptorException>("Decorator Interceptor failed during object construction.  See the inner exception", _pluginType,
                     decoratedExpression, decorator);
                 
                 plan.Add(Expression.Assign(pluginTypeVariable, wrapped));
@@ -140,8 +140,7 @@ namespace StructureMap.Building.Interception
                 {
                     var interceptionExpression = interceptor.ToExpression(policies, Parameters.Context, variable);
 
-                    yield return
-                        TryCatchWrapper.WrapAction<StructureMapInterceptorException>(interceptionExpression, interceptor);
+                    yield return TryCatchWrapper.WrapAction<StructureMapInterceptorException>("Activator interceptor failed during object creation.  See the inner exception for details.", interceptionExpression, interceptor);
 
                 }
             } 

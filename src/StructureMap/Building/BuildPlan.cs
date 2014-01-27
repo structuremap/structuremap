@@ -44,12 +44,13 @@ namespace StructureMap.Building
                 builder = Expression.Convert(builder, _pluginType);
             }
 
-            var wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(_pluginType, builder, _instance);
+            var message = "Failure while building '{0}', check the inner exception for details".ToFormat(_instance.Description);
+            var wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(message, _pluginType, builder, _instance);
             
             // Push/Pop for contextual construction and bi-directional dependency checking
             wrapped = PushPopWrapper.WrapFunc(_pluginType,_instance, wrapped);
             
-            wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(_pluginType, wrapped, this);
+            wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(message, _pluginType, wrapped, this);
 
             if (!wrapped.Type.IsClass)
             {

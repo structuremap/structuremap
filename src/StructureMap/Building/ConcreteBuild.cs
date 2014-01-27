@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
@@ -97,7 +98,7 @@ namespace StructureMap.Building
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
             var expression = buildInnerExpression(session, context);
-            return TryCatchWrapper.WrapFunc<StructureMapBuildException>(_concreteType, expression, this);
+            return TryCatchWrapper.WrapFunc<StructureMapBuildException>("Error while building type {0}.  See the inner exception for details".ToFormat(_concreteType.GetFullName()), _concreteType, expression, this);
         }
 
         private Expression buildInnerExpression(ParameterExpression session, ParameterExpression context)

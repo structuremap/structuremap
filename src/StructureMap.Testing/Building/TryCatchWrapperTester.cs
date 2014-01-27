@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void no_return_happy_type()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>(null, goodVoid, "okay");
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", null, goodVoid, "okay");
             var action = Expression.Lambda<Action>(wrapped).Compile();
 
             action();
@@ -54,7 +54,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void no_return_sad_path_with_generic_exception()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>(null, badVoid, "okay");
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", null, badVoid, "okay");
             var action = Expression.Lambda<Action>(wrapped).Compile();
 
             Exception<FakeStructureMapException>.ShouldBeThrownBy(() => {
@@ -65,7 +65,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void no_return_sad_path_with_structuremapexception()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>(null, badSmVoid, "okay");
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", null, badSmVoid, "okay");
             var action = Expression.Lambda<Action>(wrapped).Compile();
 
             Exception<StructureMapException>.ShouldBeThrownBy(() =>
@@ -78,7 +78,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void wrap_against_a_successful_expression_by_IDescribed()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>(typeof (string), good,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), good,
                 new StubbedDescribed("my description"));
 
 
@@ -90,7 +90,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void wrap_against_a_failed_generic_exception_by_IDescribed()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>(typeof(string), throwGeneral,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), throwGeneral,
                 new StubbedDescribed("my description"));
 
 
@@ -98,14 +98,15 @@ namespace StructureMap.Testing.Building
 
             var ex = Exception<FakeStructureMapException>.ShouldBeThrownBy(() => func());
 
-            ex.Title.ShouldEqual("Failure at: \"my description\"");
+            ex.Title.ShouldEqual("bad!");
+            ex.Message.ShouldContain("my description");
             ex.InnerException.ShouldBeTheSameAs(genericEx);
         }
 
         [Test]
         public void wrap_against_a_failed_StructureMapException_by_IDescribed()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>(typeof (string), throwSM,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), throwSM,
                 new StubbedDescribed("my description"));
 
 
@@ -121,7 +122,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void wrap_against_a_successful_expression_by_expression_description()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>(typeof(string), good,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), good,
                 () => "some description");
 
 
@@ -133,7 +134,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void wrap_against_a_failed_generic_exception_by_expression_description()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>(typeof(string), throwGeneral,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), throwGeneral,
                 () => "some description");
 
 
@@ -141,14 +142,15 @@ namespace StructureMap.Testing.Building
 
             var ex = Exception<FakeStructureMapException>.ShouldBeThrownBy(() => func());
 
-            ex.Title.ShouldEqual("Failure at: \"some description\"");
+            ex.Title.ShouldEqual("bad!");
+            ex.Message.ShouldContain("some description");
             ex.InnerException.ShouldBeTheSameAs(genericEx);
         }
 
         [Test]
         public void wrap_against_a_failed_StructureMapException_by_expression_description()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>(typeof(string), throwSM,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), throwSM,
                 () => "some description");
 
 
@@ -163,7 +165,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void wrap_against_a_successful_expression_by_string_description()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>(typeof(string), good,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), good,
                 "some description");
 
 
@@ -175,7 +177,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void wrap_against_a_failed_generic_exception_by_string_description()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>(typeof(string), throwGeneral,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), throwGeneral,
                 "some description");
 
 
@@ -183,14 +185,15 @@ namespace StructureMap.Testing.Building
 
             var ex = Exception<FakeStructureMapException>.ShouldBeThrownBy(() => func());
 
-            ex.Title.ShouldEqual("Failure at: \"some description\"");
+            ex.Title.ShouldEqual("bad!");
+            ex.Message.ShouldContain("some description");
             ex.InnerException.ShouldBeTheSameAs(genericEx);
         }
 
         [Test]
         public void wrap_against_a_failed_StructureMapException_by_string_description()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>(typeof(string), throwSM,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), throwSM,
                "some description");
 
 

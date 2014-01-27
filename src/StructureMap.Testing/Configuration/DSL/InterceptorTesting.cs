@@ -130,7 +130,10 @@ namespace StructureMap.Testing.Configuration.DSL
                 _container.GetInstance<IService>("Bad");
             });
 
-            ex.Title.ShouldContain("throw exception");
+            ex.Title.ShouldEqual(
+                "Activator interceptor failed during object creation.  See the inner exception for details.");
+
+            ex.Message.ShouldContain("throw exception");
         }
     }
 

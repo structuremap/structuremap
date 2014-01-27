@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Diagnostics;
+using NUnit.Framework;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Testing.Pipeline;
@@ -102,7 +103,8 @@ namespace StructureMap.Testing.Building.Interception
                         plan.ToBuilder<ITarget>()(session, session);
                     });
 
-            ex.Title.ShouldContain(interceptor.Description);
+            ex.Title.ShouldEqual("Activator interceptor failed during object creation.  See the inner exception for details.");
+            ex.Message.ShouldContain(interceptor.Description);
         }
 
         [Test]
