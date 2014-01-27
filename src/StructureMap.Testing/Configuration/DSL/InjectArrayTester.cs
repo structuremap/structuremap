@@ -65,6 +65,54 @@ namespace StructureMap.Testing.Configuration.DSL
             }
         }
 
+        public class ProcessorWithConcreteList
+        {
+            private readonly List<IHandler> _handlers;
+            private readonly string _name;
+
+            public ProcessorWithConcreteList(List<IHandler> handlers, string name)
+            {
+                _handlers = handlers;
+                _name = name;
+            }
+
+
+            public IList<IHandler> Handlers
+            {
+                get { return _handlers; }
+            }
+
+
+            public string Name
+            {
+                get { return _name; }
+            }
+        }
+
+        public class ProcessorWithEnumerable
+        {
+            private readonly IList<IHandler> _handlers;
+            private readonly string _name;
+
+            public ProcessorWithEnumerable(IEnumerable<IHandler> handlers, string name)
+            {
+                _handlers = handlers.ToList();
+                _name = name;
+            }
+
+
+            public IList<IHandler> Handlers
+            {
+                get { return _handlers; }
+            }
+
+
+            public string Name
+            {
+                get { return _name; }
+            }
+        }
+
         public class Processor2
         {
             private readonly IHandler[] _first;
@@ -125,7 +173,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void get_a_configured_list()
         {
             var container = new Container(x => {
-                x.For<Processor>().Use<Processor>()
+                x.For<ProcessorWithList>().Use<ProcessorWithList>()
                     .EnumerableOf<IHandler>().Contains(
                         new SmartInstance<Handler1>(),
                         new SmartInstance<Handler2>(),
@@ -134,9 +182,48 @@ namespace StructureMap.Testing.Configuration.DSL
                     .Ctor<string>("name").Is("Jeremy");
             });
 
-            container.GetInstance<Processor>()
+            container.GetInstance<ProcessorWithList>()
                 .Handlers.Select(x => x.GetType())
                 .ShouldHaveTheSameElementsAs(typeof (Handler1), typeof (Handler2), typeof (Handler3));
+        }
+
+        [Test]
+        public void get_a_configured_concrete_list()
+        {
+            var container = new Container(x =>
+            {
+                x.For<ProcessorWithConcreteList>().Use<ProcessorWithConcreteList>()
+                    .EnumerableOf<IHandler>().Contains(
+                        new SmartInstance<Handler1>(),
+                        new SmartInstance<Handler2>(),
+                        new SmartInstance<Handler3>()
+                    )
+                    .Ctor<string>("name").Is("Jeremy");
+            });
+
+            container.GetInstance<ProcessorWithConcreteList>()
+                .Handlers.Select(x => x.GetType())
+                .ShouldHaveTheSameElementsAs(typeof(Handler1), typeof(Handler2), typeof(Handler3));
+        }
+
+
+        [Test]
+        public void get_a_configured_ienumerable()
+        {
+            var container = new Container(x =>
+            {
+                x.For<ProcessorWithEnumerable>().Use<ProcessorWithEnumerable>()
+                    .EnumerableOf<IHandler>().Contains(
+                        new SmartInstance<Handler1>(),
+                        new SmartInstance<Handler2>(),
+                        new SmartInstance<Handler3>()
+                    )
+                    .Ctor<string>("name").Is("Jeremy");
+            });
+
+            container.GetInstance<ProcessorWithEnumerable>()
+                .Handlers.Select(x => x.GetType())
+                .ShouldHaveTheSameElementsAs(typeof(Handler1), typeof(Handler2), typeof(Handler3));
         }
 
         [Test]
