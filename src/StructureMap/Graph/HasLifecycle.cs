@@ -1,4 +1,3 @@
-using System;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Graph

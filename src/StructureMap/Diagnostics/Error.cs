@@ -27,7 +27,6 @@ namespace StructureMap.Diagnostics
             get { return _message; }
         }
 
-
         #region IEquatable<Error> Members
 
         public bool Equals(Error error)
@@ -52,8 +51,6 @@ namespace StructureMap.Diagnostics
                 ex = ex.InnerException;
             }
         }
-
-
 
 
         public override string ToString()

@@ -199,7 +199,7 @@ namespace StructureMap
             {
                 return type.IsGenericType ? GetGenericName(type) : type.FullName;
             }
-			
+
             public static string GetTypeName(this Type type)
             {
                 return type.IsGenericType ? GetGenericName(type) : type.Name;
@@ -208,7 +208,7 @@ namespace StructureMap
             private static string GetGenericName(Type type)
             {
                 var parameters = type.GetGenericArguments().Select(t => t.GetName());
-                string parameterList = String.Join(", ", parameters);
+                var parameterList = String.Join(", ", parameters);
                 return "{0}<{1}>".ToFormat(type.Name.Split('`').First(), parameterList);
             }
 

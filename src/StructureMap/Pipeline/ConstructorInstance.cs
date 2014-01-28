@@ -29,7 +29,8 @@ namespace StructureMap.Pipeline
     }
 
 
-    public abstract class ConstructorInstance<TThis> : ExpressedInstance<TThis>, IConfiguredInstance where TThis : ConstructorInstance<TThis>
+    public abstract class ConstructorInstance<TThis> : ExpressedInstance<TThis>, IConfiguredInstance
+        where TThis : ConstructorInstance<TThis>
     {
         private readonly Type _pluggedType;
         private readonly DependencyCollection _dependencies = new DependencyCollection();
@@ -38,14 +39,15 @@ namespace StructureMap.Pipeline
         {
             if (!concreteType.GetConstructors().Any())
             {
-                throw new ArgumentOutOfRangeException("{0} must have at least one public constructor to be plugged in by StructureMap".ToFormat(concreteType.GetFullName()));
+                throw new ArgumentOutOfRangeException(
+                    "{0} must have at least one public constructor to be plugged in by StructureMap".ToFormat(
+                        concreteType.GetFullName()));
             }
-            
+
             _pluggedType = concreteType;
 
-            
 
-            _pluggedType.GetCustomAttributes(typeof(InstanceAttribute), false).OfType<InstanceAttribute>()
+            _pluggedType.GetCustomAttributes(typeof (InstanceAttribute), false).OfType<InstanceAttribute>()
                 .Each(x => x.Alter(this));
         }
 
@@ -115,7 +117,7 @@ namespace StructureMap.Pipeline
 
         public static ConstructorInstance For<T>()
         {
-            return new ConstructorInstance(typeof(T));
+            return new ConstructorInstance(typeof (T));
         }
 
         public override Instance CloseType(Type[] types)

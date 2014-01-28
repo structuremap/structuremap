@@ -13,7 +13,8 @@ namespace StructureMap.Building.Interception
         private readonly IEnumerable<IInterceptor> _interceptors;
         private readonly ParameterExpression _variable;
 
-        public InterceptionPlan(Type pluginType, IDependencySource inner, Policies policies, IEnumerable<IInterceptor> interceptors)
+        public InterceptionPlan(Type pluginType, IDependencySource inner, Policies policies,
+            IEnumerable<IInterceptor> interceptors)
         {
             _pluginType = pluginType;
             _inner = inner;
@@ -27,9 +28,10 @@ namespace StructureMap.Building.Interception
         public Func<IBuildSession, IContext, T> ToBuilder<T>()
         {
             var lambdaType = typeof (Func<IBuildSession, IContext, T>);
-            var lambda = Expression.Lambda(lambdaType, ToExpression(Parameters.Session, Parameters.Context), Parameters.Session, Parameters.Context);
+            var lambda = Expression.Lambda(lambdaType, ToExpression(Parameters.Session, Parameters.Context),
+                Parameters.Session, Parameters.Context);
             return (Func<IBuildSession, IContext, T>) lambda.Compile();
-        } 
+        }
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
@@ -49,24 +51,22 @@ namespace StructureMap.Building.Interception
             createTheReturnValue(pluginTypeVariable, plan);
 
             return plan.ToExpression();
-
         }
 
         public Type ReturnedType
         {
-            get
-            {
-                return _pluginType;
-            }
+            get { return _pluginType; }
         }
 
         private void addDecorators(ParameterExpression context, ParameterExpression pluginTypeVariable, BlockPlan plan)
         {
             _interceptors.Where(x => x.Role == InterceptorRole.Decorates).Each(decorator => {
                 var decoratedExpression = decorator.ToExpression(_policies, context, pluginTypeVariable);
-                var wrapped = TryCatchWrapper.WrapFunc<StructureMapInterceptorException>("Decorator Interceptor failed during object construction.  See the inner exception", _pluginType,
-                    decoratedExpression, decorator);
-                
+                var wrapped =
+                    TryCatchWrapper.WrapFunc<StructureMapInterceptorException>(
+                        "Decorator Interceptor failed during object construction.  See the inner exception", _pluginType,
+                        decoratedExpression, decorator);
+
                 plan.Add(Expression.Assign(pluginTypeVariable, wrapped));
             });
         }
@@ -140,18 +140,17 @@ namespace StructureMap.Building.Interception
                 {
                     var interceptionExpression = interceptor.ToExpression(policies, Parameters.Context, variable);
 
-                    yield return TryCatchWrapper.WrapAction<StructureMapInterceptorException>("Activator interceptor failed during object creation.  See the inner exception for details.", interceptionExpression, interceptor);
-
+                    yield return
+                        TryCatchWrapper.WrapAction<StructureMapInterceptorException>(
+                            "Activator interceptor failed during object creation.  See the inner exception for details.",
+                            interceptionExpression, interceptor);
                 }
-            } 
+            }
         }
 
         public string Description
         {
-            get
-            {
-                return "Interceptor Plan for " + _inner.Description;
-            }
+            get { return "Interceptor Plan for " + _inner.Description; }
         }
     }
 }

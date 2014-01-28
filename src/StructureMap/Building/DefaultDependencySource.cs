@@ -27,18 +27,12 @@ namespace StructureMap.Building
 
         public Type ReturnedType
         {
-            get
-            {
-                return _dependencyType;
-            }
+            get { return _dependencyType; }
         }
 
         public string Description
         {
-            get
-            {
-                return "*Default of {0}*".ToFormat(_dependencyType.GetName());
-            }
+            get { return "*Default of {0}*".ToFormat(_dependencyType.GetName()); }
         }
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)

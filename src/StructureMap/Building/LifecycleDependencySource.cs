@@ -31,10 +31,7 @@ namespace StructureMap.Building
 
         public string Description
         {
-            get
-            {
-                return "Lifecyle resolution of " + _instance.Description;
-            }
+            get { return "Lifecyle resolution of " + _instance.Description; }
         }
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)
@@ -50,10 +47,7 @@ namespace StructureMap.Building
 
         public Type ReturnedType
         {
-            get
-            {
-                return PluginType;
-            }
+            get { return PluginType; }
         }
     }
 }

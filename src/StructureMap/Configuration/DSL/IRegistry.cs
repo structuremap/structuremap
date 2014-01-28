@@ -118,7 +118,6 @@ namespace StructureMap.Configuration.DSL
         void Scan(Action<IAssemblyScanner> action);
 
 
-
         /// <summary>
         /// Advanced Usage Only!  Skips the Registry and goes right to the inner
         /// Semantic Model of StructureMap.  Use with care

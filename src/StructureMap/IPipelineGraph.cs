@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Pipeline;
 using StructureMap.Query;
 
 namespace StructureMap
@@ -31,6 +30,5 @@ namespace StructureMap
 
 
         void Configure(Action<ConfigurationExpression> configure);
-
     }
 }

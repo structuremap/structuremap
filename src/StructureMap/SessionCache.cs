@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using StructureMap.Building;
 using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
@@ -44,12 +43,16 @@ namespace StructureMap
             var instance = pipelineGraph.Instances.GetDefault(pluginType);
             if (instance == null)
             {
-                var ex = new StructureMapConfigurationException("No default Instance is registered and cannot be automatically determined for type '{0}'", pluginType.GetFullName());
+                var ex =
+                    new StructureMapConfigurationException(
+                        "No default Instance is registered and cannot be automatically determined for type '{0}'",
+                        pluginType.GetFullName());
 
                 if (pipelineGraph.ToModel().HasImplementationsFor(pluginType))
                 {
-                    ex.Context = new WhatDoIHaveWriter(pipelineGraph).GetText(new ModelQuery {PluginType = pluginType}, "No default instance is specified.  The current configuration for type {0} is:".ToFormat(pluginType.GetFullName()));
-
+                    ex.Context = new WhatDoIHaveWriter(pipelineGraph).GetText(new ModelQuery {PluginType = pluginType},
+                        "No default instance is specified.  The current configuration for type {0} is:".ToFormat(
+                            pluginType.GetFullName()));
                 }
                 else
                 {

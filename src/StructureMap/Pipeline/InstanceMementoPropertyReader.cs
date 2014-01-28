@@ -1,5 +1,4 @@
 using System.Reflection;
-using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -76,7 +75,8 @@ namespace StructureMap.Pipeline
             {
                 if (isMandatory)
                 {
-                    throw new StructureMapConfigurationException("Missing requested Instance property '{0}' for InstanceKey '{1}'", name, _memento.InstanceKey);
+                    throw new StructureMapConfigurationException(
+                        "Missing requested Instance property '{0}' for InstanceKey '{1}'", name, _memento.InstanceKey);
                 }
             }
             else

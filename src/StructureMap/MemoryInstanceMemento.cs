@@ -56,7 +56,7 @@ namespace StructureMap
         /// <param name="concreteKey">The concrete key of the Plugin type</param>
         /// <param name="instanceKey">The identifying instance key</param>
         public MemoryInstanceMemento(string concreteKey, string instanceKey)
-            : this(concreteKey, instanceKey, new Dictionary<string,string>())
+            : this(concreteKey, instanceKey, new Dictionary<string, string>())
         {
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Pipeline;
@@ -30,8 +29,6 @@ namespace StructureMap.Building
                 plan = new ConcreteBuild(pluggedType, ctorStep);
 
                 determineSetterSources(pluggedType, dependencies, policies, plan);
-
-
             }
             catch (StructureMapException e)
             {
@@ -40,9 +37,9 @@ namespace StructureMap.Building
             }
             catch (Exception e)
             {
-                throw new StructureMapConfigurationException("Attempting to create a build plan for concrete type " + pluggedType.GetFullName(), e);
+                throw new StructureMapConfigurationException(
+                    "Attempting to create a build plan for concrete type " + pluggedType.GetFullName(), e);
             }
-
 
 
             return plan;
@@ -90,7 +87,8 @@ namespace StructureMap.Building
             var ctor = constructor ?? policies.SelectConstructor(pluggedType);
             if (ctor == null)
             {
-                throw new StructureMapConfigurationException("No public constructor could be selected for concrete type " + pluggedType.GetFullName());
+                throw new StructureMapConfigurationException(
+                    "No public constructor could be selected for concrete type " + pluggedType.GetFullName());
             }
 
             var ctorStep = new ConstructorStep(ctor);
@@ -157,7 +155,8 @@ namespace StructureMap.Building
                         Type = ctorOrSetter,
                         Name = name,
                         ReturnedType = dependencyType,
-                        Message = CastingError.ToFormat(value, value.GetType().GetFullName(), dependencyType.GetFullName())
+                        Message =
+                            CastingError.ToFormat(value, value.GetType().GetFullName(), dependencyType.GetFullName())
                     };
                 }
             }

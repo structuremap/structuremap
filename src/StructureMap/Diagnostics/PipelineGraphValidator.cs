@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,7 +28,9 @@ namespace StructureMap.Diagnostics
             {
                 var errorCount = reports.Sum(x => x.Errors.Count());
                 var validationCount = reports.Sum(x => x.Validations.Count());
-                var title = "StructureMap Failures:  {0} Build/Configuration Failures and {1} Validation Errors".ToFormat(errorCount, validationCount);
+                var title =
+                    "StructureMap Failures:  {0} Build/Configuration Failures and {1} Validation Errors".ToFormat(
+                        errorCount, validationCount);
 
                 var writer = new StringWriter();
                 reports.Each(x => x.WriteErrorMessages(writer));
@@ -51,7 +52,7 @@ namespace StructureMap.Diagnostics
                     yield return profile;
                 }
             }
-        } 
+        }
 
         public void Validate(IPipelineGraph pipeline, Policies policies)
         {
@@ -60,17 +61,16 @@ namespace StructureMap.Diagnostics
 
             var closedTypes = pipeline.ToModel().PluginTypes.Where(x => !x.PluginType.IsOpenGeneric()).ToArray();
 
-            closedTypes.Each(family => {
-                family.Instances.Each(i => {
-                    tryCreateBuildPlan(family.PluginType, i, policies, report);
+            closedTypes.Each(
+                family => {
+                    family.Instances.Each(i => { tryCreateBuildPlan(family.PluginType, i, policies, report); });
                 });
-            });
 
-            closedTypes.Each(family => {
-                family.Instances.Where(x => !_buildPlanFailureIds.Contains(x.Instance.Id)).Each(i => {
-                    tryBuildInstance(family.PluginType, i.Instance, pipeline, report);
+            closedTypes.Each(
+                family => {
+                    family.Instances.Where(x => !_buildPlanFailureIds.Contains(x.Instance.Id))
+                        .Each(i => { tryBuildInstance(family.PluginType, i.Instance, pipeline, report); });
                 });
-            });
         }
 
         private void tryBuildInstance(Type pluginType, Instance instance, IPipelineGraph pipeline, ProfileReport report)
@@ -90,7 +90,8 @@ namespace StructureMap.Diagnostics
             }
         }
 
-        private void tryCreateBuildPlan(Type pluginType, InstanceRef instanceRef, Policies policies, ProfileReport report)
+        private void tryCreateBuildPlan(Type pluginType, InstanceRef instanceRef, Policies policies,
+            ProfileReport report)
         {
             try
             {
@@ -102,7 +103,6 @@ namespace StructureMap.Diagnostics
                 e.Instances.Fill(instanceRef.Instance.Id);
                 report.AddError(pluginType, instanceRef.Instance, e);
             }
-
         }
 
         private void validate(Type pluginType, Instance instance, object builtObject, ProfileReport report)

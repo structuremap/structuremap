@@ -32,10 +32,7 @@ namespace StructureMap.Building
 
         public string Description
         {
-            get
-            {
-                return "Name='{0}'".ToFormat(_name);
-            }
+            get { return "Name='{0}'".ToFormat(_name); }
         }
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)
@@ -43,7 +40,10 @@ namespace StructureMap.Building
             return Expression.Call(context, ContextMethod.MakeGenericMethod(_dependencyType), Expression.Constant(_name));
         }
 
-        public Type ReturnedType { get { return DependencyType; } }
+        public Type ReturnedType
+        {
+            get { return DependencyType; }
+        }
 
         public override string ToString()
         {

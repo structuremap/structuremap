@@ -29,10 +29,7 @@ namespace StructureMap.Building
 
         public override string Description
         {
-            get
-            {
-                return "List of all possible {0} values".ToFormat(ItemType.GetFullName());
-            }
+            get { return "List of all possible {0} values".ToFormat(ItemType.GetFullName()); }
         }
     }
 }

@@ -11,9 +11,9 @@ namespace StructureMap.Building.Interception
         private readonly ConfiguredInstance _instance;
         private readonly Func<Instance, bool> _filter;
 
-        public DecoratorPolicy(Type pluginType, Type pluggedType, Func<Instance, bool> filter = null) : this(pluginType, new ConfiguredInstance(pluggedType), filter)
+        public DecoratorPolicy(Type pluginType, Type pluggedType, Func<Instance, bool> filter = null)
+            : this(pluginType, new ConfiguredInstance(pluggedType), filter)
         {
-
         }
 
         public DecoratorPolicy(Type pluginType, ConfiguredInstance instance, Func<Instance, bool> filter = null)
@@ -31,6 +31,7 @@ namespace StructureMap.Building.Interception
                     _instance.PluggedType.GetFullName());
             }
         }
+
         public IEnumerable<IInterceptor> DetermineInterceptors(Type pluginType, Instance instance)
         {
             if (!_filter(instance))
@@ -42,14 +43,14 @@ namespace StructureMap.Building.Interception
             {
                 yield return new DecoratorInterceptor(pluginType, _instance);
             }
-            else if (_pluginType.IsOpenGeneric() && pluginType.IsGenericType && pluginType.GetGenericTypeDefinition() == _pluginType)
+            else if (_pluginType.IsOpenGeneric() && pluginType.IsGenericType &&
+                     pluginType.GetGenericTypeDefinition() == _pluginType)
             {
                 var parameters = pluginType.GetGenericArguments();
                 var closedInstance = _instance.CloseType(parameters) as IConfiguredInstance;
 
                 yield return new DecoratorInterceptor(pluginType, closedInstance);
             }
-
         }
     }
 }

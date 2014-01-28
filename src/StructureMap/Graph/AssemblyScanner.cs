@@ -114,7 +114,7 @@ namespace StructureMap.Graph
             _postScanningActions.Add(modifyGraph);
         }
 
-        
+
         public void With(IRegistrationConvention convention)
         {
             _conventions.Fill(convention);

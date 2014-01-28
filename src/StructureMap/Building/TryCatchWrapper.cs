@@ -39,7 +39,8 @@ namespace StructureMap.Building
             return wrap<T>(message, null, expression, description);
         }
 
-        public static Expression WrapFunc<T>(string message, Type returnType, Expression expression, IDescribed described)
+        public static Expression WrapFunc<T>(string message, Type returnType, Expression expression,
+            IDescribed described)
             where T : StructureMapException
         {
             var description = Expression.Call(Expression.Constant(described), DescriptionMethod);
@@ -53,7 +54,8 @@ namespace StructureMap.Building
             return wrap<T>(message, null, expression, description);
         }
 
-        public static Expression WrapFunc<T>(string message, Type returnType, Expression expression, string descriptionString)
+        public static Expression WrapFunc<T>(string message, Type returnType, Expression expression,
+            string descriptionString)
             where T : StructureMapException
         {
             var description = Expression.Constant(descriptionString);
@@ -69,18 +71,21 @@ namespace StructureMap.Building
             var exVar = Expression.Variable(typeof (T), "smEx");
 
             var assign = Expression.Assign(exVar, newSmEx);
-            var firstSmPush = Expression.Call(exVar, StructureMapException.PushMethod, new [] { description, Expression.Constant(new object[0]) });
+            var firstSmPush = Expression.Call(exVar, StructureMapException.PushMethod,
+                new[] {description, Expression.Constant(new object[0])});
 
 
             var genericThrow = Expression.Throw(exVar);
 
             var genericCatch = returnType.IsVoidReturn()
-                ? Expression.Catch(EX, Expression.Block(new []{exVar}, assign, firstSmPush, genericThrow))
-                : Expression.Catch(EX, Expression.Block(new[] { exVar }, assign, firstSmPush, genericThrow, Expression.Default(returnType)));
+                ? Expression.Catch(EX, Expression.Block(new[] {exVar}, assign, firstSmPush, genericThrow))
+                : Expression.Catch(EX,
+                    Expression.Block(new[] {exVar}, assign, firstSmPush, genericThrow, Expression.Default(returnType)));
 
             var smParameter = Expression.Parameter(typeof (StructureMapException), "ex");
 
-            var smPush = Expression.Call(smParameter, StructureMapException.PushMethod, new[] { description, Expression.Constant(new object[0]) });
+            var smPush = Expression.Call(smParameter, StructureMapException.PushMethod,
+                new[] {description, Expression.Constant(new object[0])});
             var rethrow = Expression.Throw(smParameter);
 
             var pushAndReThrowBlock = returnType.IsVoidReturn()

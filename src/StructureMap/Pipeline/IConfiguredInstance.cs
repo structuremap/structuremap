@@ -24,6 +24,5 @@ namespace StructureMap.Pipeline
         /// Explicitly select a constructor
         /// </summary>
         ConstructorInfo Constructor { get; set; }
-
     }
 }

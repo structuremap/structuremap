@@ -4,6 +4,7 @@ using FubuMVC.StructureMap3.Testing.Compliance;
 using NUnit.Framework;
 using StructureMap;
 using StructureMap.Configuration.DSL;
+using StructureMap.Graph;
 using StructureMap.Testing;
 
 namespace FubuMVC.StructureMap3.Testing.Internals

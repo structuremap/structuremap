@@ -82,10 +82,7 @@ namespace StructureMap.Diagnostics
 
         public Guid RootInstance
         {
-            get
-            {
-                return Exception.Instances.FirstOrDefault();
-            }
+            get { return Exception.Instances.FirstOrDefault(); }
         }
 
         public void AddDependency(BuildDependency dependency)
@@ -106,7 +103,6 @@ namespace StructureMap.Diagnostics
                 ? "Build Error on Instance '{0}' ({2})\n    for PluginType {1}"
                 : "Build Error on Instance '{0}' \n    for PluginType {1}";
 
-            
 
             writer.WriteLine(format, Instance.Description, PluginType.GetFullName(), Instance.Name);
             _dependencies.Each(x => writer.WriteLine(" - and " + x));
@@ -123,7 +119,6 @@ namespace StructureMap.Diagnostics
                 {
                     writer.WriteLine(Exception.ToString());
                 }
-                
             }
             writer.WriteLine();
         }

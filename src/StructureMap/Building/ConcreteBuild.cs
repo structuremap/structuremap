@@ -88,7 +88,7 @@ namespace StructureMap.Building
         {
             var inner = ToExpression(Parameters.Session, Parameters.Context);
 
-            var lambdaType = typeof (Func<,,>).MakeGenericType(typeof (IBuildSession), typeof(IContext), _concreteType);
+            var lambdaType = typeof (Func<,,>).MakeGenericType(typeof (IBuildSession), typeof (IContext), _concreteType);
 
             var lambda = Expression.Lambda(lambdaType, inner, Parameters.Session, Parameters.Context);
 
@@ -98,7 +98,10 @@ namespace StructureMap.Building
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
             var expression = buildInnerExpression(session, context);
-            return TryCatchWrapper.WrapFunc<StructureMapBuildException>("Error while building type {0}.  See the inner exception for details".ToFormat(_concreteType.GetFullName()), _concreteType, expression, this);
+            return
+                TryCatchWrapper.WrapFunc<StructureMapBuildException>(
+                    "Error while building type {0}.  See the inner exception for details".ToFormat(
+                        _concreteType.GetFullName()), _concreteType, expression, this);
         }
 
         private Expression buildInnerExpression(ParameterExpression session, ParameterExpression context)
@@ -116,10 +119,7 @@ namespace StructureMap.Building
 
         public Type ReturnedType
         {
-            get
-            {
-                return _concreteType;
-            }
+            get { return _concreteType; }
         }
 
         public bool IsValid()

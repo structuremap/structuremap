@@ -28,7 +28,7 @@ namespace StructureMap.Pipeline.Lazy
 
         public override Instance CloseType(Type[] types)
         {
-            var instanceType = typeof(FuncInstance<>).MakeGenericType(types);
+            var instanceType = typeof (FuncInstance<>).MakeGenericType(types);
             return Activator.CreateInstance(instanceType).As<Instance>();
         }
     }

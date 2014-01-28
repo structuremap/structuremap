@@ -81,7 +81,6 @@ namespace StructureMap.Pipeline
                     .ToArray();
 
             return "{" + string.Join("; ", values) + "}";
-
         }
     }
 }

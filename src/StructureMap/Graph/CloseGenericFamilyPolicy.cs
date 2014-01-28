@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Reflection;
 
 namespace StructureMap.Graph
 {
@@ -21,7 +20,6 @@ namespace StructureMap.Graph
             var basicType = type.GetGenericTypeDefinition();
             if (!_graph.Families.Has(basicType))
             {
-                
                 return _graph.Families.ToArray().FirstOrDefault(x => type.IsAssignableFrom(x.PluginType));
             }
 

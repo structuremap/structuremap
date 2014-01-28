@@ -74,7 +74,8 @@ namespace StructureMap
             }
             catch (Exception ex)
             {
-                throw new StructureMapConfigurationException("Missing requested Instance property '{0}' for InstanceKey '{1}'".ToFormat(Key, InstanceKey), ex);
+                throw new StructureMapConfigurationException(
+                    "Missing requested Instance property '{0}' for InstanceKey '{1}'".ToFormat(Key, InstanceKey), ex);
             }
 
             if (String.IsNullOrEmpty(returnValue)) return null;
@@ -147,7 +148,8 @@ namespace StructureMap
             }
             catch (Exception e)
             {
-                throw new StructureMapConfigurationException("Malformed InstanceMemento {0} of PluginType {1}".ToFormat(InstanceKey, pluginType.GetFullName()), e);
+                throw new StructureMapConfigurationException(
+                    "Malformed InstanceMemento {0} of PluginType {1}".ToFormat(InstanceKey, pluginType.GetFullName()), e);
             }
         }
 

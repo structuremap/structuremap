@@ -23,12 +23,12 @@ namespace StructureMap.Pipeline.Lazy
 
         public override Type ReturnedType
         {
-            get { return typeof(Lazy<>); }
+            get { return typeof (Lazy<>); }
         }
 
         public override Instance CloseType(Type[] types)
         {
-            var instanceType = typeof(LazyInstance<>).MakeGenericType(types);
+            var instanceType = typeof (LazyInstance<>).MakeGenericType(types);
             return Activator.CreateInstance(instanceType).As<Instance>();
         }
     }

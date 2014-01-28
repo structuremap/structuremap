@@ -37,11 +37,7 @@ namespace StructureMap.Building
 
         public string Description
         {
-            get
-            {
-                return "Value: {0}".ToFormat(_value);
-
-            }
+            get { return "Value: {0}".ToFormat(_value); }
         }
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)

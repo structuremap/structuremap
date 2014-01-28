@@ -35,7 +35,7 @@ namespace StructureMap.Building
 
         public string Description
         {
-            get { return _constructor.ToString(); } 
+            get { return _constructor.ToString(); }
         }
 
         public NewExpression ToExpression(ParameterExpression session, ParameterExpression context)

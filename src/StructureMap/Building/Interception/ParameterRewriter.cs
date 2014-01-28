@@ -10,11 +10,10 @@ namespace StructureMap.Building.Interception
         private readonly ParameterExpression _before;
         private readonly ParameterExpression _after;
 
-        public static LambdaExpression ReplaceParameter(Type acceptsType, LambdaExpression expression, ParameterExpression newParam)
+        public static LambdaExpression ReplaceParameter(Type acceptsType, LambdaExpression expression,
+            ParameterExpression newParam)
         {
-            var before = expression.Parameters.FirstOrDefault(x => {
-                return x.Type.CanBeCastTo(acceptsType);
-            });
+            var before = expression.Parameters.FirstOrDefault(x => { return x.Type.CanBeCastTo(acceptsType); });
 
             if (before == null) return expression;
 
@@ -37,7 +36,5 @@ namespace StructureMap.Building.Interception
 
             return Expression.Convert(_after, _before.Type);
         }
-
-
     }
 }

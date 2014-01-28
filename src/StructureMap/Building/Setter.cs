@@ -18,10 +18,7 @@ namespace StructureMap.Building
 
         public string Description
         {
-            get
-            {
-                return _member.Name + " = " + AssignedValue.Description;
-            }
+            get { return _member.Name + " = " + AssignedValue.Description; }
         }
 
         public MemberBinding ToBinding(ParameterExpression session, ParameterExpression context)
@@ -31,9 +28,10 @@ namespace StructureMap.Building
 
         public LambdaExpression ToSetterLambda(Type concreteType, ParameterExpression target)
         {
-            var lambdaType = typeof (Action<,,>).MakeGenericType(typeof (IBuildSession), typeof(IContext), concreteType);
+            var lambdaType = typeof (Action<,,>).MakeGenericType(typeof (IBuildSession), typeof (IContext), concreteType);
             var method = _member.As<PropertyInfo>().GetSetMethod();
-            var callSetMethod = Expression.Call(target, method, AssignedValue.ToExpression(Parameters.Session, Parameters.Context));
+            var callSetMethod = Expression.Call(target, method,
+                AssignedValue.ToExpression(Parameters.Session, Parameters.Context));
 
             return Expression.Lambda(lambdaType, callSetMethod, Parameters.Session, Parameters.Context, target);
         }

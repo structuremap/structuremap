@@ -119,7 +119,7 @@ namespace StructureMap.Query
 
         public void EjectAndRemove<TPluginType>()
         {
-            EjectAndRemove(typeof(TPluginType));
+            EjectAndRemove(typeof (TPluginType));
         }
 
         /// <summary>

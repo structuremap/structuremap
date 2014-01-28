@@ -12,10 +12,7 @@ namespace StructureMap.Building
 
         public string Description
         {
-            get
-            {
-                return "{0} '{1}' ({2}): {3}".ToFormat(Type, Name, ReturnedType.GetFullName(), Message);
-            }
+            get { return "{0} '{1}' ({2}): {3}".ToFormat(Type, Name, ReturnedType.GetFullName(), Message); }
         }
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
-using StructureMap.Util;
 
 namespace StructureMap
 {
@@ -20,7 +17,8 @@ namespace StructureMap
         public readonly InterceptorPolicies Interceptors = new InterceptorPolicies();
 
         private readonly object _buildLock = new object();
-        private readonly IDictionary<Type, BuildUpPlan> _buildUpPlans 
+
+        private readonly IDictionary<Type, BuildUpPlan> _buildUpPlans
             = new Dictionary<Type, BuildUpPlan>();
 
         public BuildUpPlan ToBuildUpPlan(Type pluggedType, Func<IConfiguredInstance> findInstance)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using StructureMap.TypeRules;
@@ -125,7 +124,9 @@ namespace StructureMap.Pipeline
                     }
                     catch (Exception e)
                     {
-                        throw new StructureMapConfigurationException("Invalid value '{0}' for parameter {1} of type {2}".ToFormat(@dependency, name, type.GetFullName()), e);
+                        throw new StructureMapConfigurationException(
+                            "Invalid value '{0}' for parameter {1} of type {2}".ToFormat(@dependency, name,
+                                type.GetFullName()), e);
                     }
                 }
             }

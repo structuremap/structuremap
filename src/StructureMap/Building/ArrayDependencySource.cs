@@ -34,10 +34,7 @@ namespace StructureMap.Building
 
         public virtual string Description
         {
-            get
-            {
-                return "Array of all possible {0} values".ToFormat(_itemType.GetFullName());
-            }
+            get { return "Array of all possible {0} values".ToFormat(_itemType.GetFullName()); }
         }
 
         public virtual Expression ToExpression(ParameterExpression session, ParameterExpression context)
@@ -47,11 +44,7 @@ namespace StructureMap.Building
 
         public Type ReturnedType
         {
-            get
-            {
-                return _itemType.MakeArrayType();
-            }
-            
+            get { return _itemType.MakeArrayType(); }
         }
     }
 }

@@ -97,7 +97,7 @@ namespace StructureMap
             }
             catch (StructureMapException e)
             {
-                e.Push("Container.GetInstance<{0}>({1}, '{2}')", typeof(T).GetFullName(), args, name);
+                e.Push("Container.GetInstance<{0}>({1}, '{2}')", typeof (T).GetFullName(), args, name);
                 throw;
             }
         }
@@ -155,7 +155,7 @@ namespace StructureMap
             }
             catch (StructureMapException e)
             {
-                e.Push("Container.GetAllInstances<{0}>({1})", typeof(T).GetFullName(), args);
+                e.Push("Container.GetAllInstances<{0}>({1})", typeof (T).GetFullName(), args);
                 throw;
             }
         }
@@ -185,7 +185,7 @@ namespace StructureMap
             }
             catch (StructureMapException e)
             {
-                e.Push("Container.GetAllInstances<{0}>()", typeof(T).GetFullName());
+                e.Push("Container.GetAllInstances<{0}>()", typeof (T).GetFullName());
                 throw;
             }
         }

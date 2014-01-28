@@ -20,15 +20,17 @@ namespace StructureMap
 
         public static IPipelineGraph BuildRoot(PluginGraph pluginGraph)
         {
-            return new PipelineGraph(pluginGraph, new RootInstanceGraph(pluginGraph), null, pluginGraph.SingletonCache, new NulloTransientCache());
+            return new PipelineGraph(pluginGraph, new RootInstanceGraph(pluginGraph), null, pluginGraph.SingletonCache,
+                new NulloTransientCache());
         }
 
         public static IPipelineGraph BuildEmpty()
         {
             var pluginGraph = new PluginGraph();
-            return new PipelineGraph(pluginGraph, new RootInstanceGraph(pluginGraph), null, pluginGraph.SingletonCache, new NulloTransientCache());
+            return new PipelineGraph(pluginGraph, new RootInstanceGraph(pluginGraph), null, pluginGraph.SingletonCache,
+                new NulloTransientCache());
         }
-        
+
         private readonly PluginGraph _pluginGraph;
         private readonly IInstanceGraph _instances;
         private readonly IPipelineGraph _root;
@@ -36,7 +38,8 @@ namespace StructureMap
         private readonly IObjectCache _transients;
         private readonly Profiles _profiles;
 
-        public PipelineGraph(PluginGraph pluginGraph, IInstanceGraph instances, IPipelineGraph root, IObjectCache singletons, IObjectCache transients)
+        public PipelineGraph(PluginGraph pluginGraph, IInstanceGraph instances, IPipelineGraph root,
+            IObjectCache singletons, IObjectCache transients)
         {
             _pluginGraph = pluginGraph;
             _instances = instances;
@@ -88,34 +91,22 @@ namespace StructureMap
 
         public string Profile
         {
-            get
-            {
-                return _pluginGraph.ProfileName;
-            }
+            get { return _pluginGraph.ProfileName; }
         }
 
         public ContainerRole Role
         {
-            get
-            {
-                return _instances.Role;
-            }
+            get { return _instances.Role; }
         }
 
         public IGraphEjector Ejector
         {
-            get
-            {
-                return new GraphEjector(_pluginGraph, this);
-            }
+            get { return new GraphEjector(_pluginGraph, this); }
         }
 
         public Policies Policies
         {
-            get
-            {
-                return _pluginGraph.Root.Policies;
-            }
+            get { return _pluginGraph.Root.Policies; }
         }
 
         public void Dispose()
@@ -126,14 +117,15 @@ namespace StructureMap
 
         public void RegisterContainer(IContainer container)
         {
-            _pluginGraph.Families[typeof(IContainer)].SetDefault(new ObjectInstance(container));
+            _pluginGraph.Families[typeof (IContainer)].SetDefault(new ObjectInstance(container));
         }
 
         public IPipelineGraph ToNestedGraph()
         {
             var nestedPluginGraph = new PluginGraph(Profile + " - Nested");
             var instances = new ComplexInstanceGraph(this, nestedPluginGraph, ContainerRole.Nested);
-            return new PipelineGraph(nestedPluginGraph, instances, this, _singletons, new NestedContainerTransientObjectCache());
+            return new PipelineGraph(nestedPluginGraph, instances, this, _singletons,
+                new NestedContainerTransientObjectCache());
         }
 
         public void Configure(Action<ConfigurationExpression> configure)

@@ -19,15 +19,11 @@ namespace StructureMap.Building.Interception
         public DecoratorInterceptor(Type pluginType, Type pluggedType)
             : this(pluginType, new ConstructorInstance(pluggedType))
         {
-            
         }
 
         public string Description
         {
-            get
-            {
-                return "Decorator of type " + _instance.PluggedType.GetFullName();
-            }
+            get { return "Decorator of type " + _instance.PluggedType.GetFullName(); }
         }
 
         public IConfiguredInstance Instance
@@ -37,10 +33,7 @@ namespace StructureMap.Building.Interception
 
         public InterceptorRole Role
         {
-            get
-            {
-                return InterceptorRole.Decorates;
-            }
+            get { return InterceptorRole.Decorates; }
         }
 
         public Expression ToExpression(Policies policies, ParameterExpression session, ParameterExpression variable)
@@ -54,9 +47,15 @@ namespace StructureMap.Building.Interception
             return Expression.Convert(builder, _pluginType);
         }
 
-        public Type Accepts { get { return _pluginType; } }
-        public Type Returns { get { return _pluginType; } }
+        public Type Accepts
+        {
+            get { return _pluginType; }
+        }
 
+        public Type Returns
+        {
+            get { return _pluginType; }
+        }
 
 
         public class LiteralDependencySource : IDependencySource
@@ -71,11 +70,9 @@ namespace StructureMap.Building.Interception
 
             public string Description
             {
-                get
-                {
-                    return _expression.ToString();
-                }
+                get { return _expression.ToString(); }
             }
+
             public Expression ToExpression(ParameterExpression session, ParameterExpression context)
             {
                 return _expression;
@@ -84,6 +81,4 @@ namespace StructureMap.Building.Interception
             public Type ReturnedType { get; private set; }
         }
     }
-
-
 }

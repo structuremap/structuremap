@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
-using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
 using StructureMap.Util;
 

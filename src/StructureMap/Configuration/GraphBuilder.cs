@@ -23,7 +23,7 @@ namespace StructureMap.Configuration
         public void AddRegistry(string registryTypeName)
         {
             var type = new TypePath(registryTypeName).FindType();
-            var registry = (Registry)Activator.CreateInstance(type);
+            var registry = (Registry) Activator.CreateInstance(type);
             registry.As<IPluginGraphConfiguration>().Configure(_pluginGraph);
         }
 

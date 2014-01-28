@@ -13,6 +13,5 @@ namespace StructureMap
 
         void Push(Instance instance);
         void Pop();
-
     }
 }

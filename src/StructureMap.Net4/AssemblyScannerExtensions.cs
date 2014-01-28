@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
 
-namespace StructureMap
+namespace StructureMap.Graph
 {
     public static class AssemblyScannerExtensions
     {

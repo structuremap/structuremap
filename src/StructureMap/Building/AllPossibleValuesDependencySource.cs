@@ -25,10 +25,7 @@ namespace StructureMap.Building
 
         public string Description
         {
-            get
-            {
-                return "Enumerable of {0} with all registered instances".ToFormat(_elementType.GetFullName());
-            }
+            get { return "Enumerable of {0} with all registered instances".ToFormat(_elementType.GetFullName()); }
         }
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)

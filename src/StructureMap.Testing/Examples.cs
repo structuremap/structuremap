@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
+using StructureMap.Graph;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.DocumentationExamples

@@ -1,5 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
+using StructureMap.Graph;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
 

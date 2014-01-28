@@ -11,7 +11,7 @@ namespace StructureMap.Pipeline.Lazy
 
         public override string Description
         {
-            get { return "Constructor for Lazy<{0}>".ToFormat(typeof(T).Name); }
+            get { return "Constructor for Lazy<{0}>".ToFormat(typeof (T).Name); }
         }
     }
 }

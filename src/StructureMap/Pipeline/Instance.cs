@@ -166,7 +166,9 @@ namespace StructureMap.Pipeline
             }
             catch (Exception e)
             {
-                throw new StructureMapBuildPlanException("Error while trying to create the BuildPlan for {0}.\nPlease check the inner exception".ToFormat(toDescription(pluginType)), e);
+                throw new StructureMapBuildPlanException(
+                    "Error while trying to create the BuildPlan for {0}.\nPlease check the inner exception".ToFormat(
+                        toDescription(pluginType)), e);
             }
         }
 

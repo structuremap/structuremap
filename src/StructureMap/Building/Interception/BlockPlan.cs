@@ -8,7 +8,7 @@ namespace StructureMap.Building.Interception
     public class BlockPlan
     {
         private readonly List<Expression> _expressions = new List<Expression>();
-        private readonly List<ParameterExpression> _variables = new List<ParameterExpression>(); 
+        private readonly List<ParameterExpression> _variables = new List<ParameterExpression>();
 
         public static BlockPlan operator +(BlockPlan plan, Expression expression)
         {

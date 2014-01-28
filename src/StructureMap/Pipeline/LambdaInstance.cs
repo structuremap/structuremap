@@ -11,10 +11,10 @@ namespace StructureMap.Pipeline
 
         public LambdaInstance(Expression<Func<IContext, T>> builder)
         {
-            _builder = builder.ReplaceParameter(typeof(IContext), Parameters.Context).Body;
+            _builder = builder.ReplaceParameter(typeof (IContext), Parameters.Context).Body;
 
             _description = builder
-                .ReplaceParameter(typeof (IContext), Expression.Parameter(typeof(IContext), "IContext"))
+                .ReplaceParameter(typeof (IContext), Expression.Parameter(typeof (IContext), "IContext"))
                 .Body.ToString();
         }
 
@@ -34,7 +34,7 @@ namespace StructureMap.Pipeline
         {
             _description = description;
             _builder = Expression.Invoke(Expression.Constant(builder));
-        } 
+        }
 
         protected override LambdaInstance<T> thisInstance
         {
@@ -53,10 +53,7 @@ namespace StructureMap.Pipeline
 
         public override Type ReturnedType
         {
-            get
-            {
-                return typeof (T);
-            }
+            get { return typeof (T); }
         }
 
         public override string Description

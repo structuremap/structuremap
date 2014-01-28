@@ -24,6 +24,5 @@ namespace StructureMap.Building.Interception
         {
             return new FuncInterceptor<T>((s, x) => func(s, x), description);
         }
-
     }
 }

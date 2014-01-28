@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
 using StructureMap.TypeRules;
 
@@ -33,7 +32,7 @@ namespace StructureMap.Building.Interception
             {
                 var bodyDescription = _description ?? _action
                     .ReplaceParameter(Accepts, Expression.Parameter(Accepts, Accepts.Name))
-                    .ReplaceParameter(typeof(IContext), Expression.Parameter(typeof(IContext), "IContext"))
+                    .ReplaceParameter(typeof (IContext), Expression.Parameter(typeof (IContext), "IContext"))
                     .Body.ToString();
 
                 return "ActivatorInterceptor of {0}: {1}".ToFormat(typeof (T).GetFullName(), bodyDescription);
@@ -42,10 +41,7 @@ namespace StructureMap.Building.Interception
 
         public InterceptorRole Role
         {
-            get
-            {
-                return InterceptorRole.Activates;
-            }
+            get { return InterceptorRole.Activates; }
         }
 
         public Expression ToExpression(Policies policies, ParameterExpression context, ParameterExpression variable)
@@ -56,8 +52,15 @@ namespace StructureMap.Building.Interception
                 .Body;
         }
 
-        public Type Accepts { get { return typeof (T); } }
-        public Type Returns { get { return typeof(T); } }
+        public Type Accepts
+        {
+            get { return typeof (T); }
+        }
+
+        public Type Returns
+        {
+            get { return typeof (T); }
+        }
 
         protected bool Equals(ActivatorInterceptor<T> other)
         {

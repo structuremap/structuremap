@@ -27,12 +27,14 @@ namespace StructureMap
 
         public bool HasDefaultForPluginType(Type pluginType)
         {
-            return _pluginGraph.HasDefaultForPluginType(pluginType) || _parent.Instances.HasDefaultForPluginType(pluginType);
+            return _pluginGraph.HasDefaultForPluginType(pluginType) ||
+                   _parent.Instances.HasDefaultForPluginType(pluginType);
         }
 
         public bool HasInstance(Type pluginType, string instanceKey)
         {
-            return _pluginGraph.HasInstance(pluginType, instanceKey) || _parent.Instances.HasInstance(pluginType, instanceKey);
+            return _pluginGraph.HasInstance(pluginType, instanceKey) ||
+                   _parent.Instances.HasInstance(pluginType, instanceKey);
         }
 
         public void EachInstance(Action<Type, Instance> action)
@@ -63,7 +65,8 @@ namespace StructureMap
                 yield return family;
             }
 
-            foreach (var family in _parent.Instances.UniqueFamilies().Where(x => !_pluginGraph.Families.Has(x.PluginType)))
+            foreach (
+                var family in _parent.Instances.UniqueFamilies().Where(x => !_pluginGraph.Families.Has(x.PluginType)))
             {
                 yield return family;
             }

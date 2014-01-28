@@ -52,7 +52,6 @@ namespace StructureMap
             _pluginGraph.Families[pluginType].RemoveInstance(instance);
 
             instance.SafeDispose();
-
         }
     }
 }

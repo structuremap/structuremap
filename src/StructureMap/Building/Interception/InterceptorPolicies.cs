@@ -29,6 +29,6 @@ namespace StructureMap.Building.Interception
             if (instance == null) throw new ArgumentNullException("instance");
 
             return _policies.SelectMany(x => x.DetermineInterceptors(pluginType, instance)).ToArray();
-        } 
+        }
     }
 }

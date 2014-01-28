@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using StructureMap.Configuration;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
 using StructureMap.Pipeline.Lazy;
 
 namespace StructureMap

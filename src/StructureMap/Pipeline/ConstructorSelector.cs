@@ -13,7 +13,6 @@ namespace StructureMap.Pipeline
         {
             new AttributeConstructorSelector(),
             new GreediestConstructorSelector()
-            
         };
 
         public ConstructorSelector()

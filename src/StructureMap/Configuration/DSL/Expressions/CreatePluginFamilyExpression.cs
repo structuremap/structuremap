@@ -240,7 +240,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Register an Action to run against any object of this PluginType immediately after
         /// it is created, but before the new object is passed back to the caller
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Expression<Action<TPluginType>> handler, Func<Instance, bool> filter = null)
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Expression<Action<TPluginType>> handler,
+            Func<Instance, bool> filter = null)
         {
             return InterceptWith(new ActivatorInterceptor<TPluginType>(handler), filter);
         }
@@ -249,7 +250,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// it is created, but before the new object is passed back to the caller
         /// </summary>
         /// <param name="description">Descriptive text for diagnostics</param>
-        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(string description, Action<TPluginType> handler, Func<Instance, bool> filter = null)
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(string description,
+            Action<TPluginType> handler, Func<Instance, bool> filter = null)
         {
             return InterceptWith(InterceptorFactory.ForAction(description, handler), filter);
         }
@@ -259,7 +261,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Register an Action to run against any object of this PluginType immediately after
         /// it is created, but before the new object is passed back to the caller
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Expression<Action<IContext, TPluginType>> handler, Func<Instance, bool> filter = null)
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(
+            Expression<Action<IContext, TPluginType>> handler, Func<Instance, bool> filter = null)
         {
             return InterceptWith(new ActivatorInterceptor<TPluginType>(handler), filter);
         }
@@ -269,7 +272,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// it is created, but before the new object is passed back to the caller
         /// </summary>
         /// <param name="description">Descriptive text for diagnostics</param>
-        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(string description, Action<IContext, TPluginType> handler, Func<Instance, bool> filter = null)
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(string description,
+            Action<IContext, TPluginType> handler, Func<Instance, bool> filter = null)
         {
             return InterceptWith(InterceptorFactory.ForAction(description, handler), filter);
         }
@@ -277,12 +281,11 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Adds an Interceptor to only this PluginType
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> InterceptWith(IInterceptor interceptor, Func<Instance, bool> filter = null )
+        public CreatePluginFamilyExpression<TPluginType> InterceptWith(IInterceptor interceptor,
+            Func<Instance, bool> filter = null)
         {
             _children.Add(
-                graph => {
-                    graph.Policies.Interceptors.Add<TPluginType>(interceptor, filter);
-                });
+                graph => { graph.Policies.Interceptors.Add<TPluginType>(interceptor, filter); });
 
             return this;
         }
@@ -290,7 +293,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Decorates all instances of TPluginType with the concrete type TDecoratorType
         /// </summary>
-        public SmartInstance<TDecoratorType> DecorateAllWith<TDecoratorType>(Func<Instance, bool> filter = null) where TDecoratorType : TPluginType
+        public SmartInstance<TDecoratorType> DecorateAllWith<TDecoratorType>(Func<Instance, bool> filter = null)
+            where TDecoratorType : TPluginType
         {
             var instance = new SmartInstance<TDecoratorType>();
             var interceptor = new DecoratorInterceptor(typeof (TPluginType), instance);
@@ -307,7 +311,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// DecorateAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(Expression<Func<TPluginType, TPluginType>> handler, Func<Instance, bool> filter = null)
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(
+            Expression<Func<TPluginType, TPluginType>> handler, Func<Instance, bool> filter = null)
         {
             return InterceptWith(new FuncInterceptor<TPluginType>(handler), filter);
         }
@@ -319,7 +324,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// scenarios or to return a decorator.
         /// </summary>
         /// <param name="description">Descriptive text for diagnostics</param>
-        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(string description, Func<TPluginType, TPluginType> handler, Func<Instance, bool> filter = null)
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(string description,
+            Func<TPluginType, TPluginType> handler, Func<Instance, bool> filter = null)
         {
             return InterceptWith(InterceptorFactory.ForFunc(description, handler), filter);
         }
@@ -330,7 +336,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// DecorateAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(Expression<Func<IContext, TPluginType, TPluginType>> handler, Func<Instance, bool> filter = null)
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(
+            Expression<Func<IContext, TPluginType, TPluginType>> handler, Func<Instance, bool> filter = null)
         {
             return InterceptWith(new FuncInterceptor<TPluginType>(handler), filter);
         }
@@ -342,7 +349,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// scenarios or to return a decorator.
         /// </summary>
         /// <param name="description">Descriptive text for diagnostics</param>
-        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(string description, Func<IContext, TPluginType, TPluginType> handler, Func<Instance, bool> filter = null)
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(string description,
+            Func<IContext, TPluginType, TPluginType> handler, Func<Instance, bool> filter = null)
         {
             return InterceptWith(InterceptorFactory.ForFunc(description, handler), filter);
         }

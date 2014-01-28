@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using StructureMap.Building.Interception;
 using StructureMap.Configuration.DSL.Expressions;
@@ -147,7 +146,6 @@ namespace StructureMap.Configuration.DSL
         }
 
 
-
         /// <summary>
         /// All requests For the "TO" types will be filled by fetching the "FROM"
         /// type and casting it to "TO"
@@ -200,15 +198,20 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public LambdaInstance<T> Redirect<T, U>() where T : class where U : class
         {
-            return For<T>().Use("Redirect requests for {0} to the configured default of {1} with a cast".ToFormat(typeof(T).GetFullName(), typeof(U).GetFullName()),c => {
-                var raw = c.GetInstance<U>();
-                var t = raw as T;
-                if (t == null)
-                    throw new InvalidCastException(raw.GetType().AssemblyQualifiedName + " could not be cast to " +
-                                                   typeof (T).AssemblyQualifiedName);
+            return
+                For<T>()
+                    .Use(
+                        "Redirect requests for {0} to the configured default of {1} with a cast".ToFormat(
+                            typeof (T).GetFullName(), typeof (U).GetFullName()), c => {
+                                var raw = c.GetInstance<U>();
+                                var t = raw as T;
+                                if (t == null)
+                                    throw new InvalidCastException(raw.GetType().AssemblyQualifiedName +
+                                                                   " could not be cast to " +
+                                                                   typeof (T).AssemblyQualifiedName);
 
-                return t;
-            });
+                                return t;
+                            });
         }
 
         /// <summary>
@@ -306,16 +309,9 @@ namespace StructureMap.Configuration.DSL
         }
 
 
-
-
-
-
         public PoliciesExpression Policies
         {
-            get
-            {
-                return new PoliciesExpression(this);
-            }
+            get { return new PoliciesExpression(this); }
         }
 
         // TODO -- add Xml comments
@@ -396,7 +392,7 @@ namespace StructureMap.Configuration.DSL
             /// <returns></returns>
             public CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>()
             {
-                Func<PropertyInfo, bool> predicate = prop => prop.PropertyType == typeof(TPluginType);
+                Func<PropertyInfo, bool> predicate = prop => prop.PropertyType == typeof (TPluginType);
 
                 _parent.alter = graph => graph.Policies.SetterRules.Add(predicate);
 

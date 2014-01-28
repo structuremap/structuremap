@@ -14,7 +14,9 @@ namespace StructureMap.Building.Interception
         {
             if (!interceptor.Accepts.CanBeCastTo<T>())
             {
-                throw new ArgumentOutOfRangeException("The accepts type of {0} cannot be cast to {1}".ToFormat(interceptor.Accepts.GetFullName(), typeof(T).GetFullName()));
+                throw new ArgumentOutOfRangeException(
+                    "The accepts type of {0} cannot be cast to {1}".ToFormat(interceptor.Accepts.GetFullName(),
+                        typeof (T).GetFullName()));
             }
 
             _interceptor = interceptor;

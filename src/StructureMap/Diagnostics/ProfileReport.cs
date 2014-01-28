@@ -65,8 +65,6 @@ namespace StructureMap.Diagnostics
 
             _validations.Each(e => e.Write(writer));
             _errors.Each(e => e.Write(writer));
-
-
         }
 
         public IEnumerable<BuildError> Errors

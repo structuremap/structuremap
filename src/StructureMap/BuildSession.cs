@@ -16,7 +16,7 @@ namespace StructureMap
         private readonly IPipelineGraph _pipelineGraph;
         private readonly ISessionCache _sessionCache;
 
-        private readonly Stack<Instance> _instances = new Stack<Instance>(); 
+        private readonly Stack<Instance> _instances = new Stack<Instance>();
 
         public BuildSession(IPipelineGraph pipelineGraph, string requestedName = null, ExplicitArguments args = null)
         {
@@ -43,7 +43,7 @@ namespace StructureMap
 
             var plan = _pipelineGraph.Policies.ToBuildUpPlan(pluggedType, () => {
                 return _pipelineGraph.Instances.GetDefault(pluggedType) as IConfiguredInstance
-                           ?? new ConfiguredInstance(pluggedType);
+                       ?? new ConfiguredInstance(pluggedType);
             });
 
             plan.BuildUp(this, this, target);
@@ -86,7 +86,9 @@ namespace StructureMap
 
         public object TryGetInstance(Type pluginType, string name)
         {
-            return _pipelineGraph.Instances.HasInstance(pluginType, name) ? ((IContext) this).GetInstance(pluginType, name) : null;
+            return _pipelineGraph.Instances.HasInstance(pluginType, name)
+                ? ((IContext) this).GetInstance(pluginType, name)
+                : null;
         }
 
         public IEnumerable<T> All<T>() where T : class
@@ -114,7 +116,10 @@ namespace StructureMap
 
         public IEnumerable<T> GetAllInstances<T>()
         {
-            return _pipelineGraph.Instances.GetAllInstances(typeof (T)).Select(x => (T) FindObject(typeof (T), x)).ToArray();
+            return
+                _pipelineGraph.Instances.GetAllInstances(typeof (T))
+                    .Select(x => (T) FindObject(typeof (T), x))
+                    .ToArray();
         }
 
         public IEnumerable<object> GetAllInstances(Type pluginType)
@@ -126,7 +131,7 @@ namespace StructureMap
         public static BuildSession ForPluginGraph(PluginGraph graph, ExplicitArguments args = null)
         {
             var pipeline = PipelineGraph.BuildRoot(graph);
-            
+
             return new BuildSession(pipeline, args: args);
         }
 
@@ -140,7 +145,9 @@ namespace StructureMap
             var instance = _pipelineGraph.Instances.FindInstance(pluginType, name);
             if (instance == null)
             {
-                var ex = new StructureMapConfigurationException("Could not find an Instance named '{0}' for PluginType {1}", name, pluginType.GetFullName());
+                var ex =
+                    new StructureMapConfigurationException("Could not find an Instance named '{0}' for PluginType {1}",
+                        name, pluginType.GetFullName());
 
                 ex.Context = new WhatDoIHaveWriter(_pipelineGraph).GetText(new ModelQuery {PluginType = pluginType},
                     "The current configuration for type {0} is:".ToFormat(pluginType.GetFullName()));
@@ -155,9 +162,9 @@ namespace StructureMap
         {
             if (_instances.Contains(instance))
             {
-                throw new StructureMapBuildException("Bi-directional dependency relationship detected!" + Environment.NewLine + "Check the StructureMap stacktrace below:");
+                throw new StructureMapBuildException("Bi-directional dependency relationship detected!" +
+                                                     Environment.NewLine + "Check the StructureMap stacktrace below:");
             }
-
 
 
             _instances.Push(instance);
@@ -169,7 +176,6 @@ namespace StructureMap
             {
                 _instances.Pop();
             }
-            
         }
 
         public Type ParentType
@@ -182,7 +188,6 @@ namespace StructureMap
                 }
 
                 return null;
-
             }
         }
 
@@ -198,5 +203,4 @@ namespace StructureMap
             get { return _pipelineGraph.Policies; }
         }
     }
-
 }

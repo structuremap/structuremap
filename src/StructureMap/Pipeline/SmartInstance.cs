@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using StructureMap.Building.Interception;
 
@@ -11,7 +10,7 @@ namespace StructureMap.Pipeline
     /// <typeparam name="T">The concrete type constructed by SmartInstance</typeparam>
     public class SmartInstance<T> : ConstructorInstance<SmartInstance<T>>
     {
-        public SmartInstance(Expression<Func<T>> constructorSelection = null )
+        public SmartInstance(Expression<Func<T>> constructorSelection = null)
             : base(typeof (T))
         {
             if (constructorSelection != null)
@@ -149,7 +148,6 @@ namespace StructureMap.Pipeline
 
             return this;
         }
-
 
 
         /// <summary>
