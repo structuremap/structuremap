@@ -576,7 +576,7 @@ namespace StructureMap
             return session.FindObject(pluginType, instance);
         }
 
-        public ExplicitArgsExpression With(Action<ExplicitArgsExpression> action)
+        public ExplicitArgsExpression With(Action<IExplicitArgsExpression> action)
         {
             var expression = new ExplicitArgsExpression(this);
             action(expression);

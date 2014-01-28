@@ -165,6 +165,7 @@
     <Compile Include="Acceptance\build_by_lambdas.cs" />
     <Compile Include="Acceptance\contextual_building.cs" />
     <Compile Include="Acceptance\ejecting_instances.cs" />
+    <Compile Include="Acceptance\explicit_arguments.cs" />
     <Compile Include="Acceptance\full_stack_container_usage.cs" />
     <Compile Include="Acceptance\interception_acceptance_tests.cs" />
     <Compile Include="Acceptance\lifecycle_creation.cs" />

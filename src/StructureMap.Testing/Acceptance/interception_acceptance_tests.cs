@@ -393,4 +393,5 @@ namespace StructureMap.Testing.Acceptance
 
     public interface IService{}
     public class AService : IService{}
+    public class BService : IService{}
 }
