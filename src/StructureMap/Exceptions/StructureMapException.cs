@@ -16,7 +16,7 @@ namespace StructureMap
             typeof (StructureMapException).GetConstructor(new[] {typeof (string), typeof (Exception)});
 
         public static readonly MethodInfo PushMethod = typeof (StructureMapException).GetMethod("Push",
-            new[] {typeof (string)});
+            new[] {typeof (string), typeof(object[])});
 
         private readonly Queue<string> _descriptions = new Queue<string>();
         private readonly string _title;
@@ -45,10 +45,11 @@ namespace StructureMap
 
         public string Context { get; set; }
 
-        public void Push(string description)
+        public void Push(string description, params object[] parameters)
         {
-            _descriptions.Enqueue(description);
+            _descriptions.Enqueue(description.ToFormat(parameters));
         }
+
 
         public StructureMapException(string message) : base(message)
         {

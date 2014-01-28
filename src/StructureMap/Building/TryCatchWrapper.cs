@@ -69,7 +69,7 @@ namespace StructureMap.Building
             var exVar = Expression.Variable(typeof (T), "smEx");
 
             var assign = Expression.Assign(exVar, newSmEx);
-            var firstSmPush = Expression.Call(exVar, StructureMapException.PushMethod, description);
+            var firstSmPush = Expression.Call(exVar, StructureMapException.PushMethod, new [] { description, Expression.Constant(new object[0]) });
 
 
             var genericThrow = Expression.Throw(exVar);
@@ -80,7 +80,7 @@ namespace StructureMap.Building
 
             var smParameter = Expression.Parameter(typeof (StructureMapException), "ex");
 
-            var smPush = Expression.Call(smParameter, StructureMapException.PushMethod, description);
+            var smPush = Expression.Call(smParameter, StructureMapException.PushMethod, new[] { description, Expression.Constant(new object[0]) });
             var rethrow = Expression.Throw(smParameter);
 
             var pushAndReThrowBlock = returnType.IsVoidReturn()

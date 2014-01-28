@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StructureMap.Pipeline
 {
@@ -70,6 +71,17 @@ namespace StructureMap.Pipeline
         public bool Has(string propertyName)
         {
             return _args.ContainsKey(propertyName);
+        }
+
+        public override string ToString()
+        {
+            var values =
+                _args.Select(x => "{0}={1}".ToFormat(x.Key, x.Value))
+                    .Union(_defaults.Select(x => "{0}={1}".ToFormat(x.Key, x.Value)))
+                    .ToArray();
+
+            return "{" + string.Join("; ", values) + "}";
+
         }
     }
 }

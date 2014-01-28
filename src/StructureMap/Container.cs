@@ -90,8 +90,16 @@ namespace StructureMap
 
         public T GetInstance<T>(ExplicitArguments args, string name)
         {
-            var namedInstance = _pipelineGraph.Instances.FindInstance(typeof (T), name);
-            return (T) buildInstanceWithArgs(typeof (T), namedInstance, args, name);
+            try
+            {
+                var namedInstance = _pipelineGraph.Instances.FindInstance(typeof (T), name);
+                return (T) buildInstanceWithArgs(typeof (T), namedInstance, args, name);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance<{0}>({1}, '{2}')", typeof(T).GetFullName(), args, name);
+                throw;
+            }
         }
 
         /// <summary>
@@ -102,10 +110,18 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, ExplicitArguments args)
         {
-            var defaultInstance = _pipelineGraph.Instances.GetDefault(pluginType);
-            var requestedName = BuildSession.DEFAULT;
+            try
+            {
+                var defaultInstance = _pipelineGraph.Instances.GetDefault(pluginType);
+                var requestedName = BuildSession.DEFAULT;
 
-            return buildInstanceWithArgs(pluginType, defaultInstance, args, requestedName);
+                return buildInstanceWithArgs(pluginType, defaultInstance, args, requestedName);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance({0} ,{1})", pluginType.GetFullName(), args);
+                throw;
+            }
         }
 
 
@@ -117,15 +133,31 @@ namespace StructureMap
         /// <returns></returns>
         public IEnumerable GetAllInstances(Type type, ExplicitArguments args)
         {
-            var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
-            return session.GetAllInstances(type);
+            try
+            {
+                var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
+                return session.GetAllInstances(type);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetAllInstances({0}, {1})", type.GetFullName(), args);
+                throw;
+            }
         }
 
 
         public IEnumerable<T> GetAllInstances<T>(ExplicitArguments args)
         {
-            var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
-            return session.GetAllInstances<T>();
+            try
+            {
+                var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
+                return session.GetAllInstances<T>();
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetAllInstances<{0}>({1})", typeof(T).GetFullName(), args);
+                throw;
+            }
         }
 
 
@@ -146,8 +178,16 @@ namespace StructureMap
         /// <returns></returns>
         public IEnumerable<T> GetAllInstances<T>()
         {
-            var session = new BuildSession(_pipelineGraph);
-            return session.GetAllInstances<T>();
+            try
+            {
+                var session = new BuildSession(_pipelineGraph);
+                return session.GetAllInstances<T>();
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetAllInstances<{0}>()", typeof(T).GetFullName());
+                throw;
+            }
         }
 
         /// <summary>
@@ -158,7 +198,15 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, string instanceKey)
         {
-            return new BuildSession(_pipelineGraph, instanceKey).CreateInstance(pluginType, instanceKey);
+            try
+            {
+                return new BuildSession(_pipelineGraph, instanceKey).CreateInstance(pluginType, instanceKey);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance({0}, '{1}')", pluginType.GetFullName(), instanceKey);
+                throw;
+            }
         }
 
         /// <summary>
@@ -169,9 +217,17 @@ namespace StructureMap
         /// <returns></returns>
         public object TryGetInstance(Type pluginType, string instanceKey)
         {
-            return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
-                ? null
-                : GetInstance(pluginType, instanceKey);
+            try
+            {
+                return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
+                    ? null
+                    : GetInstance(pluginType, instanceKey);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.TryGetInstance({0}, '{1}')", pluginType.GetFullName(), instanceKey);
+                throw;
+            }
         }
 
         /// <summary>
@@ -181,9 +237,17 @@ namespace StructureMap
         /// <returns></returns>
         public object TryGetInstance(Type pluginType)
         {
-            return !_pipelineGraph.Instances.HasDefaultForPluginType(pluginType)
-                ? null
-                : GetInstance(pluginType);
+            try
+            {
+                return !_pipelineGraph.Instances.HasDefaultForPluginType(pluginType)
+                    ? null
+                    : GetInstance(pluginType);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.TryGetInstance({0})", pluginType.GetFullName());
+                throw;
+            }
         }
 
         /// <summary>
@@ -204,7 +268,15 @@ namespace StructureMap
         /// <param name="target"></param>
         public void BuildUp(object target)
         {
-            new BuildSession(_pipelineGraph).BuildUp(target);
+            try
+            {
+                new BuildSession(_pipelineGraph).BuildUp(target);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.BuildUp({0})", target);
+                throw;
+            }
         }
 
         /// <summary>
@@ -224,7 +296,15 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType)
         {
-            return new BuildSession(_pipelineGraph).GetInstance(pluginType);
+            try
+            {
+                return new BuildSession(_pipelineGraph).GetInstance(pluginType);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance({0})", pluginType.GetFullName());
+                throw;
+            }
         }
 
 
@@ -236,8 +316,16 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, Instance instance)
         {
-            var session = new BuildSession(_pipelineGraph, instance.Name);
-            return session.FindObject(pluginType, instance);
+            try
+            {
+                var session = new BuildSession(_pipelineGraph, instance.Name);
+                return session.FindObject(pluginType, instance);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance({0}, Instance: {1})", pluginType.GetFullName(), instance.Description);
+                throw;
+            }
         }
 
         /// <summary>
@@ -247,7 +335,15 @@ namespace StructureMap
         /// <returns></returns>
         public IEnumerable GetAllInstances(Type pluginType)
         {
-            return new BuildSession(_pipelineGraph).GetAllInstances(pluginType);
+            try
+            {
+                return new BuildSession(_pipelineGraph).GetAllInstances(pluginType);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetAllInstances({0})", pluginType.GetFullName());
+                throw;
+            }
         }
 
         /// <summary>
