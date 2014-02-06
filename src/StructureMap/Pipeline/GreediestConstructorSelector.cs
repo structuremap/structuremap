@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
@@ -8,7 +9,9 @@ namespace StructureMap.Pipeline
     {
         public ConstructorInfo Find(Type pluggedType)
         {
-            return pluggedType.GetConstructors().OrderByDescending(x => x.GetParameters().Count())
+            return pluggedType
+                .GetConstructors()
+                .OrderByDescending(x => x.GetParameters().Count())
                 .FirstOrDefault();
         }
     }

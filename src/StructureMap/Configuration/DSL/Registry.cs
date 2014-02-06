@@ -246,17 +246,18 @@ namespace StructureMap.Configuration.DSL
 
         internal static bool IsPublicRegistry(Type type)
         {
-            if (type.Assembly == typeof (Registry).Assembly)
+            var ti = type.GetTypeInfo();
+            if (Equals(ti.Assembly, typeof (Registry).GetTypeInfo().Assembly))
             {
                 return false;
             }
 
-            if (!typeof (Registry).IsAssignableFrom(type))
+            if (!typeof (Registry).GetTypeInfo().IsAssignableFrom(ti))
             {
                 return false;
             }
 
-            if (type.IsInterface || type.IsAbstract || type.IsGenericType)
+            if (ti.IsInterface || ti.IsAbstract || ti.IsGenericType)
             {
                 return false;
             }
@@ -269,9 +270,9 @@ namespace StructureMap.Configuration.DSL
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             if (other.GetType() == typeof (Registry) && GetType() == typeof (Registry)) return false;
-            if (Equals(other.GetType(), GetType()))
+            if (other.GetType() == GetType())
             {
-                return !GetType().IsNotPublic;
+                return !GetType().GetTypeInfo().IsNotPublic;
             }
             return false;
         }
@@ -280,7 +281,7 @@ namespace StructureMap.Configuration.DSL
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (!typeof (Registry).IsAssignableFrom(obj.GetType())) return false;
+            if (!typeof(Registry).GetTypeInfo().IsAssignableFrom(obj.GetType().GetTypeInfo())) return false;
             return Equals((Registry) obj);
         }
 

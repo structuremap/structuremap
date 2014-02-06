@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 
@@ -25,7 +26,7 @@ namespace StructureMap.Graph
 
         private Type GetLeastSpecificButValidType(Type pluginType, Type type)
         {
-            if (pluginType.IsGenericTypeDefinition && !type.IsOpenGeneric())
+            if (pluginType.GetTypeInfo().IsGenericTypeDefinition && !type.IsOpenGeneric())
                 return type.FindFirstInterfaceThatCloses(pluginType);
 
             return pluginType;

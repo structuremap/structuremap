@@ -1,4 +1,6 @@
 using System;
+using System.Reflection;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
@@ -22,28 +24,28 @@ namespace StructureMap.Graph
 
         private static bool checkGenericType(Type pluggedType, Type pluginType)
         {
-            if (pluginType.IsAssignableFrom(pluggedType)) return true;
+            if (pluginType.GetTypeInfo().IsAssignableFrom(pluggedType.GetTypeInfo())) return true;
 
 
 // check interfaces
             foreach (var type in pluggedType.GetInterfaces())
             {
-                if (!type.IsGenericType)
+                if (!type.GetTypeInfo().IsGenericType)
                 {
                     continue;
                 }
 
-                if (type.GetGenericTypeDefinition().Equals(pluginType))
+                if (type.GetGenericTypeDefinition() == pluginType)
                 {
                     return true;
                 }
             }
 
-            if (pluggedType.BaseType.IsGenericType)
+            if (pluggedType.GetTypeInfo().BaseType.GetTypeInfo().IsGenericType)
             {
-                var baseType = pluggedType.BaseType.GetGenericTypeDefinition();
+                var baseType = pluggedType.GetTypeInfo().BaseType.GetGenericTypeDefinition();
 
-                if (baseType.Equals(pluginType))
+                if (baseType == pluginType)
                 {
                     return true;
                 }

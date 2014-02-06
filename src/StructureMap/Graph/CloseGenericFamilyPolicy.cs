@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Reflection;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
@@ -15,18 +17,19 @@ namespace StructureMap.Graph
 
         public PluginFamily Build(Type type)
         {
-            if (!type.IsGenericType) return null;
+            if (!type.GetTypeInfo().IsGenericType) return null;
 
             var basicType = type.GetGenericTypeDefinition();
             if (!_graph.Families.Has(basicType))
             {
-                return _graph.Families.ToArray().FirstOrDefault(x => type.IsAssignableFrom(x.PluginType));
+
+                return _graph.Families.ToArray().FirstOrDefault(x => type.GetTypeInfo().IsAssignableFrom(x.PluginType.GetTypeInfo()));
             }
 
             var basicFamily = _graph.Families[basicType];
             var templatedParameterTypes = type.GetGenericArguments();
 
-            return basicFamily.CreateTemplatedClone(templatedParameterTypes);
+            return basicFamily.CreateTemplatedClone(templatedParameterTypes.ToArray());
         }
 
         public bool AppliesToHasFamilyChecks
@@ -36,7 +39,7 @@ namespace StructureMap.Graph
 
         public bool Matches(Type type)
         {
-            if (!type.IsGenericType) return false;
+            if (!type.GetTypeInfo().IsGenericType) return false;
 
             var basicType = type.GetGenericTypeDefinition();
             return _graph.Families.Has(basicType);

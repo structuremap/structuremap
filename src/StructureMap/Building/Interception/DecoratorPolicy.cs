@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 
@@ -43,8 +44,8 @@ namespace StructureMap.Building.Interception
             {
                 yield return new DecoratorInterceptor(pluginType, _instance);
             }
-            else if (_pluginType.IsOpenGeneric() && pluginType.IsGenericType &&
-                     pluginType.GetGenericTypeDefinition() == _pluginType)
+            else if (_pluginType.IsOpenGeneric() && pluginType.GetTypeInfo().IsGenericType &&
+                     pluginType.GetTypeInfo().GetGenericTypeDefinition() == _pluginType)
             {
                 var parameters = pluginType.GetGenericArguments();
                 var closedInstance = _instance.CloseType(parameters) as IConfiguredInstance;

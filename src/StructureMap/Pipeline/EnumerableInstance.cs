@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using StructureMap.Building;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
@@ -59,7 +61,7 @@ namespace StructureMap.Pipeline
                 return typeof (ArrayCoercion<>).MakeGenericType(propertyType.GetElementType());
             }
 
-            if (propertyType.IsGenericType)
+            if (propertyType.GetTypeInfo().IsGenericType)
             {
                 var templateType = propertyType.GetGenericTypeDefinition();
                 if (_enumerableTypes.Contains(templateType))
@@ -105,7 +107,7 @@ namespace StructureMap.Pipeline
         {
             if (type.IsArray) return true;
 
-            return type.IsGenericType && type.GetGenericTypeDefinition().IsIn(_enumerableTypes);
+            return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition().IsIn(_enumerableTypes);
         }
     }
 }
