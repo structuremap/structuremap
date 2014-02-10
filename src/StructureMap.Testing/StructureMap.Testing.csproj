@@ -241,6 +241,7 @@
     <Compile Include="Configuration\GraphBuilderTester.cs" />
     <Compile Include="Container_role_assignment_and_profile_name_Tester.cs" />
     <Compile Include="Diagnostics\AssertConfigurationIsValid_Smoke_Tester.cs" />
+    <Compile Include="Diagnostics\TextTreeWriter_Smoke_Tester.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
     <Compile Include="Examples.cs">
       <SubType>Form</SubType>
