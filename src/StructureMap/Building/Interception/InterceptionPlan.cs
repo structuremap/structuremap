@@ -13,6 +13,8 @@ namespace StructureMap.Building.Interception
         private readonly Policies _policies;
         private readonly IEnumerable<IInterceptor> _interceptors;
         private readonly ParameterExpression _variable;
+        private readonly IEnumerable<ActivatorGroup> _activators;
+        private readonly IEnumerable<IInterceptor> _decorators;
 
         public InterceptionPlan(Type pluginType, IDependencySource inner, Policies policies,
             IEnumerable<IInterceptor> interceptors)
@@ -22,6 +24,9 @@ namespace StructureMap.Building.Interception
             _policies = policies;
             _interceptors = interceptors;
             _variable = Expression.Variable(_inner.ReturnedType, "x");
+
+            _activators = findActivatorGroups();
+            _decorators = _interceptors.Where(x => x.Role == InterceptorRole.Decorates);
 
             // TODO -- blow up if any decorates interceptors cannot be cast to pluginType
         }
@@ -59,14 +64,20 @@ namespace StructureMap.Building.Interception
             get { return _pluginType; }
         }
 
-        public void AcceptVisitor(IDependencyVisitor visitor)
+        void IDependencySource.AcceptVisitor(IDependencyVisitor visitor)
         {
             visitor.Dependency(this);
         }
 
+        public void AcceptVisitor(IBuildPlanVisitor visitor)
+        {
+            _decorators.Each(visitor.Decorator);
+            _activators.SelectMany(x => x.Interceptors).Each(visitor.Activator);
+        }
+
         private void addDecorators(ParameterExpression context, ParameterExpression pluginTypeVariable, BlockPlan plan)
         {
-            _interceptors.Where(x => x.Role == InterceptorRole.Decorates).Each(decorator => {
+            _decorators.Each(decorator => {
                 var decoratedExpression = decorator.ToExpression(_policies, context, pluginTypeVariable);
                 var wrapped =
                     TryCatchWrapper.WrapFunc<StructureMapInterceptorException>(
@@ -100,9 +111,8 @@ namespace StructureMap.Building.Interception
 
         private void addActivations(BlockPlan plan)
         {
-            var activators = findActivatorGroups();
-            plan.AddVariables(activators.SelectMany(x => x.ToParameterExpressions(_inner.ReturnedType)));
-            plan.Add(activators.SelectMany(x => x.CreateExpressions(_policies, _variable)).ToArray());
+            plan.AddVariables(_activators.SelectMany(x => x.ToParameterExpressions(_inner.ReturnedType)));
+            plan.Add(_activators.SelectMany(x => x.CreateExpressions(_policies, _variable)).ToArray());
         }
 
         private IEnumerable<ActivatorGroup> findActivatorGroups()
@@ -122,6 +132,11 @@ namespace StructureMap.Building.Interception
             public ActivatorGroup(IGrouping<Type, IInterceptor> group)
             {
                 _group = @group;
+            }
+
+            public IEnumerable<IInterceptor> Interceptors
+            {
+                get { return _group; }
             }
 
             public IEnumerable<ParameterExpression> ToParameterExpressions(Type returnedType)

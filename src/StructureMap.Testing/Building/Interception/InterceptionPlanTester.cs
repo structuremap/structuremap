@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics;
+using System.Windows.Forms.VisualStyles;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
 using StructureMap.Testing.Pipeline;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Building.Interception
 {
@@ -231,11 +233,23 @@ namespace StructureMap.Testing.Building.Interception
             ex.Message.ShouldContain("new SadContextKeepingTarget(IContext, ITarget)");
         }
 
-        /*
+        
         [Test]
         public void accept_visitor_for_activator()
         {
-            Assert.Fail("Do, but it's going to take several tests to do it");
+            var target = new Target();
+            var inner = Constant.For(target);
+
+            var interceptor = new ActivatorInterceptor<Target>(x => x.ThrowUp());
+            var plan = new InterceptionPlan(typeof(ITarget), inner, new Policies(),
+                new IInterceptor[]
+                {
+                    interceptor
+                });
+
+            plan.AcceptVisitor(theVisitor);
+
+            theVisitor.AssertWasCalled(x => x.Activator(interceptor));
         }
 
         [Test]
@@ -249,14 +263,22 @@ namespace StructureMap.Testing.Building.Interception
 
             plan.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x);
+            theVisitor.AssertWasCalled(x => x.Decorator(decorator));
         }
 
         [Test]
         public void accept_visitor_for_DependencyInterceptor()
         {
-            Assert.Fail("Do.");
+            var target = new Target();
+            var inner = Constant.For(target);
+
+            var decorator = new DecoratorInterceptor(typeof(IGateway), typeof(DecoratedGateway));
+            var plan = new InterceptionPlan(typeof(ITarget), inner, new Policies(), new IInterceptor[] { decorator });
+
+            plan.AcceptVisitor(theVisitor);
+
+            theVisitor.AssertWasCalled(x => x.Decorator(decorator));
         }
-         */
+         
     }
 }

@@ -12,6 +12,5 @@ namespace StructureMap.Diagnostics
 
         void Activator(IInterceptor interceptor);
         void Decorator(IInterceptor interceptor);
-        void Decorator(DecoratorInterceptor interceptor);
     }
 }
