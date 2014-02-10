@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Building
@@ -48,6 +49,11 @@ namespace StructureMap.Building
         public Type ReturnedType
         {
             get { return PluginType; }
+        }
+
+        public void AcceptVisitor(IDependencyVisitor visitor)
+        {
+            visitor.Lifecycled(this);
         }
     }
 }

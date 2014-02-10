@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
 using NUnit.Framework;
+using Rhino.Mocks;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
+using StructureMap.Diagnostics;
 using StructureMap.Testing.Pipeline;
 
 namespace StructureMap.Testing.Building.Interception
@@ -9,6 +11,14 @@ namespace StructureMap.Testing.Building.Interception
     [TestFixture]
     public class InterceptionPlanTester
     {
+        private IBuildPlanVisitor theVisitor;
+
+        [SetUp]
+        public void SetUp()
+        {
+            theVisitor = MockRepository.GenerateMock<IBuildPlanVisitor>();
+        }
+
         [Test]
         public void intercept_happy_path_with_a_single_activation()
         {
@@ -220,5 +230,33 @@ namespace StructureMap.Testing.Building.Interception
 
             ex.Message.ShouldContain("new SadContextKeepingTarget(IContext, ITarget)");
         }
+
+        /*
+        [Test]
+        public void accept_visitor_for_activator()
+        {
+            Assert.Fail("Do, but it's going to take several tests to do it");
+        }
+
+        [Test]
+        public void accept_visitor_for_func_decorator()
+        {
+            var target = new Target();
+            var inner = Constant.For(target);
+
+            var decorator = new FuncInterceptor<ITarget>((s, t) => new ContextKeepingTarget(s, t));
+            var plan = new InterceptionPlan(typeof(ITarget), inner, new Policies(), new IInterceptor[] { decorator });
+
+            plan.AcceptVisitor(theVisitor);
+
+            theVisitor.AssertWasCalled(x => x);
+        }
+
+        [Test]
+        public void accept_visitor_for_DependencyInterceptor()
+        {
+            Assert.Fail("Do.");
+        }
+         */
     }
 }

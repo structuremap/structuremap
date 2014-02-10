@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using StructureMap.Diagnostics;
 
 namespace StructureMap.Building.Interception
 {
@@ -56,6 +57,11 @@ namespace StructureMap.Building.Interception
         public Type ReturnedType
         {
             get { return _pluginType; }
+        }
+
+        public void AcceptVisitor(IDependencyVisitor visitor)
+        {
+            visitor.Dependency(this);
         }
 
         private void addDecorators(ParameterExpression context, ParameterExpression pluginTypeVariable, BlockPlan plan)

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using StructureMap.Diagnostics;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
-    public class ArrayDependencySource : IDependencySource
+    public class ArrayDependencySource : IDependencySource, IEnumerableDependencySource
     {
         private readonly Type _itemType;
         private readonly List<IDependencySource> _items = new List<IDependencySource>();
@@ -45,6 +46,11 @@ namespace StructureMap.Building
         public Type ReturnedType
         {
             get { return _itemType.MakeArrayType(); }
+        }
+
+        public void AcceptVisitor(IDependencyVisitor visitor)
+        {
+            visitor.InlineEnumerable(this);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 
@@ -48,6 +49,11 @@ namespace StructureMap.Building
         public Type ReturnedType
         {
             get { return _enumerationType; }
+        }
+
+        public void AcceptVisitor(IDependencyVisitor visitor)
+        {
+            visitor.AllPossibleOf(_elementType);
         }
 
         public Type ElementType

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using StructureMap.Diagnostics;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Building
@@ -28,6 +29,11 @@ namespace StructureMap.Building
         public Type ReturnedType
         {
             get { return _dependencyType; }
+        }
+
+        public void AcceptVisitor(IDependencyVisitor visitor)
+        {
+            visitor.Default(_dependencyType);
         }
 
         public string Description

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using StructureMap.Diagnostics;
 
 namespace StructureMap.Building
 {
@@ -28,6 +29,11 @@ namespace StructureMap.Building
         public Type ReturnedType
         {
             get { return _argumentType; }
+        }
+
+        public void AcceptVisitor(IDependencyVisitor visitor)
+        {
+            visitor.Constant(this);
         }
 
         public object Value

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 
@@ -47,6 +48,7 @@ namespace StructureMap.Building.Interception
             return Expression.Convert(builder, _pluginType);
         }
 
+
         public Type Accepts
         {
             get { return _pluginType; }
@@ -79,6 +81,10 @@ namespace StructureMap.Building.Interception
             }
 
             public Type ReturnedType { get; private set; }
+            public void AcceptVisitor(IDependencyVisitor visitor)
+            {
+                visitor.Dependency(this);
+            }
         }
     }
 }

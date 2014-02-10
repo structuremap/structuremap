@@ -74,6 +74,7 @@
     <Compile Include="Building\IBuildPlan.cs" />
     <Compile Include="Building\IDependencySource.cs" />
     <Compile Include="Building\IDescribed.cs" />
+    <Compile Include="Building\IEnumerableDependencySource.cs" />
     <Compile Include="Building\IHasSetters.cs" />
     <Compile Include="Building\Interception\ActivatorInterceptor.cs" />
     <Compile Include="Building\Interception\BlockPlan.cs" />
@@ -119,6 +120,8 @@
     <Compile Include="Diagnostics\DividerLine.cs" />
     <Compile Include="Diagnostics\DoctorResult.cs" />
     <Compile Include="Diagnostics\Error.cs" />
+    <Compile Include="Diagnostics\IBuildPlanVisitor.cs" />
+    <Compile Include="Diagnostics\IDependencyVisitor.cs" />
     <Compile Include="Diagnostics\InstanceToken.cs" />
     <Compile Include="Diagnostics\Line.cs" />
     <Compile Include="Diagnostics\PipelineGraphValidator.cs" />

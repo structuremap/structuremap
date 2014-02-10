@@ -207,6 +207,7 @@
     <Compile Include="Building\constructor_expression_building.cs" />
     <Compile Include="Building\complex_concrete_build_with_child_dependencies.cs" />
     <Compile Include="Building\DefaultDependencySourceTester.cs" />
+    <Compile Include="Building\Dependency_Visiting_Tester.cs" />
     <Compile Include="Building\FakeBuildSession.cs" />
     <Compile Include="Building\Interception\ActivatorInterceptorTester.cs" />
     <Compile Include="Building\Interception\DecoratorInterceptorTester.cs" />

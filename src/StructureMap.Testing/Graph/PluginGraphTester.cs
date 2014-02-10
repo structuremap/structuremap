@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using StructureMap.Building;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -249,6 +250,10 @@ namespace StructureMap.Testing.Graph
         }
 
         public Type ReturnedType { get; private set; }
+        public void AcceptVisitor(IDependencyVisitor visitor)
+        {
+            visitor.Dependency(this);
+        }
     }
 
     public class FakeInstance : Instance, IDisposable

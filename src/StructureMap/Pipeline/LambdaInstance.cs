@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using StructureMap.Building;
+using StructureMap.Diagnostics;
 
 namespace StructureMap.Pipeline
 {
@@ -54,6 +55,11 @@ namespace StructureMap.Pipeline
         public override Type ReturnedType
         {
             get { return typeof (T); }
+        }
+
+        void IDependencySource.AcceptVisitor(IDependencyVisitor visitor)
+        {
+            visitor.Dependency(this);
         }
 
         public override string Description

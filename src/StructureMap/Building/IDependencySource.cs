@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using StructureMap.Diagnostics;
 
 namespace StructureMap.Building
 {
@@ -7,5 +8,7 @@ namespace StructureMap.Building
     {
         Expression ToExpression(ParameterExpression session, ParameterExpression context);
         Type ReturnedType { get; }
+
+        void AcceptVisitor(IDependencyVisitor visitor);
     }
 }

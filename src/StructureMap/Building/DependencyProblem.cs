@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using StructureMap.Diagnostics;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Building
@@ -21,5 +22,9 @@ namespace StructureMap.Building
         }
 
         public Type ReturnedType { get; set; }
+        public void AcceptVisitor(IDependencyVisitor visitor)
+        {
+            visitor.Problem(this);
+        }
     }
 }

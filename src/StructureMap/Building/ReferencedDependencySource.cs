@@ -2,7 +2,11 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+<<<<<<< HEAD
 using StructureMap.TypeRules;
+=======
+using StructureMap.Diagnostics;
+>>>>>>> added the build plan visitor interfaces, dependency sources accept the visitor
 
 namespace StructureMap.Building
 {
@@ -44,6 +48,11 @@ namespace StructureMap.Building
         public Type ReturnedType
         {
             get { return DependencyType; }
+        }
+
+        public void AcceptVisitor(IDependencyVisitor visitor)
+        {
+            visitor.Referenced(this);
         }
 
         public override string ToString()
