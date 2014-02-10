@@ -6,7 +6,11 @@ using StructureMap.Diagnostics;
 
 namespace StructureMap.Building.Interception
 {
-    public class InterceptionPlan : IDependencySource
+    public interface IInterceptionPlan : IDependencySource, IBuildPlanVisitable
+    {
+    }
+
+    public class InterceptionPlan : IInterceptionPlan
     {
         private readonly Type _pluginType;
         private readonly IDependencySource _inner;

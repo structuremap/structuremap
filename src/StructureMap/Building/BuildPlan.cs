@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.Building.Interception;
+using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 
@@ -14,7 +15,7 @@ namespace StructureMap.Building
         private readonly Type _pluginType;
         private readonly Instance _instance;
         private readonly IDependencySource _inner;
-        private readonly InterceptionPlan _interceptionPlan;
+        private readonly IInterceptionPlan _interceptionPlan;
         private readonly Func<IBuildSession, IContext, object> _func;
 
 
@@ -32,6 +33,62 @@ namespace StructureMap.Building
 
             var @delegate = ToDelegate();
             _func = @delegate as Func<IBuildSession, IContext, object>;
+        }
+
+        /// <summary>
+        /// FOR TESTING ONLY!
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instance"></param>
+        /// <param name="inner"></param>
+        /// <param name="interceptionPlan"></param>
+        public BuildPlan(Type pluginType, Instance instance, IDependencySource inner, IInterceptionPlan interceptionPlan)
+        {
+            _pluginType = pluginType;
+            _instance = instance;
+            _inner = inner;
+            _interceptionPlan = interceptionPlan;
+        }
+
+        public Type PluginType
+        {
+            get { return _pluginType; }
+        }
+
+        public Instance Instance
+        {
+            get { return _instance; }
+        }
+
+        public IDependencySource Inner
+        {
+            get { return _inner; }
+        }
+
+        public IInterceptionPlan InterceptionPlan
+        {
+            get { return _interceptionPlan; }
+        }
+
+        public void AcceptVisitor(IBuildPlanVisitor visitor)
+        {
+            visitor.Instance(_pluginType, _instance);
+            if (_interceptionPlan != null)
+            {
+                _interceptionPlan.AcceptVisitor(visitor);
+            }
+
+            var visitable = _inner.As<IBuildPlanVisitable>();
+            if (visitable == null)
+            {
+                visitor.InnerBuilder(_inner);
+            }
+            else
+            {
+                visitable.AcceptVisitor(visitor);
+            }
+
+            
         }
 
         public Delegate ToDelegate()
@@ -99,5 +156,6 @@ namespace StructureMap.Building
         {
             get { return _pluginType; }
         }
+
     }
 }

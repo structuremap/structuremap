@@ -72,6 +72,7 @@
     <Compile Include="Building\DelegateExtensions.cs" />
     <Compile Include="Building\DependencyProblem.cs" />
     <Compile Include="Building\IBuildPlan.cs" />
+    <Compile Include="Building\IBuildPlanVisitable.cs" />
     <Compile Include="Building\IDependencySource.cs" />
     <Compile Include="Building\IDescribed.cs" />
     <Compile Include="Building\IEnumerableDependencySource.cs" />

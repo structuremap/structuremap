@@ -2,7 +2,7 @@
 
 namespace StructureMap.Building
 {
-    public interface IBuildPlan : IDescribed
+    public interface IBuildPlan : IDescribed, IBuildPlanVisitable
     {
         object Build(IBuildSession session, IContext context);
 
