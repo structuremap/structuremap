@@ -10,7 +10,7 @@ namespace StructureMap.Building
     public class ConstructorStep
     {
         private readonly ConstructorInfo _constructor;
-        private readonly List<Argument> _arguments = new List<Argument>();
+        private readonly List<CtorArgument> _arguments = new List<CtorArgument>();
 
         public ConstructorStep(ConstructorInfo constructor)
         {
@@ -21,14 +21,14 @@ namespace StructureMap.Building
 
         public void Add(IDependencySource dependency)
         {
-            _arguments.Add(new Argument
+            _arguments.Add(new CtorArgument
             {
                 Parameter = _constructor.GetParameters()[_arguments.Count],
                 Dependency = dependency
             });
         }
 
-        public IEnumerable<Argument> Arguments
+        public IEnumerable<CtorArgument> Arguments
         {
             get { return _arguments; }
         }
@@ -80,9 +80,33 @@ namespace StructureMap.Building
         }
     }
 
-    public class Argument
+    public class CtorArgument
     {
         public ParameterInfo Parameter;
         public IDependencySource Dependency;
+
+        public string Fullname()
+        {
+            return "{0} {1}".ToFormat(Parameter.ParameterType.GetTypeName(), Parameter.Name);
+        }
+
+        public string ShortName()
+        {
+            return Parameter.ParameterType.GetTypeName();
+        }
+
+        public string Description()
+        {
+            var name = Parameter.ParameterType.IsSimple()
+                ? Fullname()
+                : ShortName();
+
+            return "{0} = {1}".ToFormat(name, Dependency.Description);
+        }
+
+        public override string ToString()
+        {
+            return Description();
+        }
     }
 }

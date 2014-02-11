@@ -34,7 +34,14 @@ namespace StructureMap.Diagnostics
             _writer.Line(constructor.Description);
             if (constructor.Arguments.Any())
             {
-                throw new NotImplementedException();
+                _writer.StartSection<OutlineWithBars>();
+
+                constructor.Arguments.Each(arg => {
+                    // This could and will change if we go deeper
+                    _writer.Line(arg.Description());
+                });
+
+                _writer.EndSection();
             }
 
         }

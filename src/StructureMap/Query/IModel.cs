@@ -131,5 +131,9 @@ namespace StructureMap.Query
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         IEnumerable<T> GetAllPossible<T>() where T : class;
+
+
+        // TODO -- Xml comments
+        InstanceRef Find<TPluginType>(string name);
     }
 }

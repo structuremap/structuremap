@@ -137,6 +137,11 @@ namespace StructureMap.Query
                 .Where(x => x != null);
         }
 
+        public InstanceRef Find<TPluginType>(string name)
+        {
+            return For<TPluginType>().Find(name);
+        }
+
         public IEnumerable<InstanceRef> InstancesOf(Type pluginType)
         {
             return findForFamily(pluginType, x => x.Instances, new InstanceRef[0]);

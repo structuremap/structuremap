@@ -1,5 +1,6 @@
 ﻿using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Acceptance;
+using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Diagnostics
 {
@@ -12,7 +13,14 @@ namespace StructureMap.Testing.Diagnostics
             For<IDevice>().Add(() => new ADevice()).Named("A");
             For<IDevice>().Add(new BDevice()).Named("B");
 
+            For<IDevice>().Add<DeviceWithArgs>()
+                .Named("GoodSimpleArgs")
+                .Ctor<string>("color").Is("Blue")
+                .Ctor<string>("direction").Is("North")
+                .Ctor<string>("name").Is("Declan");
 
+
+            For<Rule>().Use<ColorRule>().Ctor<string>("color").Is("Red").Named("Red");
         }
     }
 
@@ -33,6 +41,13 @@ namespace StructureMap.Testing.Diagnostics
     public class CDevice : Activateable, IDevice
     {
 
+    }
+
+    public class DeviceWithArgs : IDevice
+    {
+        public DeviceWithArgs(string color, string direction, string name)
+        {
+        }
     }
 
 

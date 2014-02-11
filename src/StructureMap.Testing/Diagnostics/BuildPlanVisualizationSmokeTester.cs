@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using NUnit.Framework;
 using StructureMap.Query;
+using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Diagnostics
 {
@@ -69,15 +70,40 @@ namespace StructureMap.Testing.Diagnostics
                 .Find("B")
                 .DescribeBuildPlan();
 
-            Debug.WriteLine(description);
+            
 
             description.ShouldContain("Value: StructureMap.Testing.Diagnostics.BDevice");
         }
 
+        [Test]
+        public void single_ctor_arg_with_constant()
+        {
+            var description = theContainer.Model
+                .Find<Rule>("Red")
+                .DescribeBuildPlan();
+
+            description.ShouldContain("┗ String color = Value: Red");
+        }
+
+        [Test]
+        public void multiple_ctor_args_with_constants()
+        {
+            var description = theContainer.Model
+                .Find<IDevice>("GoodSimpleArgs")
+                .DescribeBuildPlan();
+
+            Debug.WriteLine(description);
+
+            description.ShouldContain("┣ String color = Value: Blue");
+            description.ShouldContain("┣ String direction = Value: North");
+            description.ShouldContain("┗ String name = Value: Declan");
+        }
+
         /*
          * TODO's
-         * 
-         * 
+         * ctor with one arg
+         * ctor with multiple args
+         * setters
          * 
          */
     }

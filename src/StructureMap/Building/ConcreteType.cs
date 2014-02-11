@@ -71,9 +71,19 @@ namespace StructureMap.Building
             PropertyInfo setter,
             IHasSetters plan)
         {
-            var dependency = dependencies.FindByTypeOrName(setter.PropertyType, setter.Name);
+            var isMandatory = policies.IsMandatorySetter(setter);
 
-            if (dependency == null && !policies.IsMandatorySetter(setter)) return;
+            object dependency = null;
+            if (setter.PropertyType.IsSimple() && !isMandatory)
+            {
+                dependency = dependencies.FindByTypeAndName(setter.PropertyType, setter.Name);
+            }
+            else
+            {
+                dependency = dependencies.FindByTypeOrName(setter.PropertyType, setter.Name);
+            }
+
+            if (dependency == null && !isMandatory) return;
 
             var source = SourceFor(SetterProperty, setter.Name, setter.PropertyType, dependency);
             plan.Add(setter, source);
@@ -90,16 +100,28 @@ namespace StructureMap.Building
             }
 
             var ctorStep = new ConstructorStep(ctor);
+            var multiples = findTypesWithMultipleParametersRequired(ctor);
+
             var ctorDependencies = ctor
                 .GetParameters()
                 .Select(x => {
-                    var dependency = dependencies.FindByTypeOrName(x.ParameterType, x.Name);
+                    var dependency = multiples.Contains(x.ParameterType)
+                        ? dependencies.FindByTypeAndName(x.ParameterType, x.Name)
+                        : dependencies.FindByTypeOrName(x.ParameterType, x.Name);
+
                     return SourceFor(ConstructorArgument, x.Name, x.ParameterType, dependency);
                 });
 
             ctorStep.Add(ctorDependencies);
 
             return ctorStep;
+        }
+
+        private static Type[] findTypesWithMultipleParametersRequired(ConstructorInfo ctor)
+        {
+            var multiples = ctor.GetParameters().GroupBy(x => x.ParameterType)
+                .Where(x => x.Count() > 1).Select(x => x.Key).ToArray();
+            return multiples;
         }
 
         public static IDependencySource SourceFor(string ctorOrSetter, string name, Type dependencyType, object value)

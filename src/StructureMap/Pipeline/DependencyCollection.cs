@@ -96,7 +96,13 @@ namespace StructureMap.Pipeline
 
         public void Add(string name, object @dependency)
         {
-            Add(name, null, dependency);
+            Type type = null;
+            if (@dependency != null && @dependency.GetType().IsSimple())
+            {
+                type = @dependency.GetType();
+            }
+
+            Add(name, type, dependency);
         }
 
         public void Insert(Argument argument)
@@ -186,6 +192,12 @@ namespace StructureMap.Pipeline
             return value is ObjectInstance
                 ? value.As<ObjectInstance>().Object
                 : value;
+        }
+
+        public object FindByTypeAndName(Type propertyType, string name)
+        {
+            var arg = findByAll(propertyType, name);
+            return arg == null ? null : arg.Dependency;
         }
     }
 }
