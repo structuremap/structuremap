@@ -23,5 +23,9 @@ namespace StructureMap.Diagnostics
         {
             return _text.Length + Bullet.Length;
         }
+
+        public int LineCount {
+            get { return 1; }
+        }
     }
 }

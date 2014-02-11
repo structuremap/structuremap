@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Query
@@ -77,6 +79,17 @@ namespace StructureMap.Query
         public bool ObjectHasBeenCreated()
         {
             return _family.HasBeenCreated(_instance);
+        }
+
+        public string DescribeBuildPlan(int maxLevels = 0)
+        {
+            var visualizer = new BuildPlanVisualizer(_family.Pipeline, levels: maxLevels);
+            visualizer.Instance(_family.PluginType, Instance);
+
+            var writer = new StringWriter();
+            visualizer.Write(writer);
+
+            return writer.ToString();
         }
     }
 }

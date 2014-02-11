@@ -8,8 +8,7 @@ namespace StructureMap.Diagnostics
 {
     public interface IBuildPlanVisitor
     {
-        void Constructor(ConstructorInfo constructor);
-        void Parameter(ParameterInfo parameter, IDependencySource source);
+        void Constructor(ConstructorStep constructor);
         void Setter(Setter setter);
 
         void Activator(IInterceptor interceptor);

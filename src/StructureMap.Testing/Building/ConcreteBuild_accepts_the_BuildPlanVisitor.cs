@@ -27,12 +27,8 @@ namespace StructureMap.Testing.Building
             var visitor = new StubVisitor();
             build.AcceptVisitor(visitor);
 
-            visitor.Items.Each(x => Debug.WriteLine(x));
-
             visitor.Items.ShouldHaveTheSameElementsAs(
                 "Constructor: Void .ctor(StructureMap.Testing.Widget3.IGateway, StructureMap.Testing.Widget.Rule)",
-                "Parameter: gateway, *Default of IGateway*",
-                "Parameter: rule, Value: The 'Red' Rule",
                 "Widget = Value: StructureMap.Testing.Widget.AWidget",
                 "Service = *Default of IService*"
                 );
@@ -43,9 +39,9 @@ namespace StructureMap.Testing.Building
     {
         public readonly IList<string> Items = new List<string>();
 
-        public void Constructor(ConstructorInfo constructor)
+        public void Constructor(ConstructorStep constructor)
         {
-            Items.Add("Constructor: " + constructor);
+            Items.Add("Constructor: " + constructor.Constructor);
         }
 
         public void Parameter(ParameterInfo parameter, IDependencySource source)

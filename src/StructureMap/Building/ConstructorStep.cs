@@ -10,7 +10,7 @@ namespace StructureMap.Building
     public class ConstructorStep
     {
         private readonly ConstructorInfo _constructor;
-        private readonly List<IDependencySource> _arguments = new List<IDependencySource>();
+        private readonly List<Argument> _arguments = new List<Argument>();
 
         public ConstructorStep(ConstructorInfo constructor)
         {
@@ -19,12 +19,16 @@ namespace StructureMap.Building
             _constructor = constructor;
         }
 
-        public void Add(IDependencySource argument)
+        public void Add(IDependencySource dependency)
         {
-            _arguments.Add(argument);
+            _arguments.Add(new Argument
+            {
+                Parameter = _constructor.GetParameters()[_arguments.Count],
+                Dependency = dependency
+            });
         }
 
-        public IEnumerable<IDependencySource> Arguments
+        public IEnumerable<Argument> Arguments
         {
             get { return _arguments; }
         }
@@ -67,13 +71,18 @@ namespace StructureMap.Building
 
         public NewExpression ToExpression(ParameterExpression session, ParameterExpression context)
         {
-            return Expression.New(_constructor, _arguments.Select(x => x.ToExpression(session, context)));
+            return Expression.New(_constructor, _arguments.Select(x => x.Dependency.ToExpression(session, context)));
         }
-        public void Add(IEnumerable<IDependencySource> arguments)
+
+        public void Add(IEnumerable<IDependencySource> dependencies)
         {
-            _arguments.AddRange(arguments);
+            dependencies.Each(Add);
         }
     }
 
-
+    public class Argument
+    {
+        public ParameterInfo Parameter;
+        public IDependencySource Dependency;
+    }
 }

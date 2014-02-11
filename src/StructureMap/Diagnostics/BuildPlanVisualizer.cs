@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
@@ -12,7 +14,6 @@ namespace StructureMap.Diagnostics
     {
         private readonly IPipelineGraph _pipeline;
         private readonly TextTreeWriter _writer;
-        private bool _is_not_the_first_Instance;
         private readonly int _maxLevels;
 
         public BuildPlanVisualizer(IPipelineGraph pipeline, bool deep = false, int levels = 0)
@@ -28,15 +29,16 @@ namespace StructureMap.Diagnostics
             get { return _maxLevels; }
         }
 
-        public void Constructor(ConstructorInfo constructor)
+        public void Constructor(ConstructorStep constructor)
         {
-            throw new NotImplementedException();
+            _writer.Line(constructor.Description);
+            if (constructor.Arguments.Any())
+            {
+                throw new NotImplementedException();
+            }
+
         }
 
-        public void Parameter(ParameterInfo parameter, IDependencySource source)
-        {
-            throw new NotImplementedException();
-        }
 
         public void Setter(Setter setter)
         {
@@ -53,33 +55,38 @@ namespace StructureMap.Diagnostics
             throw new NotImplementedException();
         }
 
+        private readonly Stack<Instance> _instanceStack = new Stack<Instance>(); 
+
         public void Instance(Type pluginType, Instance instance)
         {
-            if (_is_not_the_first_Instance)
+            if (_instanceStack.Any() && _instanceStack.Peek() == instance) return;
+
+            if (_instanceStack.Contains(instance))
+            {
+                _writer.Line("Bi-Directional Relationship Detected w/ Instance {0}, PluginType {1}", instance.Description, pluginType.GetTypeName());
+            }
+
+            if (_writer.LineCount > 0)
             {
                 _writer.BlankLines(3);
             }
-            _is_not_the_first_Instance = true;
 
-            var title = "Build Plan for Instance {0}";
-            if (instance.HasExplicitName())
-            {
-                title += " ('{1}')";
-            }
+            _instanceStack.Push(instance);
 
-            _writer.Line(title, instance.Description, instance.Name);
+
+            _writer.Line("Build Plan for Instance {0}", instance.Description, instance.Name);
             if (pluginType != null) _writer.Line("PluginType: " + pluginType.GetFullName());
-            _writer.Line("Lifecycle: " + instance.Lifecycle.Description);
+            _writer.Line("Lifecycle: " + (instance.Lifecycle ?? Lifecycles.Transient).Description);
 
             var plan = instance.ResolveBuildPlan(pluginType, _pipeline.Policies);
 
             plan.AcceptVisitor(this);
-
+            _instanceStack.Pop();
         }
 
         public void InnerBuilder(IDependencySource inner)
         {
-            throw new NotImplementedException();
+            _writer.Line(inner.Description);
         }
 
         public void Write(TextWriter writer)

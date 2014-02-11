@@ -20,6 +20,14 @@ namespace StructureMap.Diagnostics
             get { return _indention; }
         }
 
+        public int LineCount
+        {
+            get
+            {
+                return _lines.Sum(x => x.LineCount);
+            }
+        }
+
         public void Write(int spaces, TextWriter writer)
         {
             applyBullets();

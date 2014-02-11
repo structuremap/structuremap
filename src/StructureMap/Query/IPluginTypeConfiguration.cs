@@ -5,6 +5,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Query
 {
+    // TODO -- fill in Xml comments
     public interface IFamily
     {
         /// <summary>
@@ -39,6 +40,8 @@ namespace StructureMap.Query
         ILifecycle Lifecycle { get; }
 
         Type PluginType { get; }
+
+        IPipelineGraph Pipeline { get; }
     }
 
     public interface IPluginTypeConfiguration

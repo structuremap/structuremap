@@ -16,6 +16,11 @@ namespace StructureMap
     {
         private IPipelineGraph _pipelineGraph;
 
+        public static IContainer For<T>() where T : Registry, new()
+        {
+            return new Container(new T());
+        }
+
         public Container(Action<ConfigurationExpression> action) : this(PipelineGraph.For(action))
         {
         }
@@ -401,27 +406,6 @@ namespace StructureMap
                 TypeName = typeName
             });
         }
-
-        public string WhatIsTheBuildPlan(Type pluginType, string name = null, bool deep = false, int levels = 0)
-        {
-            var writer = new BuildPlanVisualizer(_pipelineGraph, deep, levels);
-
-
-            throw new NotImplementedException();
-        }
-
-        public string WhatIsTheBuildPlan<T>(string name = null, bool deep = false, int levels = 0)
-        {
-            return WhatIsTheBuildPlan(typeof (T), name, deep, levels);
-        }
-
-        public string WhatIsTheBuildPlan(Instance instance, bool deep = false, int levels = 0)
-        {
-            var writer = new BuildPlanVisualizer(_pipelineGraph, deep, levels);
-
-            throw new NotImplementedException();
-        }
-
 
         /// <summary>
         ///     Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency

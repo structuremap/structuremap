@@ -27,5 +27,7 @@ namespace StructureMap.Diagnostics
         {
             return 1;
         }
+
+        public int LineCount { get { return 1; } }
     }
 }

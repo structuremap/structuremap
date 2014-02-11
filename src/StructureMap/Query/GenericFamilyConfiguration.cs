@@ -9,12 +9,19 @@ namespace StructureMap.Query
     public class GenericFamilyConfiguration : IPluginTypeConfiguration, IFamily
     {
         private readonly PluginFamily _family;
+        private readonly IPipelineGraph _pipeline;
         private readonly PluginGraph _graph;
 
-        public GenericFamilyConfiguration(PluginFamily family)
+        public GenericFamilyConfiguration(PluginFamily family, IPipelineGraph pipeline)
         {
             _family = family;
+            _pipeline = pipeline;
             _graph = family.Owner;
+        }
+
+        public IPipelineGraph Pipeline
+        {
+            get { return _pipeline; }
         }
 
         public string ProfileName

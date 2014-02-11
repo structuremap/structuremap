@@ -6,5 +6,6 @@ namespace StructureMap.Diagnostics
     {
         void Write(int spaces, TextWriter writer);
         int MaxLength();
+        int LineCount { get; }
     }
 }

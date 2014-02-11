@@ -153,13 +153,6 @@ namespace StructureMap
             string typeName = null);
 
 
-
-        string WhatIsTheBuildPlan(Type pluginType, string name = null, bool deep = false, int levels = 0);
-
-        string WhatIsTheBuildPlan<T>(string name = null, bool deep = false, int levels = 0);
-
-        string WhatIsTheBuildPlan(Instance instance, bool deep = false, int levels = 0);
-
         /// <summary>
         /// Use with caution!  Does a full environment test of the configuration of this container.  Will try to create every configured
         /// instance and afterward calls any methods marked with the [ValidationMethod] attribute

@@ -17,6 +17,14 @@ namespace StructureMap.Diagnostics
             _sections.Push(_top);
         }
 
+        public int LineCount
+        {
+            get
+            {
+                return _top.LineCount;
+            }
+        }
+
         public void StartSection(int indention = 4, IBulletStyle bulletStyle = null)
         {
             var section = _sections.Peek().ChildSection(indention, bulletStyle);

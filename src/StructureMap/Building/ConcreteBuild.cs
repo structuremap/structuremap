@@ -67,7 +67,7 @@ namespace StructureMap.Building
         {
             get
             {
-                var args = _constructor.Arguments.Select(x => x.Description).ToArray();
+                var args = _constructor.Arguments.Select(x => x.Dependency.Description).ToArray();
 
                 var description = "new {0}({1})".ToFormat(_concreteType.Name, string.Join(", ", args));
 
@@ -130,7 +130,7 @@ namespace StructureMap.Building
 
         public bool IsValid()
         {
-            if (_constructor.Arguments.OfType<DependencyProblem>().Any()) return false;
+            if (_constructor.Arguments.Any(x => x.Dependency is DependencyProblem)) return false;
 
             if (_setters.Any(x => x.AssignedValue is DependencyProblem)) return false;
 
@@ -139,16 +139,7 @@ namespace StructureMap.Building
 
         public void AcceptVisitor(IBuildPlanVisitor visitor)
         {
-            visitor.Constructor(_constructor.Constructor);
-
-            var arguments = _constructor.Arguments.ToArray();
-            var i = 0;
-            
-            foreach (var parameter in _constructor.Constructor.GetParameters())
-            {
-                visitor.Parameter(parameter, arguments[i]);
-                i++;
-            }
+            visitor.Constructor(_constructor);
 
             _setters.Each(visitor.Setter);
         }

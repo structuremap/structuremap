@@ -40,6 +40,11 @@ namespace StructureMap.Query
             get { return _pipelineGraph.Profile; }
         }
 
+        public IPipelineGraph Pipeline
+        {
+            get { return _pipelineGraph; }
+        }
+
         Type IFamily.PluginType
         {
             get { return _family.PluginType; }

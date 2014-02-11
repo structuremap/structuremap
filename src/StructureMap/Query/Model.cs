@@ -29,7 +29,7 @@ namespace StructureMap.Query
                 {
                     if (family.IsGenericTemplate)
                     {
-                        yield return new GenericFamilyConfiguration(family);
+                        yield return new GenericFamilyConfiguration(family, _graph);
                     }
                     else
                     {
