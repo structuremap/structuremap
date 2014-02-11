@@ -9,7 +9,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
-    public class ConcreteBuild : IHasSetters, IDependencySource
+    public class ConcreteBuild : IHasSetters, IDependencySource, IBuildPlanVisitable
     {
         private readonly Type _concreteType;
         private readonly ConstructorStep _constructor;
@@ -135,6 +135,22 @@ namespace StructureMap.Building
             if (_setters.Any(x => x.AssignedValue is DependencyProblem)) return false;
 
             return true;
+        }
+
+        public void AcceptVisitor(IBuildPlanVisitor visitor)
+        {
+            visitor.Constructor(_constructor.Constructor);
+
+            var arguments = _constructor.Arguments.ToArray();
+            var i = 0;
+            
+            foreach (var parameter in _constructor.Constructor.GetParameters())
+            {
+                visitor.Parameter(parameter, arguments[i]);
+                i++;
+            }
+
+            _setters.Each(visitor.Setter);
         }
     }
 

@@ -73,6 +73,7 @@ namespace StructureMap.Pipeline
             {
                 var message = "Unable to create a build plan for concrete type " + PluggedType.GetFullName();
 
+                // TODO -- show the build plan visualization in this message!!!!
                 throw new StructureMapBuildPlanException(message)
                 {
                     Context = plan.Description
