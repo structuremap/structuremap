@@ -1,4 +1,5 @@
-﻿using StructureMap.Configuration.DSL;
+﻿using StructureMap.Attributes;
+using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Acceptance;
 using StructureMap.Testing.Widget;
 
@@ -18,6 +19,14 @@ namespace StructureMap.Testing.Diagnostics
                 .Ctor<string>("color").Is("Blue")
                 .Ctor<string>("direction").Is("North")
                 .Ctor<string>("name").Is("Declan");
+
+            For<IDevice>().Add<DeviceWithArgsAndSetters>()
+                .Named("MixedCtorAndSetter")
+                .Ctor<string>("color").Is("Blue")
+                .Ctor<string>("direction").Is("North")
+                .Ctor<string>("name").Is("Declan")
+                .Setter<int>("Age").Is(40)
+                .Setter<int>("Order").Is(2);
 
 
             For<Rule>().Use<ColorRule>().Ctor<string>("color").Is("Red").Named("Red");
@@ -48,6 +57,19 @@ namespace StructureMap.Testing.Diagnostics
         public DeviceWithArgs(string color, string direction, string name)
         {
         }
+    }
+
+    public class DeviceWithArgsAndSetters : DeviceWithArgs
+    {
+        public DeviceWithArgsAndSetters(string color, string direction, string name) : base(color, direction, name)
+        {
+        }
+
+        [SetterProperty]
+        public int Age { get;set; }
+    
+        [SetterProperty]
+        public int Order { get; set; }
     }
 
 

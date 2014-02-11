@@ -29,8 +29,8 @@ namespace StructureMap.Testing.Building
 
             visitor.Items.ShouldHaveTheSameElementsAs(
                 "Constructor: Void .ctor(StructureMap.Testing.Widget3.IGateway, StructureMap.Testing.Widget.Rule)",
-                "Widget = Value: StructureMap.Testing.Widget.AWidget",
-                "Service = *Default of IService*"
+                "Set IWidget Widget = Value: StructureMap.Testing.Widget.AWidget",
+                "Set IService Service = *Default of IService*"
                 );
         }
     }

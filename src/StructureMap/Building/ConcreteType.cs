@@ -86,7 +86,7 @@ namespace StructureMap.Building
             if (dependency == null && !isMandatory) return;
 
             var source = SourceFor(SetterProperty, setter.Name, setter.PropertyType, dependency);
-            plan.Add(setter, source);
+            plan.Add(setter.PropertyType, setter, source);
         }
 
         public static ConstructorStep BuildConstructorStep(Type pluggedType, ConstructorInfo constructor,

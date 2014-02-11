@@ -7,19 +7,31 @@ namespace StructureMap.Building
 {
     public class Setter : IDescribed
     {
+        private readonly Type _setterType;
         private readonly MemberInfo _member;
 
-        public Setter(MemberInfo member, IDependencySource value)
+        public Setter(Type setterType, MemberInfo member, IDependencySource value)
         {
+            _setterType = setterType;
             _member = member;
             AssignedValue = value;
         }
 
         public IDependencySource AssignedValue { get; private set; }
 
+        public Type SetterType
+        {
+            get { return _setterType; }
+        }
+
         public string Description
         {
-            get { return _member.Name + " = " + AssignedValue.Description; }
+            get
+            {
+
+                return "Set {1} {0} = {2}".ToFormat(_member.Name, _setterType.GetTypeName(),
+                    AssignedValue.Description);
+            }
         }
 
         public MemberBinding ToBinding(ParameterExpression session, ParameterExpression context)

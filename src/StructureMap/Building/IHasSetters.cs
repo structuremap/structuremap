@@ -7,6 +7,6 @@ namespace StructureMap.Building
     {
         Type ConcreteType { get; }
         void Add(Setter setter);
-        void Add(MemberInfo member, IDependencySource value);
+        void Add(Type setterType, MemberInfo member, IDependencySource value);
     }
 }

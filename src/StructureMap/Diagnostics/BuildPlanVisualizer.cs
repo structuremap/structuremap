@@ -49,7 +49,7 @@ namespace StructureMap.Diagnostics
 
         public void Setter(Setter setter)
         {
-            throw new NotImplementedException();
+            _writer.Line(setter.Description);
         }
 
         public void Activator(IInterceptor interceptor)

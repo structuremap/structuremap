@@ -99,12 +99,30 @@ namespace StructureMap.Testing.Diagnostics
             description.ShouldContain("┗ String name = Value: Declan");
         }
 
+        [Test]
+        public void multiple_ctor_args_and_setters_with_constants()
+        {
+            var description = theContainer.Model
+                .Find<IDevice>("MixedCtorAndSetter")
+                .DescribeBuildPlan();
+
+            Debug.WriteLine(description);
+
+            description.ShouldContain("┣ String color = Value: Blue");
+            description.ShouldContain("┣ String direction = Value: North");
+            description.ShouldContain("┗ String name = Value: Declan");
+        }
+
         /*
          * TODO's
-         * ctor with one arg
-         * ctor with multiple args
+
          * setters
-         * 
+         * problems
+         * inline dependencies
+         * default dependencies
+         * inline lambda
+         * inline reference
+         * complex lambda?
          */
     }
 
