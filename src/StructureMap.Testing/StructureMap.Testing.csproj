@@ -206,6 +206,7 @@
     <Compile Include="Building\ConcreteBuild_description_building_Tester.cs" />
     <Compile Include="Building\ConcreteBuild_exception_throwing_Tester.cs" />
     <Compile Include="Building\ConcreteTypeTester.cs" />
+    <Compile Include="Building\ConstructorStepTester.cs" />
     <Compile Include="Building\constructor_expression_building.cs" />
     <Compile Include="Building\complex_concrete_build_with_child_dependencies.cs" />
     <Compile Include="Building\DefaultDependencySourceTester.cs" />
@@ -242,6 +243,8 @@
     <Compile Include="Configuration\GraphBuilderTester.cs" />
     <Compile Include="Container_role_assignment_and_profile_name_Tester.cs" />
     <Compile Include="Diagnostics\AssertConfigurationIsValid_Smoke_Tester.cs" />
+    <Compile Include="Diagnostics\BuildPlanVisualizationSmokeTester.cs" />
+    <Compile Include="Diagnostics\BuildPlanVisualizerTester.cs" />
     <Compile Include="Diagnostics\TextTreeWriter_Smoke_Tester.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
     <Compile Include="Examples.cs">

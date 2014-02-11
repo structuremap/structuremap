@@ -133,6 +133,7 @@
     <Compile Include="Diagnostics\PipelineGraphValidator.cs" />
     <Compile Include="Diagnostics\ProfileReport.cs" />
     <Compile Include="Diagnostics\SeparatorLine.cs" />
+    <Compile Include="Diagnostics\BuildPlanVisualizer.cs" />
     <Compile Include="Diagnostics\TabbedLine.cs" />
     <Compile Include="Diagnostics\TextLine.cs" />
     <Compile Include="Diagnostics\TextReportWriter.cs" />

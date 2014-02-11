@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
@@ -35,14 +36,39 @@ namespace StructureMap.Building
 
         public string Description
         {
-            get { return _constructor.ToString(); }
+            get { return ToDescription(_constructor); }
+        }
+
+        public static string ToDescription(ConstructorInfo constructor)
+        {
+            var parameters = constructor.GetParameters();
+            var paramList = parameters.Select(x => {
+                if (x.ParameterType.IsSimple())
+                {
+                    return "{0} {1}".ToFormat(x.ParameterType.GetTypeName(), x.Name);
+                }
+                else
+                {
+                    if (parameters.Where(p => p.ParameterType == x.ParameterType).Count() > 1)
+                    {
+                        return "{0} {1}".ToFormat(x.ParameterType.GetTypeName(), x.Name);
+                    }
+                    else
+                    {
+                        return x.ParameterType.GetTypeName();
+                    }
+                }
+            }).ToArray();
+
+
+
+            return "new {0}({1})".ToFormat(constructor.DeclaringType.GetTypeName(), string.Join(", ", paramList));
         }
 
         public NewExpression ToExpression(ParameterExpression session, ParameterExpression context)
         {
             return Expression.New(_constructor, _arguments.Select(x => x.ToExpression(session, context)));
         }
-
         public void Add(IEnumerable<IDependencySource> arguments)
         {
             _arguments.AddRange(arguments);

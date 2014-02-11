@@ -53,5 +53,14 @@ namespace StructureMap.Diagnostics
         {
             return _top.MaxLength();
         }
+
+        public void BlankLines(int count)
+        {
+
+            for (int i = 0; i < count; i++)
+            {
+                Line("");                
+            }
+        }
     }
 }
