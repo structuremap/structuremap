@@ -142,7 +142,7 @@ namespace StructureMap.Diagnostics
 
         public void AllPossibleOf(Type pluginType)
         {
-            throw new NotImplementedException();
+            write("All registered Instances of " + pluginType.GetFullName());
         }
 
         public void Concrete(ConcreteBuild build)

@@ -1,4 +1,6 @@
-﻿using StructureMap.Attributes;
+﻿using System.Collections;
+using System.Collections.Generic;
+using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Acceptance;
 using StructureMap.Testing.Widget;
@@ -46,6 +48,8 @@ namespace StructureMap.Testing.Diagnostics
 
             For<DeviceDecorator>().Add<DeviceDecorator>().Named("UsesA")
                 .Ctor<IDevice>().IsNamedInstance("A");
+
+            For<CompositeDevice>().Add<CompositeDevice>().Named("AllPossible");
         }
     }
 
@@ -66,6 +70,13 @@ namespace StructureMap.Testing.Diagnostics
     public class CDevice : Activateable, IDevice
     {
 
+    }
+
+    public class CompositeDevice
+    {
+        public CompositeDevice(IEnumerable<IDevice> devices)
+        {
+        }
     }
 
     public class DeviceWithArgs : IDevice

@@ -161,6 +161,18 @@ namespace StructureMap.Testing.Diagnostics
             description.ShouldContain("┗ IDevice = Instance named 'A'");
         }
 
+        [Test]
+        public void inline_all_possible_enumeration()
+        {
+            var description = theContainer.Model
+                .Find<CompositeDevice>("AllPossible")
+                .DescribeBuildPlan();
+
+            Debug.WriteLine(description);
+
+            description.ShouldContain("┗ IEnumerable<IDevice> = All registered Instances of StructureMap.Testing.Diagnostics.IDevice");
+        }
+
         /*
          * TODO's
 
