@@ -48,7 +48,21 @@ namespace StructureMap.Diagnostics
 
         public void InlineEnumerable(IEnumerableDependencySource source)
         {
-            throw new NotImplementedException();
+            write("Inline Enumerable Configuration");
+            int i = 0;
+
+            withinNestedSection(() => {
+                
+
+                source.Items.Each(x => {
+                    i++;
+                    var title = (i.ToString() + ".)").PadLeft(4);
+                    var child = new DependencyVisualizer(title, _writer, _buildPlanVisitor);
+
+                    x.AcceptVisitor(child);
+                });
+            });
+
         }
 
         public void AllPossibleOf(Type pluginType)
@@ -58,7 +72,7 @@ namespace StructureMap.Diagnostics
 
         public void Concrete(ConcreteBuild build)
         {
-            throw new NotImplementedException();
+            write(build.Description);
         }
 
         public void Lifecycled(LifecycleDependencySource source)

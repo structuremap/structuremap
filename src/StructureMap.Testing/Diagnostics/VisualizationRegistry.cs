@@ -65,6 +65,13 @@ namespace StructureMap.Testing.Diagnostics
 
             For<CompositeDevice>().Add<CompositeDevice>().Named("AllPossible");
 
+            For<CompositeDevice>().Add<CompositeDevice>().Named("InlineEnumerable")
+                .EnumerableOf<IDevice>().Contains(x => {
+                    x.Type<ADevice>();
+                    x.Type<BDevice>();
+                    x.Type<CDevice>();
+                });
+
             ForConcreteType<DeviceUser>()
                 .Configure
                 .Ctor<IDevice>("one").Is<ADevice>()

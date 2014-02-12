@@ -204,6 +204,16 @@ namespace StructureMap.Testing.Diagnostics
 
         }
 
+        [Test]
+        public void inline_enumerable_instance_dependency()
+        {
+            var description = theContainer.Model
+                .Find<CompositeDevice>("InlineEnumerable")
+                .DescribeBuildPlan();
+
+            Debug.WriteLine(description);
+        }
+
 
         /*
          * TODO's
