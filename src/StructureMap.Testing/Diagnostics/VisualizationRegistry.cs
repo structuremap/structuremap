@@ -43,6 +43,9 @@ namespace StructureMap.Testing.Diagnostics
             For<Rule>().Use<ColorRule>().Ctor<string>("color").Is("Red").Named("Red");
 
             For<DeviceDecorator>().Add<DeviceDecorator>().Named("UsesDefault");
+
+            For<DeviceDecorator>().Add<DeviceDecorator>().Named("UsesA")
+                .Ctor<IDevice>().IsNamedInstance("A");
         }
     }
 

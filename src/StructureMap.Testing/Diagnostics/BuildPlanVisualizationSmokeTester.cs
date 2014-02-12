@@ -149,16 +149,33 @@ namespace StructureMap.Testing.Diagnostics
 
         }
 
+        [Test]
+        public void inline_referenced_dependency()
+        {
+            var description = theContainer.Model
+                .Find<DeviceDecorator>("UsesA")
+                .DescribeBuildPlan();
+
+            Debug.WriteLine(description);
+
+            description.ShouldContain("┗ IDevice = Instance named 'A'");
+        }
+
         /*
          * TODO's
 
 
-         * problems
-         * inline dependencies
-         * default dependencies
+         * inline ctor dep
          * inline lambda
          * inline reference
          * complex lambda?
+         * FuncInterceptor
+         * DecoratorInterceptor
+         * AllPossibleOf
+         * InlineEnumerable
+         * Concrete inline
+         * Lifecycled inline
+         * Referenced inline
          */
     }
 

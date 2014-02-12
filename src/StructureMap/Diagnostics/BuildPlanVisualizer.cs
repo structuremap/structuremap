@@ -132,7 +132,7 @@ namespace StructureMap.Diagnostics
 
         public void Referenced(ReferencedDependencySource source)
         {
-            throw new NotImplementedException();
+            write("Instance named '{0}'".ToFormat(source.Name));
         }
 
         public void InlineEnumerable(IEnumerableDependencySource source)
