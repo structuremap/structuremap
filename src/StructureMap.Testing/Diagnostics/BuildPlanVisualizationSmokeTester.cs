@@ -173,6 +173,27 @@ namespace StructureMap.Testing.Diagnostics
             description.ShouldContain("┗ IEnumerable<IDevice> = All registered Instances of StructureMap.Testing.Diagnostics.IDevice");
         }
 
+//        [Test]
+//        public void inlined_constructor_dependency_simple()
+//        {
+//            var description = theContainer.Model
+//                .Find<DeviceDecorator>("InlineDevice")
+//                .DescribeBuildPlan();
+//
+//            Debug.WriteLine(description);
+//        }
+//
+//        [Test]
+//        public void inlined_constructor_dependency_complex()
+//        {
+//            var description = theContainer.Model
+//                .Find<DeviceDecorator>("InlineDevice")
+//                .DescribeBuildPlan();
+//
+//            Debug.WriteLine(description);
+//        }
+
+
         /*
          * TODO's
 

@@ -175,4 +175,5 @@ namespace StructureMap.Pipeline
             return new DependencyExpression<SmartInstance<T>, TSettertype>(this, propertyName);
         }
     }
+
 }

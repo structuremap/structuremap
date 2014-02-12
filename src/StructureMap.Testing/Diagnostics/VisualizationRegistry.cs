@@ -40,11 +40,25 @@ namespace StructureMap.Testing.Diagnostics
 
             For<IDevice>().Add<CDevice>().Named("Activated");
 
+//            For<IDevice>().Add<CDevice>().Named("DecoratedWithFunc")
+//                .DecorateWith(x => new DeviceDecorator(x));
+
             For<Activateable>().OnCreationForAll(x => x.Activate());
 
             For<Rule>().Use<ColorRule>().Ctor<string>("color").Is("Red").Named("Red");
 
             For<DeviceDecorator>().Add<DeviceDecorator>().Named("UsesDefault");
+
+            For<DeviceDecorator>().Add<DeviceDecorator>().Named("InlineDevice")
+                .Ctor<IDevice>().Is<ADevice>(x => x.Singleton());
+
+            For<DeviceDecorator>().Add<DeviceDecorator>().Named("DeepInlineDevice")
+                .Ctor<IDevice>().Is<DeviceWithArgs>(x => {
+                    x.Singleton();
+                    x.Ctor<string>("color").Is("Blue");
+                    x.Ctor<string>("direction").Is("North");
+                    x.Ctor<string>("name").Is("Declan");
+                });
 
             For<DeviceDecorator>().Add<DeviceDecorator>().Named("UsesA")
                 .Ctor<IDevice>().IsNamedInstance("A");
