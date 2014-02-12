@@ -25,6 +25,20 @@ namespace StructureMap.Diagnostics
             }
         }
 
+        public ILeftPadding CurrentPadding
+        {
+            get
+            {
+                return _sections.Peek().Padding;
+            }
+        }
+
+        public void StartSection(TreeSection section)
+        {
+            _sections.Peek().ChildSection(section);
+            _sections.Push(section);
+        }
+
         public void StartSection(ILeftPadding padding = null, IBulletStyle bulletStyle = null)
         {
             var section = _sections.Peek().ChildSection(padding ?? new LeftPadding(4), bulletStyle);
@@ -42,7 +56,7 @@ namespace StructureMap.Diagnostics
             _sections.Pop();
         }
 
-        public void Line(string text, params object[] parameters)
+        public virtual void Line(string text, params object[] parameters)
         {
             _sections.Peek().WriteLine(text, parameters);
         }
@@ -71,4 +85,5 @@ namespace StructureMap.Diagnostics
             }
         }
     }
+
 }

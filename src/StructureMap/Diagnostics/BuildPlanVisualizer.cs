@@ -36,7 +36,7 @@ namespace StructureMap.Diagnostics
                 _writer.StartSection<OutlineWithBars>();
 
                 constructor.Arguments.Each(arg => {
-                    var depVisualizer = new DependencyVisualizer(arg.Title, _writer);
+                    var depVisualizer = new DependencyVisualizer(arg.Title, _writer, this);
                     arg.Dependency.AcceptVisitor(depVisualizer);
                 });
 
@@ -48,7 +48,7 @@ namespace StructureMap.Diagnostics
 
         public void Setter(Setter setter)
         {
-            var depVisualizer = new DependencyVisualizer(setter.Title, _writer);
+            var depVisualizer = new DependencyVisualizer(setter.Title, _writer, this);
             setter.AssignedValue.AcceptVisitor(depVisualizer);
         }
 
@@ -73,11 +73,6 @@ namespace StructureMap.Diagnostics
                 _writer.Line("Bi-Directional Relationship Detected w/ Instance {0}, PluginType {1}", instance.Description, pluginType.GetTypeName());
             }
 
-            if (_writer.LineCount > 0)
-            {
-                _writer.BlankLines(3);
-            }
-
             _instanceStack.Push(instance);
 
 
@@ -85,7 +80,7 @@ namespace StructureMap.Diagnostics
             if (pluginType != null) _writer.Line("PluginType: " + pluginType.GetFullName());
             _writer.Line("Lifecycle: " + (instance.Lifecycle ?? Lifecycles.Transient).Description);
 
-            var plan = instance.ResolveBuildPlan(pluginType, _pipeline.Policies);
+            var plan = instance.ResolveBuildPlan(pluginType ?? instance.ReturnedType, _pipeline.Policies);
 
             plan.AcceptVisitor(this);
             _instanceStack.Pop();
@@ -103,65 +98,20 @@ namespace StructureMap.Diagnostics
     }
 
 
-    public class DependencyVisualizer : IDependencyVisitor
+    public class NestedSectionPadding : ILeftPadding
     {
-        private readonly string _title;
-        private readonly TextTreeWriter _writer;
+        private readonly LeftPadding _outer;
+        private readonly ILeftPadding _inner;
 
-        public DependencyVisualizer(string title, TextTreeWriter writer)
+        public NestedSectionPadding(ILeftPadding inner, int spaces)
         {
-            _title = title;
-            _writer = writer;
+            _outer = new LeftPadding(spaces, Convert.ToChar(9475).ToString());
+            _inner = inner;
         }
 
-        private void write(string text)
+        public string Create()
         {
-            _writer.Line(_title + text);
-        }
-
-        public void Constant(Constant constant)
-        {
-            Dependency(constant);
-        }
-
-        public void Default(Type pluginType)
-        {
-            write("**Default**");
-        }
-
-        public void Referenced(ReferencedDependencySource source)
-        {
-            write("Instance named '{0}'".ToFormat(source.Name));
-        }
-
-        public void InlineEnumerable(IEnumerableDependencySource source)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AllPossibleOf(Type pluginType)
-        {
-            write("All registered Instances of " + pluginType.GetFullName());
-        }
-
-        public void Concrete(ConcreteBuild build)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Lifecycled(LifecycleDependencySource source)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Dependency(IDependencySource source)
-        {
-            write(source.Description);
-        }
-
-        public void Problem(DependencyProblem problem)
-        {
-            write(problem.Message);
+            return _outer.Create().Replace(Convert.ToChar(9507), Convert.ToChar(9475)) + _inner.Create();
         }
     }
 }

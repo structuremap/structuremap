@@ -78,5 +78,10 @@ namespace StructureMap.Diagnostics
         {
             _lines.Add(new SeparatorLine(character, this));
         }
+
+        public void ChildSection(TreeSection section)
+        {
+            _lines.Add(section);
+        }
     }
 }

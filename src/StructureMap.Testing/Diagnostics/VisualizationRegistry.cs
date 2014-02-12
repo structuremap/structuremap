@@ -64,6 +64,12 @@ namespace StructureMap.Testing.Diagnostics
                 .Ctor<IDevice>().IsNamedInstance("A");
 
             For<CompositeDevice>().Add<CompositeDevice>().Named("AllPossible");
+
+            ForConcreteType<DeviceUser>()
+                .Configure
+                .Ctor<IDevice>("one").Is<ADevice>()
+                .Ctor<IDevice>("two").Is<BDevice>()
+                .Ctor<IDevice>("three").Is<CDevice>();
         }
     }
 
@@ -120,6 +126,13 @@ namespace StructureMap.Testing.Diagnostics
         public IDevice Wrap(IDevice Device)
         {
             return new DeviceDecorator(Device);
+        }
+    }
+
+    public class DeviceUser
+    {
+        public DeviceUser(IDevice one, IDevice two, IDevice three)
+        {
         }
     }
 

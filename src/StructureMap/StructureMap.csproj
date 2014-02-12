@@ -120,6 +120,7 @@
     <Compile Include="Diagnostics\BuildError.cs" />
     <Compile Include="Diagnostics\CharacterWidth.cs" />
     <Compile Include="Diagnostics\ComplexPadding.cs" />
+    <Compile Include="Diagnostics\DependencyVisualizer.cs" />
     <Compile Include="Diagnostics\DividerLine.cs" />
     <Compile Include="Diagnostics\Error.cs" />
     <Compile Include="Diagnostics\IBuildPlanVisitor.cs" />

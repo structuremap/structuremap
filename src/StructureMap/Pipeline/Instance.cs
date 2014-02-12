@@ -141,12 +141,14 @@ namespace StructureMap.Pipeline
 
         private string toDescription(Type pluginType)
         {
+            var typeName = (pluginType ?? ReturnedType).GetFullName();
+
             if (HasExplicitName())
             {
-                return "Instance of {0} ({1}) -- {2}".ToFormat(pluginType.GetFullName(), Name, Description);
+                return "Instance of {0} ({1}) -- {2}".ToFormat(typeName, Name, Description);
             }
 
-            return "Instance of {0} -- {1}".ToFormat(pluginType.GetFullName(), Description);
+            return "Instance of {0} -- {1}".ToFormat(typeName, Description);
         }
 
         private IBuildPlan buildPlan(Type pluginType, Policies policies)
