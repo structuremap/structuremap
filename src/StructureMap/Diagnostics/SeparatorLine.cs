@@ -13,9 +13,9 @@ namespace StructureMap.Diagnostics
             _parent = parent;
         }
 
-        public void Write(int spaces, TextWriter writer)
+        public void Write(ILeftPadding padding, TextWriter writer)
         {
-            writer.WriteLine(spaces, _parent.MaxLength().Line(_character));
+            writer.WriteLine(padding.Create() + _parent.MaxLength().Line(_character));
         }
 
         public char Character

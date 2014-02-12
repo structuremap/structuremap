@@ -16,10 +16,5 @@
         {
             return _leftBorder.PadRight(_spaces);
         }
-
-        public ILeftPadding ToChild(int spaces, string leftBorder = "")
-        {
-            return new ComplexPadding(this, spaces, leftBorder);
-        }
     }
 }

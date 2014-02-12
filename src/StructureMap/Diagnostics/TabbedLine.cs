@@ -14,9 +14,9 @@ namespace StructureMap.Diagnostics
 
         public string Bullet { get; set; }
 
-        public void Write(int spaces, TextWriter writer)
+        public void Write(ILeftPadding padding, TextWriter writer)
         {
-            writer.WriteLine(spaces, Bullet + _text);
+            writer.WriteLine(padding.Create() + Bullet + _text);
         }
 
         public int MaxLength()

@@ -4,7 +4,7 @@ namespace StructureMap.Diagnostics
 {
     public interface ITabbedLines
     {
-        void Write(int spaces, TextWriter writer);
+        void Write(ILeftPadding padding, TextWriter writer);
         int MaxLength();
         int LineCount { get; }
     }

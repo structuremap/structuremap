@@ -5,7 +5,7 @@ namespace StructureMap.Diagnostics
 {
     public class TextTreeWriter
     {
-        private readonly TreeSection _top = new TreeSection(0);
+        private readonly TreeSection _top = new TreeSection(new NulloPadding());
         private readonly Stack<TreeSection> _sections = new Stack<TreeSection>();
 
         public TextTreeWriter(IBulletStyle bullets = null)
@@ -25,15 +25,15 @@ namespace StructureMap.Diagnostics
             }
         }
 
-        public void StartSection(int indention = 4, IBulletStyle bulletStyle = null)
+        public void StartSection(ILeftPadding padding = null, IBulletStyle bulletStyle = null)
         {
-            var section = _sections.Peek().ChildSection(indention, bulletStyle);
+            var section = _sections.Peek().ChildSection(padding ?? new LeftPadding(4), bulletStyle);
             _sections.Push(section);
         }
 
-        public void StartSection<T>(int indention = 4) where T : IBulletStyle, new()
+        public void StartSection<T>(ILeftPadding padding = null) where T : IBulletStyle, new()
         {
-            StartSection(indention, new T());
+            StartSection(padding, new T());
         }
 
 
@@ -49,7 +49,7 @@ namespace StructureMap.Diagnostics
 
         public void WriteAll(TextWriter writer)
         {
-            _top.Write(0, writer);
+            _top.Write(new NulloPadding(), writer);
         }
 
         public void Separator(char character)

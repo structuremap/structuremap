@@ -140,5 +140,27 @@ namespace StructureMap.Testing.Diagnostics
 
             writer.WriteAll(Console.Out);
         }
+
+        [Test]
+        public void deep_nested_sections_with_left_border()
+        {
+            var writer = new TextTreeWriter();
+            "ABCDEFGHIJK".ToCharArray().Each(c => writer.Line("".PadRight(20, c)));
+
+            writer.StartSection<Astericks>(new LeftPadding(3, "|"));
+            "LMNOPQRS".ToCharArray().Each(c => writer.Line("".PadRight(20, c)));
+
+            writer.StartSection<Numbered>();
+            "TUVWXYZ".ToCharArray().Each(c => writer.Line("".PadRight(20, c)));
+            writer.EndSection();
+
+            "1234567".ToCharArray().Each(c => writer.Line("".PadRight(20, c)));
+            writer.EndSection();
+
+            "GHIJKLMNO".ToCharArray().Each(c => writer.Line("".PadRight(20, c)));
+
+
+            writer.WriteAll(Console.Out);
+        }
     }
 }

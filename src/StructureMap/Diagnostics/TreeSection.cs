@@ -6,18 +6,13 @@ namespace StructureMap.Diagnostics
 {
     public class TreeSection : ITabbedLines
     {
-        private readonly int _indention;
+        private readonly ILeftPadding _padding;
         public IBulletStyle BulletStyle = new NulloBulletStyle();
         private readonly IList<ITabbedLines> _lines = new List<ITabbedLines>();
 
-        public TreeSection(int indention = 4)
+        public TreeSection(ILeftPadding padding)
         {
-            _indention = indention;
-        }
-
-        public int Indention
-        {
-            get { return _indention; }
+            _padding = padding;
         }
 
         public int LineCount
@@ -28,11 +23,16 @@ namespace StructureMap.Diagnostics
             }
         }
 
-        public void Write(int spaces, TextWriter writer)
+        public ILeftPadding Padding
+        {
+            get { return _padding; }
+        }
+
+        public void Write(ILeftPadding padding, TextWriter writer)
         {
             applyBullets();
 
-            var childIndent = spaces + _indention;
+            var childIndent = padding.ToChild(_padding);
             _lines.Each(x => x.Write(childIndent, writer));
         }
 
@@ -46,9 +46,9 @@ namespace StructureMap.Diagnostics
             _lines.Add(new TabbedLine(format, parameters));
         }
 
-        public TreeSection ChildSection(int indention = 4, IBulletStyle bullets = null)
+        public TreeSection ChildSection(ILeftPadding padding, IBulletStyle bullets = null)
         {
-            var section = new TreeSection(indention);
+            var section = new TreeSection(padding);
             if (bullets != null)
             {
                 section.BulletStyle = bullets;
@@ -59,12 +59,6 @@ namespace StructureMap.Diagnostics
             return section;
         }
 
-
-        public TreeSection ChildSection<T>(int indention = 4) where T : IBulletStyle, new()
-        {
-            return ChildSection(indention, new T());
-        }
-
         public int MaxLength()
         {
             applyBullets();
@@ -72,7 +66,7 @@ namespace StructureMap.Diagnostics
             var max = _lines.Max(x => x.MaxLength());
             if (_lines.OfType<TreeSection>().Any())
             {
-                var sectionMax = _lines.OfType<TreeSection>().Max(x => x.MaxLength() + x.Indention);
+                var sectionMax = _lines.OfType<TreeSection>().Max(x => x.MaxLength() + x.Padding.Create().Length);
                 if (sectionMax > max)
                     max = sectionMax;
             }
