@@ -34,6 +34,15 @@ namespace StructureMap.Building
             }
         }
 
+        public string Title
+        {
+            get
+            {
+                return "Set {1} {0} = "
+                    .ToFormat(_member.Name, _setterType.GetTypeName());
+            }
+        }
+
         public MemberBinding ToBinding(ParameterExpression session, ParameterExpression context)
         {
             return Expression.Bind(_member, AssignedValue.ToExpression(session, context));

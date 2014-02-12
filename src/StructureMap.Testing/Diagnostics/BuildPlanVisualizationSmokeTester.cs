@@ -106,17 +106,53 @@ namespace StructureMap.Testing.Diagnostics
                 .Find<IDevice>("MixedCtorAndSetter")
                 .DescribeBuildPlan();
 
-            Debug.WriteLine(description);
-
             description.ShouldContain("┣ String color = Value: Blue");
             description.ShouldContain("┣ String direction = Value: North");
             description.ShouldContain("┗ String name = Value: Declan");
         }
 
+        [Test]
+        public void activator_interceptor()
+        {
+            var description = theContainer.Model
+                .Find<IDevice>("Activated")
+                .DescribeBuildPlan();
+
+            Debug.WriteLine(description);
+
+            description.ShouldContain("ActivatorInterceptor of StructureMap.Testing.Acceptance.Activateable: Activateable.Activate()");
+        }
+
+        [Test]
+        public void inline_default_with_flat_visualization()
+        {
+            var description = theContainer.Model
+                .Find<DeviceDecorator>("UsesDefault")
+                .DescribeBuildPlan();
+
+            description.ShouldContain("┗ IDevice = **Default**");
+
+        }
+
+        [Test]
+        public void show_problems_in_flat_visualization()
+        {
+            var ex = Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() => {
+                theContainer.Model
+                    .Find<IDevice>("MixedCtorAndSetterWithProblems")
+                    .DescribeBuildPlan();
+            });
+
+            ex.Context.ShouldContain("┣ String color = Required primitive dependency is not explicitly defined");
+
+            ex.Context.ShouldContain("Set Int64 Age = Required primitive dependency is not explicitly defined");
+
+        }
+
         /*
          * TODO's
 
-         * setters
+
          * problems
          * inline dependencies
          * default dependencies

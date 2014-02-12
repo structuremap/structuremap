@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Building;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
 
@@ -73,10 +75,15 @@ namespace StructureMap.Pipeline
             {
                 var message = "Unable to create a build plan for concrete type " + PluggedType.GetFullName();
 
+                var visualizer = new BuildPlanVisualizer(null, levels: 0);
+                plan.AcceptVisitor(visualizer);
+                var writer = new StringWriter();
+                visualizer.Write(writer);
+
                 // TODO -- show the build plan visualization in this message!!!!
                 throw new StructureMapBuildPlanException(message)
                 {
-                    Context = plan.Description
+                    Context = writer.ToString()
                 };
             }
 

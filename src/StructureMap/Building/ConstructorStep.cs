@@ -85,6 +85,18 @@ namespace StructureMap.Building
         public ParameterInfo Parameter;
         public IDependencySource Dependency;
 
+        public string Title
+        {
+            get
+            {
+                var name = Parameter.ParameterType.IsSimple()
+                    ? Fullname()
+                    : ShortName();
+
+                return name + " = ";
+            }
+        }
+
         public string Fullname()
         {
             return "{0} {1}".ToFormat(Parameter.ParameterType.GetTypeName(), Parameter.Name);
@@ -97,11 +109,7 @@ namespace StructureMap.Building
 
         public string Description()
         {
-            var name = Parameter.ParameterType.IsSimple()
-                ? Fullname()
-                : ShortName();
-
-            return "{0} = {1}".ToFormat(name, Dependency.Description);
+            return Title + Dependency.Description;
         }
 
         public override string ToString()

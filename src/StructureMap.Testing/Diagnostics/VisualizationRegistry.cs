@@ -25,11 +25,24 @@ namespace StructureMap.Testing.Diagnostics
                 .Ctor<string>("color").Is("Blue")
                 .Ctor<string>("direction").Is("North")
                 .Ctor<string>("name").Is("Declan")
-                .Setter<int>("Age").Is(40)
+                .Setter<long>("Age").Is(40)
                 .Setter<int>("Order").Is(2);
 
+            For<IDevice>().Add<DeviceWithArgsAndSetters>()
+                .Named("MixedCtorAndSetterWithProblems")
+                //.Ctor<string>("color").Is("Blue")
+                .Ctor<string>("direction").Is("North")
+                .Ctor<string>("name").Is("Declan")
+                //.Setter<int>("Age").Is(40.01)
+                .Setter<int>("Order").Is(2);
+
+            For<IDevice>().Add<CDevice>().Named("Activated");
+
+            For<Activateable>().OnCreationForAll(x => x.Activate());
 
             For<Rule>().Use<ColorRule>().Ctor<string>("color").Is("Red").Named("Red");
+
+            For<DeviceDecorator>().Add<DeviceDecorator>().Named("UsesDefault");
         }
     }
 
@@ -66,7 +79,7 @@ namespace StructureMap.Testing.Diagnostics
         }
 
         [SetterProperty]
-        public int Age { get;set; }
+        public long Age { get;set; }
     
         [SetterProperty]
         public int Order { get; set; }

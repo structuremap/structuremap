@@ -37,8 +37,8 @@ namespace StructureMap.Diagnostics
                 _writer.StartSection<OutlineWithBars>();
 
                 constructor.Arguments.Each(arg => {
-                    // This could and will change if we go deeper
-                    _writer.Line(arg.Description());
+                    var depVisualizer = new DependencyVisualizer(arg.Title, _writer);
+                    arg.Dependency.AcceptVisitor(depVisualizer);
                 });
 
                 _writer.EndSection();
@@ -49,12 +49,13 @@ namespace StructureMap.Diagnostics
 
         public void Setter(Setter setter)
         {
-            _writer.Line(setter.Description);
+            var depVisualizer = new DependencyVisualizer(setter.Title, _writer);
+            setter.AssignedValue.AcceptVisitor(depVisualizer);
         }
 
         public void Activator(IInterceptor interceptor)
         {
-            throw new NotImplementedException();
+            _writer.Line(interceptor.Description);
         }
 
         public void Decorator(IInterceptor interceptor)
@@ -99,6 +100,69 @@ namespace StructureMap.Diagnostics
         public void Write(TextWriter writer)
         {
             _writer.WriteAll(writer);
+        }
+    }
+
+
+    public class DependencyVisualizer : IDependencyVisitor
+    {
+        private readonly string _title;
+        private readonly TextTreeWriter _writer;
+
+        public DependencyVisualizer(string title, TextTreeWriter writer)
+        {
+            _title = title;
+            _writer = writer;
+        }
+
+        private void write(string text)
+        {
+            _writer.Line(_title + text);
+        }
+
+        public void Constant(Constant constant)
+        {
+            Dependency(constant);
+        }
+
+        public void Default(Type pluginType)
+        {
+            write("**Default**");
+        }
+
+        public void Referenced(ReferencedDependencySource source)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InlineEnumerable(IEnumerableDependencySource source)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AllPossibleOf(Type pluginType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Concrete(ConcreteBuild build)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Lifecycled(LifecycleDependencySource source)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dependency(IDependencySource source)
+        {
+            write(source.Description);
+        }
+
+        public void Problem(DependencyProblem problem)
+        {
+            write(problem.Message);
         }
     }
 }
