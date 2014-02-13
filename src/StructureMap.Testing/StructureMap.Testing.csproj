@@ -245,8 +245,6 @@
     <Compile Include="Diagnostics\AssertConfigurationIsValid_Smoke_Tester.cs" />
     <Compile Include="Diagnostics\BuildPlanVisualizationSmokeTester.cs" />
     <Compile Include="Diagnostics\BuildPlanVisualizerTester.cs" />
-    <Compile Include="Diagnostics\LeftPaddingTester.cs" />
-    <Compile Include="Diagnostics\TextTreeWriter_Smoke_Tester.cs" />
     <Compile Include="Diagnostics\TreeView\TreeWriter_Smoke_Tester.cs" />
     <Compile Include="Diagnostics\VisualizationRegistry.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />

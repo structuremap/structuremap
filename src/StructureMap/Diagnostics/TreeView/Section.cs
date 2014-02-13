@@ -15,7 +15,7 @@ namespace StructureMap.Diagnostics.TreeView
             }
         }
 
-        public void Write(string format, params object[] parameters)
+        public virtual void Write(string format, params object[] parameters)
         {
             items.Add(new Line(format.ToFormat(parameters)));
         }

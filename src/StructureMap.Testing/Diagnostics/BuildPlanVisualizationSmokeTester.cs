@@ -20,12 +20,6 @@ namespace StructureMap.Testing.Diagnostics
         }
 
         [Test]
-        public void should_have_a_title()
-        {
-            theDescription.ShouldContain("Build Plan for Instance StructureMap.Testing.Diagnostics.DefaultDevice");
-        }
-
-        [Test]
         public void should_specify_the_plugin_type()
         {
             theDescription.ShouldContain("PluginType: StructureMap.Testing.Diagnostics.IDevice");
@@ -50,7 +44,6 @@ namespace StructureMap.Testing.Diagnostics
             var description = theContainer.Model.For<IDevice>()
                 .Default.DescribeBuildPlan();
 
-            Debug.WriteLine(description);
 
             description.ShouldContain("new DefaultDevice()");
         }
@@ -61,6 +54,9 @@ namespace StructureMap.Testing.Diagnostics
             var description = theContainer.Model.For<IDevice>()
                 .Find("A")
                 .DescribeBuildPlan();
+
+
+            Debug.WriteLine(description);
 
             description.ShouldContain("Lambda: new ADevice()");
         }
@@ -108,6 +104,8 @@ namespace StructureMap.Testing.Diagnostics
                 .Find<IDevice>("MixedCtorAndSetter")
                 .DescribeBuildPlan();
 
+            Debug.WriteLine(description);
+
             description.ShouldContain("┣ String color = Value: Blue");
             description.ShouldContain("┣ String direction = Value: North");
             description.ShouldContain("┗ String name = Value: Declan");
@@ -132,6 +130,8 @@ namespace StructureMap.Testing.Diagnostics
                 .Find<DeviceDecorator>("UsesDefault")
                 .DescribeBuildPlan();
 
+            Debug.WriteLine(description);
+
             description.ShouldContain("┗ IDevice = **Default**");
 
         }
@@ -144,6 +144,8 @@ namespace StructureMap.Testing.Diagnostics
                     .Find<IDevice>("MixedCtorAndSetterWithProblems")
                     .DescribeBuildPlan();
             });
+
+            Debug.WriteLine(ex.Context);
 
             ex.Context.ShouldContain("┣ String color = Required primitive dependency is not explicitly defined");
 

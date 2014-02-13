@@ -17,7 +17,7 @@ namespace StructureMap.Diagnostics.TreeView
 
         public void StartSection(Section section)
         {
-            _sections.Peek().ChildSection(section);
+            CurrentSection.ChildSection(section);
             _sections.Push(section);
         }
 
@@ -33,9 +33,17 @@ namespace StructureMap.Diagnostics.TreeView
             _sections.Pop();
         }
 
+        public Section CurrentSection
+        {
+            get
+            {
+                return _sections.Peek();
+            }
+        }
+
         public virtual void Line(string text, params object[] parameters)
         {
-            _sections.Peek().Write(text, parameters);
+            CurrentSection.Write(text, parameters);
         }
 
         public void WriteAll(TextWriter writer)
