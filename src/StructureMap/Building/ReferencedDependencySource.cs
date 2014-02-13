@@ -2,11 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-<<<<<<< HEAD
-using StructureMap.TypeRules;
-=======
 using StructureMap.Diagnostics;
->>>>>>> added the build plan visitor interfaces, dependency sources accept the visitor
 
 namespace StructureMap.Building
 {
