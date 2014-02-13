@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {

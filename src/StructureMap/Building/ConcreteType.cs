@@ -64,9 +64,7 @@ namespace StructureMap.Building
 
         public static PropertyInfo[] GetSetters(Type pluggedType)
         {
-            return pluggedType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(x => x.CanWrite && x.GetSetMethod(false) != null && x.GetSetMethod().GetParameters().Length == 1)
-                .ToArray();
+            return pluggedType.GetSettableProperties().ToArray();
         }
 
         private static void determineSetterSource(DependencyCollection dependencies, Policies policies,
@@ -183,7 +181,7 @@ namespace StructureMap.Building
         {
             if (value.GetType() == dependencyType) return value;
 
-            if (dependencyType.IsEnum) return Enum.Parse(dependencyType, value.ToString());
+            if (dependencyType.GetTypeInfo().IsEnum) return Enum.Parse(dependencyType, value.ToString());
 
             return Convert.ChangeType(value, dependencyType);
         }

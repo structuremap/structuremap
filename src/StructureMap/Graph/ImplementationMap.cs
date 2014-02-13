@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
@@ -26,7 +27,7 @@ namespace StructureMap.Graph
         {
             if (!type.CanBeCreated()) return;
 
-            type.GetInterfaces().Where(i => i.IsVisible).Each(i => Register(i, type));
+            type.GetInterfaces().Where(i => i.GetTypeInfo().IsVisible).Each(i => Register(i, type));
         }
 
         public void RegisterSingleImplementations(PluginGraph graph)

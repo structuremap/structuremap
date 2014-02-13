@@ -32,7 +32,7 @@ namespace StructureMap.Diagnostics
 
             if (Assembly != null)
             {
-                enumerable = enumerable.Where(x => x.PluginType.Assembly == Assembly);
+                enumerable = enumerable.Where(x => x.PluginType.GetTypeInfo().Assembly == Assembly);
             }
 
             if (TypeName.IsNotEmpty())

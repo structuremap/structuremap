@@ -3,316 +3,254 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
 
-namespace StructureMap
+namespace StructureMap.TypeRules
 {
-    internal static class BasicExtensions
+
+    public static partial class TypeExtensions
     {
-        public static TReturn FirstValue<TItem, TReturn>(this IEnumerable<TItem> enumerable, Func<TItem, TReturn> func)
-            where TReturn : class
+        internal static bool HasAttribute<T>(this MemberInfo provider) where T : Attribute
         {
-            foreach (var item in enumerable)
-            {
-                var @object = func(item);
-                if (@object != null) return @object;
-            }
-
-            return null;
+            var atts = provider.GetCustomAttributes(typeof (T), true);
+            return atts.Any();
         }
 
-        public static string ToName(this ILifecycle lifecycle)
+        internal static void ForAttribute<T>(this MemberInfo provider, Action<T> action)
+            where T : Attribute
         {
-            return lifecycle == null ? Lifecycles.Transient.Description : lifecycle.Description;
-        }
-
-        public static void Fill<T>(this IList<T> list, T value)
-        {
-            if (list.Contains(value)) return;
-            list.Add(value);
-        }
-
-        public static void SafeDispose(this object target)
-        {
-            var disposable = target as IDisposable;
-            if (disposable == null) return;
-
-            try
+            foreach (T attribute in provider.GetCustomAttributes(typeof (T), true))
             {
-                disposable.Dispose();
-            }
-            catch (Exception)
-            {
+                action(attribute);
             }
         }
 
-
-        public static void TryGet<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
-            Action<TValue> action)
+        internal static T GetAttribute<T>(this MemberInfo provider)
+            where T : Attribute
         {
-            TValue value;
-            if (dictionary.TryGetValue(key, out value))
-            {
-                action(value);
-            }
+            return provider.GetCustomAttributes(typeof(T), true).OfType<T>().FirstOrDefault();
         }
 
-        internal static T As<T>(this object target) where T : class
+        public static T CloseAndBuildAs<T>(this Type openType, params Type[] parameterTypes)
         {
-            return target as T;
+            var closedType = openType.MakeGenericType(parameterTypes);
+            return (T) Activator.CreateInstance(closedType);
         }
 
-        public static bool IsIn<T>(this T target, IList<T> list)
+        public static T CloseAndBuildAs<T>(this Type openType, object ctorArgument, params Type[] parameterTypes)
         {
-            return list.Contains(target);
+            var closedType = openType.MakeGenericType(parameterTypes);
+            return (T) Activator.CreateInstance(closedType, ctorArgument);
         }
-    }
 
-    namespace TypeRules
-    {
-        public static class TypeExtensions
+
+        public static bool Closes(this Type type, Type openType)
         {
-            internal static bool HasAttribute<T>(this MemberInfo provider) where T : Attribute
+            var baseType = type.GetTypeInfo().BaseType;
+            if (baseType == null) return false;
+
+            var closes = baseType.GetTypeInfo().IsGenericType && baseType.GetTypeInfo().GetGenericTypeDefinition() == openType;
+            return closes || baseType.Closes(openType);
+        }
+
+        public static bool IsInNamespace(this Type type, string nameSpace)
+        {
+            return type.Namespace != null && type.Namespace.StartsWith(nameSpace);
+        }
+
+        public static bool IsOpenGeneric(this Type type)
+        {
+            return type.GetTypeInfo().IsGenericTypeDefinition || type.GetTypeInfo().ContainsGenericParameters;
+        }
+
+
+        public static bool IsConcreteAndAssignableTo(this Type TPluggedType, Type pluginType)
+        {
+            return TPluggedType.IsConcrete() && pluginType.GetTypeInfo().IsAssignableFrom(TPluggedType.GetTypeInfo());
+        }
+
+        public static bool ImplementsInterfaceTemplate(this Type TPluggedType, Type templateType)
+        {
+            if (!TPluggedType.IsConcrete()) return false;
+
+            return TPluggedType.GetInterfaces().
+                Any(itfType => itfType.GetTypeInfo().IsGenericType && itfType.GetGenericTypeDefinition() == templateType);
+        }
+
+        public static Type FindFirstInterfaceThatCloses(this Type TPluggedType, Type templateType)
+        {
+            return TPluggedType.FindInterfacesThatClose(templateType).FirstOrDefault();
+        }
+
+        public static IEnumerable<Type> FindInterfacesThatClose(this Type TPluggedType, Type templateType)
+        {
+            return rawFindInterfacesThatCloses(TPluggedType, templateType).Distinct();
+        }
+
+        private static IEnumerable<Type> rawFindInterfacesThatCloses(Type TPluggedType, Type templateType)
+        {
+            if (!TPluggedType.IsConcrete()) yield break;
+
+            if (templateType.GetTypeInfo().IsInterface)
             {
-                var atts = provider.GetCustomAttributes(typeof (T), true);
-                return atts.Length > 0;
-            }
-
-            internal static void ForAttribute<T>(this MemberInfo provider, Action<T> action)
-                where T : Attribute
-            {
-                foreach (T attribute in provider.GetCustomAttributes(typeof (T), true))
-                {
-                    action(attribute);
-                }
-            }
-
-            public static T CloseAndBuildAs<T>(this Type openType, params Type[] parameterTypes)
-            {
-                var closedType = openType.MakeGenericType(parameterTypes);
-                return (T) Activator.CreateInstance(closedType);
-            }
-
-            public static T CloseAndBuildAs<T>(this Type openType, object ctorArgument, params Type[] parameterTypes)
-            {
-                var closedType = openType.MakeGenericType(parameterTypes);
-                return (T) Activator.CreateInstance(closedType, ctorArgument);
-            }
-
-
-            public static bool Closes(this Type type, Type openType)
-            {
-                var baseType = type.BaseType;
-                if (baseType == null) return false;
-
-                var closes = baseType.IsGenericType && baseType.GetGenericTypeDefinition() == openType;
-                if (closes) return true;
-
-                return type.BaseType == null ? false : type.BaseType.Closes(openType);
-            }
-
-            public static bool IsInNamespace(this Type type, string nameSpace)
-            {
-                return type.Namespace != null && type.Namespace.StartsWith(nameSpace);
-            }
-
-            public static bool IsOpenGeneric(this Type type)
-            {
-                return type.IsGenericTypeDefinition || type.ContainsGenericParameters;
-            }
-
-
-            public static bool IsConcreteAndAssignableTo(this Type TPluggedType, Type pluginType)
-            {
-                return TPluggedType.IsConcrete() && pluginType.IsAssignableFrom(TPluggedType);
-            }
-
-            public static bool ImplementsInterfaceTemplate(this Type TPluggedType, Type templateType)
-            {
-                if (!TPluggedType.IsConcrete()) return false;
-
-                foreach (var interfaceType in TPluggedType.GetInterfaces())
-                {
-                    if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            public static Type FindFirstInterfaceThatCloses(this Type TPluggedType, Type templateType)
-            {
-                return TPluggedType.FindInterfacesThatClose(templateType).FirstOrDefault();
-            }
-
-            public static IEnumerable<Type> FindInterfacesThatClose(this Type TPluggedType, Type templateType)
-            {
-                return rawFindInterfacesThatCloses(TPluggedType, templateType).Distinct();
-            }
-
-            private static IEnumerable<Type> rawFindInterfacesThatCloses(Type TPluggedType, Type templateType)
-            {
-                if (!TPluggedType.IsConcrete()) yield break;
-
-                if (templateType.IsInterface)
-                {
-                    foreach (
-                        var interfaceType in
-                            TPluggedType.GetInterfaces()
-                                .Where(type => type.IsGenericType && (type.GetGenericTypeDefinition() == templateType)))
-                    {
-                        yield return interfaceType;
-                    }
-                }
-                else if (TPluggedType.BaseType.IsGenericType &&
-                         (TPluggedType.BaseType.GetGenericTypeDefinition() == templateType))
-                {
-                    yield return TPluggedType.BaseType;
-                }
-
-                if (TPluggedType.BaseType == typeof (object)) yield break;
-
-                foreach (var interfaceType in rawFindInterfacesThatCloses(TPluggedType.BaseType, templateType))
+                foreach (
+                    var interfaceType in
+                        TPluggedType.GetInterfaces()
+                            .Where(type => type.GetTypeInfo().IsGenericType && (type.GetGenericTypeDefinition() == templateType)))
                 {
                     yield return interfaceType;
                 }
             }
-
-            public static bool IsNullable(this Type type)
+            else if (TPluggedType.GetTypeInfo().BaseType.GetTypeInfo().IsGenericType &&
+                     (TPluggedType.GetTypeInfo().BaseType.GetGenericTypeDefinition() == templateType))
             {
-                return type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Nullable<>);
+                yield return TPluggedType.GetTypeInfo().BaseType;
             }
 
-            public static Type GetInnerTypeFromNullable(this Type nullableType)
+            if (TPluggedType.GetTypeInfo().BaseType == typeof(object)) yield break;
+
+            foreach (var interfaceType in rawFindInterfacesThatCloses(TPluggedType.GetTypeInfo().BaseType, templateType))
             {
-                return nullableType.GetGenericArguments()[0];
+                yield return interfaceType;
+            }
+        }
+
+        public static bool IsNullable(this Type type)
+        {
+            return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
+
+        public static Type GetInnerTypeFromNullable(this Type nullableType)
+        {
+            return nullableType.GetGenericArguments()[0];
+        }
+
+        public static string GetName(this Type type)
+        {
+            return type.GetTypeInfo().IsGenericType ? GetGenericName(type) : type.Name;
+        }
+
+        public static string GetFullName(this Type type)
+        {
+            return type.GetTypeInfo().IsGenericType ? GetGenericName(type) : type.FullName;
+        }
+
+        public static string GetTypeName(this Type type)
+        {
+            return type.GetTypeInfo().IsGenericType ? GetGenericName(type) : type.Name;
+        }
+
+        private static string GetGenericName(Type type)
+        {
+            var parameters = type.GetGenericArguments().Select(t => t.GetName());
+            string parameterList = String.Join(", ", parameters);
+            return "{0}<{1}>".ToFormat(type.Name.Split('`').First(), parameterList);
+        }
+
+        public static bool CanBeCreated(this Type type)
+        {
+            return type.IsConcrete() && type.HasConstructors();
+        }
+
+        public static IEnumerable<Type> AllInterfaces(this Type type)
+        {
+            foreach (var @interface in type.GetInterfaces())
+            {
+                yield return @interface;
+            }
+        }
+
+        /// <summary>
+        /// Determines if the PluggedType can be upcast to the pluginType
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="pluggedType"></param>
+        /// <returns></returns>
+        public static bool CanBeCastTo(this Type pluggedType, Type pluginType)
+        {
+            if (pluggedType == null) return false;
+
+            if (pluggedType == pluginType) return true;
+
+            if (pluggedType.IsInterfaceOrAbstract())
+            {
+                return false;
             }
 
-            public static string GetName(this Type type)
+            if (pluginType.IsOpenGeneric())
             {
-                return type.IsGenericType ? GetGenericName(type) : type.Name;
+                return GenericsPluginGraph.CanBeCast(pluginType, pluggedType);
             }
 
-            public static string GetFullName(this Type type)
+            if (IsOpenGeneric(pluggedType))
             {
-                return type.IsGenericType ? GetGenericName(type) : type.FullName;
-            }
-
-            public static string GetTypeName(this Type type)
-            {
-                return type.IsGenericType ? GetGenericName(type) : type.Name;
-            }
-
-            private static string GetGenericName(Type type)
-            {
-                var parameters = type.GetGenericArguments().Select(t => t.GetName());
-                var parameterList = String.Join(", ", parameters);
-                return "{0}<{1}>".ToFormat(type.Name.Split('`').First(), parameterList);
-            }
-
-            public static bool CanBeCreated(this Type type)
-            {
-                return type.IsConcrete() && type.HasConstructors();
-            }
-
-            public static IEnumerable<Type> AllInterfaces(this Type type)
-            {
-                foreach (var @interface in type.GetInterfaces())
-                {
-                    yield return @interface;
-                }
-            }
-
-            /// <summary>
-            /// Determines if the PluggedType can be upcast to the pluginType
-            /// </summary>
-            /// <param name="pluginType"></param>
-            /// <param name="pluggedType"></param>
-            /// <returns></returns>
-            public static bool CanBeCastTo(this Type pluggedType, Type pluginType)
-            {
-                if (pluggedType == null) return false;
-
-                if (pluggedType == pluginType) return true;
-
-                if (pluggedType.IsInterface || pluggedType.IsAbstract)
-                {
-                    return false;
-                }
-
-                if (pluginType.IsOpenGeneric())
-                {
-                    return GenericsPluginGraph.CanBeCast(pluginType, pluggedType);
-                }
-
-                if (IsOpenGeneric(pluggedType))
-                {
-                    return false;
-                }
-
-
-                return pluginType.IsAssignableFrom(pluggedType);
-            }
-
-            public static bool CanBeCastTo<T>(this Type pluggedType)
-            {
-                return pluggedType.CanBeCastTo(typeof (T));
+                return false;
             }
 
 
-            public static bool IsString(this Type type)
-            {
-                return type.Equals(typeof (string));
-            }
+            return pluginType.GetTypeInfo().IsAssignableFrom(pluggedType.GetTypeInfo());
+        }
 
-            public static bool IsPrimitive(this Type type)
-            {
-                return type.IsPrimitive && !IsString(type) && type != typeof (IntPtr);
-            }
+        public static bool CanBeCastTo<T>(this Type pluggedType)
+        {
+            return pluggedType.CanBeCastTo(typeof (T));
+        }
 
-            public static bool IsSimple(this Type type)
-            {
-                if (type == null) return false;
 
-                return type.IsPrimitive || IsString(type) || type.IsEnum;
-            }
+        public static bool IsString(this Type type)
+        {
+            return type == typeof (string);
+        }
 
-            public static bool IsChild(this Type type)
-            {
-                return IsPrimitiveArray(type) || (!type.IsArray && !IsSimple(type));
-            }
+        public static bool IsPrimitive(this Type type)
+        {
+            return type.GetTypeInfo().IsPrimitive && !IsString(type) && type != typeof(IntPtr);
+        }
 
-            public static bool IsChildArray(this Type type)
-            {
-                return type.IsArray && !IsSimple(type.GetElementType());
-            }
+        public static bool IsSimple(this Type type)
+        {
+            if (type == null) return false;
 
-            public static bool IsPrimitiveArray(this Type type)
-            {
-                return type.IsArray && IsSimple(type.GetElementType());
-            }
+            return type.GetTypeInfo().IsPrimitive || IsString(type) || type.GetTypeInfo().IsEnum;
+        }
 
-            public static bool IsConcrete(this Type type)
-            {
-                return !type.IsAbstract && !type.IsInterface;
-            }
+        public static bool IsInterfaceOrAbstract(this Type type)
+        {
+            return type.GetTypeInfo().IsInterface || type.GetTypeInfo().IsAbstract;
+        }
 
-            public static bool IsAutoFillable(this Type type)
-            {
-                return IsChild(type) || IsChildArray(type);
-            }
+        public static bool IsChild(this Type type)
+        {
+            return IsPrimitiveArray(type) || (!type.IsArray && !IsSimple(type));
+        }
 
-            public static bool HasConstructors(this Type type)
-            {
-                return type.GetConstructors().Any();
-            }
+        public static bool IsChildArray(this Type type)
+        {
+            return type.IsArray && !IsSimple(type.GetElementType());
+        }
 
-            public static bool IsVoidReturn(this Type type)
-            {
-                return type == null || type == typeof (void);
-            }
+        public static bool IsPrimitiveArray(this Type type)
+        {
+            return type.IsArray && IsSimple(type.GetElementType());
+        }
+
+        public static bool IsConcrete(this Type type)
+        {
+            return !type.GetTypeInfo().IsAbstract && !type.GetTypeInfo().IsInterface;
+        }
+
+        public static bool IsAutoFillable(this Type type)
+        {
+            return IsChild(type) || IsChildArray(type);
+        }
+
+        public static bool HasConstructors(this Type type)
+        {
+            return type.GetConstructors().Any();
+        }
+
+        public static bool IsVoidReturn(this Type type)
+        {
+            return type == null || type == typeof (void);
         }
     }
 }

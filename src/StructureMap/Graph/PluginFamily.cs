@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 using StructureMap.Util;
@@ -26,9 +27,8 @@ namespace StructureMap.Graph
             _pluginType = pluginType;
 
             resetDefault();
+            _pluginType.GetTypeInfo().ForAttribute<FamilyAttribute>(a => a.Alter(this));
 
-            Attribute.GetCustomAttributes(_pluginType, typeof (FamilyAttribute), true).OfType<FamilyAttribute>()
-                .Each(x => x.Alter(this));
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace StructureMap.Graph
         /// </summary>
         public bool IsGenericTemplate
         {
-            get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; }
+            get { return _pluginType.GetTypeInfo().IsGenericTypeDefinition || _pluginType.GetTypeInfo().ContainsGenericParameters; }
         }
 
         /// <summary>

@@ -33,7 +33,7 @@ namespace StructureMap.Graph
 
         public void Assembly(string assemblyName)
         {
-            Assembly(System.Reflection.Assembly.Load(assemblyName));
+            Assembly(AssemblyLoader.ByName(assemblyName));
         }
 
         public void Convention<T>() where T : IRegistrationConvention, new()
@@ -52,12 +52,12 @@ namespace StructureMap.Graph
 
         public void AssemblyContainingType<T>()
         {
-            _assemblies.Add(typeof (T).Assembly);
+            AssemblyContainingType(typeof(T));
         }
 
         public void AssemblyContainingType(Type type)
         {
-            _assemblies.Add(type.Assembly);
+            _assemblies.Add(type.GetTypeInfo().Assembly);
         }
 
         public FindAllTypesFilter AddAllTypesOf<TPluginType>()

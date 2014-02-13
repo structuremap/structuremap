@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Reflection;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
@@ -24,7 +26,7 @@ namespace StructureMap
             {
                 var atts = constructor.GetCustomAttributes(typeof (DefaultConstructorAttribute), true);
 
-                if (atts.Length > 0)
+                if (atts.Any())
                 {
                     returnValue = constructor;
                     break;

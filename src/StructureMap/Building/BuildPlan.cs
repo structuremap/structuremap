@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
@@ -53,7 +54,7 @@ namespace StructureMap.Building
 
             wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(message, _pluginType, wrapped, this);
 
-            if (!wrapped.Type.IsClass)
+            if (!wrapped.Type.GetTypeInfo().IsClass)
             {
                 wrapped = Expression.Convert(wrapped, typeof (object));
             }

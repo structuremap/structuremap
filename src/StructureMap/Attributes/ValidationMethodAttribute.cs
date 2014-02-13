@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
@@ -24,8 +25,7 @@ namespace StructureMap
             var methods = objectType.GetMethods();
             foreach (var method in methods)
             {
-                var att =
-                    (ValidationMethodAttribute) GetCustomAttribute(method, typeof (ValidationMethodAttribute));
+                var att = method.GetAttribute<ValidationMethodAttribute>();
 
                 if (att != null)
                 {
