@@ -50,6 +50,8 @@ namespace StructureMap.Testing.Diagnostics
             var description = theContainer.Model.For<IDevice>()
                 .Default.DescribeBuildPlan();
 
+            Debug.WriteLine(description);
+
             description.ShouldContain("new DefaultDevice()");
         }
 

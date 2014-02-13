@@ -11,6 +11,10 @@ namespace StructureMap.Testing.Diagnostics
     {
         public VisualizationRegistry()
         {
+            For<IDevice>().DecorateAllWith(x => new DeviceDecorator(x));
+
+            For<IDevice>().DecorateAllWith<CrazyDecorator>();
+
             For<IDevice>().Use<DefaultDevice>();
 
             For<IDevice>().Add(() => new ADevice()).Named("A");
@@ -81,6 +85,13 @@ namespace StructureMap.Testing.Diagnostics
     }
 
     public interface IDevice{}
+
+    public class CrazyDecorator : IDevice
+    {
+        public CrazyDecorator(IDevice inner, IEngine engine, IFoo foo)
+        {
+        }
+    }
 
     public class DefaultDevice : IDevice { }
 

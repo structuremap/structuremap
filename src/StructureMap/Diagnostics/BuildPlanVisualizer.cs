@@ -59,7 +59,7 @@ namespace StructureMap.Diagnostics
 
         public void Decorator(IInterceptor interceptor)
         {
-            throw new NotImplementedException();
+            _writer.Line("Decorator --> " + interceptor.Description);
         }
 
         private readonly Stack<Instance> _instanceStack = new Stack<Instance>(); 

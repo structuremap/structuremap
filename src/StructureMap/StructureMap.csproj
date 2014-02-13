@@ -144,6 +144,13 @@
     <Compile Include="Diagnostics\TextReportWriter.cs" />
     <Compile Include="Diagnostics\TextTreeWriter.cs" />
     <Compile Include="Diagnostics\TreeSection.cs" />
+    <Compile Include="Diagnostics\TreeView\Astericks.cs" />
+    <Compile Include="Diagnostics\TreeView\Numbered.cs" />
+    <Compile Include="Diagnostics\TreeView\Outline.cs" />
+    <Compile Include="Diagnostics\TreeView\Section.cs" />
+    <Compile Include="Diagnostics\TreeView\Tabbed.cs" />
+    <Compile Include="Diagnostics\TreeView\Line.cs" />
+    <Compile Include="Diagnostics\TreeView\TreeWriter.cs" />
     <Compile Include="Diagnostics\ValidationError.cs" />
     <Compile Include="Diagnostics\WhatDoIHaveWriter.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
