@@ -39,13 +39,21 @@ namespace StructureMap.Building.Interception
 
         public Expression ToExpression(Policies policies, ParameterExpression session, ParameterExpression variable)
         {
+            var build = ToConcreteBuild(policies, variable);
+            var builder = build.ToExpression(session, Parameters.Context);
+
+            return Expression.Convert(builder, _pluginType);
+        }
+
+        public ConcreteBuild ToConcreteBuild(Policies policies, ParameterExpression variable)
+        {
+            variable = variable ?? Expression.Variable(_pluginType, "Inner");
+
             var dependencies = _instance.Dependencies.Clone();
             dependencies.Add(_pluginType, new LiteralDependencySource(variable, _pluginType));
 
             var build = ConcreteType.BuildSource(_instance.PluggedType, _instance.Constructor, dependencies, policies);
-            var builder = build.ToExpression(session, Parameters.Context);
-
-            return Expression.Convert(builder, _pluginType);
+            return build;
         }
 
 
@@ -72,7 +80,7 @@ namespace StructureMap.Building.Interception
 
             public string Description
             {
-                get { return _expression.ToString(); }
+                get { return "The inner " + ReturnedType.GetName(); }
             }
 
             public Expression ToExpression(ParameterExpression session, ParameterExpression context)
@@ -86,5 +94,7 @@ namespace StructureMap.Building.Interception
                 visitor.Dependency(this);
             }
         }
+
     }
+
 }

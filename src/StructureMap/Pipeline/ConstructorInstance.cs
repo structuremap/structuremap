@@ -80,7 +80,6 @@ namespace StructureMap.Pipeline
                 var writer = new StringWriter();
                 visualizer.Write(writer);
 
-                // TODO -- show the build plan visualization in this message!!!!
                 throw new StructureMapBuildPlanException(message)
                 {
                     Context = writer.ToString()

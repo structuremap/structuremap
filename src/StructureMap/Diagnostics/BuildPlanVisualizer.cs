@@ -64,7 +64,20 @@ namespace StructureMap.Diagnostics
 
         public void Decorator(IInterceptor interceptor)
         {
+            
+
+
+
             _writer.Line("Decorator --> " + interceptor.Description);
+            var decorator = interceptor as DecoratorInterceptor;
+            if (decorator != null)
+            {
+                _writer.StartSection(4);
+
+                var build = decorator.ToConcreteBuild(_pipeline.Policies, null);
+                build.AcceptVisitor(this);
+                _writer.EndSection();
+            }
         }
 
         private readonly Stack<Instance> _instanceStack = new Stack<Instance>(); 

@@ -44,6 +44,7 @@ namespace StructureMap.Testing.Diagnostics
             var description = theContainer.Model.For<IDevice>()
                 .Default.DescribeBuildPlan();
 
+            Debug.WriteLine(description);
 
             description.ShouldContain("new DefaultDevice()");
         }
@@ -217,24 +218,6 @@ namespace StructureMap.Testing.Diagnostics
 
             Debug.WriteLine(description);
         }
-
-
-        /*
-         * TODO's
-
-
-         * inline ctor dep
-         * inline lambda
-         * inline reference
-         * complex lambda?
-         * FuncInterceptor
-         * DecoratorInterceptor
-         * AllPossibleOf
-         * InlineEnumerable
-         * Concrete inline
-         * Lifecycled inline
-         * Referenced inline
-         */
     }
 
 
