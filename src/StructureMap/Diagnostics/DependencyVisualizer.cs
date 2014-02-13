@@ -9,13 +9,12 @@ namespace StructureMap.Diagnostics
     public class DependencyVisualizer : IDependencyVisitor, IDisposable
     {
         private readonly TitledWriter _writer;
-        private readonly IBuildPlanVisitor _buildPlanVisitor;
+        private readonly BuildPlanVisualizer _buildPlanVisitor;
 
-        public DependencyVisualizer(string title, TreeWriter writer, IBuildPlanVisitor buildPlanVisitor)
+        public DependencyVisualizer(string title, TreeWriter writer, BuildPlanVisualizer buildPlanVisitor)
         {
             _writer = new TitledWriter(title, writer);
             _buildPlanVisitor = buildPlanVisitor;
-            
         }
 
         public void Constant(Constant constant)
@@ -26,11 +25,13 @@ namespace StructureMap.Diagnostics
         public void Default(Type pluginType)
         {
             _writer.Line("**Default**");
+            _buildPlanVisitor.ShowDefault(pluginType);
         }
 
         public void Referenced(ReferencedDependencySource source)
         {
             _writer.Line("Instance named '{0}'".ToFormat(source.Name));
+            _buildPlanVisitor.ShowReferenced(source.DependencyType, source.Name);
         }
 
         public void InlineEnumerable(IEnumerableDependencySource source)

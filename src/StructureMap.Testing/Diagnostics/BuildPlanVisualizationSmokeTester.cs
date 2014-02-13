@@ -218,6 +218,53 @@ namespace StructureMap.Testing.Diagnostics
 
             Debug.WriteLine(description);
         }
+
+        [Test]
+        public void deep_visualization_with_a_default_that_is_not_registered()
+        {
+            var description = theContainer.Model
+                .For<ClassThatHoldsINotRegistered>()
+                .Default
+                .DescribeBuildPlan(1);
+
+            description.ShouldContain("NO DEFAULT IS SPECIFIED AND CANNOT BE AUTOMATICALLY DETERMINED");
+
+            Debug.WriteLine(description);
+        }
+
+        [Test]
+        public void deep_visualization_with_a_default_that_can_be_found()
+        {
+            var description = theContainer.Model
+                .Find<DeviceDecorator>("UsesDefault")
+                .DescribeBuildPlan(1);
+
+            description.ShouldNotContain("NO DEFAULT IS SPECIFIED AND CANNOT BE AUTOMATICALLY DETERMINED");
+
+            Debug.WriteLine(description);
+        }
+
+        [Test]
+        public void deep_visualization_with_a_reference_that_cannot_be_found()
+        {
+            var description = theContainer.Model
+                .Find<DeviceDecorator>("UsesNonExistent")
+                .DescribeBuildPlan(1);
+
+            description.ShouldContain("NO SUCH INSTANCE IS REGISTERED FOR THIS NAME");
+
+            Debug.WriteLine(description);
+        }
+
+        /*
+         * TODO
+         * 1. Deep with default that does not exist
+         * 2. Deep with default that exists
+         * 3. Deep with reference that does not exist
+         * 4. Deep with reference that exists
+         * 
+         * 
+         */
     }
 
 

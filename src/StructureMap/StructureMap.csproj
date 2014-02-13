@@ -2,7 +2,6 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</ProjectGuid>
@@ -10,11 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StructureMap</RootNamespace>
     <AssemblyName>StructureMap</AssemblyName>
-    
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
-  
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <!-- <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -131,6 +128,7 @@
     <Compile Include="Diagnostics\TextLine.cs" />
     <Compile Include="Diagnostics\TextReportWriter.cs" />
     <Compile Include="Diagnostics\TreeView\Astericks.cs" />
+    <Compile Include="Diagnostics\TreeView\LeftBorder.cs" />
     <Compile Include="Diagnostics\TreeView\Numbered.cs" />
     <Compile Include="Diagnostics\TreeView\Outline.cs" />
     <Compile Include="Diagnostics\TreeView\Section.cs" />

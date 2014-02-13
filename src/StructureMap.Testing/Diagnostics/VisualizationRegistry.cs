@@ -81,6 +81,15 @@ namespace StructureMap.Testing.Diagnostics
                 .Ctor<IDevice>("one").Is<ADevice>()
                 .Ctor<IDevice>("two").Is<BDevice>()
                 .Ctor<IDevice>("three").Is<CDevice>();
+
+            For<ClassThatHoldsINotRegistered>().Use<ClassThatHoldsINotRegistered>();
+
+            For<DeviceDecorator>().Add<DeviceDecorator>().Named("UsesDefault");
+            For<DeviceDecorator>().Add<DeviceDecorator>().Named("UsesA")
+                .Ctor<IDevice>().IsNamedInstance("A");
+
+            For<DeviceDecorator>().Add<DeviceDecorator>().Named("UsesNonExistent")
+                .Ctor<IDevice>().IsNamedInstance("NonExistent");
         }
     }
 
@@ -166,6 +175,22 @@ namespace StructureMap.Testing.Diagnostics
         public IDevice Inner
         {
             get { return _inner; }
+        }
+    }
+
+    public interface INotRegistered{}
+
+    public class ClassThatHoldsINotRegistered
+    {
+        public ClassThatHoldsINotRegistered(INotRegistered registered)
+        {
+        }
+    }
+
+    public class DeviceHandler
+    {
+        public DeviceHandler(IDevice device)
+        {
         }
     }
 }

@@ -15,6 +15,7 @@ namespace StructureMap.Diagnostics
         private readonly IPipelineGraph _pipeline;
         private readonly TreeWriter _writer;
         private readonly int _maxLevels;
+        private int _level;
 
         public BuildPlanVisualizer(IPipelineGraph pipeline, bool deep = false, int levels = 0)
         {
@@ -27,6 +28,55 @@ namespace StructureMap.Diagnostics
         public int MaxLevels
         {
             get { return _maxLevels; }
+        }
+
+        public void VisitNextLevel(Action action)
+        {
+            _writer.StartSection(new LeftBorder(3));
+            if (_level >= _maxLevels) return;
+
+            _level++;
+
+            try
+            {
+                action();
+            }
+            finally
+            {
+                _level--;
+                _writer.EndSection();
+                _writer.Line("");
+            }
+        }
+
+        public void ShowDefault(Type pluginType)
+        {
+            VisitNextLevel(() => {
+                var @default = _pipeline.Instances.GetDefault(pluginType);
+                if (@default == null)
+                {
+                    _writer.Line("NO DEFAULT IS SPECIFIED AND CANNOT BE AUTOMATICALLY DETERMINED");
+                }
+                else
+                {
+                    Instance(pluginType, @default);
+                }
+            });
+        }
+
+        public void ShowReferenced(Type pluginType, string name)
+        {
+            VisitNextLevel(() => {
+                var instance = _pipeline.Instances.FindInstance(pluginType, name);
+                if (instance == null)
+                {
+                    _writer.Line("NO SUCH INSTANCE IS REGISTERED FOR THIS NAME");
+                }
+                else
+                {
+                    Instance(pluginType, instance);
+                }
+            });
         }
 
         public void Constructor(ConstructorStep constructor)
@@ -64,10 +114,6 @@ namespace StructureMap.Diagnostics
 
         public void Decorator(IInterceptor interceptor)
         {
-            
-
-
-
             _writer.Line("Decorator --> " + interceptor.Description);
             var decorator = interceptor as DecoratorInterceptor;
             if (decorator != null)
@@ -112,6 +158,8 @@ namespace StructureMap.Diagnostics
         {
             _writer.WriteAll(writer);
         }
+
+
     }
 
 
