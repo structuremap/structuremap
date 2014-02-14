@@ -22,10 +22,12 @@ namespace StructureMap.Query
             get { return _instance; }
         }
 
-        // TODO -- get a UT on this puppy
         public ILifecycle Lifecycle
         {
-            get { return _instance.Lifecycle ?? _family.Lifecycle ?? Lifecycles.Transient; }
+            get
+            {
+                return _instance.DetermineLifecycle(_family.Lifecycle);
+            }
         }
 
         public string Name

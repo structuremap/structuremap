@@ -141,6 +141,9 @@ namespace StructureMap.Diagnostics
 
 
             if (pluginType != null) _writer.Line("PluginType: " + pluginType.GetFullName());
+
+            // TODO -- eliminate this duplication
+
             _writer.Line("Lifecycle: " + (instance.Lifecycle ?? Lifecycles.Transient).Description);
 
             var plan = instance.ResolveBuildPlan(pluginType ?? instance.ReturnedType, _pipeline.Policies);

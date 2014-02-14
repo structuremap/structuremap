@@ -20,7 +20,9 @@ namespace StructureMap
 
         public static string ToName(this ILifecycle lifecycle)
         {
-            return lifecycle == null ? Lifecycles.Transient.Description : lifecycle.Description;
+            if (lifecycle == null) throw new ArgumentNullException("lifecycle");
+
+            return lifecycle.Description;
         }
 
         public static void Fill<T>(this IList<T> list, T value)

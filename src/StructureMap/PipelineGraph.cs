@@ -144,7 +144,7 @@ namespace StructureMap
 
         public ILifecycle DetermineLifecycle(Type pluginType, Instance instance)
         {
-            return instance.Lifecycle ?? _instances.DefaultLifecycleFor(pluginType) ?? Lifecycles.Transient;
+            return instance.DetermineLifecycle(_instances.DefaultLifecycleFor(pluginType));
         }
     }
 }

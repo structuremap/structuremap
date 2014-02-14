@@ -188,6 +188,11 @@ namespace StructureMap.Pipeline
             }
         }
 
+        public ILifecycle DetermineLifecycle(ILifecycle parent)
+        {
+            return Lifecycle ?? parent ?? Lifecycles.Transient;
+        }
+
         protected bool Equals(Instance other)
         {
             return string.Equals(_originalName, other._originalName);
