@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
                     x.Object(new ColorService("Yellow"))
                         .Named("Yellow")
-                        .OnCreation<ColorService>("set the last service", s => _lastService = s);
+                        .OnCreation("set the last service", s => _lastService = s);
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("Purple")
                         .DecorateWith<IService>(s => new DecoratorService(s));
@@ -49,12 +49,12 @@ namespace StructureMap.Testing.Configuration.DSL
                             return new DecoratorService(s);
                         });
 
-                    x.Type<ColorService>().Named("Decorated").DecorateWith<IService>(
+                    x.Type<ColorService>().Named("Decorated").DecorateWith(
                         s => new DecoratorService(s))
                         .Ctor<string>("color").Is("Orange");
 
                     x.Object(new ColorService("Yellow")).Named("Bad")
-                        .OnCreation<ColorService>("throw exception", obj => { throw new ApplicationException("Bad!"); });
+                        .OnCreation("throw exception", obj => { throw new ApplicationException("Bad!"); });
                 });
             });
         }

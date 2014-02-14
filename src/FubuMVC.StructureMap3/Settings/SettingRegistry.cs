@@ -16,7 +16,7 @@ namespace FubuMVC.StructureMap3.Settings
 
         public void AddSettingType<T>() where T : class, new()
         {
-            ForSingletonOf<T>().Use(new SettingsInstance<T>());
+            ForSingletonOf<T>().UseInstance(new SettingsInstance<T>());
         }
 
         public void AddSettingType(Type type)

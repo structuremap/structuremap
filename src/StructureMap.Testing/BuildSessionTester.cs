@@ -186,7 +186,7 @@ namespace StructureMap.Testing
                 return new ColorRule("Red");
             });
             var registry = new Registry();
-            registry.For<ColorRule>().Use(instance);
+            registry.For<ColorRule>().UseInstance(instance);
 
             var graph = registry.Build();
             var session = BuildSession.ForPluginGraph(graph);

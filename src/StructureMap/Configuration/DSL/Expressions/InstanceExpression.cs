@@ -30,7 +30,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        ObjectInstance IsThis(T obj);
+        ObjectInstance<TReturned, T> IsThis<TReturned>(TReturned obj) where TReturned : T;
     }
 
 
@@ -95,7 +95,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="theObject"></param>
         /// <returns></returns>
-        ObjectInstance Object(T theObject);
+        ObjectInstance<TReturned, T> Object<TReturned>(TReturned theObject) where TReturned : T;
 
 
         /// <summary>
@@ -190,9 +190,9 @@ namespace StructureMap.Configuration.DSL.Expressions
             returnInstance(instance);
         }
 
-        public ObjectInstance IsThis(T obj)
+        public ObjectInstance<TReturned, T> IsThis<TReturned>(TReturned obj) where TReturned : T
         {
-            return returnInstance(new ObjectInstance(obj));
+            return returnInstance(new ObjectInstance<TReturned, T>(obj));
         }
 
         #endregion
@@ -217,9 +217,9 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new ConfiguredInstance(type));
         }
 
-        public ObjectInstance Object(T theObject)
+        public ObjectInstance<TReturned, T> Object<TReturned>(TReturned theObject) where TReturned : T
         {
-            return returnInstance(new ObjectInstance(theObject));
+            return returnInstance(new ObjectInstance<TReturned, T>(theObject));
         }
 
         public ReferencedInstance TheInstanceNamed(string name)

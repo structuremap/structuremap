@@ -64,7 +64,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         public CreatePluginFamilyExpression<TPluginType> UseSpecial(Action<IInstanceExpression<TPluginType>> configure)
         {
-            var expression = new InstanceExpression<TPluginType>(Use);
+            var expression = new InstanceExpression<TPluginType>(UseInstance);
             configure(expression);
 
             return this;
@@ -76,7 +76,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         public CreatePluginFamilyExpression<TPluginType> AddSpecial(Action<IInstanceExpression<TPluginType>> configure)
         {
-            var expression = new InstanceExpression<TPluginType>(Add);
+            var expression = new InstanceExpression<TPluginType>(AddInstance);
             configure(expression);
 
             return this;
@@ -154,7 +154,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Makes the supplied instance the default Instance for 
         /// TPluginType
         /// </summary>
-        public void Use(Instance instance)
+        public void UseInstance(Instance instance)
         {
             registerDefault(instance);
         }
@@ -162,9 +162,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Shorthand to say TheDefault.IsThis(@object)
         /// </summary>
-        public ObjectInstance Use(TPluginType @object)
+        public ObjectInstance<TReturned, TPluginType> Use<TReturned>(TReturned @object) where TReturned : TPluginType
         {
-            var instance = new ObjectInstance(@object);
+            var instance = new ObjectInstance<TReturned, TPluginType>(@object);
             registerDefault(instance);
 
             return instance;
@@ -177,7 +177,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         public ReferencedInstance Use(string instanceName)
         {
             var instance = new ReferencedInstance(instanceName);
-            Use(instance);
+            UseInstance(instance);
 
             return instance;
         }
@@ -379,10 +379,10 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Adds the object to to the TPluginType
         /// </summary>
-        public ObjectInstance Add(TPluginType @object)
+        public ObjectInstance<TReturned, TPluginType> Add<TReturned>(TReturned @object) where TReturned : TPluginType
         {
-            var instance = new ObjectInstance(@object);
-            Add(instance);
+            var instance = new ObjectInstance<TReturned, TPluginType>(@object);
+            AddInstance(instance);
 
             return instance;
         }
@@ -390,7 +390,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         public SmartInstance<TPluggedType, TPluginType> Add<TPluggedType>() where TPluggedType : TPluginType
         {
             var instance = new SmartInstance<TPluggedType, TPluginType>();
-            Add(instance);
+            AddInstance(instance);
 
             return instance;
         }
@@ -401,7 +401,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         public LambdaInstance<TPluginType> Add(Expression<Func<TPluginType>> func)
         {
             var instance = new LambdaInstance<TPluginType>(func);
-            Add(instance);
+            AddInstance(instance);
 
             return instance;
         }
@@ -412,7 +412,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         public LambdaInstance<TPluginType> Add(string description, Func<TPluginType> func)
         {
             var instance = new LambdaInstance<TPluginType>(description, func);
-            Add(instance);
+            AddInstance(instance);
 
             return instance;
         }
@@ -423,7 +423,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         public LambdaInstance<TPluginType> Add(Expression<Func<IContext, TPluginType>> func)
         {
             var instance = new LambdaInstance<TPluginType>(func);
-            Add(instance);
+            AddInstance(instance);
 
             return instance;
         }
@@ -434,12 +434,12 @@ namespace StructureMap.Configuration.DSL.Expressions
         public LambdaInstance<TPluginType> Add(string description, Func<IContext, TPluginType> func)
         {
             var instance = new LambdaInstance<TPluginType>(description, func);
-            Add(instance);
+            AddInstance(instance);
 
             return instance;
         }
 
-        public void Add(Instance instance)
+        public void AddInstance(Instance instance)
         {
             alter = f => f.AddInstance(instance);
         }

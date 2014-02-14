@@ -3,13 +3,20 @@ using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
-    public class ObjectInstance : ExpressedInstance<ObjectInstance>, IDisposable
+    public class ObjectInstance : ObjectInstance<object, object>
     {
-        private object _object;
-
-        public ObjectInstance(object anObject)
+        public ObjectInstance(object anObject) : base(anObject)
         {
-            if (anObject == null)
+        }
+    }
+
+    public class ObjectInstance<TReturned, TPluginType> : ExpressedInstance<ObjectInstance<TReturned, TPluginType>, TReturned, TPluginType>, IDisposable where TReturned : TPluginType
+    {
+        private TReturned _object;
+
+        public ObjectInstance(TReturned anObject)
+        {
+            if (null == anObject)
             {
                 throw new ArgumentNullException("anObject");
             }
@@ -20,12 +27,12 @@ namespace StructureMap.Pipeline
         }
 
 
-        protected override ObjectInstance thisInstance
+        protected override ObjectInstance<TReturned, TPluginType> thisInstance
         {
             get { return this; }
         }
 
-        public object Object
+        public TReturned Object
         {
             get { return _object; }
         }
@@ -38,7 +45,7 @@ namespace StructureMap.Pipeline
                 _object.SafeDispose();
             }
 
-            _object = null;
+            _object = default(TReturned);
         }
 
         public override string Description

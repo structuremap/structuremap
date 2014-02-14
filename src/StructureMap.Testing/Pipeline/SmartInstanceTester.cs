@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Pipeline
             var instance = For<T>();
             action(instance);
 
-            var container = new Container(r => r.For<T>().Use(instance));
+            var container = new Container(r => r.For<T>().UseInstance(instance));
             return container.GetInstance<T>();
         }
 
