@@ -104,7 +104,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <typeparam name="TPluggedType"></typeparam>
         /// <returns></returns>
-        SmartInstance<TPluggedType> Type<TPluggedType>();
+        SmartInstance<TPluggedType, T> Type<TPluggedType>() where TPluggedType : T;
 
         /// <summary>
         /// Build the Instance with the constructor function and setter arguments.  Use this
@@ -202,14 +202,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             _action(instance);
         }
 
-        public SmartInstance<TPluggedType> Type<TPluggedType>()
+        public SmartInstance<TPluggedType, T> Type<TPluggedType>() where TPluggedType : T
         {
             if (!typeof (TPluggedType).IsConcrete())
             {
                 throw new InvalidOperationException("This class can only be created for concrete TPluginType types");
             }
 
-            return returnInstance(new SmartInstance<TPluggedType>());
+            return returnInstance(new SmartInstance<TPluggedType, T>());
         }
 
         public ConfiguredInstance Type(Type type)

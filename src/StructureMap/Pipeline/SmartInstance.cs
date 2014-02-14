@@ -1,5 +1,7 @@
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
+using StructureMap.Building;
 using StructureMap.Building.Interception;
 
 namespace StructureMap.Pipeline
@@ -8,10 +10,12 @@ namespace StructureMap.Pipeline
     ///     Instance that builds objects with by calling constructor functions and using setter properties
     /// </summary>
     /// <typeparam name="T">The concrete type constructed by SmartInstance</typeparam>
-    public class SmartInstance<T> : ConstructorInstance<SmartInstance<T>>
+    /// <typeparam name="TPluginType">The "PluginType" that this instance satisfies</typeparam>
+    public class SmartInstance<T, TPluginType> : ExpressedInstance<SmartInstance<T, TPluginType>, T, TPluginType>, IConfiguredInstance where T : TPluginType
     {
+        private readonly ConstructorInstance _inner = new ConstructorInstance(typeof (T));
+
         public SmartInstance(Expression<Func<T>> constructorSelection = null)
-            : base(typeof (T))
         {
             if (constructorSelection != null)
             {
@@ -19,38 +23,19 @@ namespace StructureMap.Pipeline
             }
         }
 
-        public SmartInstance<T> SelectConstructor(Expression<Func<T>> constructor)
+        public SmartInstance<T, TPluginType> SelectConstructor(Expression<Func<T>> constructor)
         {
             var finder = new ConstructorFinderVisitor();
             finder.Visit(constructor);
 
-            Constructor = finder.Constructor;
+            _inner.Constructor = finder.Constructor;
 
             return this;
         }
 
-        protected override SmartInstance<T> thisInstance
+        protected override SmartInstance<T, TPluginType> thisInstance
         {
             get { return this; }
-        }
-
-        /// <summary>
-        ///     Register an Action to perform on the object created by this Instance
-        ///     before it is returned to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <param name="description">Descriptive text for diagnostic purposes</param>
-        /// <returns></returns>
-        public SmartInstance<T> OnCreation(string description, Action<T> handler)
-        {
-            AddInterceptor(InterceptorFactory.ForAction(description, handler));
-
-            return this;
-        }
-
-        protected override SmartInstance<T> thisObject()
-        {
-            return this;
         }
 
 
@@ -59,7 +44,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        public SmartInstance<T> SetProperty(Action<T> action)
+        public SmartInstance<T, TPluginType> SetProperty(Action<T> action)
         {
             AddInterceptor(InterceptorFactory.ForAction("Setting property", action));
             return this;
@@ -72,11 +57,59 @@ namespace StructureMap.Pipeline
         /// <typeparam name="TSettertype"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public DependencyExpression<SmartInstance<T>, TSettertype> Setter<TSettertype>(
+        public DependencyExpression<SmartInstance<T, TPluginType>, TSettertype> Setter<TSettertype>(
             Expression<Func<T, TSettertype>> expression)
         {
             var propertyName = ReflectionHelper.GetProperty(expression).Name;
-            return new DependencyExpression<SmartInstance<T>, TSettertype>(this, propertyName);
+            return new DependencyExpression<SmartInstance<T, TPluginType>, TSettertype>(this, propertyName);
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            return _inner.ToDependencySource(pluginType);
+        }
+
+        public override string Description
+        {
+            get { return _inner.Description; }
+        }
+
+        public override Type ReturnedType
+        {
+            get { return PluggedType; }
+        }
+
+        public Type PluggedType
+        {
+            get
+            {
+                return typeof (T);
+            }
+        }
+
+        public DependencyCollection Dependencies
+        {
+            get
+            {
+                return _inner.Dependencies;
+            }
+        }
+
+        public ConstructorInstance Override(ExplicitArguments arguments)
+        {
+            return _inner.Override(arguments);
+        }
+
+        public ConstructorInfo Constructor
+        {
+            get
+            {
+                return _inner.Constructor;
+            }
+            set
+            {
+                _inner.Constructor = value;
+            }
         }
     }
 

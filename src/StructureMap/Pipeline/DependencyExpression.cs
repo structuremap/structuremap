@@ -9,7 +9,7 @@ namespace StructureMap.Pipeline
     /// <summary>
     /// Expression Builder that helps to define child dependencies inline 
     /// </summary>
-    public class DependencyExpression<TInstance, TChild> where TInstance : ConstructorInstance<TInstance>
+    public class DependencyExpression<TInstance, TChild> where TInstance : IConfiguredInstance
     {
         private readonly TInstance _instance;
         private readonly string _propertyName;
@@ -107,7 +107,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Is<TConcreteType>() where TConcreteType : TChild
         {
-            return Is(new SmartInstance<TConcreteType>());
+            return Is(new SmartInstance<TConcreteType, TChild>());
         }
 
 
@@ -117,9 +117,9 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <typeparam name="TConcreteType"></typeparam>
         /// <returns></returns>
-        public TInstance Is<TConcreteType>(Action<SmartInstance<TConcreteType>> configure) where TConcreteType : TChild
+        public TInstance Is<TConcreteType>(Action<SmartInstance<TConcreteType, TChild>> configure) where TConcreteType : TChild
         {
-            var instance = new SmartInstance<TConcreteType>();
+            var instance = new SmartInstance<TConcreteType, TChild>();
             configure(instance);
             return Is(instance);
         }

@@ -86,11 +86,11 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Shorthand way of saying Use<>
         /// </summary>
-        public SmartInstance<TConcreteType> Use<TConcreteType>() where TConcreteType : TPluginType
+        public SmartInstance<TConcreteType, TPluginType> Use<TConcreteType>() where TConcreteType : TPluginType
         {
             // This is *my* team's naming convention for generic parameters
             // I know you may not like it, but it's my article so there
-            var instance = new SmartInstance<TConcreteType>();
+            var instance = new SmartInstance<TConcreteType, TPluginType>();
 
             registerDefault(instance);
 
@@ -185,9 +185,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Defines a fallback instance in case no default was defined for TPluginType
         /// </summary>
-        public SmartInstance<TConcreteType> UseIfNone<TConcreteType>() where TConcreteType : TPluginType
+        public SmartInstance<TConcreteType, TPluginType> UseIfNone<TConcreteType>() where TConcreteType : TPluginType
         {
-            var instance = new SmartInstance<TConcreteType>();
+            var instance = new SmartInstance<TConcreteType, TPluginType>();
             registerFallBack(instance);
             return instance;
         }
@@ -293,10 +293,10 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Decorates all instances of TPluginType with the concrete type TDecoratorType
         /// </summary>
-        public SmartInstance<TDecoratorType> DecorateAllWith<TDecoratorType>(Func<Instance, bool> filter = null)
+        public SmartInstance<TDecoratorType, TPluginType> DecorateAllWith<TDecoratorType>(Func<Instance, bool> filter = null)
             where TDecoratorType : TPluginType
         {
-            var instance = new SmartInstance<TDecoratorType>();
+            var instance = new SmartInstance<TDecoratorType, TPluginType>();
             var interceptor = new DecoratorInterceptor(typeof (TPluginType), instance);
             var policy = new InterceptorPolicy<TPluginType>(interceptor, filter);
 
@@ -387,9 +387,9 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-        public SmartInstance<TPluggedType> Add<TPluggedType>()
+        public SmartInstance<TPluggedType, TPluginType> Add<TPluggedType>() where TPluggedType : TPluginType
         {
-            var instance = new SmartInstance<TPluggedType>();
+            var instance = new SmartInstance<TPluggedType, TPluginType>();
             Add(instance);
 
             return instance;

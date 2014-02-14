@@ -296,14 +296,14 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="T"></typeparam>
         public class BuildWithExpression<T>
         {
-            private readonly SmartInstance<T> _instance;
+            private readonly SmartInstance<T, T> _instance;
 
-            public BuildWithExpression(SmartInstance<T> instance)
+            public BuildWithExpression(SmartInstance<T, T> instance)
             {
                 _instance = instance;
             }
 
-            public SmartInstance<T> Configure
+            public SmartInstance<T, T> Configure
             {
                 get { return _instance; }
             }
