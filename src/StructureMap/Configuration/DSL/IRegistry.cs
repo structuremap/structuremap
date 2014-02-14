@@ -43,7 +43,7 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="U"></typeparam>
         /// <returns></returns>
-        LambdaInstance<T> Redirect<T, U>() where T : class where U : class;
+        LambdaInstance<T, T> Redirect<T, U>() where T : class where U : class;
     }
 
     public interface IRegistry : IProfileRegistry

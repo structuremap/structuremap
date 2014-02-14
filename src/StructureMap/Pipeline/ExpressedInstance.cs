@@ -143,9 +143,9 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T DecorateWith(Expression<Func<TReturned, TPluginType>> handler)
+        public T DecorateWith(Expression<Func<TPluginType, TPluginType>> handler)
         {
-            AddInterceptor(new FuncInterceptor<TReturned, TPluginType>(handler));
+            AddInterceptor(new FuncInterceptor<TPluginType>(handler));
 
             return thisInstance;
         }
@@ -157,7 +157,7 @@ namespace StructureMap.Pipeline
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T DecorateWith<THandler>(string description, Func<THandler, THandler> handler)
+        public T DecorateWith(string description, Func<TPluginType, TPluginType> handler)
         {
             AddInterceptor(InterceptorFactory.ForFunc(description, handler));
 
@@ -170,9 +170,9 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T DecorateWith(Expression<Func<IContext, TReturned, TPluginType>> handler)
+        public T DecorateWith(Expression<Func<IContext, TPluginType, TPluginType>> handler)
         {
-            AddInterceptor(new FuncInterceptor<TReturned, TPluginType>(handler));
+            AddInterceptor(new FuncInterceptor<TPluginType>(handler));
 
             return thisInstance;
         }
@@ -181,10 +181,10 @@ namespace StructureMap.Pipeline
         ///     Register a Func to potentially decorate or substitute for the object
         ///     created by this Instance before it is returned to the caller
         /// </summary>
-        /// <typeparam name="THandler"></typeparam>
+        /// <param name="description">User friendly descriptive message</param>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T DecorateWith<THandler>(string description, Func<IContext, THandler, THandler> handler)
+        public T DecorateWith(string description, Func<IContext, TPluginType, TPluginType> handler)
         {
             AddInterceptor(InterceptorFactory.ForFunc(description, handler));
 

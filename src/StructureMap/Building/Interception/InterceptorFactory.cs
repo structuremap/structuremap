@@ -15,14 +15,14 @@ namespace StructureMap.Building.Interception
             return new ActivatorInterceptor<T>((s, x) => action(s, x));
         }
 
-        public static IInterceptor ForFunc<T, TPluginType>(string description, Func<T, TPluginType> func) where T : TPluginType
+        public static IInterceptor ForFunc<T>(string description, Func<T, T> func) 
         {
-            return new FuncInterceptor<T, TPluginType>(x => func(x), description);
+            return new FuncInterceptor<T>(x => func(x), description);
         }
 
-        public static IInterceptor ForFunc<T, TPluginType>(string description, Func<IContext, T, TPluginType> func) where T : TPluginType
+        public static IInterceptor ForFunc<T>(string description, Func<IContext, T, T> func) 
         {
-            return new FuncInterceptor<T, TPluginType>((s, x) => func(s, x), description);
+            return new FuncInterceptor<T>((s, x) => func(s, x), description);
         }
     }
 }

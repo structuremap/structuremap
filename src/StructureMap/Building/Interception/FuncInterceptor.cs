@@ -4,29 +4,19 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Building.Interception
 {
-    public class FuncInterceptor<T> : FuncInterceptor<T, T>
-    {
-        public FuncInterceptor(Expression<Func<T, T>> expression, string description = null) : base(expression, description)
-        {
-        }
 
-        public FuncInterceptor(Expression<Func<IContext, T, T>> expression, string description = null) : base(expression, description)
-        {
-        }
-    }
-
-    public class FuncInterceptor<T, TPluginType> : IInterceptor where T : TPluginType
+    public class FuncInterceptor<T> : IInterceptor
     {
         private readonly LambdaExpression _expression;
         private readonly string _description;
 
-        public FuncInterceptor(Expression<Func<T, TPluginType>> expression, string description = null)
+        public FuncInterceptor(Expression<Func<T, T>> expression, string description = null)
         {
             _expression = expression;
             _description = description;
         }
 
-        public FuncInterceptor(Expression<Func<IContext, T, TPluginType>> expression, string description = null)
+        public FuncInterceptor(Expression<Func<IContext, T, T>> expression, string description = null)
         {
             _expression = expression;
             _description = description;
@@ -70,10 +60,10 @@ namespace StructureMap.Building.Interception
 
         public Type Returns
         {
-            get { return typeof (TPluginType); }
+            get { return typeof (T); }
         }
 
-        protected bool Equals(FuncInterceptor<T, TPluginType> other)
+        protected bool Equals(FuncInterceptor<T> other)
         {
             return Equals(_expression, other._expression);
         }
@@ -83,7 +73,7 @@ namespace StructureMap.Building.Interception
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((FuncInterceptor<T, TPluginType>) obj);
+            return Equals((FuncInterceptor<T>) obj);
         }
 
         public override int GetHashCode()

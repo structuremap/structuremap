@@ -41,10 +41,10 @@ namespace StructureMap.Testing.Configuration.DSL
                         .OnCreation("set the last service", s => _lastService = s);
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("Purple")
-                        .DecorateWith<IService>(s => new DecoratorService(s));
+                        .DecorateWith(s => new DecoratorService(s));
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("DecoratedWithContext")
-                        .DecorateWith<IService>("decorated with context", (c, s) => {
+                        .DecorateWith("decorated with context", (c, s) => {
                             c.GetInstance<ContextRecorder>().WasTouched = true;
                             return new DecoratorService(s);
                         });

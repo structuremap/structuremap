@@ -77,6 +77,11 @@ namespace StructureMap.Pipeline
             return _inner.ToDependencySource(pluginType);
         }
 
+        public override IDependencySource ToBuilder(Type pluginType, Policies policies)
+        {
+            return _inner.ToBuilder(pluginType, policies);
+        }
+
         public override string Description
         {
             get { return _inner.Description; }

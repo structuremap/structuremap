@@ -541,12 +541,12 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="TPluginType"></typeparam>
         /// <param name="instance"></param>
-        public void Inject<TPluginType>(TPluginType instance)
+        public void Inject<TPluginType>(TPluginType instance) where TPluginType : class
         {
             Configure(x => x.For<TPluginType>().Use(instance));
         }
 
-        public void Inject<TPluginType>(string name, TPluginType value)
+        public void Inject<TPluginType>(string name, TPluginType value) where TPluginType : class
         {
             Configure(x => x.For<TPluginType>().Use(value).Named(name));
         }

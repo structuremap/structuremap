@@ -118,9 +118,9 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="TPluginType"></typeparam>
         /// <param name="instance"></param>
-        void Inject<TPluginType>(TPluginType instance);
+        void Inject<TPluginType>(TPluginType instance) where TPluginType : class;
 
-        void Inject<TPluginType>(string name, TPluginType value);
+        void Inject<TPluginType>(string name, TPluginType value) where TPluginType : class;
 
 
         /// <summary>

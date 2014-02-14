@@ -86,7 +86,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var graph = registry.Build();
             graph.Profile("something").Families[typeof (IWidget)].GetDefaultInstance()
-                .ShouldBeOfType<ObjectInstance>()
+                .ShouldBeOfType<ObjectInstance<AWidget, IWidget>>()
                 .Object.ShouldBeTheSameAs(theWidget);
         }
 

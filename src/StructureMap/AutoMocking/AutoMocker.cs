@@ -46,7 +46,7 @@ namespace StructureMap.AutoMocking
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="target"></param>
-        void Inject<T>(T target);
+        void Inject<T>(T target) where T : class;
 
         /// <summary>
         ///     Adds an additional mock object for a given T
@@ -63,7 +63,7 @@ namespace StructureMap.AutoMocking
         ///     ClassUnderTest gets built with a concrete T
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        void UseConcreteClassFor<T>();
+        void UseConcreteClassFor<T>() where T : class;
 
         /// <summary>
         ///     Creates, returns, and registers an array of mock objects for type T.
@@ -149,7 +149,7 @@ namespace StructureMap.AutoMocking
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="target"></param>
-        public void Inject<T>(T target)
+        public void Inject<T>(T target) where T : class
         {
             Container.Inject(target);
         }
@@ -175,7 +175,7 @@ namespace StructureMap.AutoMocking
         ///     ClassUnderTest gets built with a concrete T
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public void UseConcreteClassFor<T>()
+        public void UseConcreteClassFor<T>() where T : class
         {
             var concreteClass = Container.GetInstance<T>();
             Container.Inject(concreteClass);

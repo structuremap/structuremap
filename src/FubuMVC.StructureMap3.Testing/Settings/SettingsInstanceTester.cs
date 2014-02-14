@@ -17,7 +17,7 @@ namespace FubuMVC.StructureMap3.Testing.Settings
                 x.For<ISettingsProvider>().Use<SettingsProvider>();
                 x.For<IObjectResolver>().Use(ObjectResolver.Basic());
 
-                x.For<FooSettings>().Use(new SettingsInstance<FooSettings>());
+                x.For<FooSettings>().UseInstance(new SettingsInstance<FooSettings>());
             });
 
             container.GetInstance<FooSettings>()

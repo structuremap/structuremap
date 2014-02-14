@@ -30,7 +30,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        ObjectInstance<TReturned, T> IsThis<TReturned>(TReturned obj) where TReturned : T;
+        ObjectInstance<TReturned, T> IsThis<TReturned>(TReturned obj) where TReturned : class, T;
     }
 
 
@@ -95,7 +95,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="theObject"></param>
         /// <returns></returns>
-        ObjectInstance<TReturned, T> Object<TReturned>(TReturned theObject) where TReturned : T;
+        ObjectInstance<TReturned, T> Object<TReturned>(TReturned theObject) where TReturned : class, T;
 
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        LambdaInstance<T> ConstructedBy(Expression<Func<T>> func);
+        LambdaInstance<TReturned, T> ConstructedBy<TReturned>(Expression<Func<TReturned>> func) where TReturned : T;
 
         /// <summary>
         /// Create an Instance that builds an object by calling a Lambda or
@@ -130,7 +130,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="func"></param>
         /// <param name="description">Diagnostic description of func</param>
         /// <returns></returns>
-        LambdaInstance<T> ConstructedBy(string description, Func<T> func);
+        LambdaInstance<TReturned, T> ConstructedBy<TReturned>(string description, Func<TReturned> func) where TReturned : T;
 
         /// <summary>
         /// Create an Instance that builds an object by calling a Lambda or
@@ -139,7 +139,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        LambdaInstance<T> ConstructedBy(Expression<Func<IContext, T>> func);
+        LambdaInstance<TReturned, T> ConstructedBy<TReturned>(Expression<Func<IContext, TReturned>> func) where TReturned : T;
 
         /// <summary>
         /// Create an Instance that builds an object by calling a Lambda or
@@ -149,7 +149,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="func"></param>
         /// <param name="description">Diagnostic description of the func</param>
         /// <returns></returns>
-        LambdaInstance<T> ConstructedBy(string description, Func<IContext, T> func);
+        LambdaInstance<TReturned, T> ConstructedBy<TReturned>(string description, Func<IContext, TReturned> func) where TReturned : T;
 
         /// <summary>
         /// Use the Instance of this PluginType with the specified name.  This is
@@ -190,7 +190,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             returnInstance(instance);
         }
 
-        public ObjectInstance<TReturned, T> IsThis<TReturned>(TReturned obj) where TReturned : T
+        public ObjectInstance<TReturned, T> IsThis<TReturned>(TReturned obj) where TReturned : class, T
         {
             return returnInstance(new ObjectInstance<TReturned, T>(obj));
         }
@@ -217,7 +217,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new ConfiguredInstance(type));
         }
 
-        public ObjectInstance<TReturned, T> Object<TReturned>(TReturned theObject) where TReturned : T
+        public ObjectInstance<TReturned, T> Object<TReturned>(TReturned theObject) where TReturned : class, T
         {
             return returnInstance(new ObjectInstance<TReturned, T>(theObject));
         }
@@ -232,24 +232,24 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new DefaultInstance());
         }
 
-        public LambdaInstance<T> ConstructedBy(Expression<Func<T>> func)
+        public LambdaInstance<TReturned, T> ConstructedBy<TReturned>(Expression<Func<TReturned>> func) where TReturned : T
         {
-            return returnInstance(new LambdaInstance<T>(func));
+            return returnInstance(new LambdaInstance<TReturned, T>(func));
         }
 
-        public LambdaInstance<T> ConstructedBy(string description, Func<T> func)
+        public LambdaInstance<TReturned, T> ConstructedBy<TReturned>(string description, Func<TReturned> func) where TReturned : T
         {
-            return returnInstance(new LambdaInstance<T>(description, func));
+            return returnInstance(new LambdaInstance<TReturned, T>(description, func));
         }
 
-        public LambdaInstance<T> ConstructedBy(Expression<Func<IContext, T>> func)
+        public LambdaInstance<TReturned, T> ConstructedBy<TReturned>(Expression<Func<IContext, TReturned>> func) where TReturned : T
         {
-            return returnInstance(new LambdaInstance<T>(func));
+            return returnInstance(new LambdaInstance<TReturned, T>(func));
         }
 
-        public LambdaInstance<T> ConstructedBy(string description, Func<IContext, T> func)
+        public LambdaInstance<TReturned, T> ConstructedBy<TReturned>(string description, Func<IContext, TReturned> func) where TReturned : T
         {
-            return returnInstance(new LambdaInstance<T>(description, func));
+            return returnInstance(new LambdaInstance<TReturned, T>(description, func));
         }
 
         private TInstance returnInstance<TInstance>(TInstance instance) where TInstance : Instance

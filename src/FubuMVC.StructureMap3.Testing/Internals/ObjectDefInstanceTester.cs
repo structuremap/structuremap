@@ -58,7 +58,7 @@ namespace FubuMVC.StructureMap3.Testing.Internals
                 {
                     x.For<IFileSystem>().Use<FileSystem>();
                     x.For<IHttpWriter>().Use<NulloHttpWriter>();
-                    x.For<IActionBehavior>().Use(new ObjectDefInstance(def));
+                    x.For<IActionBehavior>().UseInstance(new ObjectDefInstance(def));
                     x.For<ILogger>().Use<Logger>();
                     x.For<ISystemTime>().Use(() => SystemTime.Default());
                 });
@@ -78,7 +78,7 @@ namespace FubuMVC.StructureMap3.Testing.Internals
             };
 
             var container =
-                new Container(x => { x.For<IActionBehavior>().Use(new ObjectDefInstance(def)); });
+                new Container(x => { x.For<IActionBehavior>().UseInstance(new ObjectDefInstance(def)); });
 
             container.GetInstance<IActionBehavior>().ShouldBeOfType<TestBehavior>();
         }

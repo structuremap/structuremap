@@ -10,7 +10,7 @@ namespace StructureMap.Pipeline
         }
     }
 
-    public class ObjectInstance<TReturned, TPluginType> : ExpressedInstance<ObjectInstance<TReturned, TPluginType>, TReturned, TPluginType>, IDisposable where TReturned : TPluginType
+    public class ObjectInstance<TReturned, TPluginType> : ExpressedInstance<ObjectInstance<TReturned, TPluginType>, TReturned, TPluginType>, IDisposable where TReturned : class, TPluginType
     {
         private TReturned _object;
 
@@ -45,7 +45,7 @@ namespace StructureMap.Pipeline
                 _object.SafeDispose();
             }
 
-            _object = default(TReturned);
+            _object = null;
         }
 
         public override string Description

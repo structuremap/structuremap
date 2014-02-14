@@ -1,5 +1,6 @@
 using System.Security.Principal;
 using NUnit.Framework;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Bugs
 {
@@ -19,7 +20,7 @@ namespace StructureMap.Testing.Bugs
         public void Returning_null_values_in_contructed_by_generates_a_duplicate_cache_entry()
         {
             var container = new Container(x => {
-                x.For<IPrincipal>().Use(() => null);
+                x.For<IPrincipal>().UseInstance(new NullInstance());
 
                 x.For<TestClass>().Use<TestClass>();
             });
