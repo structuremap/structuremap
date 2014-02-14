@@ -159,10 +159,10 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void smart_instance_can_specify_the_constructor()
         {
-            new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null)).Constructor.GetParameters().Select(x => x.ParameterType)
+            new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null)).As<IConfiguredInstance>().Constructor.GetParameters().Select(x => x.ParameterType)
                 .ShouldHaveTheSameElementsAs(typeof(IGateway));
 
-            new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null, null)).Constructor.GetParameters().Select(x => x.ParameterType)
+            new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null, null)).As<IConfiguredInstance>().Constructor.GetParameters().Select(x => x.ParameterType)
                 .ShouldHaveTheSameElementsAs(typeof(IGateway), typeof(IService));
         }
 

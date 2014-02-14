@@ -6,6 +6,14 @@ using StructureMap.Building.Interception;
 
 namespace StructureMap.Pipeline
 {
+
+    public class SmartInstance<T> : SmartInstance<T, T>
+    {
+        public SmartInstance(Expression<Func<T>> constructorSelection = null) : base(constructorSelection)
+        {
+        }
+    }
+
     /// <summary>
     ///     Instance that builds objects with by calling constructor functions and using setter properties
     /// </summary>
