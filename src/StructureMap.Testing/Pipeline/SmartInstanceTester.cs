@@ -11,14 +11,14 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class SmartInstanceTester
     {
-        private SmartInstance<T> For<T>()
+        private SmartInstance<T, T> For<T>()
         {
-            var instance = new SmartInstance<T>();
+            var instance = new SmartInstance<T, T>();
 
             return instance;
         }
 
-        public T build<T>(Action<SmartInstance<T>> action)
+        public T build<T>(Action<SmartInstance<T, T>> action)
         {
             var instance = For<T>();
             action(instance);

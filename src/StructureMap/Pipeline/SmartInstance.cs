@@ -76,10 +76,10 @@ namespace StructureMap.Pipeline
 
         public override Type ReturnedType
         {
-            get { return PluggedType; }
+            get { return typeof(T); }
         }
 
-        public Type PluggedType
+        Type IConfiguredInstance.PluggedType
         {
             get
             {
@@ -87,7 +87,7 @@ namespace StructureMap.Pipeline
             }
         }
 
-        public DependencyCollection Dependencies
+        DependencyCollection IConfiguredInstance.Dependencies
         {
             get
             {
@@ -95,12 +95,12 @@ namespace StructureMap.Pipeline
             }
         }
 
-        public ConstructorInstance Override(ExplicitArguments arguments)
+        ConstructorInstance IConfiguredInstance.Override(ExplicitArguments arguments)
         {
             return _inner.Override(arguments);
         }
 
-        public ConstructorInfo Constructor
+        ConstructorInfo IConfiguredInstance.Constructor
         {
             get
             {
@@ -110,6 +110,84 @@ namespace StructureMap.Pipeline
             {
                 _inner.Constructor = value;
             }
+        }
+
+
+
+
+        /// <summary>
+        ///     Inline definition of a constructor dependency.  Select the constructor argument by type.  Do not
+        ///     use this method if there is more than one constructor arguments of the same type
+        /// </summary>
+        /// <typeparam name="TCtorType"></typeparam>
+        /// <returns></returns>
+        public DependencyExpression<SmartInstance<T, TPluginType>, TCtorType> Ctor<TCtorType>()
+        {
+            return Ctor<TCtorType>(null);
+        }
+
+        /// <summary>
+        ///     Inline definition of a constructor dependency.  Select the constructor argument by type and constructor name.
+        ///     Use this method if there is more than one constructor arguments of the same type
+        /// </summary>
+        /// <typeparam name="TCtorType"></typeparam>
+        /// <param name="constructorArg"></param>
+        /// <returns></returns>
+        public DependencyExpression<SmartInstance<T, TPluginType>, TCtorType> Ctor<TCtorType>(string constructorArg)
+        {
+            return new DependencyExpression<SmartInstance<T, TPluginType>, TCtorType>(this, constructorArg);
+        }
+
+
+        /// <summary>
+        ///     Inline definition of a setter dependency.  Only use this method if there
+        ///     is only a single property of the TSetterType
+        /// </summary>
+        /// <typeparam name="TSetterType"></typeparam>
+        /// <returns></returns>
+        public DependencyExpression<SmartInstance<T, TPluginType>, TSetterType> Setter<TSetterType>()
+        {
+            return Ctor<TSetterType>();
+        }
+
+        /// <summary>
+        ///     Inline definition of a setter dependency.  Only use this method if there
+        ///     is only a single property of the TSetterType
+        /// </summary>
+        /// <typeparam name="TSetterType"></typeparam>
+        /// <param name="setterName">The name of the property</param>
+        /// <returns></returns>
+        public DependencyExpression<SmartInstance<T, TPluginType>, TSetterType> Setter<TSetterType>(string setterName)
+        {
+            return Ctor<TSetterType>(setterName);
+        }
+
+        /// <summary>
+        ///     Inline definition of a dependency on an Array of the CHILD type.  I.e. CHILD[].
+        ///     This method can be used for either constructor arguments or setter properties
+        /// </summary>
+        /// <typeparam name="TElement"></typeparam>
+        /// <returns></returns>
+        public ArrayDefinitionExpression<SmartInstance<T, TPluginType>, TElement> EnumerableOf<TElement>()
+        {
+            if (typeof(TElement).IsArray)
+            {
+                throw new ArgumentException("Please specify the element type in the call to TheArrayOf");
+            }
+
+            return new ArrayDefinitionExpression<SmartInstance<T, TPluginType>, TElement>(this, null);
+        }
+
+        /// <summary>
+        ///     Inline definition of a dependency on an Array of the CHILD type and the specified setter property or constructor argument name.  I.e. CHILD[].
+        ///     This method can be used for either constructor arguments or setter properties
+        /// </summary>
+        /// <typeparam name="TElement"></typeparam>
+        /// <param name="ctorOrPropertyName"></param>
+        /// <returns></returns>
+        public ArrayDefinitionExpression<SmartInstance<T, TPluginType>, TElement> EnumerableOf<TElement>(string ctorOrPropertyName)
+        {
+            return new ArrayDefinitionExpression<SmartInstance<T, TPluginType>, TElement>(this, ctorOrPropertyName);
         }
     }
 
