@@ -34,20 +34,6 @@ namespace StructureMap.Pipeline
             get { return this; }
         }
 
-
-        /// <summary>
-        ///     Register an Action to perform on the object created by this Instance
-        ///     before it is returned to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public SmartInstance<T> OnCreation(Expression<Action<T>> handler)
-        {
-            AddInterceptor(new ActivatorInterceptor<T>(handler));
-
-            return this;
-        }
-
         /// <summary>
         ///     Register an Action to perform on the object created by this Instance
         ///     before it is returned to the caller
@@ -64,88 +50,6 @@ namespace StructureMap.Pipeline
 
         protected override SmartInstance<T> thisObject()
         {
-            return this;
-        }
-
-        /// <summary>
-        ///     Register an Action to perform on the object created by this Instance
-        ///     before it is returned to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public SmartInstance<T> OnCreation(Expression<Action<IContext, T>> handler)
-        {
-            AddInterceptor(new ActivatorInterceptor<T>(handler));
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Register an Action to perform on the object created by this Instance
-        ///     before it is returned to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <param name="description">Descriptive text for diagnostic purposes</param>
-        /// <returns></returns>
-        public SmartInstance<T> OnCreation(string description, Action<IContext, T> handler)
-        {
-            AddInterceptor(InterceptorFactory.ForAction(description, handler));
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Register a Func to potentially decorate or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public SmartInstance<T> DecorateWith(Expression<Func<T, T>> handler)
-        {
-            AddInterceptor(new FuncInterceptor<T>(handler));
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Register a Func to potentially decorate or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <param name="description">Descriptive text for diagnostic purposes</param>
-        /// <returns></returns>
-        public SmartInstance<T> DecorateWith(string description, Func<T, T> handler)
-        {
-            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
-
-            return this;
-        }
-
-
-        /// <summary>
-        ///     Register a Func to potentially decorate or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public SmartInstance<T> DecorateWith(Expression<Func<IContext, T, T>> handler)
-        {
-            AddInterceptor(new FuncInterceptor<T>(handler));
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Register a Func to potentially decorate or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <param name="description">Descriptive text for diagnostic purposes</param>
-        /// <returns></returns>
-        public SmartInstance<T> DecorateWith(string description, Func<IContext, T, T> handler)
-        {
-            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
-
             return this;
         }
 

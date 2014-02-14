@@ -25,119 +25,6 @@ namespace StructureMap.Pipeline
             return thisInstance;
         }
 
-        /// <summary>
-        ///     Register an Action to perform on the object created by this Instance
-        ///     before it is returned to the caller
-        /// </summary>
-        /// <typeparam name="THandler"></typeparam>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public T OnCreation<THandler>(Expression<Action<THandler>> handler)
-        {
-            AddInterceptor(new ActivatorInterceptor<THandler>(handler));
-
-            return thisInstance;
-        }
-
-        /// <summary>
-        ///     Register an Action to perform on the object created by this Instance
-        ///     before it is returned to the caller
-        /// </summary>
-        /// <typeparam name="THandler"></typeparam>
-        /// <param name="handler"></param>
-        /// <param name="description">A description of the action for diagnostic purposes</param>
-        /// <returns></returns>
-        public T OnCreation<THandler>(string description, Action<THandler> handler)
-        {
-            AddInterceptor(InterceptorFactory.ForAction(description, handler));
-
-            return thisInstance;
-        }
-
-        /// <summary>
-        ///     Register an Action to perform on the object created by this Instance
-        ///     before it is returned to the caller
-        /// </summary>
-        /// <typeparam name="THandler"></typeparam>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public T OnCreation<THandler>(Expression<Action<IContext, THandler>> handler)
-        {
-            AddInterceptor(new ActivatorInterceptor<THandler>(handler));
-
-            return thisInstance;
-        }
-
-        /// <summary>
-        ///     Register an Action to perform on the object created by this Instance
-        ///     before it is returned to the caller
-        /// </summary>
-        /// <typeparam name="THandler"></typeparam>
-        /// <param name="handler"></param>
-        /// <param name="description">A description of the action for diagnostic purposes</param>
-        /// <returns></returns>
-        public T OnCreation<THandler>(string description, Action<IContext, THandler> handler)
-        {
-            AddInterceptor(InterceptorFactory.ForAction(description, handler));
-
-            return thisInstance;
-        }
-
-        /// <summary>
-        ///     Register a Func to potentially decorate or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <typeparam name="THandler"></typeparam>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public T DecorateWith<THandler>(Expression<Func<THandler, THandler>> handler)
-        {
-            AddInterceptor(new FuncInterceptor<THandler>(handler));
-
-            return thisInstance;
-        }
-
-        /// <summary>
-        ///     Register a Func to potentially decorate or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <typeparam name="THandler"></typeparam>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public T DecorateWith<THandler>(string description, Func<THandler, THandler> handler)
-        {
-            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
-
-            return thisInstance;
-        }
-
-        /// <summary>
-        ///     Register a Func to potentially decorate or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <typeparam name="THandler"></typeparam>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public T DecorateWith<THandler>(Expression<Func<IContext, THandler, THandler>> handler)
-        {
-            AddInterceptor(new FuncInterceptor<THandler>(handler));
-
-            return thisInstance;
-        }
-
-        /// <summary>
-        ///     Register a Func to potentially decorate or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <typeparam name="THandler"></typeparam>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public T DecorateWith<THandler>(string description, Func<IContext, THandler, THandler> handler)
-        {
-            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
-
-            return thisInstance;
-        }
 
         /// <summary>
         ///     Register an <see cref="IInterceptor">IInterceptor</see> with this Instance
@@ -190,5 +77,119 @@ namespace StructureMap.Pipeline
             SetLifecycleTo<TLifecycle>();
             return thisInstance;
         }
+    }
+
+    public abstract class ExpressedInstance<T, TReturned, TPluginType> : ExpressedInstance<T> where TReturned : TPluginType
+    {
+        /// <summary>
+        ///     Register an Action to perform on the object created by this Instance
+        ///     before it is returned to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public T OnCreation(Expression<Action<TReturned>> handler)
+        {
+            AddInterceptor(new ActivatorInterceptor<TReturned>(handler));
+
+            return thisInstance;
+        }
+
+        /// <summary>
+        ///     Register an Action to perform on the object created by this Instance
+        ///     before it is returned to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="description">A description of the action for diagnostic purposes</param>
+        /// <returns></returns>
+        public T OnCreation(string description, Action<TReturned> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForAction(description, handler));
+
+            return thisInstance;
+        }
+
+        /// <summary>
+        ///     Register an Action to perform on the object created by this Instance
+        ///     before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="THandler"></typeparam>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public T OnCreation(Expression<Action<IContext, TReturned>> handler)
+        {
+            AddInterceptor(new ActivatorInterceptor<TReturned>(handler));
+
+            return thisInstance;
+        }
+
+        /// <summary>
+        ///     Register an Action to perform on the object created by this Instance
+        ///     before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="THandler"></typeparam>
+        /// <param name="handler"></param>
+        /// <param name="description">A description of the action for diagnostic purposes</param>
+        /// <returns></returns>
+        public T OnCreation(string description, Action<IContext, TReturned> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForAction(description, handler));
+
+            return thisInstance;
+        }
+
+        /// <summary>
+        ///     Register a Func to potentially decorate or substitute for the object
+        ///     created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public T DecorateWith(Expression<Func<TReturned, TPluginType>> handler)
+        {
+            AddInterceptor(new FuncInterceptor<TReturned, TPluginType>(handler));
+
+            return thisInstance;
+        }
+
+        /// <summary>
+        ///     Register a Func to potentially decorate or substitute for the object
+        ///     created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="THandler"></typeparam>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public T DecorateWith<THandler>(string description, Func<THandler, THandler> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
+
+            return thisInstance;
+        }
+
+        /// <summary>
+        ///     Register a Func to potentially decorate or substitute for the object
+        ///     created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public T DecorateWith(Expression<Func<IContext, TReturned, TPluginType>> handler)
+        {
+            AddInterceptor(new FuncInterceptor<TReturned, TPluginType>(handler));
+
+            return thisInstance;
+        }
+
+        /// <summary>
+        ///     Register a Func to potentially decorate or substitute for the object
+        ///     created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="THandler"></typeparam>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public T DecorateWith<THandler>(string description, Func<IContext, THandler, THandler> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
+
+            return thisInstance;
+        }
+
     }
 }
