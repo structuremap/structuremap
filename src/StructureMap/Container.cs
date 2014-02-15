@@ -11,7 +11,6 @@ using StructureMap.TypeRules;
 
 namespace StructureMap
 {
-    // TODO -- fill in all Xml comments
     public class Container : IContainer
     {
         private IPipelineGraph _pipelineGraph;
@@ -93,6 +92,13 @@ namespace StructureMap
             return (TPluginType) GetInstance(typeof (TPluginType), args);
         }
 
+        /// <summary>
+        /// Gets the default instance of T, but built with the overridden
+        /// arguments from args
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public T GetInstance<T>(ExplicitArguments args, string name)
         {
             try
@@ -150,7 +156,12 @@ namespace StructureMap
             }
         }
 
-
+        /// <summary>
+        /// Gets the default instance of type T using the explicitly configured arguments from the "args"
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public IEnumerable<T> GetAllInstances<T>(ExplicitArguments args)
         {
             try
@@ -546,10 +557,6 @@ namespace StructureMap
             Configure(x => x.For<TPluginType>().Use(instance));
         }
 
-        public void Inject<TPluginType>(string name, TPluginType value) where TPluginType : class
-        {
-            Configure(x => x.For<TPluginType>().Use(value).Named(name));
-        }
 
         /// <summary>
         ///     Injects the given object into a Container as the default for the designated
@@ -580,6 +587,12 @@ namespace StructureMap
             return session.FindObject(pluginType, instance);
         }
 
+        /// <summary>
+        /// Starts a request for an instance or instances with explicitly configured
+        /// arguments
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public ExplicitArgsExpression With(Action<IExplicitArgsExpression> action)
         {
             var expression = new ExplicitArgsExpression(this);
@@ -598,6 +611,9 @@ namespace StructureMap
             Configure(x => x.For(pluginType).Use(instance));
         }
 
+        /// <summary>
+        /// Is this container the root, a profile or child, or a nested container?
+        /// </summary>
         public ContainerRole Role
         {
             get { return _pipelineGraph.Role; }

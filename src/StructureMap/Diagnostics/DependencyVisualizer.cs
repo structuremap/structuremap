@@ -5,7 +5,6 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Diagnostics
 {
-    // TODO -- add level latching?
     public class DependencyVisualizer : IDependencyVisitor, IDisposable
     {
         private readonly TitledWriter _writer;

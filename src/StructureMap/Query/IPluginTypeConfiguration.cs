@@ -5,7 +5,6 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Query
 {
-    // TODO -- fill in Xml comments
     public interface IFamily
     {
         /// <summary>
@@ -36,16 +35,25 @@ namespace StructureMap.Query
         /// <returns></returns>
         bool HasBeenCreated(Instance instance);
 
-
+        /// <summary>
+        /// The default lifecycle for this PluginType/Family
+        /// </summary>
         ILifecycle Lifecycle { get; }
 
         Type PluginType { get; }
 
+        /// <summary>
+        /// A reference to the underlying container runtime model.  Doing any direct manipulation
+        /// against this service will void the warranty on StructureMap.
+        /// </summary>
         IPipelineGraph Pipeline { get; }
     }
 
     public interface IPluginTypeConfiguration
     {
+        /// <summary>
+        /// The active Profile or 'DEFAULT'. 
+        /// </summary>
         string ProfileName { get; }
 
         Type PluginType { get; }

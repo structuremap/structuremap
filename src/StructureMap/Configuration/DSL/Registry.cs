@@ -309,13 +309,14 @@ namespace StructureMap.Configuration.DSL
             }
         }
 
-
+        /// <summary>
+        /// Configure Container-wide policies and conventions
+        /// </summary>
         public PoliciesExpression Policies
         {
             get { return new PoliciesExpression(this); }
         }
 
-        // TODO -- add Xml comments
         public class PoliciesExpression
         {
             private readonly Registry _parent;
@@ -325,23 +326,37 @@ namespace StructureMap.Configuration.DSL
                 _parent = parent;
             }
 
+            /// <summary>
+            /// Register an interception policy
+            /// </summary>
+            /// <param name="policy"></param>
             public void Interceptors(IInterceptorPolicy policy)
             {
                 _parent.alter = graph => graph.Policies.Interceptors.Add(policy);
             }
 
+            /// <summary>
+            /// Register a strategy for automatically resolving "missing" families
+            /// when an unknown PluginType is first encountered
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
             public void OnMissingFamily<T>() where T : IFamilyPolicy, new()
             {
                 _parent.alter = graph => graph.AddFamilyPolicy(new T());
             }
 
+            /// <summary>
+            /// Register a strategy for automatically resolving "missing" families
+            /// when an unknown PluginType is first encountered
+            /// </summary>
+            /// <param name="policy"></param>
             public void OnMissingFamily(IFamilyPolicy policy)
             {
                 _parent.alter = graph => graph.AddFamilyPolicy(policy);
             }
 
             /// <summary>
-            /// <see cref="Configure{T}"/>
+            /// Registers a new IPluginGraphConfiguration policy
             /// </summary>
             public void Configure(IPluginGraphConfiguration pluginGraphConfig)
             {
@@ -349,11 +364,19 @@ namespace StructureMap.Configuration.DSL
                 _parent.register = pluginGraphConfig.Register;
             }
 
+            /// <summary>
+            /// Register a custom constructor selection policy
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
             public void ConstructorSelector<T>() where T : IConstructorSelector, new()
             {
                 ConstructorSelector(new T());
             }
 
+            /// <summary>
+            /// Register a custom constructor selection policy
+            /// </summary>
+            /// <param name="constructorSelector"></param>
             public void ConstructorSelector(IConstructorSelector constructorSelector)
             {
                 _parent.alter = x => x.Policies.ConstructorSelector.Add(constructorSelector);

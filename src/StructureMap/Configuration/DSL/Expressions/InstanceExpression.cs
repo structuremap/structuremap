@@ -5,8 +5,6 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
-    // TODO -- need to add Xml comments
-
     /// <summary>
     /// Expression Builder to define an Instance
     /// </summary>
@@ -185,11 +183,21 @@ namespace StructureMap.Configuration.DSL.Expressions
             get { return this; }
         }
 
+        /// <summary>
+        /// Use the specified Instance as the inline dependency
+        /// </summary>
+        /// <param name="instance"></param>
         public void IsThis(Instance instance)
         {
             returnInstance(instance);
         }
 
+        /// <summary>
+        /// Use a specific object as the inline dependency
+        /// </summary>
+        /// <typeparam name="TReturned"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public ObjectInstance<TReturned, T> IsThis<TReturned>(TReturned obj) where TReturned : class, T
         {
             return returnInstance(new ObjectInstance<TReturned, T>(obj));

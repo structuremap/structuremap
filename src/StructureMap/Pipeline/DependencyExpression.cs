@@ -4,7 +4,6 @@ using StructureMap.Configuration.DSL.Expressions;
 
 namespace StructureMap.Pipeline
 {
-    // TODO -- add Xml comments to the missing things
 
     /// <summary>
     /// Expression Builder that helps to define child dependencies inline 
@@ -32,24 +31,46 @@ namespace StructureMap.Pipeline
             return _instance;
         }
 
+        /// <summary>
+        /// Inline dependency by simple Lambda expression
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public TInstance Is(Expression<Func<TChild>> func)
         {
             var child = new LambdaInstance<TChild>(func);
             return Is(child);
         }
 
+        /// <summary>
+        /// Inline dependency by Lambda Func
+        /// </summary>
+        /// <param name="description">User friendly description for diagnostics</param>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public TInstance Is(string description, Func<TChild> func)
         {
             var child = new LambdaInstance<TChild>(description, func);
             return Is(child);
         }
 
+        /// <summary>
+        /// Inline dependency by Lambda expression that uses IContext
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public TInstance Is(Expression<Func<IContext, TChild>> func)
         {
             var child = new LambdaInstance<TChild>(func);
             return Is(child);
         }
 
+        /// <summary>
+        /// Inline dependency by Lambda Func that uses IContext
+        /// </summary>
+        /// <param name="description">User friendly description for diagnostics</param>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public TInstance Is(string description, Func<IContext, TChild> func)
         {
             var child = new LambdaInstance<TChild>(description, func);
@@ -124,6 +145,12 @@ namespace StructureMap.Pipeline
             return Is(instance);
         }
 
+        /// <summary>
+        /// Use the named Instance of TChild for the inline
+        /// dependency here
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public TInstance Named(string name)
         {
             return Is(c => c.GetInstance<TChild>(name));

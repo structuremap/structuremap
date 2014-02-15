@@ -7,7 +7,6 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Util
 {
-    // TODO -- at least use reader/writer locks
     public class Cache<TKey, TValue> : IEnumerable<TValue>
     {
         private readonly object _locker = new object();

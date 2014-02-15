@@ -120,9 +120,6 @@ namespace StructureMap
         /// <param name="instance"></param>
         void Inject<TPluginType>(TPluginType instance) where TPluginType : class;
 
-        void Inject<TPluginType>(string name, TPluginType value) where TPluginType : class;
-
-
         /// <summary>
         /// Injects the given object into a Container as the default for the designated
         /// pluginType.  Mostly used for temporarily setting up return values of the Container
@@ -176,6 +173,13 @@ namespace StructureMap
         /// <returns></returns>
         IEnumerable GetAllInstances(Type type, ExplicitArguments args);
 
+        /// <summary>
+        /// Gets the default instance of T, but built with the overridden
+        /// arguments from args
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
+        /// <returns></returns>
         T GetInstance<T>(ExplicitArguments args);
 
         /// <summary>
@@ -291,5 +295,13 @@ namespace StructureMap
         /// The profile name of this container
         /// </summary>
         string ProfileName { get; }
+
+        /// <summary>
+        /// Starts a request for an instance or instances with explicitly configured
+        /// arguments
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        ExplicitArgsExpression With(Action<IExplicitArgsExpression> action);
     }
 }

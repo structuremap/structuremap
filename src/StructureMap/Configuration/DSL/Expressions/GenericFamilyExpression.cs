@@ -6,7 +6,6 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
-    // TODO -- backfill Xml comments here
 
     /// <summary>
     /// Expression Builder that has grammars for defining policies at the 
@@ -67,7 +66,11 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-
+        /// <summary>
+        /// Register an Instance constructed by a Lambda Expression using IContext
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public LambdaInstance<object> Use(Expression<Func<IContext, object>> func)
         {
             var instance = new LambdaInstance<object>(func);
@@ -76,6 +79,12 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Register an Instance constructed by a Func that uses IContex
+        /// </summary>
+        /// <param name="description">User friendly diagnostic description</param>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public LambdaInstance<object> Use(string description, Func<IContext, object> func)
         {
             var instance = new LambdaInstance<object>(description, func);
@@ -84,6 +93,11 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Adds an additional Instance constructed by a Lambda Expression using IContext
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public LambdaInstance<object> Add(Expression<Func<IContext, object>> func)
         {
             var instance = new LambdaInstance<object>(func);
@@ -92,6 +106,12 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Adds an additional Instance constructed by a Func using IContext
+        /// </summary>
+        /// <param name="description">User friendly description for diagnostic purposes</param>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public LambdaInstance<object> Add(string description, Func<IContext, object> func)
         {
             var instance = new LambdaInstance<object>(description, func);
@@ -113,6 +133,12 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Makes a previously registered Instance with the name 'instanceKey'
+        /// the default Instance for this PluginType
+        /// </summary>
+        /// <param name="instanceKey"></param>
+        /// <returns></returns>
         public ReferencedInstance Use(string instanceKey)
         {
             var instance = new ReferencedInstance(instanceKey);
@@ -138,7 +164,11 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-
+        /// <summary>
+        /// Adds an additional Instance against this PluginType
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
         public GenericFamilyExpression Add(Instance instance)
         {
             return alterAndContinue(family => family.AddInstance(instance));
@@ -177,7 +207,12 @@ namespace StructureMap.Configuration.DSL.Expressions
             return LifecycleIs(Lifecycles.Singleton);
         }
 
-        // TODO -- xml comments
+        /// <summary>
+        /// Applies a decorator type to all Instances that return a type that can be cast to this PluginType
+        /// </summary>
+        /// <param name="decoratorType"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public ConfiguredInstance DecorateAllWith(Type decoratorType, Func<Instance, bool> filter = null)
         {
             var instance = new ConfiguredInstance(decoratorType);

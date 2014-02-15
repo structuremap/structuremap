@@ -7,8 +7,6 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
-    // TODO -- evaluate ALL Xml comments.  Missing parameters
-
     /// <summary>
     /// Expression Builder that has grammars for defining policies at the 
     /// PluginType level
@@ -36,6 +34,10 @@ namespace StructureMap.Configuration.DSL.Expressions
             }
         }
 
+        /// <summary>
+        /// Specify the "on missing named instance" configuration for this
+        /// PluginType
+        /// </summary>
         public InstanceExpression<TPluginType> MissingNamedInstanceIs
         {
             get
@@ -84,12 +86,10 @@ namespace StructureMap.Configuration.DSL.Expressions
 
 
         /// <summary>
-        /// Shorthand way of saying Use<>
+        /// Specify the default Instance of this PluginType by a concrete type
         /// </summary>
         public SmartInstance<TConcreteType, TPluginType> Use<TConcreteType>() where TConcreteType : TPluginType
         {
-            // This is *my* team's naming convention for generic parameters
-            // I know you may not like it, but it's my article so there
             var instance = new SmartInstance<TConcreteType, TPluginType>();
 
             registerDefault(instance);
@@ -115,6 +115,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Use this signature if your Func is too complicated to be an Expression
         /// </summary>
         /// <param name="description">Diagnostic description of the func</param>
+        /// <param name="func"></param>
         public LambdaInstance<T, TPluginType> Use<T>(string description, Func<IContext, T> func) where T : TPluginType
         {
             var instance = new LambdaInstance<T, TPluginType>(description, func);
@@ -141,6 +142,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Use this overload if your func is too complicated to be an expression
         /// </summary>
         /// <param name="description">Diagnostic description of the func</param>
+        /// <param name="func"></param>
         public LambdaInstance<T, TPluginType> Use<T>(string description, Func<T> func) where T : TPluginType
         {
             var instance = new LambdaInstance<T, TPluginType>(description, func);
@@ -192,6 +194,13 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Applies a "Use" on this type that will only apply if no other declaration
+        /// is made.  Used for "default" registrations
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public LambdaInstance<T, TPluginType> UseIfNone<T>(Expression<Func<IContext, T>> func) where T : TPluginType
         {
             var instance = new LambdaInstance<T, TPluginType>(func);
@@ -199,6 +208,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Applies a "Use" on this type that will only apply if no other declaration
+        /// is made.  Used for "default" registrations
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="description"></param>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public LambdaInstance<T, TPluginType> UseIfNone<T>(string description, Func<IContext, T> func) where T : TPluginType
         {
             var instance = new LambdaInstance<T, TPluginType>(description, func);
@@ -206,6 +223,13 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Applies a "Use" on this type that will only apply if no other declaration
+        /// is made.  Used for "default" registrations
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public LambdaInstance<T, TPluginType> UseIfNone<T>(Expression<Func<T>> func) where T : TPluginType
         {
             var instance = new LambdaInstance<T, TPluginType>(func);
@@ -213,6 +237,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Applies a "Use" on this type that will only apply if no other declaration
+        /// is made.  Used for "default" registrations
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="description"></param>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public LambdaInstance<T, TPluginType> UseIfNone<T>(string description, Func<T> func) where T : TPluginType
         {
             var instance = new LambdaInstance<T, TPluginType>(description, func);
@@ -246,10 +278,13 @@ namespace StructureMap.Configuration.DSL.Expressions
             return InterceptWith(new ActivatorInterceptor<TPluginType>(handler), filter);
         }
 
-        /// Register an Action to run against any object of this PluginType immediately after
-        /// it is created, but before the new object is passed back to the caller
-        /// </summary>
-        /// <param name="description">Descriptive text for diagnostics</param>
+        /// <summary>
+        ///  Register an Action to run against any object of this PluginType immediately after
+        ///  it is created, but before the new object is passed back to the caller
+        ///  </summary>
+        ///  <param name="description">Descriptive text for diagnostics</param>
+        /// <param name="handler"></param>
+        /// <param name="filter">If specified, limits the applicability of this activation interception</param>
         public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(string description,
             Action<TPluginType> handler, Func<Instance, bool> filter = null)
         {
@@ -272,6 +307,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// it is created, but before the new object is passed back to the caller
         /// </summary>
         /// <param name="description">Descriptive text for diagnostics</param>
+        /// <param name="handler"></param>
+        /// <param name="filter"></param>
         public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(string description,
             Action<IContext, TPluginType> handler, Func<Instance, bool> filter = null)
         {
@@ -324,6 +361,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// scenarios or to return a decorator.
         /// </summary>
         /// <param name="description">Descriptive text for diagnostics</param>
+        /// <param name="handler"></param>
+        /// <param name="filter"></param>
         public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(string description,
             Func<TPluginType, TPluginType> handler, Func<Instance, bool> filter = null)
         {
@@ -350,6 +389,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="description">Descriptive text for diagnostics</param>
         /// <param name="handler">Function that will create a decorator for the plugin type</param>
+        /// <param name="filter"></param>
         public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(string description,
             Func<IContext, TPluginType, TPluginType> handler, Func<Instance, bool> filter = null)
         {
@@ -388,6 +428,11 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Add a new Instance to this PluginType by concrete type
+        /// </summary>
+        /// <typeparam name="TPluggedType"></typeparam>
+        /// <returns></returns>
         public SmartInstance<TPluggedType, TPluginType> Add<TPluggedType>() where TPluggedType : TPluginType
         {
             var instance = new SmartInstance<TPluggedType, TPluginType>();
@@ -440,6 +485,10 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Add a new Instance to this type
+        /// </summary>
+        /// <param name="instance"></param>
         public void AddInstance(Instance instance)
         {
             alter = f => f.AddInstance(instance);
