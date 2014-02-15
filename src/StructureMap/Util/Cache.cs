@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Util
 {
@@ -9,6 +11,7 @@ namespace StructureMap.Util
     public class Cache<TKey, TValue> : IEnumerable<TValue>
     {
         private readonly object _locker = new object();
+        private readonly ReaderWriterLockSlim _rwLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
         private readonly IDictionary<TKey, TValue> _values;
 
         private Func<TValue, TKey> _getKey = delegate { throw new NotImplementedException(); };
@@ -59,19 +62,17 @@ namespace StructureMap.Util
 
         public int Count
         {
-            get { return _values.Count; }
+            get
+            {
+                return _rwLock.Read(() => _values.Count);
+            }
         }
 
         public TValue First
         {
             get
             {
-                foreach (var pair in _values)
-                {
-                    return pair.Value;
-                }
-
-                return default(TValue);
+                return _rwLock.Read(() => _values.Values.FirstOrDefault());
             }
         }
 
@@ -119,17 +120,19 @@ namespace StructureMap.Util
 
         public void Fill(TKey key, Func<TKey, TValue> onMissing)
         {
-            if (!_values.ContainsKey(key))
+            _rwLock.EnterUpgradeableReadLock();
+            try
             {
-                lock (_locker)
+                if (!_values.ContainsKey(key))
                 {
-                    if (!_values.ContainsKey(key))
-                    {
-                        var value = onMissing(key);
-                        _onAddition(value);
-                        _values.Add(key, value);
-                    }
+                    var value = onMissing(key);
+                    _onAddition(value);
+                    Fill(key, value);
                 }
+            }
+            finally
+            {
+                _rwLock.ExitUpgradeableReadLock();
             }
         }
 
@@ -140,20 +143,27 @@ namespace StructureMap.Util
                 return;
             }
 
-            _values.Add(key, value);
+            _rwLock.EnterWriteLock();
+            try
+            {
+                _values.Add(key, value);
+            }
+            finally
+            {
+                _rwLock.ExitWriteLock();
+            }
         }
 
         public void Each(Action<TValue> action)
         {
-            foreach (var pair in _values)
-            {
-                action(pair.Value);
-            }
+            var snapshot = _rwLock.Read(() => _values.Values.ToArray());
+            snapshot.Each(action);
         }
 
         public void Each(Action<TKey, TValue> action)
         {
-            foreach (var pair in _values)
+            var snapshot = _rwLock.Read(() => _values.ToArray());
+            foreach (var pair in snapshot)
             {
                 action(pair.Key, pair.Value);
             }
@@ -161,52 +171,39 @@ namespace StructureMap.Util
 
         public bool Has(TKey key)
         {
-            return _values.ContainsKey(key);
+            return _rwLock.Read(()=>_values.ContainsKey(key));
         }
 
-        public bool Exists(Predicate<TValue> predicate)
+        public bool Exists(Func<TValue,bool> predicate)
         {
-            var returnValue = false;
-
-            Each(delegate(TValue value) { returnValue |= predicate(value); });
-
-            return returnValue;
+            var snapshot = _rwLock.Read(() => _values.Values.ToArray());
+            return snapshot.Any(predicate);
         }
 
-        public TValue Find(Predicate<TValue> predicate)
+        public TValue Find(Func<TValue,bool> predicate)
         {
-            foreach (var pair in _values)
-            {
-                if (predicate(pair.Value))
-                {
-                    return pair.Value;
-                }
-            }
-
-            return default(TValue);
+            var snapshot = _rwLock.Read(() => _values.Values.ToArray());
+            return snapshot.FirstOrDefault(predicate);
         }
 
         public TKey[] GetAllKeys()
         {
-            return _values.Keys.ToArray();
+            return _rwLock.Read(() => _values.Keys.ToArray());
         }
 
         public TValue[] GetAll()
         {
-            return _values.Values.ToArray();
+            return _rwLock.Read(() => _values.Values.ToArray());
         }
 
         public void Remove(TKey key)
         {
-            if (_values.ContainsKey(key))
-            {
-                _values.Remove(key);
-            }
+            _rwLock.Write(()=>_values.Remove(key));
         }
 
         public void ClearAll()
         {
-            _values.Clear();
+            _rwLock.Write(()=> _values.Clear());
         }
 
         public bool WithValue(TKey key, Action<TValue> callback)
@@ -216,13 +213,12 @@ namespace StructureMap.Util
                 callback(this[key]);
                 return true;
             }
-
             return false;
         }
 
         public IDictionary<TKey, TValue> ToDictionary()
         {
-            return new Dictionary<TKey, TValue>(_values);
+            return _rwLock.Read(()=> new Dictionary<TKey, TValue>(_values));
         }
     }
 }
