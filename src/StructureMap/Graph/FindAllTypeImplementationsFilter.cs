@@ -5,7 +5,7 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
 
-namespace Convo.Web.Graph
+namespace StructureMap.Graph
 {
     public class FindAllTypeImplementationsFilter : IRegistrationConvention
     {
