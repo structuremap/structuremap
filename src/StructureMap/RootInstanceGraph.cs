@@ -58,6 +58,8 @@ namespace StructureMap
 
         public ILifecycle DefaultLifecycleFor(Type pluginType)
         {
+            if (pluginType == null) return null;
+
             if (!_pluginGraph.HasFamily(pluginType)) return null;
 
             return _pluginGraph.Families[pluginType].Lifecycle;

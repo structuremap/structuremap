@@ -256,15 +256,6 @@ namespace StructureMap.Testing.Diagnostics
             Debug.WriteLine(description);
         }
 
-        /*
-         * TODO
-         * 1. Deep with default that does not exist
-         * 2. Deep with default that exists
-         * 3. Deep with reference that does not exist
-         * 4. Deep with reference that exists
-         * 
-         * 
-         */
     }
 
 
