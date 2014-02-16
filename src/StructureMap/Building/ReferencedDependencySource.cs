@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.Diagnostics;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
