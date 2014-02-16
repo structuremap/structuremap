@@ -1,18 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting;
 using NUnit.Framework;
+using StructureMap.Building.Interception;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Acceptance
 {
-    /*
-     * TODO
-
-     * 12.) Use open generics
-     * 13.) custom interception policy
-     */
-
     [TestFixture]
     public class interception_acceptance_tests
     {
@@ -240,6 +236,20 @@ namespace StructureMap.Testing.Acceptance
             decorator.One.ShouldBeOfType<AWidget>();
             decorator.Two.ShouldBeOfType<AService>();
         }
+
+        [Test]
+        public void use_a_custom_interception_policy()
+        {
+            var container = new Container(x => {
+                x.Policies.Interceptors(new CustomInterception());
+
+                x.For<IWidget>().Use<AWidget>();
+            });
+
+            container.GetInstance<IWidget>()
+                .ShouldBeOfType<WidgetHolder>()
+                .Inner.ShouldBeOfType<AWidget>();
+        }
     }
 
     public abstract class Activateable
@@ -394,4 +404,22 @@ namespace StructureMap.Testing.Acceptance
     public interface IService{}
     public class AService : IService{}
     public class BService : IService{}
+
+    public class CustomInterception : IInterceptorPolicy
+    {
+        public string Description
+        {
+            get
+            {
+                return "good interception policy";
+            }
+        }
+        public IEnumerable<IInterceptor> DetermineInterceptors(Type pluginType, Instance instance)
+        {
+            if (pluginType == typeof (IWidget))
+            {
+                yield return new DecoratorInterceptor(typeof(IWidget), typeof(WidgetHolder));
+            }
+        }
+    }
 }
