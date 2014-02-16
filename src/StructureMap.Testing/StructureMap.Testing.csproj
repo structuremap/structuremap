@@ -351,6 +351,7 @@
     <Compile Include="PerRequestInterceptorTester.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeExtensionsTester.cs" />
+    <Compile Include="Util\Cache_multi_threading_basher.cs" />
     <Compile Include="Util\LightweightCacheTester.cs" />
     <Compile Include="WhatDoIHave_Smoke_Tester.cs" />
     <None Include="..\structuremap.snk">
