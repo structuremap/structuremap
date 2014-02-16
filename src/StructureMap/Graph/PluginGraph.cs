@@ -8,9 +8,6 @@ using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
-    // TODO -- might eliminate the cache and use a dictionary directly
-    // TODO -- go to reader writer locks
-
     /// <summary>
     ///   Models the runtime configuration of a StructureMap Container
     /// </summary>
@@ -186,11 +183,8 @@ namespace StructureMap.Graph
         {
             if (_families.Has(pluginType)) return true;
 
-            // TODO -- this needs better locking mechanics
-            var newFamily = _policies.Where(x => x.AppliesToHasFamilyChecks).FirstValue(x => x.Build(pluginType));
-            if (newFamily != null)
+            if (_policies.Where(x => x.AppliesToHasFamilyChecks).Any(x => x.Build(pluginType) != null))
             {
-                _families[pluginType] = newFamily;
                 return true;
             }
 
@@ -263,10 +257,8 @@ namespace StructureMap.Graph
             {
                 return _families[pluginType].Instances;
             }
-            else
-            {
-                return Enumerable.Empty<Instance>();
-            }
+
+            return Enumerable.Empty<Instance>();
         }
 
         void IDisposable.Dispose()
