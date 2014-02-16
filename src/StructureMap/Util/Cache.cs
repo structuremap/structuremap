@@ -9,7 +9,6 @@ namespace StructureMap.Util
 {
     public class Cache<TKey, TValue> : IEnumerable<TValue>
     {
-        private readonly object _locker = new object();
         private readonly ReaderWriterLockSlim _rwLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
         private readonly IDictionary<TKey, TValue> _values;
 

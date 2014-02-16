@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using StructureMap.Diagnostics;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Building.Interception
 {
@@ -29,10 +30,19 @@ namespace StructureMap.Building.Interception
             _interceptors = interceptors;
             _variable = Expression.Variable(_inner.ReturnedType, "x");
 
+            
+
             _activators = findActivatorGroups();
             _decorators = _interceptors.Where(x => x.Role == InterceptorRole.Decorates);
 
-            // TODO -- blow up if any decorates interceptors cannot be cast to pluginType
+            var badDecorators = _decorators.Where(x => x.Accepts != pluginType || x.Returns != pluginType).ToArray();
+            if (badDecorators.Any())
+            {
+                var decoratorDescription = string.Join(", ", badDecorators.Select(x => x.Description));
+
+                var description = "Invalid decorators for type {0}: {1}".ToFormat(pluginType.GetTypeName(), decoratorDescription);
+                throw new StructureMapBuildPlanException(description);
+            }
         }
 
         public Func<IBuildSession, IContext, T> ToBuilder<T>()

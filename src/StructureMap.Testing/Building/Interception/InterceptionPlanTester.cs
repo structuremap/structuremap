@@ -22,6 +22,22 @@ namespace StructureMap.Testing.Building.Interception
         }
 
         [Test]
+        public void will_not_accept_decorator_that_does_not_match_the_plugin_type()
+        {
+            var target = new Target();
+            var inner = Constant.For(target);
+
+            Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() => {
+                new InterceptionPlan(typeof(ITarget), inner, new Policies(),
+                    new IInterceptor[]
+                {
+                    new DecoratorInterceptor(typeof(ATarget), typeof(ATarget)), 
+                });
+            });
+        }
+
+
+        [Test]
         public void intercept_happy_path_with_a_single_activation()
         {
             var target = new Target();
@@ -272,7 +288,7 @@ namespace StructureMap.Testing.Building.Interception
             var target = new Target();
             var inner = Constant.For(target);
 
-            var decorator = new DecoratorInterceptor(typeof(IGateway), typeof(DecoratedGateway));
+            var decorator = new DecoratorInterceptor(typeof(ITarget), typeof(DecoratedTarget));
             var plan = new InterceptionPlan(typeof(ITarget), inner, new Policies(), new IInterceptor[] { decorator });
 
             plan.AcceptVisitor(theVisitor);
