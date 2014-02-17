@@ -205,5 +205,10 @@ namespace StructureMap.Util
                 action(this[key]);
             }
         }
+
+        public void ClearAll()
+        {
+            _values.Clear();
+        }
     }
 }

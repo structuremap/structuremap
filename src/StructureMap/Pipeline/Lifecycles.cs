@@ -5,8 +5,8 @@ namespace StructureMap.Pipeline
 {
     public static class Lifecycles
     {
-        private static readonly Cache<Type, ILifecycle> _lifecycles =
-            new Cache<Type, ILifecycle>(type => (ILifecycle) Activator.CreateInstance(type));
+        private static readonly LightweightCache<Type, ILifecycle> _lifecycles =
+            new LightweightCache<Type, ILifecycle>(type => (ILifecycle) Activator.CreateInstance(type));
 
 
         public static readonly ILifecycle Transient = Register<TransientLifecycle>();

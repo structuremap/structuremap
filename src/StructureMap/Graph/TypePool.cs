@@ -9,7 +9,7 @@ namespace StructureMap.Graph
 {
     public class TypePool
     {
-        private readonly Cache<Assembly, Type[]> _types = new Cache<Assembly, Type[]>();
+        private readonly LightweightCache<Assembly, Type[]> _types = new LightweightCache<Assembly, Type[]>();
 
         public TypePool()
         {

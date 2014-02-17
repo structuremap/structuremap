@@ -11,7 +11,7 @@ namespace StructureMap.Graph
 {
     public class ImplementationMap : ConfigurableRegistrationConvention
     {
-        private readonly Cache<Type, List<Type>> _types = new Cache<Type, List<Type>>(t => new List<Type>());
+        private readonly LightweightCache<Type, List<Type>> _types = new LightweightCache<Type, List<Type>>(t => new List<Type>());
 
         public override void Process(Type type, Registry registry)
         {

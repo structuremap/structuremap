@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.TypeRules;
@@ -11,8 +12,14 @@ namespace StructureMap.Building
         public static ParameterExpression EX = Expression.Parameter(typeof (Exception), "ex");
         public static MethodInfo DescriptionMethod = typeof (IDescribed).GetProperty("Description").GetGetMethod();
 
-        private static readonly Cache<Type, ConstructorInfo> _constructors =
-            new Cache<Type, ConstructorInfo>(
+        static TryCatchWrapper()
+        {
+            Assembly.GetExecutingAssembly().GetExportedTypes().Where(x => x.CanBeCastTo<StructureMapException>())
+                .Each(type => _constructors.FillDefault(type));
+        }
+
+        private static readonly LightweightCache<Type, ConstructorInfo> _constructors =
+            new LightweightCache<Type, ConstructorInfo>(
                 type => type.GetConstructor(new Type[] {typeof (string), typeof (Exception)}));
 
 
