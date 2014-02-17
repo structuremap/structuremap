@@ -133,9 +133,19 @@ namespace StructureMap.Diagnostics
             {
                 writeInstance(instance);
             }
+
+            if (pluginType.MissingNamedInstance != null)
+            {
+                writeInstance(pluginType.MissingNamedInstance, "*Missing Named Instance*");
+            }
+
+            if (pluginType.Fallback != null)
+            {
+                writeInstance(pluginType.Fallback, "*Fallback*");
+            }
         }
 
-        private void writeInstance(InstanceRef instance)
+        private void writeInstance(InstanceRef instance, string name = null)
         {
             if (_instances.Contains(instance.Instance) || instance.Instance == null)
             {
@@ -143,23 +153,32 @@ namespace StructureMap.Diagnostics
             }
 
             var contents = new[] {string.Empty, string.Empty, string.Empty, string.Empty, string.Empty};
-            setContents(contents, instance);
+            setContents(contents, instance, name);
 
             _writer.AddText(contents);
         }
 
 
-        private void setContents(string[] contents, InstanceRef instance)
+        private void setContents(string[] contents, InstanceRef instance, string name = null)
         {
             contents[2] = instance.Lifecycle.ToName();
 
             contents[3] = instance.Description;
 
-            Guid assignedName;
-            if (instance.Instance.HasExplicitName() && !Guid.TryParse(instance.Name, out assignedName))
+            if (name.IsNotEmpty())
             {
-                contents[4] = instance.Name;
+                contents[4] = name;
             }
+            else
+            {
+                Guid assignedName;
+                if (instance.Instance.HasExplicitName() && !Guid.TryParse(instance.Name, out assignedName))
+                {
+                    contents[4] = instance.Name;
+                }
+            }
+
+
 
             if (contents[4].Length > 30)
             {

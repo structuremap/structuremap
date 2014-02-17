@@ -93,6 +93,17 @@ namespace StructureMap.Query
         /// but leaves the lifecycle behavior
         /// </summary>
         void EjectAndRemoveAll();
+
+        /// <summary>
+        /// Optional "fallback" default if no other default is
+        /// specified
+        /// </summary>
+        InstanceRef Fallback { get; }
+
+        /// <summary>
+        /// Optional instance to use for a request for named instances that do not exist
+        /// </summary>
+        InstanceRef MissingNamedInstance { get; }
     }
 
     public static class PluginTypeConfigurationExtensions

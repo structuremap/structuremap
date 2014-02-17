@@ -65,5 +65,15 @@ namespace StructureMap.Query
         public void EjectAndRemoveAll()
         {
         }
+
+        public InstanceRef Fallback { get { return null; } }
+
+        public InstanceRef MissingNamedInstance
+        {
+            get
+            {
+                return null;
+            }
+        }
     }
 }

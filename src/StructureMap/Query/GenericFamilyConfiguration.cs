@@ -103,5 +103,21 @@ namespace StructureMap.Query
         {
             _family.RemoveAll();
         }
+
+        public InstanceRef Fallback
+        {
+            get
+            {
+                return _family.Fallback == null ? null : new InstanceRef(_family.Fallback, this);
+            }
+        }
+
+        public InstanceRef MissingNamedInstance
+        {
+            get
+            {
+                return _family.MissingInstance == null ? null : new InstanceRef(_family.MissingInstance, this);
+            }
+        }
     }
 }
