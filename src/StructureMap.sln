@@ -70,6 +70,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.LegacyAttribut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Net4", "StructureMap.Net4\StructureMap.Net4.csproj", "{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetHarness", "AspNetHarness\AspNetHarness.csproj", "{866B519B-D839-4F50-8492-A9EE52FBA4BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Build|.NET = Build|.NET
@@ -483,6 +485,26 @@ Global
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Build|.NET.ActiveCfg = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Build|Any CPU.ActiveCfg = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Build|Any CPU.Build.0 = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Build|Mixed Platforms.Build.0 = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.NET45WP8|.NET.ActiveCfg = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.NET45WP8|Any CPU.ActiveCfg = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.NET45WP8|Any CPU.Build.0 = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.NET45WP8|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.NET45WP8|Mixed Platforms.Build.0 = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Release|.NET.ActiveCfg = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{866B519B-D839-4F50-8492-A9EE52FBA4BD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
