@@ -18,7 +18,6 @@ namespace StructureMap.Graph
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly Type _pluginType;
         private Lazy<Instance> _defaultInstance;
-        private Lazy<Instance> _fallBack = new Lazy<Instance>(() => null);
         private Instance _missingInstance;
 
 
@@ -85,7 +84,7 @@ namespace StructureMap.Graph
         private void resetDefault()
         {
             _defaultInstance = new Lazy<Instance>(determineDefault);
-            _fallBack = new Lazy<Instance>(() => null);
+            Fallback = null;
         }
 
         /// <summary>
@@ -130,10 +129,10 @@ namespace StructureMap.Graph
         /// <summary>
         /// The 'UseIfNone' instance to use if no default is set
         /// </summary>
-        /// <param name="instance"></param>
-        public void SetFallback(Instance instance)
+        /// <value></value>
+        public Instance Fallback
         {
-            _fallBack = new Lazy<Instance>(() => instance);
+            get; set;
         }
 
         /// <summary>
@@ -152,7 +151,7 @@ namespace StructureMap.Graph
         /// <returns></returns>
         public Instance GetDefaultInstance()
         {
-            return _defaultInstance.Value ?? _fallBack.Value;
+            return _defaultInstance.Value ?? Fallback;
         }
 
         private Instance determineDefault()

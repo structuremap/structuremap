@@ -507,7 +507,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         private void registerFallBack(Instance instance)
         {
-            alter = family => family.SetFallback(instance);
+            alter = family => family.Fallback = instance;
         }
 
         private Action<PluginFamily> alter

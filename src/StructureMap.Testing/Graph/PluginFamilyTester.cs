@@ -177,7 +177,7 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof (IServiceProvider));
             var instance = new SmartInstance<DataSet>();
 
-            family.SetFallback(new SmartInstance<DataSet>());
+            family.Fallback = new SmartInstance<DataSet>();
             family.SetDefault(instance);
 
             family.AddInstance(new SmartInstance<FakeServiceProvider>());
