@@ -168,7 +168,7 @@ namespace StructureMap.Building
                 {
                     return new Constant(dependencyType, ConvertType(value, dependencyType));
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return new DependencyProblem
                     {
