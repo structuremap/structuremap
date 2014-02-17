@@ -179,6 +179,12 @@ namespace StructureMap.Graph
             return family;
         }
 
+        /// <summary>
+        /// Does a PluginFamily already exist for the pluginType?  Will also test for open generic
+        /// definition of a generic closed type
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
         public bool HasFamily(Type pluginType)
         {
             if (_families.Has(pluginType)) return true;

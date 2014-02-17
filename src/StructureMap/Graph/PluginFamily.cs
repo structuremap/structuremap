@@ -88,6 +88,10 @@ namespace StructureMap.Graph
             _fallBack = new Lazy<Instance>(() => null);
         }
 
+        /// <summary>
+        /// Add an additional Instance to this PluginFamily/PluginType
+        /// </summary>
+        /// <param name="instance"></param>
         public void AddInstance(Instance instance)
         {
             if (instance == null) throw new ArgumentNullException("instance");
@@ -113,22 +117,39 @@ namespace StructureMap.Graph
             _defaultInstance = new Lazy<Instance>(defaultInstance);
         }
 
+        /// <summary>
+        /// Sets the default Instance. 
+        /// </summary>
+        /// <param name="instance"></param>
         public void SetDefault(Instance instance)
         {
             AddInstance(instance);
             _defaultInstance = new Lazy<Instance>(() => instance);
         }
 
+        /// <summary>
+        /// The 'UseIfNone' instance to use if no default is set
+        /// </summary>
+        /// <param name="instance"></param>
         public void SetFallback(Instance instance)
         {
             _fallBack = new Lazy<Instance>(() => instance);
         }
 
+        /// <summary>
+        /// Find a named instance for this PluginFamily
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public Instance GetInstance(string name)
         {
             return _instances[name];
         }
 
+        /// <summary>
+        /// Determine the default instance if it can.  May return null.
+        /// </summary>
+        /// <returns></returns>
         public Instance GetDefaultInstance()
         {
             return _defaultInstance.Value ?? _fallBack.Value;
@@ -153,6 +174,12 @@ namespace StructureMap.Graph
             return null;
         }
 
+        /// <summary>
+        /// If the PluginType is an open generic type, this method will create a 
+        /// closed type copy of this PluginFamily
+        /// </summary>
+        /// <param name="templateTypes"></param>
+        /// <returns></returns>
         public PluginFamily CreateTemplatedClone(Type[] templateTypes)
         {
             var templatedType = _pluginType.MakeGenericType(templateTypes);
