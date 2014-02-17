@@ -95,7 +95,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         ObjectInstance<TReturned, T> Object<TReturned>(TReturned theObject) where TReturned : class, T;
 
-
         /// <summary>
         /// Build the Instance with the constructor function and setter arguments.  Starts
         /// the definition of a <see cref="SmartInstance{T}">SmartInstance</see>

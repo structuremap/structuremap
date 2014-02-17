@@ -204,6 +204,11 @@ namespace StructureMap.Graph
                 }
             }
 
+            if (MissingInstance != null)
+            {
+                templatedFamily.MissingInstance = MissingInstance.CloseType(templateTypes);
+            }
+
             //Are there instances that close the templatedtype straight away?
             _instances.GetAll()
                 .Where(x => x.ReturnedType.CanBeCastTo(templatedType))

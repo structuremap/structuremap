@@ -67,6 +67,18 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
+        /// Specify the "on missing named instance" configuration for this
+        /// PluginType
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public GenericFamilyExpression MissingNamedInstanceIs(Instance instance)
+        {
+            alterAndContinue(family => family.MissingInstance = instance);
+            return this;
+        }
+
+        /// <summary>
         /// Register an Instance constructed by a Lambda Expression using IContext
         /// </summary>
         /// <param name="func"></param>
