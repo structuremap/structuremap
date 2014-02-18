@@ -14,7 +14,9 @@ namespace StructureMap.Building
 
         static TryCatchWrapper()
         {
-            Assembly.GetExecutingAssembly().GetExportedTypes().Where(x => x.CanBeCastTo<StructureMapException>())
+            typeof(StructureMapException).GetTypeInfo()
+                .Assembly.GetExportedTypes()
+                .Where(x => x.CanBeCastTo<StructureMapException>())
                 .Each(type => _constructors.FillDefault(type));
         }
 
