@@ -205,6 +205,8 @@
     <Compile Include="Pipeline\InstanceMementoPropertyReader.cs" />
     <Compile Include="Pipeline\IObjectCache.cs" />
     <Compile Include="Pipeline\LambdaInstance.cs" />
+    <Compile Include="Pipeline\Lazy\FuncWithArgInstance.cs" />
+    <Compile Include="Pipeline\Lazy\FuncWithArgFactoryTemplate.cs" />
     <Compile Include="Pipeline\Lazy\FuncFactoryTemplate.cs" />
     <Compile Include="Pipeline\Lazy\FuncInstance.cs" />
     <Compile Include="Pipeline\Lazy\LazyFactoryTemplate.cs" />

@@ -314,6 +314,7 @@
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
     <Compile Include="Pipeline\GenericsHelperExpressionTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
+    <Compile Include="Pipeline\Func_Typefactory_construction_strategy_Tester.cs" />
     <Compile Include="Pipeline\Lazy_and_Func_construction_strategy_Tester.cs" />
     <Compile Include="Pipeline\LifecyclesTester.cs" />
     <Compile Include="Pipeline\LifecycleObjectCacheTester.cs" />

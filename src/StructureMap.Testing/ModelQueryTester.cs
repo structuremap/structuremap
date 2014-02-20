@@ -110,15 +110,15 @@ namespace StructureMap.Testing
         [Test]
         public void Iterate_over_pluginTypes()
         {
-            // 3 registered plus the 4th is the IContainer itself + Func + Lazy
-            _model.PluginTypes.Count().ShouldEqual(6);
+            // 3 registered plus the 4th is the IContainer itself + Func + Func w/ Arg + Lazy
+            _model.PluginTypes.Count().ShouldEqual(7);
         }
 
         [Test]
         public void Iterate_over_pluginTypes_w_container()
         {
-            // IContainer is always added to the Container + Func<> + Lazy<>
-            _container.Model.PluginTypes.Count().ShouldEqual(6);
+            // IContainer is always added to the Container + Func<> + Func<,> + Lazy<>
+            _container.Model.PluginTypes.Count().ShouldEqual(7);
         }
 
         [Test]
