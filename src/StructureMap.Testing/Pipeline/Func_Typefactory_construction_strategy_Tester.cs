@@ -36,6 +36,14 @@ namespace StructureMap.Testing.Pipeline
             c3.C1.ShouldBeTheSameAs(c1);
         }
 
+        [Test]
+        public void nothing_special_about_a_string_input()
+        {
+            var c4 = new Container().GetInstance<Func<string, ConcreteClass4>>()("Hello");
+            c4.ShouldNotBeNull();
+            c4.S.ShouldEqual("Hello");
+        }
+
         public class ConcreteClass1 : IFoo
         {
             public Guid SomeGuid { get; set; }
@@ -59,6 +67,16 @@ namespace StructureMap.Testing.Pipeline
             }
 
             public IFoo C1 { get; private set; }
+        }
+
+        public class ConcreteClass4
+        {
+            public ConcreteClass4(string s)
+            {
+                S = s;
+            }
+
+            public string S { get; private set; }
         }
     }
 }
