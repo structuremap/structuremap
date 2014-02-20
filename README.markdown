@@ -8,20 +8,16 @@ StructureMap is available via NuGet:
     > Install-Package StructureMap
 
 
-Also, you can get it from the downloads area. If you want to fix a bug or just want to tinker with an idea,
+Also, you can get it from the [downloads area][2]. If you want to fix a bug or just want to tinker with an idea,
 we love receiving pull requests!
 
 Building the Source
 -------------------
 
  1. Clone the repository: `git clone git://github.com/structuremap/structuremap.git`
- 1. make sure that you have got [ruby installed][2].
- 1. run `gem install albacore`
- 1. Necessary files for the build are located in the __buildsupport__ git module. 
-    To obtain the contents run `git submodule update --init`.
-    The __--init__ flag is only necessary the first time you run it. 
+ 1. Make sure that you have got [ruby installed][3].
  1. In the root, run `rake`.
- 1. Open `StructureMap.sln` in VS2010.
+ 1. Open `StructureMap.sln` in VS2012.
  1. Build
 
 Debugger Visualizers
@@ -46,4 +42,6 @@ http://structuremap.net/
 Thanks for trying StructureMap.
 
  [1]: http://docs.structuremap.net/InversionOfControl.htm
- [2]: http://www.ruby-lang.org/en/downloads/
+ [2]: https://github.com/structuremap/structuremap/releases
+ [3]: http://www.ruby-lang.org/en/downloads/
+ 
