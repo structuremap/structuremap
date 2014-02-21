@@ -46,23 +46,29 @@ namespace StructureMap.Pipeline
             object result = null;
             var key = instance.InstanceKey(pluginType);
             _lock.EnterUpgradeableReadLock();
-            if (_objects.ContainsKey(key))
+            try
             {
-                result = _objects[key];
-                _lock.ExitUpgradeableReadLock();
+                if (_objects.ContainsKey(key))
+                {
+                    result = _objects[key];
+                }
+                else
+                {
+                    _lock.EnterWriteLock();
+                    try
+                    {
+                        result = buildWithSession(pluginType, instance, session);
+                        _objects.Add(key, result);
+                    }
+                    finally
+                    {
+                        _lock.ExitWriteLock();
+                    }
+                }
             }
-            else
+            finally
             {
-                _lock.EnterWriteLock();
-                try
-                {
-                    result = buildWithSession(pluginType, instance, session);
-                    _objects.Add(key, result);
-                }
-                finally
-                {
-                    _lock.ExitWriteLock();
-                }
+                _lock.ExitUpgradeableReadLock();
             }
 
             return result;
