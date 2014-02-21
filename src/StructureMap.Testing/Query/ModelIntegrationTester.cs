@@ -51,8 +51,8 @@ namespace StructureMap.Testing.Query
         [Test]
         public void can_iterate_through_families_including_both_generics_and_normal()
         {
-            // +1 for "IContainer" itself + Func + Lazy
-            container.Model.PluginTypes.Count().ShouldEqual(10); 
+            // +1 for "IContainer" itself + Func + Lazy + FuncWithArg
+            container.Model.PluginTypes.Count().ShouldEqual(11); 
 
             container.Model.PluginTypes.Each(x => Debug.WriteLine(x.PluginType.FullName));
         }
@@ -91,7 +91,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void get_all_instances_from_the_top()
         {
-            container.Model.AllInstances.Count().ShouldEqual(13); // Func/Lazy are built in
+            container.Model.AllInstances.Count().ShouldEqual(14); // Func/Func+Arg/Lazy are built in
         }
 
         [Test]
