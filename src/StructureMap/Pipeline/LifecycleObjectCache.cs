@@ -43,7 +43,7 @@ namespace StructureMap.Pipeline
 
         public object Get(Type pluginType, Instance instance, IBuildSession session)
         {
-            object result = null;
+            object result;
             var key = instance.InstanceKey(pluginType);
             _lock.EnterUpgradeableReadLock();
             try

@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Pipeline;
@@ -75,23 +74,24 @@ namespace StructureMap.Testing.Pipeline
             var aWidget = new AWidget();
             var instance = new ObjectInstance(aWidget);
             cache.Get(typeof(IWidget), instance, new StubBuildSession());
-
+            
+            object cachedWidget = null;
             var threadStarted = new ManualResetEvent(false);
-            Func<object> getDelegate =
+            Action getDelegate =
                 () =>
                 {
                     threadStarted.Set();
-                    return cache.Get(typeof (IWidget), instance, new StubBuildSession());
+                    cachedWidget = cache.Get(typeof (IWidget), instance, new StubBuildSession());
                 };
 
-            object cachedWidget = null;
-            var asyncResult = getDelegate.BeginInvoke(ar => cachedWidget = getDelegate.EndInvoke(ar), null);
+            var asyncResult = getDelegate.BeginInvoke(getDelegate.EndInvoke, null);
 
-            // Wait forever for the thread pool thread to kick off
+            // Wait forever for the thread pool thread to actually start
             threadStarted.WaitOne();
-            // ...then wait 10ms for the Get call to complete
+            // ...then allow 10ms for the Get call to complete
             asyncResult.AsyncWaitHandle.WaitOne(10);
 
+            Assert.NotNull(cachedWidget, "Get did not return cachedWidget within allowed time. Is your thread being blocked?");
             Assert.AreEqual(aWidget, cachedWidget);
         }   
 
