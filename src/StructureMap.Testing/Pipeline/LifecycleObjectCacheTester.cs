@@ -76,20 +76,14 @@ namespace StructureMap.Testing.Pipeline
             cache.Get(typeof(IWidget), instance, new StubBuildSession());
             
             object cachedWidget = null;
-            var threadStarted = new ManualResetEvent(false);
-            Action getDelegate =
-                () =>
-                {
-                    threadStarted.Set();
-                    cachedWidget = cache.Get(typeof (IWidget), instance, new StubBuildSession());
-                };
+            var thread = new Thread(() =>
+            {
+                cachedWidget = cache.Get(typeof(IWidget), instance, new StubBuildSession());
+            });
 
-            var asyncResult = getDelegate.BeginInvoke(getDelegate.EndInvoke, null);
-
-            // Wait forever for the thread pool thread to actually start
-            threadStarted.WaitOne();
-            // ...then allow 10ms for the Get call to complete
-            asyncResult.AsyncWaitHandle.WaitOne(10);
+            thread.Start();
+            // Allow 10ms for the thread to start and for Get call to complete
+            thread.Join(10);
 
             Assert.NotNull(cachedWidget, "Get did not return cachedWidget within allowed time. Is your thread being blocked?");
             Assert.AreEqual(aWidget, cachedWidget);
