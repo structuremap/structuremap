@@ -1,6 +1,240 @@
 <!--Title: Glossary-->
 
 <markdown>
-TODO(Write content!)
+There are some terms that reoccur throughout the documentation and show up in the StructureMap configuration. Understanding these terms and how they relate to StructureMap isn't a prerequisite to using StructureMap, but it helps.
+
+
+
+<Section title="Container" id="container">
+
+Tools like StructureMap are generally referred to as IoC containers, or in the Java world sometimes as "lightweight" containers to differentiate them from the older EJB containers.  As far as I know, the term "Inversion of Control Container" was coined by members of the PicoContainer team at ThoughtWorks and popularized by the publication of Martin Fowler's paper Inversion of Control Containers and the Dependency Injection pattern in January 2004.  StructureMap development was already underway when the paper was published.  I was definitely influenced by the paper and PicoContainer itself to a degree, but I resisted the term "Container" for a long time.  StructureMap has a container class, but it's always been largely hidden behind the static ObjectFactory class.  New in StructureMap 2.5 is an easy way to use the Container without StructureMapConfiguration or ObjectFactory like this:
+
+	IContainer container = new Container(registry =>
+	{
+	    registry.AddInstanceOf<Rule>().UsingConcreteType<ARule>().WithName("Alias");
+	
+	    // Add an instance by specifying the ConcreteKey
+	    registry.AddInstanceOf<IWidget>()
+	        .UsingConcreteType<ColorWidget>()
+	        .WithName("Purple")
+	        .WithProperty("Color").EqualTo("Purple");
+	
+	    // Specify a new Instance, override a dependency with a named instance
+	    registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("RuleThatUsesMyInstance")
+	        .Child<IWidget>("widget").IsNamedInstance("Purple");
+	});
+
+</Section>
+
+
+
+
+<Section title="PluginType and PluggedType" id="plugin-and-plugged-type">
+
+
+
+I use the term "PluginType" throughout the code and documentation to mean "the type that you want."  In my current project I have this line of configuration:
+
+	ForRequestedType<IRepository>().TheDefaultIsConcreteType<Repository>().CacheBy(InstanceScope.Hybrid);
+
+If you request an object of IRepository, you'll get an instance of the Repository class.  In this case, IRepository is the PluginType (what you're asking for) and Repository is the "PluggedType" (the concrete class you'll get that fulfills implements the PluginType contract).
+
+Another example of the PluginType / PluggedType nomenclature is in the Xml configuration on the <DefaultInstance> node.  The example below configures the default ISessionSource:
+
+  <DefaultInstance
+    PluginType="ShadeTree.DomainModel.ISessionSource,ShadeTree.DomainModel"
+    PluggedType="ShadeTree.DomainModel.SessionSource,ShadeTree.DomainModel">
+    <properties>
+      <Pair Key="connection.provider" Value="NHibernate.Connection.DriverConnectionProvider" />
+      <Pair Key="connection.driver_class" Value="NHibernate.Driver.SqlClientDriver" />
+      <Pair Key="dialect" Value="NHibernate.Dialect.MsSql2000Dialect" />
+      <Pair Key="hibernate.dialect" Value="NHibernate.Dialect.MsSql2000Dialect" />
+      <Pair Key="use_outer_join" Value="true" />
+      <Pair Key="connection.connection_string" Value="a connection string" />
+      <Pair Key="show_sql" Value="true" />
+    </properties>
+  </DefaultInstance>
+
+</Section>
+
+<Section title="Plugin Family" id="plugin-family">
+
+</Section>
+
+<Section title="Instance" id="instance">
+
+Named Instance
+
+In StructureMap terms, an "Instance" is a named way to build or locate a named object instance for a requested PluginType.  An "Instance" does not automatically equate to a concrete type.  For example, let's say that we're building a system to automate a warehouse.  Our system might consume an interface called IShippingService that acts as a Gateway to various ways of shipping boxes out of our warehouse.
+
+    public interface IShippingService
+    {
+        void ShipIt();
+    }
+
+Our warehouse system might have to interact with three types of shipping:  domestic, international, and intra-company or internal shipments.  The internal shipping service runs in process with the warehouse application, but domestic and international shipping is done by invoking external web services.  The registration of the IShippingService Instances might look like this:
+
+    public class ShippingRegistry : Registry
+    {
+        public ShippingRegistry()
+        {
+            ForRequestedType<IShippingService>().AddInstances(x =>
+            {
+                x.OfConcreteType<ShippingWebService>()
+                    .WithCtorArg("url").EqualTo("a url")
+                    .WithName("Domestic");
+ 
+                x.OfConcreteType<ShippingWebService>()
+                    .WithCtorArg("url").EqualTo("a different url")
+                    .WithName("International");
+ 
+                x.OfConcreteType<InternalShippingService>().WithName("Internal");
+            });
+        }
+    }
+In the registration code above, there are three "Instance's."  You can access the various IShippingService Instance's by name:
+
+	// Accessing the IShippingService Instance's by name
+	var internationalService = ObjectFactory.GetNamedInstance<IShippingService>("International");
+	var domesticService = ObjectFactory.GetNamedInstance<IShippingService>("Domestic");
+	var internalService = ObjectFactory.GetNamedInstance<IShippingService>("Internal");
+
+Asking for the "International" or the "Domestic" instance of IShippingService will both return an object of type ShippingWebService, but the two objects will be differently configured with unique Url's.
+
+There is an actual class in StructureMap 2.5 that represents an "Instance."  An abreviated version of the abstract Instance class is shown below:
+
+    public abstract class Instance : IDiagnosticInstance
+    {
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+ 
+        public virtual object Build(Type pluginType, IBuildSession session)
+        {
+            object rawValue = createRawObject(pluginType, session);
+            return applyInterception(rawValue, pluginType);
+        }
+ 
+        private object createRawObject(Type pluginType, IBuildSession session)
+        {
+            try
+            {
+                return build(pluginType, session);
+            }
+            catch (StructureMapException ex)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new StructureMapException(400, ex);
+            }
+        }
+ 
+        protected abstract object build(Type pluginType, IBuildSession session);
+ 
+    }
+A single Instance can be assigned to a PluginType as the default.  When you call ObjectFactory.GetInstance<T>(), StructureMap looks for the default Instance object for PluginType T, then executes the Instance.Build(Type, IBuildSession) method to create a new object or get an existing object.  Note the abstract build(Type, IBuildSession) method.  This is a Template Method that can be overriden to write your own customized Instance type.
+
+When you call ObjectFactory.GetNamedInstance<T>("the instance that I want") or ObjectFactory.GetInstance<T>(), the internal Container object is locating the correct Instance object and calling its Build() method.
+
+</Section>
+
+<Section title="Scoping (or Lifecycle)" id="lifecycle">
+
+When you register a PluginType in the system you can "scope" the Instance's of that PluginType like this:
+
+            // This is used as a sort of lightweight ScriptManager in
+            // our website application
+            ForRequestedType<ICachedSet>().TheDefaultIsConcreteType<CachedSet>()
+                .CacheBy(InstanceScope.HttpContext);
+Note the CacheBy() method hanging off the end of the expression.  This is directing the StructureMap container to use the same object instance for ICachedSet for all requests in the same HttpContext.  In this case, if a request is made for any Instance of ICachedSet, StructureMap will first check the HttpContext.Items collection to see if that exact Instance has already been created within the same HttpContext.
+
+PerRequest - The default option unless otherwise overridden.  A new object will be created for each time you request an Instance from the container.  Some other IoC containers call this "Transient."  Please note that this is the default behavior in StructureMap.  Many other IoC container tools will use "Singleton" instead.
+Singleton - A single object will be shared across all requests for a specific Instance.  StructureMap will only create the singleton object upon demand
+ThreadLocal - A single object will be created for each requesting thread.  Caches the instances with ThreadLocalStorage.
+HttpContext - A single object will be created for each HttpContext.  Caches the instances in the HttpContext.Items collection.
+HttpSession - A single object will be created for each Http Session.  Caches the intances in the HttpContext.Session collection.
+Hybrid - Uses HttpContext storage if it exists, otherwise uses ThreadLocal storage.
+It is possible to create your own type of scoping.  See "Extending StructureMap" for more information.  Also note that StructureMap provides no functionality for cleaning up resources of the objects held by the container (Container.EjectAllInstances<T>() will clear out singleton objects).  To date, I have not found a need for this behavior or functionality.  I generally assume that a combination of basic garbage collection and proper class design is sufficient.  Please also note that StructureMap does not retain a reference to objects that are created as "PerRequest/Transient" and there is not need for any kind of Container.Release() method like some other IoC tools.
+
+</Section>
+
+<Section title="Profile" id="profile">
+
+From the very beginning, StructureMap has supported the ability to define a named set of default instances called a "Profile."  The Profile feature was originally meant to be a quick way of switching the connection mode of a smart client application from connected to disconnected modes.  In practice, it's more commonly used as a way to migrate configuration between environments or for creating alternative deployment configurations.  My team uses the Profile feature in our system as a quick way to collapse our entire distributed application into a single AppDomain for easier testing and debugging.  Our "InMemory" profile is defined like this:
+
+    // Using this Profile configures our application to
+    // run completely inside a single AppDomain
+    // In production the application will consist
+    // of the website and 2-3 external windows
+    // services
+    var repository = new InMemoryRepository();
+    CreateProfile(IN_MEMORY_PROFILE, x =>
+    {
+        x.For<IRepository>().Use(repository);
+        x.For<IEventPublishingService>().Use(new InMemoryEventPublishingService(repository));
+        x.For<IUserMessagePublisher>().UseConcreteType<InMemoryUserMessageQueue>();
+        x.For<IUnitOfWork>().UseConcreteType<InMemoryUnitOfWork>();
+    });
+
+In the code, we can switch the application to the in memory mode by calling the SetDefaultsToProfile() method on the Container (or ObjectFactory.Profile = CoreRegistry.IN_MEMORY_PROFILE):
+
+	// This is actual code from a test harness class we use
+	// for integration testing
+	IContainer container = createContainer(new RuleSet[]{ruleSet});
+	container.SetDefaultsToProfile(CoreRegistry.IN_MEMORY_PROFILE);
+
+</Section>
+
+<Section title="Interceptor" id="interceptor">
+
+A new feature for StructureMap 2.5 is the ability to "intercept" an object getting created in StructureMap before the new object is handed back to the requesting code.  The intention behind this feature is to support runtime Aspect Oriented Programming techniques or any type of object initialization beyond the constructor function. 
+
+To explain the sequence of events, here's an ellided version of the Build() method of the Instance abstract class:
+
+    public virtual object Build(Type pluginType, BuildSession session)
+    {
+        markBuildStackStart(session, pluginType);
+
+        // "Build" the desired object
+        object rawValue = createRawObject(pluginType, session);
+
+        // Allow the Interceptor a chance to enhance, configure, 
+        // wrap with a decorator, or even replace the rawValue
+        object finalValue = applyInterception(rawValue, pluginType);
+
+        markBuildStackFinish(session);
+
+        return finalValue;
+    }
+
+The Instance class first builds the raw object, then applies any registered interception on the raw object to get the final value. 
+
+See Interception for more information.
+
+</Section>
+
+<Section title="Decorators" id="decorators">
+</Section>
+
+<Section title="Auto wiring" id="auto-wiring">
+</Section>
+
+<Section title="Inline dependencies" id="inline-dependencies">
+dasdasdas
+</Section>
+
+<Section title="Plugin Family" id="plugin-family">
+</Section>
+
+<Section title="Services" id="services">
+</Section>
+
+<Section title="DSL" id="dsl">
+</Section>
+
 </markdown>
 

@@ -2,6 +2,63 @@
 <!--Url: get-structuremap-->
 
 <markdown>
-TODO(Write some content!)
-</markdown>
 
+<Section title="Current Release" id="current-release">
+
+The latest and greatest version of StructureMap is **3.0**. See the <TopicLink name="release-notes" /> for more information.
+
+</Section>
+
+<Section title="Supported Platforms" id="sup-platforms">
+
+The original `StructureMap.dll` has been broken up into a couple pieces. The main assembly will be targeting PCL compliance thanks to the diligent efforts of [Frank Quednau](https://twitter.com/fquednau), and that means that Xml configuration and anything to do with ASP.Net has been devolved into separate assemblies and eventually into different Nuget packages. This means that StructureMap 3.0 will theoretically support WP8 and other versions of .Net for the very first time.
+
+The current targetted frameworks are Windows store apps and .Net framework 4.0 and higher.
+
+</Section>
+
+<Section title="Binaries" id="binaries">
+
+Binaries of StructureMap are available via [NuGet](http://www.nuget.org/packages/structuremap/):
+
+    PM> Install-Package StructureMap
+
+Also, you can get the binaries in a zip archive from the [downloads area](https://github.com/structuremap/structuremap/downloads).
+
+</Section>
+<Section title="Source" id="source">
+
+StructureMap's source is hosted on [GitHub](https://github.com/structuremap/structuremap/). If you want to fix a bug or just want to tinker with an idea, we love receiving pull requests! Start by creating your own [fork](https://github.com/structuremap/structuremap/fork) on Github.
+
+You can also grab a [zip archive](https://github.com/structuremap/structuremap/archive/master.zip) of the latest available sources.
+
+</Section>
+
+<Section title="Building the Source" id="building-source">
+
+StructureMap needs [FubuRake][2] and [Ripple][1] for building the source. FubuRake is a standard Ruby library to quickly stand up a fully functional, cross platform [`rake`][3] script for a .Net codebase based on Fubu project standards. Ripple is a package manager that simplifies managing Nuget dependencies in your solution. Both dependencies are currently distributed through Ruby Gems and are part of the Fubu family. Before you continue you need to make sure that you have got Ruby, Rake and RubyGems installed.
+
+
+1. Clone the repository: `git clone git://github.com/structuremap/structuremap.git`
+1. Now really make sure that you have got Ruby, Rake and RubyGems installed!
+1. In the root of the StructureMap Git repository, run `rake`. 
+1. Open `StructureMap.sln` in Visual Studio.
+1. Build.
+
+[1]: http://fubuworld.com/ripple/
+[2]: http://fubuworld.com/fuburake/
+[3]: https://github.com/jimweirich/rake
+
+</Section>
+
+<br/>
+
+> **Installing Ruby, Rake and RubyGems**
+
+> Installing Ruby will give you RubyGems and Rake out of the box. You can find installation guidance at the official [Ruby language](https://www.ruby-lang.org/en/installation/) website or you could install Ruby via [Chocolatey](http://chocolatey.org/):
+ 
+> `> cinst ruby`
+
+> After you have Ruby, Rake and RubyGems installed you are good to go. The `rake` build file `rakefile.rb` (located in the root) will install al the other needed dependencies like `FubuRake` and `Ripple`, which are defined in the `Gemfile` (also located in the root). This file is used by another gem called [`bundler`](http://bundler.io/). The `rake` build file will automatically install `bundler`, which does the same for all the dependencies listed in the `Gemfile`, but only if they weren't already installed on your machine.
+
+</markdown>

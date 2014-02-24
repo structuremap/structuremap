@@ -2,8 +2,8 @@
 <ProjectRoot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <TagLine>The original IoC/DI Container for .Net</TagLine>
   <Name>StructureMap</Name>
-  <GitHubPage>http://github.com/DarthFubuMVC/StructureMap</GitHubPage>
-  <UserGroupUrl>https://groups.google.com/forum/?fromgroups#!forum/fubumvc-devel</UserGroupUrl>
+  <GitHubPage>https://github.com/structuremap/structuremap</GitHubPage>
+  <UserGroupUrl>http://groups.google.com/group/structuremap-users?hl=en</UserGroupUrl>
   <BuildServerUrl>http://build.fubu-project.org/project.html?projectId=project27&amp;tab=projectOverview</BuildServerUrl>
   <TeamCityBuildType>bt46</TeamCityBuildType>
   <BottleName>StructureMap.Docs</BottleName>

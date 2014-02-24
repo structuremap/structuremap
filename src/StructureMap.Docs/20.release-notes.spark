@@ -1,0 +1,44 @@
+<!--Title: Release Notes-->
+<!--Url: release-notes-->
+<markdown>
+
+<Section title="Release Notes 3.0 (??-??-???)" id="3.0">
+
+- The exception messages provide contextual information about what StructureMap was trying to do when things went wrong.
+
+- The nested container implementation is vastly improved, much faster, and doesn’t have the massive singleton behavior bug from 2.6.*.
+
+- All old `[Obsolete]` 2.5 registration syntax has been removed, and there’s been a major effort to enforce consistency throughout the registration API’s.
+
+- The original StructureMap.dll has been broken up into a couple pieces.  The main assembly will be targeting PCL compliance thanks to the diligent efforts of Frank Quednau, and that means that Xml configuration and anything to do with ASP.Net has been devolved into separate assemblies and eventually into different Nuget packages.  This means that StructureMap will theoretically support WP8 and other versions of .Net for the very first time.  God help me.
+
+- The strong naming has been removed.  My thought is to distribute separate Nuget packages with unsigned versions for sane folks and signed versions for enterprise-y folks.
+
+- Lifecycle (scope) can be set individually on each Instance (stupid limitation left over from the very early days)
+Constructor selection can be specified per Instance.
+
+- Improved diagnostics, both at runtime and for the container configuration.
+
+- Improved runtime performance, especially for deep object graphs with inline dependencies (i.e., <ProjectLink name="FubuMVC"/> behavior chains).
+
+- The interception model has been completely redesigned.
+
+- The ancient attribute model for StructureMap configuration has been mostly removed.
+
+- The “Profile” model has been much improved.
+
+- The Xml configuration has been heavily streamlined.
+
+- Internally, the old `PipelineGraph`, `InstanceFactory`, `ProfileManager` architecture is all gone. The new `PipelineGraph` implementations just wrap one or more `PluginGraph` objects, so there’s vastly less data structure shuffling gone on internally.
+
+**Related links:**
+
+- http://jeremydmiller.com/2014/02/18/structuremap-3-is-gonna-tell-you-whats-wrong-and-where-it-hurts/
+- http://jeremydmiller.com/2014/01/17/structuremap-3-0-is-very-nearly-done-no-seriously/
+- http://jeremydmiller.com/2013/02/22/big-update-on-structuremap-3-0-progress/
+- http://jeremydmiller.com/2013/01/30/lets-try-this-again-structuremap-3-0-in-en-route-as-of-now/
+
+</Section>
+
+</markdown>
+
