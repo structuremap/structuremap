@@ -23,6 +23,10 @@ Binaries of StructureMap are available via [NuGet](http://www.nuget.org/packages
 
     PM> Install-Package StructureMap
 
+   	-- or --
+
+	> ripple install StructureMap -p [your project name]
+
 Also, you can get the binaries in a zip archive from the [downloads area](https://github.com/structuremap/structuremap/downloads).
 
 </Section>
@@ -42,7 +46,7 @@ StructureMap needs [FubuRake][2] and [Ripple][1] for building the source. FubuRa
 1. Clone the repository: `git clone git://github.com/structuremap/structuremap.git`
 1. Now really make sure that you have got Ruby, Rake and RubyGems installed!
 1. In the root of the StructureMap Git repository, run `rake`. 
-1. Open `StructureMap.sln` in Visual Studio.
+1. Open StructureMap.sln in VS2012 ('rake sln' from the root as well).
 1. Build.
 
 [1]: http://fubuworld.com/ripple/
