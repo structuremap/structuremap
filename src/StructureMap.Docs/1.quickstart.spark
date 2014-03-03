@@ -2,8 +2,7 @@
 <!--Url: quickstart-->
 
 <markdown>
-
-Before you get started with StrucutureMap it's recommended that you first get comfortable with some of the <TopicLink name="concepts" /> and the basic patterns of [Dependency Injection]() and [Inversion Of Control](). It's important that you structure and build your application with this concepts in mind.
+Before you get started with StrucutureMap it's recommended that you first get comfortable with some of the <TopicLink name="concepts" /> and the basic patterns of [Dependency Injection](http://todo) and [Inversion Of Control](http://todo). It's important that you structure and build your application with this concepts in mind.
 
 Assuming that you're already familiar with those concepts, or you'd really rather skip the pedantry and jump right into concrete code, the first thing to do is, go <TopicLink name="get-structuremap" /> and jump into usage.
 
@@ -17,131 +16,41 @@ The main usage of StructureMap consist of the following two steps:
 
 </Section>
 
-
 <Section title="Configuring the container" id="configuring-the-container">
 
 Configuring also known as bootstrapping the container is possible in various and mixed ways. The recommended way to do this, is the usage of the <TopicLink name="registration/registry-dsl" />, which provide you a way to define code as configuration in a stronly typed fashion. While the <TopicLink name="registration/registry-dsl" /> is the strongly recommended means of configuring StructureMap, there will be times when reverting to the other supported <TopicLink name="registration/xml-registration" /> is appropriate. The configuration is highly modular and you can mix and match all of the configuration choices within the same `Container` instance.
 
 The first step in using StructureMap is configuring an `Container` object or `ObjectFactory`. The following examples are based on the usage of the <TopicLink name="registration/registry-dsl" />.
 
-	public interface IBar { }
-	public class Bar : IBar { }
-	
-	public interface IFoo { }
-	public class Foo : IFoo
-	{
-	    public IBar Bar { get; private set; }
-	
-	    public Foo(IBar bar)
-	    {
-			if (bar == null) throw new ArgumentNullException("bar");
-	        Bar = bar;
-	    }
-	}
+<Snippet name="foobar-model" />
 
-<p></p>
-
-	// Example #1 - Create an container instance and directly pass in the configuration.
-	var container1 = new Container(c =>
-	{
-	    c.For<IFoo>().Use<Foo>();
-	    c.For<IBar>().Use<Bar>();
-	});
-	
-	// Example #2 - Create an container instance but add configuration later.
-	var container2 = new Container();
-	
-	container2.Configure(c =>
-	{
-	    c.For<IFoo>().Use<Foo>();
-	    c.For<IBar>().Use<Bar>();
-	});
-	
-	// Example #3 - Initialize the static ObjectFactory container.
-	ObjectFactory.Initialize(i =>
-	{
-	    i.For<IFoo>().Use<Foo>();
-	    i.For<IBar>().Use<Bar>();
-	});
-
+<Snippet name="quickstart-configure-the-container" />
 
 Initializing or configuring the container is usually done at application startup and is located as close as possible to the application's entry point. This place is sometimes referred to as the composition root of the application. Like in our example we are composing our application's object graph by connecting abstractions to concrete types.
 
-We are using the fluent API `For<PLUGIN_TYPE>().Use<CONCRETE_TYPE>()` which registers a default instance for a given plugin type. In our example we want an new instance of `Foo` every time we request the abstraction `IFoo`.
+We are using the fluent API `For<PLUGIN_TYPE>().Use<PLUGGED_TYPE>()` which registers a default instance for a given plugin type. In our example we want an new instance of `Foo` every time we request the abstraction `IFoo`.
 
 The recommended way of using the <TopicLink name="registration/registry-dsl" /> is by defining one or more `Registry` classes. Typically, you would subclass the `Registry` class, then use the Fluent API methods exposed by the `Registry` class to create `Container` configuration. Here's a sample `Registry` class below used to configure the same types as in our previous example.
 
-	public class FooBarRegistry : Registry
-	{
-	    public FooBarRegistry()
-	    {
-	        For<IFoo>().Use<Foo>();
-	        For<IBar>().Use<Bar>();
-	    }
-	}
+<Snippet name="foobar-registry" />
 
 When you set up a `Container` or `ObjectFactory`, you need to simply direct the `Container` to use the configuration in that `Registry` class.
 
-
-	// Example #1
-	var container1 = new Container(new FooBarRegistry());
-	
-	// Example #2
-	var container2 = new Container(c =>
-	{
-	    c.AddRegistry<FooBarRegistry>();
-	});
-	
-	// Example #3
-	ObjectFactory.Initialize(c =>
-	{
-	    c.AddRegistry<FooBarRegistry>();
-	});
-
+<Snippet name="quickstart-configure-the-container-using-a-registry" />
 
 In real world applications you also have to deal with repetitive similar registrations. Such registrations are tedious, easy to forget and can be a weak spot in your application. StructureMap provides <TopicLink name="registration/auto-registration-and-conventions" />  which mitigates this pain and eases the maintenance burden. StructureMap exposes this feature through the <TopicLink name="registration/registry-dsl" /> by the `Scan` method.
 
 In our example there is an reoccuring pattern, we are connecting the plugin type `ISomething` to a concrete type `Something`, meaning `IFoo` to `Foo` and `IBar` to `Bar`. Wouldn't it be cool if we could write a convention for exactly doing that? Fortunatly StructureMap has already one build in. Let's see how we can create an container with the same configuration as in the above examples.
 
-	// Example #1
-	var container1 = new Container(c =>
-	    c.Scan(scanner =>
-	    {
-	        scanner.TheCallingAssembly();
-	        scanner.WithDefaultConventions();
-	    }));
-	
-	// Example #2
-	var container2 = new Container();
-	
-	container2.Configure(c =>
-	    c.Scan(scanner =>
-	    {
-	        scanner.TheCallingAssembly();
-	        scanner.WithDefaultConventions();
-	    }));
-	
-	// Example #3
-	ObjectFactory.Initialize(i => 
-	    i.Scan(scanner =>
-		{
-		    scanner.TheCallingAssembly();
-		    scanner.WithDefaultConventions();
-		}));
+<Snippet name="quickstart-configure-the-container-using-auto-registrations-and-conventions" />
 
 We instruct the scanner to scan through the calling assembly with default conventions on. This wil find and registers the default instance for `IFoo` and `IBar` which are obviously the concrete types `Foo` and `Bar`. Now whenever you add an additional interface `IMoreFoo` and a class `MoreFoo` to your application's code base, it's automatically picked up by the scanner. 
 
 Sometimes classes need to be suplied with some primitive value in its constructor. For example the `System.Data.SqlClient.SqlConnection` needs to be supplied with the connection string in its constructor. No problem, just set up the value of the constructor argument in the bootstrapping:
 
-	//just for demostration purposes, normally you don't want to embed the connection string directly into code.
-	For<IDbConnection>().Use<SqlConnection>().Ctor<string>().Is("YOUR_CONNECTION_STRING");
-	
-	//a better solution is to pull the connection string from your AppSettings
-	For<IDbConnection>().Use<SqlConnection>().Ctor<string>().EqualToAppSetting("CONNECTION-STRING");
+<Snippet name="quickstart-container-with-primitive-value" />
 
-StructureMap will look up the "CONNECTION-STRING" value in the AppSettings portion of the App.config or Web.config file, and use that string value to invoke the constructor function of the `SqlConnection` class, then hand back that new `SqlConnection` object. 
-
-So far you have seen an couple of ways to work with the registry DSL and configure an `Container` object or `ObjectFactory`. We have seen examples of configuration that allows us to build objects that doesn't depend on anything like the `Bar` class, or do depend on other types like the `Foo` class needs an instance of `IBar`. In our last example we have seen configuration for objects that needs some primitive types like strings in its constructor function.
+So far you have seen an couple of ways to work with the <TopicLink name="registration/registry-dsl" /> and configure an `Container` object or `ObjectFactory`. We have seen examples of configuration that allows us to build objects that doesn't depend on anything like the `Bar` class, or do depend on other types like the `Foo` class needs an instance of `IBar`. In our last example we have seen configuration for objects that needs some primitive types like strings in its constructor function.
 
 Now that we have done some basic configuration, it's time to move on to the next step of the main usage: resolving instances of a service or dependency.
 
@@ -151,38 +60,29 @@ Now that we have done some basic configuration, it's time to move on to the next
 
 This will be the easy part of interacting with StructureMap. During application execution, you will be needing the services you registered in the container. When you resolve a service, depending on the <TopicLink name="object-lifecycle" />, a new instance of the service will be created by StructureMap or StructureMap is delegating the responsibility of resolving the instance to external code. This all depends on your configuration for that specific service. All of our examples so far let's StructureMap create the instance for the service.
 
-In our bootstrapping of the container we didn't specified any lifecycle. In short, a lifecycle let's you specify how long an instance is tracked by StructureMap. More information on this subject can be found in the <TopicLink name="object-lifecycle" /> chapter. The default lifecycle for all services is [`PerRequest`](). This means that a new instance will be created for each request to the container. These instances aren't tracked by the container. Lifecycles for services can be defined through code or XML.
+In our bootstrapping of the container we didn't specified any lifecycle. In short, a lifecycle let's you specify how long an instance is tracked by StructureMap. More information on this subject can be found in the <TopicLink name="object-lifecycle" /> chapter. The default lifecycle for all services is [`Transient`](). This means that a new instance will be created for each request to the container. These instances aren't tracked by the container. Lifecycles for services can be defined through code or XML.
 
-Before we can resolve services from the container, we need an reference to a `Container` object or `ObjectFactory`. For our examples we are going to use the static `ObjectFactory` class, which is StructureMap's implementation of a [Service Locator]().
+Before we can resolve services from the container, we need an reference to a `Container` object or `ObjectFactory`. For our examples we are going to use the static `ObjectFactory` class, which is StructureMap's implementation of a [Service Locator](http://todo.com).
 
-	var fooInstance = ObjectFactory.GetInstance<IFoo>();
+<Snippet name="quickstart-resolve-strongly-typed-instance" />
 
 This will create an instance of the class `Foo`. Before creating this instance, StructureMap will inspect the constructor and see that it needs to supply an instance of `IBar`. Because we also provided configuration for `IBar`, StructureMap wil be able to create an instance of the `Bar` class and injects that into the constructor of the `Foo` class. The resulting instance of `Foo` will be returned to the caller.
 
 StructureMap is also able to resolve weakly typed services. When you only have a `Type` object that you need to  get resolved, you can use the non generic `GetInstance` method.
 
-	Type foo = typeof (IFoo);
-	
-	var fooInstance = ObjectFactory.GetInstance(foo);
+<Snippet name="quickstart-resolve-weakly-typed-instance" />
 
 Both `GetInstance` methods will provide you the default instance of the `IFoo`. That is, StructureMap could have multiple configurations for the `IFoo` plugin type, but can only have one default instance. Let's alter the configuration so that there will be two `IFoo` registrations.
 
-	ObjectFactory.Initialize(i =>
-	{
-	    i.For<IFoo>().Use<Foo>();
-		i.For<IFoo>().Use<SomeOtherFoo>();
-	    i.For<IBar>().Use<Bar>();
-	});
+<Snippet name="quickstart-configure-multiple-services-of-the-same-type" />
 
 The last registration for `IFoo` will be the default instance. So whenever you want to resolve the service `IFoo` you will get an instance of `SomeOtherFoo`. But what if you want all foo's? That's easy.
 
-	IList<IFoo> fooInstances = ObjectFactory.GetAllInstances<IFoo>();
+<Snippet name="quickstart-resolve-all-instances-of-foo" />
 
 When you request a service that's unknown to StructureMap you will be presented with a StructureMap exception, complaining that there is no default instance defined for the requested service type. If you don't want this exception to occur you can use the `TryGetInstance` method. 
 
-	var blahInstance = ObjectFactory.TryGetInstance<IBlah>();
-	
-	Debug.Assert(blahInstance != null, String.Format("no default instance for {0}", typeof(IBlah).FullName));
+<Snippet name="quickstart-resolve-unknown-instance-blah" />
 
 This will try to create or find the default instance of the requested service type. It will returns the default value (i.e. `null`) of the requested service if it's not known to the container. The condition of the assertion will be false because `blahInstance` will be `null`.
 
@@ -198,54 +98,13 @@ There is an even a simpler usage than the main usage because StructureMap allows
 
 Let's say we have the following object model, which represents the weather condition for a certain location.
 
-
-	public class Weather
-	{
-	    public Location Location { get; set; }
-	    public Atmosphere Atmosphere { get; set; }
-	    public Wind Wind { get; set; }
-	    public Condition Condition { get; set; }
-	
-	    public Weather(Location location, Atmosphere atmosphere, Wind wind, Condition condition)
-	    {
-	        Location = location;
-	        Atmosphere = atmosphere;
-	        Wind = wind;
-	        Condition = condition;
-	    }
-	}
-	
-	public class Location
-	{
-	   //some properties
-	}
-	
-	public class Atmosphere
-	{
-	   //some properties
-	}
-	
-	public class Wind
-	{
-	    //some properties        
-	}
-	
-	public class Condition
-	{
-	    //some properties        
-	}
+<Snippet name="concrete-weather-model" />
 
 Before we can resolve the concrete `Weather` type, we need an instance of an `Container` object or `ObjectFactory`. As mentioned earlier, these objects defines a generic `GetInstance` method which can build us an instance of the `Weather` type.
 
 You can create a container yourself or use the statically accessed container.
 
-	var container = new Container();
-	var weather = container.GetInstance<Weather>();
-
-<p></p>
-
-	var weather = ObjectFactory.Container.GetInstance<Weather>();
-	    weather = ObjectFactory.GetInstance<Weather>(); //short version for above.
+<Snippet name="quickstart-resolve-concrete-types" />
 
 
 The reason why we don't need to supply any configuration is because StructureMap supports a concept called <TopicLink name="the-container/auto-wiring" />. It's basically a smart way of building instances of types by looking to the constructors of the requested and all the needed underlaying types. During this inspection StructureMap also uses any provided configuration to help building the requested service or dependency.

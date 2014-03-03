@@ -41,6 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="samples\glossary\glossary.cs" />
+    <Compile Include="samples\model.cs" />
+    <Compile Include="samples\quickstart\configuring_the_container.cs" />
+    <Compile Include="samples\registries.cs" />
+    <Compile Include="samples\quickstart\resolving_instances.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -54,5 +59,13 @@
     <EmbeddedResource Include="pak-WebContent.zip" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\StructureMap.Net4\StructureMap.Net4.csproj">
+      <Project>{6d812b81-cf2e-4df1-9f73-bc19e5a6a019}</Project>
+      <Name>StructureMap.Net4</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap\StructureMap.csproj">
+      <Project>{3f36ea80-2f9a-4dad-ba27-5ac6163a2ee3}</Project>
+      <Name>StructureMap</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
