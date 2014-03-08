@@ -27,7 +27,7 @@ namespace StructureMap
 
         public static string ToFormat(this string template, params object[] parameters)
         {
-            return string.Format(template, parameters);
+            return parameters.Length == 0 ? template : string.Format(template, parameters);
         }
 
         public static string[] ToDelimitedArray(this string content)
