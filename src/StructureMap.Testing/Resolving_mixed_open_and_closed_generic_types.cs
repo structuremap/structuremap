@@ -1,10 +1,10 @@
 using System.Linq;
 using NUnit.Framework;
 
-namespace StructureMap.Testing.Bugs
+namespace StructureMap.Testing
 {
 	[TestFixture]
-	public class resolve_all_open_and_closed_generic_types
+	public class Resolving_mixed_open_and_closed_generic_types
 	{
 		[Test]
 		public void when_only_open_instances_are_present_they_are_resolved()
@@ -17,9 +17,9 @@ namespace StructureMap.Testing.Bugs
 
 			var instances = container.GetAllInstances<INeedAnEntity<Entity>>().ToArray();
 
+			instances.Length.ShouldEqual(2);
 			instances[0].GetType().Name.ShouldEqual("OpenEntityType`1");
 			instances[1].GetType().Name.ShouldEqual("AnotherOpenEntityType`1");
-			instances.Length.ShouldEqual(2);
 		}
 
 		[Test]
@@ -34,17 +34,13 @@ namespace StructureMap.Testing.Bugs
 
 			var instances = container.GetAllInstances<INeedAnEntity<Entity>>().ToArray();
 
+			instances.Length.ShouldEqual(2);
 			instances[0].GetType().Name.ShouldEqual("ClosedEntityType");
 			instances[1].GetType().Name.ShouldEqual("AnotherClosedEntityType");
-
-			//Fails here with only the closed types being resolved
-			instances.Length.ShouldEqual(3);
-			instances[2].GetType().Name.ShouldEqual("OpenEntityType`1");
 		}
 	}
 
-
-	public class Entity {}
+	public class Entity { }
 
 	public interface INeedAnEntity<T>
 	{
@@ -65,4 +61,5 @@ namespace StructureMap.Testing.Bugs
 	public class AnotherOpenEntityType<T> : INeedAnEntity<T>
 	{
 	}
+
 }
