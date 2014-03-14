@@ -180,6 +180,7 @@
     <Compile Include="AutoWiringExamples.cs" />
     <Compile Include="BidirectionalDependencies.cs" />
     <Compile Include="Bugs\AddValueDirectlyWithGenericUsage.cs" />
+    <Compile Include="Bugs\resolve_all_open_and_closed_generic_types.cs" />
     <Compile Include="Bugs\Bug_101.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
     <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
