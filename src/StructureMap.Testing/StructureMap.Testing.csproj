@@ -185,6 +185,7 @@
     <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
     <Compile Include="Bugs\Defensive_check_for_public_ctors.cs" />
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
+    <Compile Include="Bugs\Exception_Within_Exception_Bug.cs" />
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
     <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />

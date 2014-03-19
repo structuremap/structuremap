@@ -143,6 +143,11 @@ namespace StructureMap.Testing
             return (T) actual;
         }
 
+        public static void ShouldNotBeOfType<T>(this object actual)
+        {
+            actual.ShouldNotBeOfType(typeof(T));
+        }
+
         public static void ShouldNotBeOfType(this object actual, Type expected)
         {
             Assert.IsNotInstanceOf(expected, actual);
