@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Win32;
 using NUnit.Framework;
 using StructureMap.Pipeline;
 using StructureMap.Query;
+using Registry = StructureMap.Configuration.DSL.Registry;
 
 namespace StructureMap.Testing.Acceptance
 {
@@ -193,6 +195,7 @@ namespace StructureMap.Testing.Acceptance
     }
     // ENDSAMPLE
 
+    // SAMPLE: CustomLifecycle
     public class CustomLifecycle : ILifecycle
     {
         public static LifecycleObjectCache Cache = new LifecycleObjectCache();
@@ -207,12 +210,33 @@ namespace StructureMap.Testing.Acceptance
 
         public void EjectAll(ILifecycleContext context)
         {
-            
+            // Here you'd remove all the existing objects
+            // from the cache and call IDisposable.Dispose()
+            // as appropriate
         }
 
         public IObjectCache FindCache(ILifecycleContext context)
         {
+            // using the context, "find" the appropriate
+            // IObjectCache object
             return Cache;
         }
     }
+    // ENDSAMPLE
+
+    // SAMPLE: using-custom-lifecycle
+    public class UsingCustomLifecycle : Registry
+    {
+        public UsingCustomLifecycle()
+        {
+            // at the Plugin Type level
+            For<IService>().LifecycleIs<CustomLifecycle>();
+
+            // at the Instance level
+            For<IService>().Use<AService>()
+                .LifecycleIs<CustomLifecycle>();
+        }
+    }
+    // ENDSAMPLE
+
 }

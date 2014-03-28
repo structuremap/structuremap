@@ -2,6 +2,76 @@
 <!--Url: supported-lifecycles-->
 
 <markdown>
-TODO(Write some content!)
+Out of the box, the core StructureMap assembly supports these lifecycles:
+
+* Transient -- The default lifecycle.  A new object is created for each logical request to resolve an object graph from the container.  
+* Singleton -- Only one object instance will be created for the main Container 
+* AlwaysUnique -- A new object instance is created every time, even within the same object graph
+* ThreadLocal -- Only one object instance will be created for the currently executing Thread
+
+
+<Section title="Transient" id="transient">
+
+Older versions of StructureMap referred to _Transient_ as _PerRequest_, which might be a more accurate reflection of how this lifecycle behaves but 
+causes some confusion with ASP.Net HTTP scoping.  The easiest way to think of _Transient_ is that a single object instance will be created for each top level
+call to <code>Container.GetInstance()</code>.  In the case of a nested container, _Transient's_ are scoped to the lifecycle
+of the nested container.
+
+
+The following unit test demonstrates how _Transient_ lifecycles work in both root and nested containers. Also note that a transient dependency will
+be created exactly once in an object graph.
+
+<Snippet name="how-transient-works" />
+
+
+
+</Section>
+
+
+
+<Section title="AlwaysUnique" id="unique">
+
+Very simply, using the _AlwaysUnique_ means that a new object instance will be created every single time a configured Instance is either requested
+from a Container or as a dependency to another object. 
+
+<Snippet name="how-always-unique" />
+
+</Section>
+
+<Section title="Singleton" id="singleton">
+
+StructureMap 3.0 fixed the [dreaded singletons with nested container's bug](https://github.com/structuremap/structuremap/issues/3) that was so nasty in 2.6. 
+
+<Snippet name="singleton-in-action" />
+
+</Section>
+
+<Section title="ThreadLocal" id="thread-local">
+The ThreadLocalStorage based lifecycle is seldom used, but the easiest example of using it and explanation is the integration test:
+<Snippet name="thread-local-storage" />
+
+</Section>
+
+<Section title="Legacy ASP.Net Lifecycles" id="aspnet">
+
+<Info>The StructureMap team strongly recommends against using the old ASP.Net lifecycles.  <b>Most</b> modern web frameworks in .Net will use a Nested Container per request to accomplish the same scoping in a better way.</Info>
+
+<Nuget name="StructureMap.Web" />
+
+In addition, the StructureMap.Web package adds the legacy ASP.Net related lifecycles for:
+
+* HttpContext
+* HttpSession
+* Hybrid -- uses ThreadLocalStorage in the absence of an active HttpContext
+* HybridSession
+
+<Snippet name="AspNet-Lifecycles" />
+
+If you do use any of the HttpContext lifecycles, make sure you also do:
+
+<Snippet name="clean-up-http-context" /> 
+
+</Section>
+
 </markdown>
 

@@ -2,6 +2,21 @@
 <!--Url: configuring-lifecycles-->
 
 <markdown>
-TODO(Write some content!)
+
+Unless designated otherwise, StructureMap uses **Transient** as the default scope for all configured _Instance's_.  
+
+<Info>StructureMap's default scoping to transient is not a universal assumption across IoC containers in .Net.  Be careful with this if you are coming to StructureMap from tools that choose _Singleton_ as their default scope.</Info>
+
+Lifecycle's can be configured at the _Plugin Type_ level such that every _Instance_ of a _Plugin Type_ is scoped to the designated lifecycle by default like so:
+
+<Snippet name="lifecycle-configuration-at-plugin-type" />
+
+
+New in version 3.0 is the ability (finally) to override the lifecycle at the individual _Instance_ level like this:
+
+<Snippet name="lifecycle-configuration-at-instance" />
+
+Configuring the lifecycle on an individual _Instance_ overrides any configured lifecycle at the _Plugin Type_ level.
+
 </markdown>
 

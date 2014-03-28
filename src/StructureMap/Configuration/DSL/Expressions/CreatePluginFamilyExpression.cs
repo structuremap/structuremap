@@ -408,6 +408,17 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
+        /// Registers an ILifecycle for this Plugin Type that executes before
+        /// any object of this PluginType is created.  ILifecycle's can be
+        /// used to create a custom scope
+        /// </summary>
+        public CreatePluginFamilyExpression<TPluginType> LifecycleIs<T>() where T : ILifecycle, new()
+        {
+            lifecycleIs(new T());
+            return this;
+        }
+
+        /// <summary>
         /// Forces StructureMap to always use a unique instance to
         /// stop the "BuildSession" caching
         /// </summary>

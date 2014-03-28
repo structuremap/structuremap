@@ -1,11 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace StructureMap.Testing.Acceptance
 {
+
+
+
+
     [TestFixture]
     public class lifecycle_creation
     {
+
+
         [Test]
         public void singletons_are_created_in_a_completely_separate_context_in_the_parent_container()
         {

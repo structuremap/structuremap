@@ -348,6 +348,9 @@
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="RegistryExtensions.cs" />
     <Compile Include="Resolving_mixed_open_and_closed_generic_types.cs" />
+    <Compile Include="Samples\LifecycleSamples\Singleton\NoSingleton.cs" />
+    <Compile Include="Samples\LifecycleSamples\Singleton\EvilSingleton.cs" />
+    <Compile Include="Samples\Lifecycles_Samples.cs" />
     <Compile Include="SessionCacheTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
@@ -405,6 +408,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AutoFactories\Supporting\" />
+    <Folder Include="Samples\NestedContainers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

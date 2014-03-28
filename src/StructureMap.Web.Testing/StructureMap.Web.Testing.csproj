@@ -52,6 +52,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Examples.cs" />
     <Compile Include="ThreadLocalStorageLifecycleTester_with_nested_containers.cs" />
     <Compile Include="EjectingWithHybridScoping.cs" />
     <Compile Include="HttpSessionNullRefBug.cs" />
