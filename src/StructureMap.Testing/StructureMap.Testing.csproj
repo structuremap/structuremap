@@ -347,6 +347,7 @@
     <Compile Include="Query\ModelIntegrationTester.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="RegistryExtensions.cs" />
+    <Compile Include="Resolving_mixed_open_and_closed_generic_types.cs" />
     <Compile Include="SessionCacheTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
