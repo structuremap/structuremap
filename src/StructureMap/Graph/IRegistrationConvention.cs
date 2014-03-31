@@ -9,6 +9,7 @@ namespace StructureMap.Graph
         void Process(Type type, Registry registry);
     }
 
+
     /// <summary>
     /// Allows built-in registration conventions to be configurable through the assembly scanning DSL
     /// </summary>

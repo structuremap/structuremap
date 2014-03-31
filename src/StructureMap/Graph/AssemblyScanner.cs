@@ -163,6 +163,10 @@ namespace StructureMap.Graph
         {
             var convention = new GenericConnectionScanner(openGenericType);
             With(convention);
+
+            ModifyGraphAfterScan(graph => {
+                convention.Apply(graph);
+            });
             return new ConfigureConventionExpression(convention);
         }
 
