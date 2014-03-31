@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Pipeline.Lazy;
@@ -73,6 +74,19 @@ namespace StructureMap
 
             var types = new TypePool();
             _scanners.Each(x => x.ScanForTypes(types, _graph));
+
+            // Recursive scanning
+            if (_graph.QueuedRegistries.Any())
+            {
+                var builder = new PluginGraphBuilder(_graph);
+                while (_graph.QueuedRegistries.Any())
+                {
+                    var registry = _graph.QueuedRegistries.Dequeue();
+                    builder.Add(registry);
+                }
+
+                builder.Build();
+            }
         }
 
         public void AddScanner(AssemblyScanner scanner)

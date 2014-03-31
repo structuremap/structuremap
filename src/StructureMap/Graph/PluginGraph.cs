@@ -135,6 +135,9 @@ namespace StructureMap.Graph
             _families[pluginType].AddType(concreteType, name);
         }
 
+
+        public readonly Queue<Registry> QueuedRegistries = new Queue<Registry>(); 
+
         /// <summary>
         /// Adds a Registry by type.  Requires that the Registry class have a no argument
         /// public constructor
@@ -142,10 +145,12 @@ namespace StructureMap.Graph
         /// <param name="type"></param>
         public void ImportRegistry(Type type)
         {
-            if (Registries.Any(x => x.GetType() == type)) return;
+            if (Registries.Any(x => x.GetType() == type) || QueuedRegistries.Any(x => x.GetType() == type)) return;
 
             var registry = (Registry) Activator.CreateInstance(type);
-            registry.As<IPluginGraphConfiguration>().Configure(this);
+            QueuedRegistries.Enqueue(registry);
+            
+            //registry.As<IPluginGraphConfiguration>().Configure(this);
         }
 
         public void AddFamily(PluginFamily family)
