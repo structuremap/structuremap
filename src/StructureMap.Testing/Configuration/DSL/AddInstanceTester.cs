@@ -65,15 +65,16 @@ namespace StructureMap.Testing.Configuration.DSL
                 .Widget.IsType<AWidget>();
         }
 
+        // SAMPLE: named-instance
         [Test]
         public void SimpleCaseWithNamedInstance()
         {
             container = new Container(x => { x.For<IWidget>().Add<AWidget>().Named("MyInstance"); });
-
+            // retrieve an instance by name
             var widget = (AWidget) container.GetInstance<IWidget>("MyInstance");
             Assert.IsNotNull(widget);
         }
-
+        // ENDSAMPLE
 
         [Test]
         public void SpecifyANewInstanceOverrideADependencyWithANamedInstance()

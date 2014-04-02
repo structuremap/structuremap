@@ -43,6 +43,7 @@ namespace StructureMap.Testing.Configuration.DSL
             }
         }
 
+        // SAMPLE: simple-registry
         public class PurpleRegistry : Registry
         {
             public PurpleRegistry()
@@ -50,7 +51,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 For<IWidget>().Use<AWidget>();
             }
         }
-
+        // ENDSAMPLE
 
         [Test]
         public void Can_add_an_instance_for_concrete_class_with_no_constructors()
@@ -108,6 +109,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry1.Equals((object) registry2).ShouldBeFalse();
         }
 
+        // SAMPLE: including-registries
         [Test]
         public void include_a_registry()
         {
@@ -115,13 +117,13 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.IncludeRegistry<YellowBlueRegistry>();
             registry.IncludeRegistry<RedGreenRegistry>();
             registry.IncludeRegistry<PurpleRegistry>();
-
+            // build a container
             var container = new Container(registry);
-
+            // verify the default implementation and total registered implementations
             container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
-
             container.GetAllInstances<IWidget>().Count().ShouldEqual(5);
         }
+        // ENDSAMPLE
 
         public class MutatedWidget : IWidget
         {
