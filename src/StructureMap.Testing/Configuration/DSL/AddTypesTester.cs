@@ -26,6 +26,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
         }
 
+        // SAMPLE: named-instances-shorthand
         [Test]
         public void A_concrete_type_is_available_by_name_when_it_is_added_by_the_shorthand_mechanism()
         {
@@ -35,11 +36,12 @@ namespace StructureMap.Testing.Configuration.DSL
                 x.Type<BlueAddTypes>().Named("Blue");
                 x.Type<PurpleAddTypes>();
             }));
-
+            // retrieve the instances by name
             container.GetInstance<IAddTypes>("Red").IsType<RedAddTypes>();
             container.GetInstance<IAddTypes>("Green").IsType<GreenAddTypes>();
             container.GetInstance<IAddTypes>("Blue").IsType<BlueAddTypes>();
         }
+        // ENDSAMPLE
 
         [Test]
         public void A_concrete_type_is_available_when_it_is_added_by_the_shorthand_mechanism()
