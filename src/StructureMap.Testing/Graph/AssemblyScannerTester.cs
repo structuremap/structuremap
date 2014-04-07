@@ -137,7 +137,7 @@ namespace StructureMap.Testing.Graph
             typeof (class_outside_namespace).IsInNamespace("StructureMap").ShouldBeFalse();
         }
 
-
+        // SAMPLE: scan-filesystem
         [Test]
         public void scan_all_assemblies_in_a_folder()
         {
@@ -153,7 +153,9 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldHaveFamilyWithSameName<IWorker>();
         }
+        // ENDSAMPLE
 
+        // SAMPLE: scan-calling-assembly
         [Test]
         public void scan_but_ignore_registries_by_default()
         {
@@ -161,7 +163,7 @@ namespace StructureMap.Testing.Graph
 
             TestingRegistry.WasUsed.ShouldBeFalse();
         }
-
+        // ENDSAMPLE
 
         [Test]
         public void scan_specific_assemblies_in_a_folder()
@@ -189,6 +191,7 @@ namespace StructureMap.Testing.Graph
             shouldNotHaveFamilyWithSameName<IWorker>();
         }
 
+        // SAMPLE: scan-for-registries
         [Test]
         public void Search_for_registries_when_explicitly_told()
         {
@@ -199,7 +202,7 @@ namespace StructureMap.Testing.Graph
 
             TestingRegistry.WasUsed.ShouldBeTrue();
         }
-
+        // ENDSAMPLE
 
         [Test]
         public void use_a_dual_exclude()
@@ -240,6 +243,7 @@ namespace StructureMap.Testing.Graph
             shouldNotHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
 
+        // SAMPLE: scan-exclusions
         [Test]
         public void use_a_single_exclude_of_type()
         {
@@ -277,7 +281,7 @@ namespace StructureMap.Testing.Graph
             shouldNotHaveFamily<IInterfaceInWidget5>();
             shouldNotHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
-
+        // ENDSAMPLE
 
         [Test]
         public void Use_a_single_include_predicate()
