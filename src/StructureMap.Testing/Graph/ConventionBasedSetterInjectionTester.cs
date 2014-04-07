@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Testing.Widget3;
 
@@ -25,12 +26,41 @@ namespace StructureMap.Testing.Graph
                 x.For<IService>().Use(theService);
                 x.For<IGateway>().Use<DefaultGateway>();
 
+                x.ForConcreteType<ClassWithNamedProperties>().Configure.Setter<int>().Is(5);
+
                 x.Policies.SetAllProperties(policy => { policy.WithAnyTypeFromNamespace("StructureMap.Testing.Widget3"); });
             });
+
+            var description = container.Model.For<ClassWithNamedProperties>().Default.DescribeBuildPlan();
+            Debug.WriteLine(description);
 
             var target = container.GetInstance<ClassWithNamedProperties>();
             target.Service.ShouldBeTheSameAs(theService);
             target.Gateway.ShouldBeOfType<DefaultGateway>();
+        }
+
+
+        [Test]
+        public void specify_setter_policy_by_of_type_and_construct_an_object()
+        {
+            var theService = new ColorService("red");
+
+            var container = new Container(x =>
+            {
+                x.For<IService>().Use(theService);
+                x.For<IGateway>().Use<DefaultGateway>();
+
+                x.ForConcreteType<ClassWithNamedProperties>().Configure.Setter<int>().Is(5);
+
+                x.Policies.SetAllProperties(policy => policy.OfType<IService>());
+            });
+
+            var description = container.Model.For<ClassWithNamedProperties>().Default.DescribeBuildPlan();
+            Debug.WriteLine(description);
+
+            var target = container.GetInstance<ClassWithNamedProperties>();
+            target.Service.ShouldBeTheSameAs(theService);
+            target.Gateway.ShouldBeNull();
         }
 
         [Test]

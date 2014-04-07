@@ -18,9 +18,29 @@ namespace StructureMap.Testing.Samples
             // It's always the same object instance
             c.GetInstance<IService>()
                 .ShouldBeTheSameAs(c.GetInstance<IService>())
+                .ShouldBeTheSameAs(c.GetInstance<IService>())
+                .ShouldBeTheSameAs(c.GetInstance<IService>())
+                .ShouldBeTheSameAs(c.GetInstance<IService>())
                 .ShouldBeTheSameAs(c.GetInstance<IService>());
         }
         // ENDSAMPLE
+
+        [Test]
+        public void singletons_2()
+        {
+            var c = new Container(x =>
+            {
+                x.For<IService>().Singleton().Use<Service>();
+            });
+
+            // It's always the same object instance
+            c.GetInstance<IService>()
+                .ShouldBeTheSameAs(c.GetInstance<IService>())
+                .ShouldBeTheSameAs(c.GetInstance<IService>())
+                .ShouldBeTheSameAs(c.GetInstance<IService>())
+                .ShouldBeTheSameAs(c.GetInstance<IService>())
+                .ShouldBeTheSameAs(c.GetInstance<IService>());
+        }
 
 
         // SAMPLE: how-transient-works

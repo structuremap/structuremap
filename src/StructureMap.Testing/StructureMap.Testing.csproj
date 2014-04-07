@@ -198,6 +198,7 @@
     <Compile Include="Bugs\MixedConfigureAndInitializeMissingInstanceProblem.cs" />
     <Compile Include="Bugs\OpenGenericWithConstraints.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
+    <Compile Include="Bugs\Setter_policies_when_the_build_plan_is_created_by_a_nested_container.cs" />
     <Compile Include="Bugs\SingletonShouldBeLazy.cs" />
     <Compile Include="Bugs\Specify_Lifecycle_in_Configure_TesterTester.cs" />
     <Compile Include="Bugs\Specify_Lifecycle_on_open_generic_Tester.cs" />
