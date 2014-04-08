@@ -122,7 +122,8 @@ namespace StructureMap.Pipeline
                             name, type));
                 }
 
-                if (@dependency.GetType() != type)
+
+                if (type != typeof(string) && @dependency.GetType() != type)
                 {
                     try
                     {
