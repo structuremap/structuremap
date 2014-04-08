@@ -34,12 +34,19 @@ namespace StructureMap.Testing.Samples
             });
 
             // It's always the same object instance
-            c.GetInstance<IService>()
+            var original = c.GetInstance<IService>();
+            original
                 .ShouldBeTheSameAs(c.GetInstance<IService>())
                 .ShouldBeTheSameAs(c.GetInstance<IService>())
                 .ShouldBeTheSameAs(c.GetInstance<IService>())
                 .ShouldBeTheSameAs(c.GetInstance<IService>())
                 .ShouldBeTheSameAs(c.GetInstance<IService>());
+
+            using (var nested = c.GetNestedContainer())
+            {
+                nested.GetInstance<IService>()
+                    .ShouldBeTheSameAs(original);
+            }
         }
 
 

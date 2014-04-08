@@ -1,13 +1,4 @@
-begin
-  require 'bundler/setup'
-  require 'fuburake'
-rescue LoadError
-  puts 'Bundler and all the gems need to be installed prior to running this rake script. Installing...'
-  system("gem install bundler --source http://rubygems.org")
-  sh 'bundle install'
-  system("bundle exec rake", *ARGV)
-  exit 0
-end
+require 'fuburake'
 
 
 FubuRake::Solution.new do |sln|
@@ -20,6 +11,10 @@ FubuRake::Solution.new do |sln|
 		:copyright => 'Copyright 2004-2014 Jeremy D. Miller, Joshua Flanagan, Frank Quednau, Tim Kellogg, et al. All rights reserved.'
 	}
 	
+	sln.compile_targets = ['Debug', 'Release', 'NET45WP8']
+	
 	sln.ripple_enabled = true
 	sln.fubudocs_enabled = true
+	
+	sln.ci_steps = ['compile:net45wp8']
 end
