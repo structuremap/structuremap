@@ -15,5 +15,7 @@
   <files>
 	<file src="..\..\src\StructureMap\bin\release\StructureMap.*" target="lib\net40" />
 	<file src="..\..\src\StructureMap.Net4\bin\release\StructureMap.Net4.*" target="lib\net40" />
+	<file src="..\..\src\StructureMap\bin\release\StructureMap.*" target="lib\portable-win+net40" />
+	<file src="..\..\src\StructureMap\bin\NET45WP8\StructureMap.*" target="lib\portable-windows8+net45+wp8 " />
   </files>
 </package>
