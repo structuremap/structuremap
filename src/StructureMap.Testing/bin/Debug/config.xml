@@ -1,5 +1,0 @@
-<configuration>
-  <appSettings>
-    <add key="age" value="34" />
-  </appSettings>
-</configuration>
