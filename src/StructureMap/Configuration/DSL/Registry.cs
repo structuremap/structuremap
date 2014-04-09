@@ -180,10 +180,6 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public GenericFamilyExpression For(Type pluginType, ILifecycle lifecycle = null)
         {
-            if (lifecycle == null)
-            {
-                lifecycle = Lifecycles.Transient;
-            }
             return new GenericFamilyExpression(pluginType, lifecycle, this);
         }
 
