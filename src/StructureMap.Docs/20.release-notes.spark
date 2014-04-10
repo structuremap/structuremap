@@ -2,11 +2,15 @@
 <!--Url: release-notes-->
 <markdown>
 
-<Section title="Release Notes 3.0 (??-??-???)" id="3.0">
+<Section title="Release Notes 3.0.1" id="3.0.1">
+Bug fix release.  See the [closed GitHub issues](https://github.com/structuremap/structuremap/issues?milestone=1&page=1&state=closed) for more information.
+</Section>
+
+<Section title="Release Notes 3.0" id="3.0">
 
 - The exception messages provide contextual information about what StructureMap was trying to do when things went wrong.
 
-- The nested container implementation is vastly improved, much faster, and doesn’t have the massive singleton behavior bug from 2.6.*.
+- The nested container implementation is vastly improved, much faster (100X in my testing against a big application), and doesn’t have the massive singleton behavior bug from 2.6.*.
 
 - All old `[Obsolete]` 2.5 registration syntax has been removed, and there’s been a major effort to enforce consistency throughout the registration API’s.
 
