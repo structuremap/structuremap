@@ -29,10 +29,12 @@ namespace StructureMap.Testing.DocumentationExamples
         public bool ShouldCache { get; set; }
     }
 
+    // SAMPLE: IShippingService
     public interface IShippingService
     {
         void ShipIt();
     }
+    // ENDSAMPLE
 
     public class ShippingWebService : IShippingService
     {
@@ -57,6 +59,7 @@ namespace StructureMap.Testing.DocumentationExamples
         }
     }
 
+    // SAMPLE: ShippingRegistry
     public class ShippingRegistry : Registry
     {
         public ShippingRegistry()
@@ -74,15 +77,21 @@ namespace StructureMap.Testing.DocumentationExamples
             });
         }
     }
+    // ENDSAMPLE
 
     public class ClassThatUsesShippingService
     {
         public ClassThatUsesShippingService()
         {
+            // SAMPLE: getting-ishippingservice
+            var container = new Container(new ShippingRegistry());
+            
             // Accessing the IShippingService Instance's by name
-            var internationalService = ObjectFactory.GetNamedInstance<IShippingService>("International");
-            var domesticService = ObjectFactory.GetNamedInstance<IShippingService>("Domestic");
-            var internalService = ObjectFactory.GetNamedInstance<IShippingService>("Internal");
+            var internationalService = container.GetInstance<IShippingService>("International");
+            var domesticService = container.GetInstance<IShippingService>("Domestic");
+            var internalService = container.GetInstance<IShippingService>("Internal");
+
+            // ENDSAMPLE
 
             // Without generics
             var internationalService2 =

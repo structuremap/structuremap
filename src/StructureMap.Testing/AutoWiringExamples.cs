@@ -4,6 +4,44 @@ using NUnit.Framework;
 
 namespace StructureMap.Testing
 {
+    // SAMPLE: auto-wiring-sample
+    public interface Xman{}
+    public class Cyclops : Xman{}
+
+    public interface Avenger{}
+    public class IronMan : Avenger{}
+
+    public class CrossoverEvent
+    {
+        public Xman Xman { get; set; }
+        public Avenger Avenger { get; set; }
+
+        public CrossoverEvent(Xman xman, Avenger avenger)
+        {
+            Xman = xman;
+            Avenger = avenger;
+        }
+    }
+
+    public class UsingCrossover
+    {
+        [Test]
+        public void showing_auto_wiring()
+        {
+            var container = new Container(x => {
+                x.For<Xman>().Use<Cyclops>();
+                x.For<Avenger>().Use<IronMan>();
+            });
+
+            // Notice that at no point did we define how to 
+            // build CrossoverEvent.  
+            var @event = container.GetInstance<CrossoverEvent>();
+            @event.Avenger.ShouldBeOfType<IronMan>();
+            @event.Xman.ShouldBeOfType<Cyclops>();
+        }
+    }
+    // ENDSAMPLE
+
     public interface IValidator
     {
     }

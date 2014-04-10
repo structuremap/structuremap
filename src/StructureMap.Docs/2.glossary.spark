@@ -23,7 +23,7 @@ More advanced features that the container can do are things like: Interception, 
 </Section>
 
 <Section title="Nested Container" id="nested-container">
-A nested container is kind of like a temporary clone of a existing container with some special properties which come in handy for certain use cases. For example you can add additional configuration for contextual, scoped services or for making sure that whenever the nested container is disposed all the transient objects that the container created and implements `IDisposable` are disposed as well.
+A nested container is kind of like a temporary clone of a existing container, but scoped for short lived transactions or web requests. For example you can add additional configuration for contextual, scoped services or for making sure that whenever the nested container is disposed all the transient objects that the container created and implements `IDisposable` are disposed as well.
 
 You can ask a existing container to create a nested container for you like in the following example:
 
@@ -36,7 +36,7 @@ For more detailed information about nested containers and their special properti
 <Section title="PluginType and PluggedType" id="plugin-and-plugged-type">
 The term plugin type is used throughout the code and documentation to mean the type that you want to register or resolve. More generally this type is known as the service type. This type can be a concrete class or in most cases, it will be a form of abstraction like an abstract class or interface. 
 
-The term plugged type means the type that you get when you request the plugin type. This type must obviously implement the plugin type contract.
+The term plugged type means the actual concrete type that you get when you request the plugin type. This type must obviously implement the plugin type contract.
 
 In your registration you could have something like this:
 
@@ -65,9 +65,9 @@ This specific exception message is gone in 3.0 because the exception messages wh
 </Section>
 
 <Section title="Plugin Graph" id="plugin-graph">
-TODO
 
-A `PluginGraph` is a model of the runtime configuration of a StructureMap container. 
+A `PluginGraph` is the configuration model of the runtime configuration of a StructureMap container. The `PluginGraph` model can be manipulated directly in StructureMap 3.0 for
+any kind of special convention that doesn't fit into the existing conventional support.
 </Section>
 
 <Section title="PipelineGraph" id="pipeline-graph">
@@ -75,187 +75,65 @@ A `PluginGraph` is a model of the runtime configuration of a StructureMap contai
 
 <Section title="Instance" id="instance">
 
-TODO
 
-OLD CONTENT:
-Named Instance
+In StructureMap terms, an "Instance" is a way to build or locate a named object instance for a requested PluginType.  An "Instance" does not automatically equate to a concrete type.  For example, let's say that we're building a system to automate a warehouse.  Our system might consume an interface called IShippingService that acts as a Gateway to various ways of shipping boxes out of our warehouse.
 
-In StructureMap terms, an "Instance" is a named way to build or locate a named object instance for a requested PluginType.  An "Instance" does not automatically equate to a concrete type.  For example, let's say that we're building a system to automate a warehouse.  Our system might consume an interface called IShippingService that acts as a Gateway to various ways of shipping boxes out of our warehouse.
-
-    public interface IShippingService
-    {
-        void ShipIt();
-    }
+<Snippet name="IShippingService" />
 
 Our warehouse system might have to interact with three types of shipping:  domestic, international, and intra-company or internal shipments.  The internal shipping service runs in process with the warehouse application, but domestic and international shipping is done by invoking external web services.  The registration of the IShippingService Instances might look like this:
 
-    public class ShippingRegistry : Registry
-    {
-        public ShippingRegistry()
-        {
-            ForRequestedType<IShippingService>().AddInstances(x =>
-            {
-                x.OfConcreteType<ShippingWebService>()
-                    .WithCtorArg("url").EqualTo("a url")
-                    .WithName("Domestic");
- 
-                x.OfConcreteType<ShippingWebService>()
-                    .WithCtorArg("url").EqualTo("a different url")
-                    .WithName("International");
- 
-                x.OfConcreteType<InternalShippingService>().WithName("Internal");
-            });
-        }
-    }
+<Snippet name="ShippingRegistry" />
+
 In the registration code above, there are three "Instance's."  You can access the various IShippingService Instance's by name:
 
-	// Accessing the IShippingService Instance's by name
-	var internationalService = ObjectFactory.GetNamedInstance<IShippingService>("International");
-	var domesticService = ObjectFactory.GetNamedInstance<IShippingService>("Domestic");
-	var internalService = ObjectFactory.GetNamedInstance<IShippingService>("Internal");
+<Snippet name="getting-ishippingservice" />
 
 Asking for the "International" or the "Domestic" instance of IShippingService will both return an object of type ShippingWebService, but the two objects will be differently configured with unique Url's.
 
-There is an actual class in StructureMap 2.5 that represents an "Instance."  An abreviated version of the abstract Instance class is shown below:
+There is an actual class in StructureMap that represents an "[Instance](https://github.com/structuremap/structuremap/blob/master/src/StructureMap/Pipeline/Instance.cs)."  
 
-    public abstract class Instance : IDiagnosticInstance
-    {
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
- 
-        public virtual object Build(Type pluginType, IBuildSession session)
-        {
-            object rawValue = createRawObject(pluginType, session);
-            return applyInterception(rawValue, pluginType);
-        }
- 
-        private object createRawObject(Type pluginType, IBuildSession session)
-        {
-            try
-            {
-                return build(pluginType, session);
-            }
-            catch (StructureMapException ex)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(400, ex);
-            }
-        }
- 
-        protected abstract object build(Type pluginType, IBuildSession session);
- 
-    }
-A single Instance can be assigned to a PluginType as the default.  When you call ObjectFactory.GetInstance<T>(), StructureMap looks for the default Instance object for PluginType T, then executes the Instance.Build(Type, IBuildSession) method to create a new object or get an existing object.  Note the abstract build(Type, IBuildSession) method.  This is a Template Method that can be overriden to write your own customized Instance type.
 
-When you call ObjectFactory.GetNamedInstance<T>("the instance that I want") or ObjectFactory.GetInstance<T>(), the internal Container object is locating the correct Instance object and calling its Build() method.
+When you call `Container.GetInstance<T>("the instance that I want")` or `Container.GetInstance<T>()`, the internal `Container` object is locating the correct Instance object and then using the Instance's internal _build plan_ to resolve or construct the actual object.
 
 </Section>
 
-<Section title="Scoping (or Lifecycle)" id="lifecycle">
-TODO
+<Section title="Lifecycle (or Scope)" id="lifecycle">
 
-OLD CONTENT:
-When you register a PluginType in the system you can "scope" the Instance's of that PluginType like this:
+The power of an IoC container isn't just in building object graphs for you, it's also about _scoping_ an object graph to what StructureMap calls a _lifecycle_.  Think of it this way,
+when you ask StructureMap for a service or much more commonly when StructureMap is filling a dependency behind the scenes, do you want:
 
-            // This is used as a sort of lightweight ScriptManager in
-            // our website application
-            ForRequestedType<ICachedSet>().TheDefaultIsConcreteType<CachedSet>()
-                .CacheBy(InstanceScope.HttpContext);
-Note the CacheBy() method hanging off the end of the expression.  This is directing the StructureMap container to use the same object instance for ICachedSet for all requests in the same HttpContext.  In this case, if a request is made for any Instance of ICachedSet, StructureMap will first check the HttpContext.Items collection to see if that exact Instance has already been created within the same HttpContext.
-
-PerRequest - The default option unless otherwise overridden.  A new object will be created for each time you request an Instance from the container.  Some other IoC containers call this "Transient."  Please note that this is the default behavior in StructureMap.  Many other IoC container tools will use "Singleton" instead.
-Singleton - A single object will be shared across all requests for a specific Instance.  StructureMap will only create the singleton object upon demand
-ThreadLocal - A single object will be created for each requesting thread.  Caches the instances with ThreadLocalStorage.
-HttpContext - A single object will be created for each HttpContext.  Caches the instances in the HttpContext.Items collection.
-HttpSession - A single object will be created for each Http Session.  Caches the intances in the HttpContext.Session collection.
-Hybrid - Uses HttpContext storage if it exists, otherwise uses ThreadLocal storage.
-It is possible to create your own type of scoping.  See "Extending StructureMap" for more information.  Also note that StructureMap provides no functionality for cleaning up resources of the objects held by the container (Container.EjectAllInstances<T>() will clear out singleton objects).  To date, I have not found a need for this behavior or functionality.  I generally assume that a combination of basic garbage collection and proper class design is sufficient.  Please also note that StructureMap does not retain a reference to objects that are created as "PerRequest/Transient" and there is not need for any kind of Container.Release() method like some other IoC tools.
+* A brand new, unique object each time?
+* The exact same object as the rest of the graph is using?
+* The exact same object every single time throughout the application?
 
 </Section>
 
 <Section title="Registry" id="registry">
-TODO
 
-A `Registry` or a sub class of `Registry` let's you configure the StructureMap container or more specifically a `PluginGraph`.
+A `Registry` or a sub class of `Registry` is a class that let's you create reusable configuration for StructureMap containers.
 
 </Section>
 
 <Section title="Profile" id="profile">
-TODO
 
-OLD CONTENT:
-From the very beginning, StructureMap has supported the ability to define a named set of default instances called a "Profile."  The Profile feature was originally meant to be a quick way of switching the connection mode of a smart client application from connected to disconnected modes.  In practice, it's more commonly used as a way to migrate configuration between environments or for creating alternative deployment configurations.  My team uses the Profile feature in our system as a quick way to collapse our entire distributed application into a single AppDomain for easier testing and debugging.  Our "InMemory" profile is defined like this:
+StructureMap 3.0 features a complete rewrite of the ancient _Profile_ functionality where you can create your base Container configuration with additional _Profile_ 
+configuration that overrides one or more of the parent Container defaults.  The _Profile_ functionality was originally meant to handle difference between
+development, testing, and production environments but has been more commonly used for multi-tenancy situations.  Think of a _Profile_ as an application or tenant mode.
 
-    // Using this Profile configures our application to
-    // run completely inside a single AppDomain
-    // In production the application will consist
-    // of the website and 2-3 external windows
-    // services
-    var repository = new InMemoryRepository();
-    CreateProfile(IN_MEMORY_PROFILE, x =>
-    {
-        x.For<IRepository>().Use(repository);
-        x.For<IEventPublishingService>().Use(new InMemoryEventPublishingService(repository));
-        x.For<IUserMessagePublisher>().UseConcreteType<InMemoryUserMessageQueue>();
-        x.For<IUnitOfWork>().UseConcreteType<InMemoryUnitOfWork>();
-    });
-
-In the code, we can switch the application to the in memory mode by calling the SetDefaultsToProfile() method on the Container (or ObjectFactory.Profile = CoreRegistry.IN_MEMORY_PROFILE):
-
-	// This is actual code from a test harness class we use
-	// for integration testing
-	IContainer container = createContainer(new RuleSet[]{ruleSet});
-	container.SetDefaultsToProfile(CoreRegistry.IN_MEMORY_PROFILE);
-
-</Section>
-
-<Section title="Interceptor" id="interceptor">
-TODO
-
-OLD CONTENT:
-A new feature for StructureMap 2.5 is the ability to "intercept" an object getting created in StructureMap before the new object is handed back to the requesting code.  The intention behind this feature is to support runtime Aspect Oriented Programming techniques or any type of object initialization beyond the constructor function. 
-
-To explain the sequence of events, here's an ellided version of the Build() method of the Instance abstract class:
-
-    public virtual object Build(Type pluginType, BuildSession session)
-    {
-        markBuildStackStart(session, pluginType);
-
-        // "Build" the desired object
-        object rawValue = createRawObject(pluginType, session);
-
-        // Allow the Interceptor a chance to enhance, configure, 
-        // wrap with a decorator, or even replace the rawValue
-        object finalValue = applyInterception(rawValue, pluginType);
-
-        markBuildStackFinish(session);
-
-        return finalValue;
-    }
-
-The Instance class first builds the raw object, then applies any registered interception on the raw object to get the final value. 
-
-See Interception for more information.
-
-</Section>
-
-<Section title="Decorators" id="decorators">
-TODO
 </Section>
 
 <Section title="Auto wiring" id="auto-wiring">
-TODO
+You'd never get anything done if you had to tell StructureMap how to build each and every constructor or setter dependency on every concrete class.  Fortunately, StructureMap like
+most IoC container tools, supports the concept of _auto-wiring_ -- meaning that StructureMap can happily infer dependency requirements from constructor functions and setter
+rules and fill those dependencies with the default configuration for the declared dependency type.
+
+Let's just see it in action:
+
+<Snippet name="auto-wiring-sample" />
+
 </Section>
 
-<Section title="DSL" id="dsl">
-TODO
-</Section>
+
 
 </markdown>
 
