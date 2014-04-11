@@ -2,6 +2,12 @@
 <!--Url: get-all-services-by-plugin-type-->
 
 <markdown>
-TODO(Write some content!)
+
+Once in a while you might want to get an enumerable of all the configured objects for a PluginType.  That's done with the `GetAllInstances()` method shown below:
+
+<Snippet name="get-all-instances" />
+
+<Info><code>GetAllInstances()</code> respects the order in which the actual instances are configured in the Container.  Be warned that some other IoC tools make different assuptions if you are coming from a different tool.</Info>
+
 </markdown>
 

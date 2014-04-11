@@ -36,7 +36,7 @@ namespace StructureMap.Graph
 
             foreach (var interfaceType in interfaceTypes)
             {
-                _interfaces.Add(interfaceType);
+                _interfaces.Fill(interfaceType);
             }
         }
 

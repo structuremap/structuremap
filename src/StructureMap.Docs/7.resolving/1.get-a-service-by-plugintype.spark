@@ -2,6 +2,9 @@
 <!--Url: get-a-service-by-plugintype-->
 
 <markdown>
-TODO(Write some content!)
+
+Requesting the default configured object of a plugin type is done through the `IContainer.GetInstance()` method shown below:
+
+<Snippet name="GetInstance" />
 </markdown>
 

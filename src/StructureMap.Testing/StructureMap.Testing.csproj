@@ -192,6 +192,7 @@
     <Compile Include="Bugs\Bug_235_for_look_for_registries_through_assemblies.cs" />
     <Compile Include="Bugs\Bug_244_using_Func_of_string_as_a_dependency.cs" />
     <Compile Include="Bugs\Bug_245_singleton_scope_and_default_conventions.cs" />
+    <Compile Include="Bugs\Bug_247_ConnectOpenTypesToImplementations_doubling_up_registrations.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
     <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
     <Compile Include="Bugs\Defensive_check_for_public_ctors.cs" />
@@ -266,6 +267,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Examples\BuildUp.cs" />
+    <Compile Include="Examples\Resolving\SimpleScenarios.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Graph\AssemblyScannerTester.cs" />
     <Compile Include="Graph\ComplexInstanceGraphTester.cs" />

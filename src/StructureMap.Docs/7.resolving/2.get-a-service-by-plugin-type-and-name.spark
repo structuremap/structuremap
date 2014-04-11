@@ -2,6 +2,10 @@
 <!--Url: get-a-service-by-plugin-type-and-name-->
 
 <markdown>
-TODO(Write some content!)
+
+You can also request a named configuration for a given PluginType by using the overloads of `IContainer.GetInstance()` that take in a name like this:
+
+<Snippet name="GetInstance-by-name" />
+
 </markdown>
 
