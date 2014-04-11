@@ -69,5 +69,10 @@ namespace StructureMap
         {
             get { return ContainerRole.Root; }
         }
+
+        public IEnumerable<Instance> ImmediateInstances()
+        {
+            return GetAllInstances();
+        }
     }
 }

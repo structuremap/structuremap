@@ -1,8 +1,11 @@
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Acceptance;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
+using AWidget = StructureMap.Testing.Widget.AWidget;
+using IWidget = StructureMap.Testing.Widget.IWidget;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
@@ -72,6 +75,30 @@ namespace StructureMap.Testing.Configuration.DSL
 
             profile.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
             profile.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
+        }
+
+        [Test]
+        public void Add_default_instance_with_concrete_type_with_a_non_transient_lifecycle()
+        {
+            var theProfileName = "something";
+
+            IContainer container = new Container(registry => {
+                registry.For<IWidget>().Use<MoneyWidget>();
+
+                registry.Profile(theProfileName, p =>
+                {
+                    p.For<IWidget>().Use<AWidget>().Singleton();
+                    p.For<Rule>().Use<DefaultRule>();
+                });
+            });
+
+            var profile = container.GetProfile(theProfileName);
+
+            profile.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+            profile.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
+
+            profile.GetNestedContainer().GetInstance<IWidget>()
+                .ShouldBeOfType<AWidget>();
         }
 
         [Test]

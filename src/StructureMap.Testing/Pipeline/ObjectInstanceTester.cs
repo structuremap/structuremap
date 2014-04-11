@@ -1,9 +1,7 @@
 using System;
 using NUnit.Framework;
 using StructureMap.Building;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
-using StructureMap.Testing.DocumentationExamples;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
@@ -33,6 +31,14 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void always_able_to_be_in_nested_container()
+        {
+            new ObjectInstance(new StubbedGateway())
+                .IsValidInNestedContainer()
+                .ShouldBeTrue();
+        }
+
+        [Test]
         public void to_dependency_source()
         {
             var gateway = new StubbedGateway();
@@ -59,9 +65,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Throw_NullArgumentException_if_literal_instance_is_null()
         {
-            Exception<ArgumentNullException>.ShouldBeThrownBy(() => {
-                new ObjectInstance(null);
-            });
+            Exception<ArgumentNullException>.ShouldBeThrownBy(() => { new ObjectInstance(null); });
         }
 
         [Test]
@@ -75,13 +79,10 @@ namespace StructureMap.Testing.Pipeline
         {
             var guy = new DisposableGuy();
 
-            var container = new Container(x => {
-                x.For<DisposableGuy>().Use(guy);
-            });
+            var container = new Container(x => { x.For<DisposableGuy>().Use(guy); });
 
             using (var nested = container.GetNestedContainer())
             {
-                
             }
 
             guy.WasDisposed.ShouldBeFalse();

@@ -26,6 +26,10 @@ namespace StructureMap.Pipeline
             SetLifecycleTo<SingletonLifecycle>();
         }
 
+        public override bool IsValidInNestedContainer()
+        {
+            return true;
+        }
 
         protected override ObjectInstance<TReturned, TPluginType> thisInstance
         {

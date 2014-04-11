@@ -18,5 +18,6 @@ namespace StructureMap
 
         ILifecycle DefaultLifecycleFor(Type pluginType);
         ContainerRole Role { get; }
+        IEnumerable<Instance> ImmediateInstances();
     }
 }

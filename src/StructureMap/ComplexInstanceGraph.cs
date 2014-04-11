@@ -84,5 +84,9 @@ namespace StructureMap
         }
 
         public ContainerRole Role { get; private set; }
+        public IEnumerable<Instance> ImmediateInstances()
+        {
+            return _pluginGraph.Families.SelectMany(x => x.Instances);
+        }
     }
 }
