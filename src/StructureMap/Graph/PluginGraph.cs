@@ -4,6 +4,7 @@ using System.Linq;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 using StructureMap.Util;
 
 namespace StructureMap.Graph
@@ -147,8 +148,16 @@ namespace StructureMap.Graph
         {
             if (Registries.Any(x => x.GetType() == type) || QueuedRegistries.Any(x => x.GetType() == type)) return;
 
-            var registry = (Registry) Activator.CreateInstance(type);
-            QueuedRegistries.Enqueue(registry);
+            try
+            {
+                var registry = (Registry) Activator.CreateInstance(type);
+                QueuedRegistries.Enqueue(registry);
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapException("Unable to create an instance for Registry type '{0}'.  Please check the inner exception for details".ToFormat(type.GetFullName()), e);
+            }
+            
             
             //registry.As<IPluginGraphConfiguration>().Configure(this);
         }
