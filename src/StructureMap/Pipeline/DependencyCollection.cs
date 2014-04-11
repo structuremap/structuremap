@@ -122,8 +122,16 @@ namespace StructureMap.Pipeline
                             name, type));
                 }
 
-
-                if (type != typeof(string) && @dependency.GetType() != type)
+                if (@dependency is LambdaInstance)
+                {
+                    if (@dependency.As<LambdaInstance>().ReturnedType != type)
+                    {
+                        throw new StructureMapConfigurationException(
+                            "Invalid value '{0}' for parameter {1} of type {2}".ToFormat(@dependency, name,
+                                type.GetFullName()));
+                    }
+                }
+                else if (@dependency.GetType() != type)
                 {
                     try
                     {

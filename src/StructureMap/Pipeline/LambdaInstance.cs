@@ -5,6 +5,11 @@ using StructureMap.Diagnostics;
 
 namespace StructureMap.Pipeline
 {
+    public interface LambdaInstance
+    {
+        Type ReturnedType { get; }
+    }
+
     public class LambdaInstance<T> : LambdaInstance<T, T>
     {
         public LambdaInstance(Expression<Func<IContext, T>> builder) : base(builder)
@@ -24,7 +29,7 @@ namespace StructureMap.Pipeline
         }
     }
 
-    public class LambdaInstance<T, TPluginType> : ExpressedInstance<LambdaInstance<T, TPluginType>, T, TPluginType>, IDependencySource where T : TPluginType
+    public class LambdaInstance<T, TPluginType> : ExpressedInstance<LambdaInstance<T, TPluginType>, T, TPluginType>, IDependencySource, LambdaInstance where T : TPluginType
     {
         private readonly Expression _builder;
         private readonly string _description;

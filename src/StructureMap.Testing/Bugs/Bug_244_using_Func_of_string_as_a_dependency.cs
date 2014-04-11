@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget2;
 
 namespace StructureMap.Testing.Bugs
 {
@@ -27,6 +28,62 @@ namespace StructureMap.Testing.Bugs
             });
 
             container.GetInstance<StringHolder>().Name.ShouldEqual("fuschia");
+        }
+
+        [Test]
+        public void use_a_func_for_a_simple_type()
+        {
+            var container = new Container(x => {
+                x.For<IntHolder>().Use<IntHolder>().Ctor<int>().Is(() => 5);
+            });
+
+            container.GetInstance<IntHolder>()
+                .Number.ShouldEqual(5);
+        }
+
+        [Test]
+        public void use_a_func_for_enums()
+        {
+            var container = new Container(x =>
+            {
+                x.For<EnumHolder>().Use<EnumHolder>().Ctor<BreedEnum>().Is(() => BreedEnum.Beefmaster);
+            });
+
+            // My father raises Beefmasters and there'd be
+            // hell to pay if he caught me using Angus as
+            // test data
+            container.GetInstance<EnumHolder>()
+                .Breed.ShouldEqual(BreedEnum.Beefmaster);
+        }
+    }
+
+    public class EnumHolder
+    {
+        private readonly BreedEnum _breed;
+
+        public EnumHolder(BreedEnum breed)
+        {
+            _breed = breed;
+        }
+
+        public BreedEnum Breed
+        {
+            get { return _breed; }
+        }
+    }
+
+    public class IntHolder
+    {
+        private readonly int _number;
+
+        public IntHolder(int number)
+        {
+            _number = number;
+        }
+
+        public int Number
+        {
+            get { return _number; }
         }
     }
 
