@@ -70,13 +70,19 @@ namespace StructureMap.Util
         {
             get
             {
-                if (!_values.ContainsKey(key))
+                TValue value;
+
+                if (!_values.TryGetValue(key, out value))
                 {
-                    var value = _onMissing(key);
-                    _values.Add(key, value);
+                    value = _onMissing(key);
+
+                    if (value != null)
+                    {
+                        _values[key] = value;
+                    }
                 }
 
-                return _values[key];
+                return value;
             }
             set
             {
