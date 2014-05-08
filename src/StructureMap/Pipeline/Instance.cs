@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
@@ -102,7 +103,7 @@ namespace StructureMap.Pipeline
             return this;
         }
 
-        private readonly object _buildLock = new object();
+        private readonly ReaderWriterLockSlim _buildLock = new ReaderWriterLockSlim();
         private IBuildPlan _plan;
 
         /// <summary>
@@ -114,18 +115,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public IBuildPlan ResolveBuildPlan(Type pluginType, Policies policies)
         {
-            if (_plan == null)
-            {
-                lock (_buildLock)
-                {
-                    if (_plan == null)
-                    {
-                        _plan = buildPlan(pluginType, policies);
-                    }
-                }
-            }
-
-            return _plan;
+            return _buildLock.MaybeWrite(() => _plan, () => _plan == null, () => _plan = buildPlan(pluginType, policies));
         }
 
         /// <summary>
@@ -133,10 +123,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         public void ClearBuildPlan()
         {
-            lock (_buildLock)
-            {
-                _plan = null;
-            }
+            _buildLock.Write(() => _plan = null);
         }
 
         private string toDescription(Type pluginType)
