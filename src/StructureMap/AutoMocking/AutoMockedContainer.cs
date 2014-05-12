@@ -28,13 +28,9 @@ namespace StructureMap.AutoMocking
 
         public PluginFamily Build(Type pluginType)
         {
-
             if (!pluginType.GetTypeInfo().IsAbstract && pluginType.GetTypeInfo().IsClass)
             {
-                if (!pluginType.GetConstructors().Any(x => x.GetParameters().Count() == 0))
-                {
-                    return null;
-                }
+                return null;
             }
 
             var family = new PluginFamily(pluginType);
