@@ -37,6 +37,7 @@ namespace StructureMap.Graph
 
 
     public class WeakReference<T>
+        where T : class
     {
         private readonly Func<T> _builder;
         private readonly WeakReference _reference;
@@ -51,12 +52,14 @@ namespace StructureMap.Graph
         {
             get
             {
-                if (!_reference.IsAlive)
+                var value = _reference.Target as T;
+                if (value == null)
                 {
-                    _reference.Target = _builder();
+                    value = _builder();
+                    _reference.Target = value;
                 }
 
-                return (T) _reference.Target;
+                return value;
             }
         }
     }
