@@ -92,7 +92,7 @@ namespace StructureMap
 
         public void AddScanner(AssemblyScanner scanner)
         {
-            _scanners.Add(scanner);
+            _scanners.Fill(scanner);
         }
     }
 }

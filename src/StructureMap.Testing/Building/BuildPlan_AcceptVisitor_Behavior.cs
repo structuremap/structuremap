@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using NUnit.Mocks;
 using Rhino.Mocks;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
