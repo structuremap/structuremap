@@ -103,7 +103,7 @@ namespace StructureMap.Pipeline
             return this;
         }
 
-        private readonly ReaderWriterLockSlim _buildLock = new ReaderWriterLockSlim();
+        private readonly object _buildLock = new object();
         private IBuildPlan _plan;
 
         /// <summary>
@@ -115,7 +115,10 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public IBuildPlan ResolveBuildPlan(Type pluginType, Policies policies)
         {
-            return _buildLock.MaybeWrite(() => _plan, () => _plan == null, () => _plan = buildPlan(pluginType, policies));
+            lock (_buildLock)
+            {
+                return _plan ?? (_plan = buildPlan(pluginType, policies));
+            }
         }
 
         /// <summary>
@@ -123,7 +126,10 @@ namespace StructureMap.Pipeline
         /// </summary>
         public void ClearBuildPlan()
         {
-            _buildLock.Write(() => _plan = null);
+            lock (_buildLock)
+            {
+                _plan = null;
+            }
         }
 
         private string toDescription(Type pluginType)
