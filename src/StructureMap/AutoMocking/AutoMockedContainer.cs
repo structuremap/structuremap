@@ -28,7 +28,7 @@ namespace StructureMap.AutoMocking
 
         public PluginFamily Build(Type pluginType)
         {
-            if (!pluginType.GetTypeInfo().IsAbstract && pluginType.GetTypeInfo().IsClass)
+            if (pluginType.IsConcrete())
             {
                 return null;
             }
