@@ -35,7 +35,9 @@ namespace StructureMap.Graph
             ProfileName = "DEFAULT";
             _families =
                 new Cache<Type, PluginFamily>(
-                    type => { return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type); });
+                    type => {
+                        return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type);
+                    });
 
             _families.OnAddition = family => family.Owner = this;
         }
@@ -87,7 +89,7 @@ namespace StructureMap.Graph
         /// <param name="policy"></param>
         public void AddFamilyPolicy(IFamilyPolicy policy)
         {
-            _policies.Add(policy);
+            _policies.Insert(0, policy);
         }
 
         /// <summary>

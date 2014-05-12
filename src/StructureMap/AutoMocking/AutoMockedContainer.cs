@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
@@ -27,9 +28,13 @@ namespace StructureMap.AutoMocking
 
         public PluginFamily Build(Type pluginType)
         {
+
             if (!pluginType.GetTypeInfo().IsAbstract && pluginType.GetTypeInfo().IsClass)
             {
-                return null;
+                if (!pluginType.GetConstructors().Any(x => x.GetParameters().Count() == 0))
+                {
+                    return null;
+                }
             }
 
             var family = new PluginFamily(pluginType);

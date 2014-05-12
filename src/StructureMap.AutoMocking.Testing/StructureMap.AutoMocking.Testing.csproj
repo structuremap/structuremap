@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoMockerTester.cs" />
+    <Compile Include="Can_use_concrete_types_in_auto_mocking.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RhinoAutoMockerTester.cs" />
     <Compile Include="RhinoMockRepositoryProxyTester.cs" />
