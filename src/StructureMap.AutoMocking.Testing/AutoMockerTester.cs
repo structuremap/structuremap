@@ -117,6 +117,13 @@ namespace StructureMap.AutoMocking.Testing
         }
 
         [Test]
+        public void the_auto_mocked_class_under_test_is_the_concrete_type()
+        {
+            AutoMocker<ClassWithArray> mocker = createAutoMocker<ClassWithArray>();
+            mocker.ClassUnderTest.GetType().ShouldEqual(typeof (ClassWithArray));
+        }
+
+        [Test]
         public void CanInjectAnArrayOfMockServices1()
         {
             AutoMocker<ClassWithArray> mocker = createAutoMocker<ClassWithArray>();
