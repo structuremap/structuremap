@@ -65,7 +65,7 @@ namespace StructureMap.Pipeline
             get { return _interceptors; }
         }
 
-        public string Name
+        public virtual string Name
         {
             get { return _name; }
             set { _name = value; }

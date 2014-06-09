@@ -29,6 +29,8 @@ namespace StructureMap.Pipeline
             {
                 SelectConstructor(constructorSelection);
             }
+
+            
         }
 
         public SmartInstance<T, TPluginType> SelectConstructor(Expression<Func<T>> constructor)
@@ -46,6 +48,17 @@ namespace StructureMap.Pipeline
             get { return this; }
         }
 
+        public override string Name
+        {
+            get
+            {
+                return _inner.Name;
+            }
+            set
+            {
+                _inner.Name = value;
+            }
+        }
 
         /// <summary>
         ///     Set simple setter properties

@@ -195,6 +195,7 @@
     <Compile Include="Bugs\Bug_247_ConnectOpenTypesToImplementations_doubling_up_registrations.cs" />
     <Compile Include="Bugs\Bug_248_do_not_allow_lifecycle_registrations_to_nested_container.cs" />
     <Compile Include="Bugs\Bug_251_do_not_add_null_values_to_plugin_family_instance_cache.cs" />
+    <Compile Include="Bugs\Bug_255_InstanceAttribute_Implementation.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
     <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
     <Compile Include="Bugs\ConnectImplementationsToTypesClosing_is_wonky_in_Registry_added_by_Configure.cs" />

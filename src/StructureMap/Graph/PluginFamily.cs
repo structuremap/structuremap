@@ -261,7 +261,9 @@ namespace StructureMap.Graph
 
             if (!hasType(concreteType) && Policies.CanBeAutoFilled(concreteType))
             {
-                AddInstance(new ConstructorInstance(concreteType, name));
+                var instance = new ConstructorInstance(concreteType);
+                if (name.IsNotEmpty()) instance.Name = name;
+                AddInstance(instance);
             }
         }
 
