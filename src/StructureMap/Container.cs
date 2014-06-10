@@ -99,19 +99,11 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="args"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         public T GetInstance<T>(ExplicitArguments args, string name)
         {
-            try
-            {
-                var namedInstance = _pipelineGraph.Instances.FindInstance(typeof (T), name);
-                return (T) buildInstanceWithArgs(typeof (T), namedInstance, args, name);
-            }
-            catch (StructureMapException e)
-            {
-                e.Push("Container.GetInstance<{0}>({1}, '{2}')", typeof (T).GetFullName(), args, name);
-                throw;
-            }
+            return (T) GetInstance(typeof (T), args, name);
         }
 
         /// <summary>
@@ -136,6 +128,26 @@ namespace StructureMap
             }
         }
 
+        /// <summary>
+        /// Gets the named instance of the pluginType using the explicitly configured arguments from the "args"
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="args"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public object GetInstance(Type pluginType, ExplicitArguments args, string name)
+        {
+            try
+            {
+                var namedInstance = _pipelineGraph.Instances.FindInstance(pluginType, name);
+                return buildInstanceWithArgs(pluginType, namedInstance, args, name);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance<{0}>({1}, '{2}')", pluginType.GetFullName(), args, name);
+                throw;
+            }
+        }
 
         /// <summary>
         ///     Gets all configured instances of type T using explicitly configured arguments from the "args"
@@ -160,7 +172,7 @@ namespace StructureMap
         /// <summary>
         /// Gets the default instance of type T using the explicitly configured arguments from the "args"
         /// </summary>
-        /// <param name="type"></param>
+        /// <typeparam name="T"></typeparam>
         /// <param name="args"></param>
         /// <returns></returns>
         public IEnumerable<T> GetAllInstances<T>(ExplicitArguments args)

@@ -208,6 +208,15 @@ namespace StructureMap
         object GetInstance(Type pluginType, ExplicitArguments args);
 
         /// <summary>
+        /// Gets the named instance of the pluginType using the explicitly configured arguments from the "args"
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="args"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        object GetInstance(Type pluginType, ExplicitArguments args, string name);
+
+        /// <summary>
         /// Removes all configured instances of type T from the Container.  Use with caution!
         /// </summary>
         /// <typeparam name="T"></typeparam>
