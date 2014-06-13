@@ -17,11 +17,13 @@ we love receiving pull requests!
 Building the Source
 -------------------
 
- 1. Clone the repository: `git clone git://github.com/structuremap/structuremap.git`
- 1. Make sure that you have got [ruby installed][3] (>= 1.9.3).
- 1. If you are installing Ruby for the first time, install Bundler with "gem install bundler" at a command prompt
- 1. In the root, run `rake`.
- 1. Open `StructureMap.sln` in VS2012 ('rake sln' from the root as well).
+1. Clone the repository: `git clone git://github.com/structuremap/structuremap.git`
+1. Make sure that you have got [ruby installed][3] (>= 1.9.3).
+1. If you are installing Ruby for the first time, run the following in command prompt at the root of the solution:
+    1. `gem install bundler`
+    2. `bundle install`
+1. In the root of the solution, run `rake` in a command prompt.
+1. Open `StructureMap.sln` in VS2012 (`rake sln` from the root as well).
 
 
 
