@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using StructureMap.Building;
 using StructureMap.Diagnostics;
@@ -127,6 +128,7 @@ namespace StructureMap
 
         public IEnumerable<object> GetAllInstances(Type pluginType)
         {
+            
             var allInstances = _pipelineGraph.Instances.GetAllInstances(pluginType);
             return allInstances.Select(x => FindObject(pluginType, x)).ToArray();
         }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -41,8 +43,16 @@ namespace StructureMap.Pipeline
             });
         }
 
+        private readonly IList<Instance> _instances = new List<Instance>(); 
+
         public object Get(Type pluginType, Instance instance, IBuildSession session)
         {
+            if (_instances.Contains(instance))
+            {
+                throw new StructureMapBuildException("Bi-directional dependency relationship detected!" +
+                                                     Environment.NewLine + "Check the StructureMap stacktrace below:");
+            }
+
             object result;
             var key = instance.InstanceKey(pluginType);
             _lock.EnterUpgradeableReadLock();
@@ -57,7 +67,10 @@ namespace StructureMap.Pipeline
                     _lock.EnterWriteLock();
                     try
                     {
+                        _instances.Add(instance);
                         result = buildWithSession(pluginType, instance, session);
+                        _instances.Remove(instance);
+
                         _objects.Add(key, result);
                     }
                     finally

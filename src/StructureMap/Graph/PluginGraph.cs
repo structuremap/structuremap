@@ -205,7 +205,7 @@ namespace StructureMap.Graph
         {
             if (_families.Has(pluginType)) return true;
 
-            if (_policies.Where(x => x.AppliesToHasFamilyChecks).Any(x => x.Build(pluginType) != null))
+            if (_policies.Where(x => x.AppliesToHasFamilyChecks).ToArray().Any(x => x.Build(pluginType) != null))
             {
                 return true;
             }
