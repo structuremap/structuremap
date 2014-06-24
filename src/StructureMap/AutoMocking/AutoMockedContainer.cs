@@ -34,18 +34,19 @@ namespace StructureMap.AutoMocking
             }
 
             var family = new PluginFamily(pluginType);
-            family.SetDefault(() => {
-                var service = _locator.Service(pluginType);
 
-                return new ObjectInstance(service);
-            });
+            var service = _locator.Service(pluginType);
+
+            var instance = new ObjectInstance(service);
+
+            family.SetDefault(instance);
 
             return family;
         }
 
         public bool AppliesToHasFamilyChecks
         {
-            get { return false; }
+            get { return true; }
         }
     }
 }

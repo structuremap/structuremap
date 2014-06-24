@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using StructureMap.Testing;
@@ -194,6 +197,7 @@ namespace StructureMap.AutoMocking.Testing
             Assert.AreSame(service3, concreteClass.Service3);
         }
 
+
         [Test]
         public void UseConcreteClassFor()
         {
@@ -224,6 +228,28 @@ namespace StructureMap.AutoMocking.Testing
             ConcreteClass concreteClass = autoMocker.ClassUnderTest;
             setExpectation(concreteClass, x => x.Name, "Max");
             concreteClass.Name.ShouldEqual("Max");
+        }
+
+        [Test]
+        public void will_inject_at_least_one_mock_into_enumerable_dependency()
+        {
+            var autoMocker = createAutoMocker<ClassWithEnumerableIMockedService>();
+            autoMocker.ClassUnderTest.Enumerable.Any().ShouldBeTrue();
+        }
+    }
+
+    public class ClassWithEnumerableIMockedService
+    {
+        private readonly IEnumerable<AutoMockerTester.IMockedService> _enumerable;
+
+        public ClassWithEnumerableIMockedService(IEnumerable<AutoMockerTester.IMockedService> enumerable)
+        {
+            _enumerable = enumerable;
+        }
+
+        public IEnumerable<AutoMockerTester.IMockedService> Enumerable
+        {
+            get { return _enumerable; }
         }
     }
 }
