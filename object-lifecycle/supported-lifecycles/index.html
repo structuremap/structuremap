@@ -1,0 +1,380 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>
+      StructureMap - Supported Lifecycles</title>
+    
+<meta charset="utf-8"/>
+<meta name="description" content="FubuDocs"/>
+<meta name="author" content="FubuDocs"/>
+
+
+
+
+<link href="/_content/styles/sons-of-obsidian.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr-responsive.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.core.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.theme.css" rel="stylesheet" type="text/css" />
+
+<link media="screen" type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,300">
+
+    
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" position="relative">
+      
+    <div class="container">
+      
+      
+
+<div class="row">
+  <div class="span6">
+    <p class="logo">
+      <a href="/topics" title="Fubu" class="root-link"><span>Fubu</span></a>
+      <a href="/" title="The original IoC/DI Container for .Net" class="project-logo"><span>StructureMap</span></a>
+    </p>
+  </div>
+  <div class="span6">
+    <div class="top-header text-right">
+      <em>
+        <em><a href="http://groups.google.com/group/structuremap-users?hl=en">Join our vibrant mailing list</a></em>
+      </em>
+      <div class="social">
+        <a href="https://github.com/structuremap/structuremap" class="ico-github"><img alt="Github" src="/_content/images/github-icon.png" /></a>
+      </div>
+    </div>
+  </div>
+</div>
+      
+
+      <div id="nav-follow" class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li><a href="/object-lifecycle" data-key="index">Object Lifecycles &#187;</a></li><li class="active"><a href="/object-lifecycle/supported-lifecycles" data-key="supported-lifecycles">Supported Lifecycles &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/object-lifecycle" title="Object Lifecycles">Previous</a></li><li><a href="/object-lifecycle/configuring-lifecycles" title="Configuring Lifecycles">Next</a></li></ul>
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        
+        
+
+        <div class="row">
+          <div class="span3 sidebar" data-spy="affix" data-offset-top="150" data-offset-bottom="200">
+            
+            <h3 class="half-margin">Topics</h3>
+            <ul id="page-toc" class="nav nav-tabs nav-stacked bs-docs-sidebar">
+            </ul>
+            <br/>
+            <h3>
+              StructureMap v1.0.0
+            </h3>
+
+            <br/>
+            <h3 class="no-margin">Next</h3>
+<p><a href="/object-lifecycle/configuring-lifecycles" data-key="configuring-lifecycles">Configuring Lifecycles</a></p>
+<h3 class="no-margin">Previous</h3>
+<p><a href="/object-lifecycle" data-key="index">Object Lifecycles</a></p>
+          </div>
+          <div class="span9">
+
+              <h1 class="no-margin">Supported Lifecycles</h1>
+              <hr class="header-line topic-line"></hr>
+
+            <!--Title: Supported Lifecycles-->
+<!--Url: supported-lifecycles-->
+<p>Out of the box, the core StructureMap assembly supports these lifecycles:</p>
+
+<ul>
+<li>Transient -- The default lifecycle.  A new object is created for each logical request to resolve an object graph from the container.  </li>
+<li>Singleton -- Only one object instance will be created for the main Container </li>
+<li>AlwaysUnique -- A new object instance is created every time, even within the same object graph</li>
+<li>ThreadLocal -- Only one object instance will be created for the currently executing Thread</li>
+</ul>
+
+<p><section><h4 id="transient" class="section-header">Transient</h4></p>
+
+<p>Older versions of StructureMap referred to <em>Transient</em> as <em>PerRequest</em>, which might be a more accurate reflection of how this lifecycle behaves but 
+causes some confusion with ASP.Net HTTP scoping.  The easiest way to think of <em>Transient</em> is that a single object instance will be created for each top level
+call to <code>Container.GetInstance()</code>.  In the case of a nested container, <em>Transient's</em> are scoped to the lifecycle
+of the nested container.</p>
+
+<p>The following unit test demonstrates how <em>Transient</em> lifecycles work in both root and nested containers. Also note that a transient dependency will
+be created exactly once in an object graph.</p>
+
+<pre data-linenums="54" class="prettyprint lang-cs">
+        [Test]
+        public void Transient()
+        {
+            var c = new Container(x =&gt;
+            {
+                x.For&lt;IService&gt;().Use&lt;Service&gt;().Transient();
+            });
+
+            // In a normal container, you get a new object
+            // instance of the Service class in subsequent
+            // requests
+            c.GetInstance&lt;IService&gt;()
+                .ShouldNotBeTheSameAs(c.GetInstance&lt;IService&gt;())
+                .ShouldNotBeTheSameAs(c.GetInstance&lt;IService&gt;());
+
+            // Within a nested container, &#39;Transient&#39; now 
+            // means within the Nested Container.
+            // A nested container is effectively one request
+            using (var nested = c.GetNestedContainer())
+            {
+                nested.GetInstance&lt;IService&gt;()
+                    .ShouldBeTheSameAs(nested.GetInstance&lt;IService&gt;())
+                    .ShouldBeTheSameAs(nested.GetInstance&lt;IService&gt;());
+            }
+        }
+</pre>
+
+<p></section></p>
+
+<p><section><h4 id="unique" class="section-header">AlwaysUnique</h4></p>
+
+<p>Very simply, using the <em>AlwaysUnique</em> means that a new object instance will be created every single time a configured Instance is either requested
+from a Container or as a dependency to another object. </p>
+
+<pre data-linenums="82" class="prettyprint lang-cs">
+        [Test]
+        public void Always_Unique()
+        {
+            var c = new Container(x =&gt;
+            {
+                x.For&lt;IService&gt;().Use&lt;Service&gt;().AlwaysUnique();
+            });
+
+            // In a normal container, you get a new object
+            // instance of the Service class in subsequent
+            // requests
+            c.GetInstance&lt;IService&gt;()
+                .ShouldNotBeTheSameAs(c.GetInstance&lt;IService&gt;())
+                .ShouldNotBeTheSameAs(c.GetInstance&lt;IService&gt;());
+
+            // Within a nested container, &#39;Transient&#39; now 
+            // means within the Nested Container.
+            // A nested container is effectively one request
+            using (var nested = c.GetNestedContainer())
+            {
+                nested.GetInstance&lt;IService&gt;()
+                    .ShouldNotBeTheSameAs(nested.GetInstance&lt;IService&gt;())
+                    .ShouldNotBeTheSameAs(nested.GetInstance&lt;IService&gt;());
+            }
+
+            // Even in a single request, 
+            var holder = c.GetInstance&lt;ServiceUserHolder&gt;();
+            holder.Service.ShouldNotBeTheSameAs(holder.User.Service);
+        }
+</pre>
+
+<p></section></p>
+
+<p><section><h4 id="singleton" class="section-header">Singleton</h4></p>
+
+<p>StructureMap 3.0 fixed the <a href="https://github.com/structuremap/structuremap/issues/3">dreaded singletons with nested container's bug</a> that was so nasty in 2.6. </p>
+
+<pre data-linenums="11" class="prettyprint lang-cs">
+        [Test]
+        public void singletons()
+        {
+            var c = new Container(x =&gt; {
+                x.For&lt;IService&gt;().Use&lt;Service&gt;().Singleton();
+            });
+
+            // It&#39;s always the same object instance
+            c.GetInstance&lt;IService&gt;()
+                .ShouldBeTheSameAs(c.GetInstance&lt;IService&gt;())
+                .ShouldBeTheSameAs(c.GetInstance&lt;IService&gt;())
+                .ShouldBeTheSameAs(c.GetInstance&lt;IService&gt;())
+                .ShouldBeTheSameAs(c.GetInstance&lt;IService&gt;())
+                .ShouldBeTheSameAs(c.GetInstance&lt;IService&gt;());
+        }
+</pre>
+
+<p></section></p>
+
+<p><section><h4 id="thread-local" class="section-header">ThreadLocal</h4>
+The ThreadLocalStorage based lifecycle is seldom used, but the easiest example of using it and explanation is the integration test:</p>
+
+<pre data-linenums="9" class="prettyprint lang-cs">
+    [TestFixture]
+    public class ThreadLocalStorageLifecycleTester
+    {
+        #region Setup/Teardown
+
+        [SetUp]
+        public void SetUp()
+        {
+            _lifecycle = new ThreadLocalStorageLifecycle();
+
+            container = new Container(x =&gt; x.For&lt;Rule&gt;(Lifecycles.ThreadLocal).Use(() =&gt; new ColorRule(&quot;Red&quot;)));
+        }
+
+        #endregion
+
+        private ThreadLocalStorageLifecycle _lifecycle;
+        private ColorRule _rule1;
+        private ColorRule _rule2;
+        private ColorRule _rule3;
+        private Container container;
+
+
+        private void findRule1()
+        {
+            _rule1 = container.GetInstance&lt;Rule&gt;().ShouldBeOfType&lt;ColorRule&gt;();
+
+            var rule = container.GetInstance&lt;Rule&gt;().ShouldBeOfType&lt;ColorRule&gt;();
+            Assert.AreSame(_rule1, rule);
+        }
+
+        private void findRule2()
+        {
+            _rule2 = container.GetInstance&lt;Rule&gt;().ShouldBeOfType&lt;ColorRule&gt;();
+
+            var rule = container.GetInstance&lt;Rule&gt;().ShouldBeOfType&lt;ColorRule&gt;();
+            Assert.AreSame(_rule2, rule);
+        }
+
+        private void findRule3()
+        {
+            _rule3 = container.GetInstance&lt;Rule&gt;().ShouldBeOfType&lt;ColorRule&gt;();
+
+            var rule = container.GetInstance&lt;Rule&gt;().ShouldBeOfType&lt;ColorRule&gt;();
+            Assert.AreSame(_rule3, rule);
+
+            rule = container.GetInstance&lt;Rule&gt;().ShouldBeOfType&lt;ColorRule&gt;();
+            Assert.AreSame(_rule3, rule);
+
+            rule = container.GetInstance&lt;Rule&gt;().ShouldBeOfType&lt;ColorRule&gt;();
+            Assert.AreSame(_rule3, rule);
+
+            rule = container.GetInstance&lt;Rule&gt;().ShouldBeOfType&lt;ColorRule&gt;();
+            Assert.AreSame(_rule3, rule);
+        }
+
+        [Test]
+        public void object_has_been_created()
+        {
+            container.Model.For&lt;Rule&gt;().Default.ObjectHasBeenCreated().ShouldBeFalse();
+            var r1 = container.GetInstance&lt;Rule&gt;();
+            container.Model.For&lt;Rule&gt;().Default.ObjectHasBeenCreated().ShouldBeTrue();
+        }
+
+        [Test]
+        public void FindUniqueInstancePerThread()
+        {
+            var t1 = new Thread(findRule1);
+            var t2 = new Thread(findRule2);
+            var t3 = new Thread(findRule3);
+
+            t1.Start();
+            t2.Start();
+            t3.Start();
+
+            t1.Join();
+            t2.Join();
+            t3.Join();
+
+            Assert.AreNotSame(_rule1, _rule2);
+            Assert.AreNotSame(_rule1, _rule3);
+            Assert.AreNotSame(_rule2, _rule3);
+            Assert.IsTrue(_rule1.ID != _rule2.ID);
+            Assert.IsTrue(_rule1.ID != _rule3.ID);
+            Assert.IsTrue(_rule2.ID != _rule3.ID);
+        }
+    }
+</pre>
+
+<p></section></p>
+
+<p><section><h4 id="aspnet" class="section-header">Legacy ASP.Net Lifecycles</h4></p>
+
+<div class="alert alert-info"><i class="icon-info-sign"></i>The StructureMap team strongly recommends against using the old ASP.Net lifecycles.  <b>Most</b> modern web frameworks in .Net will use a Nested Container per request to accomplish the same scoping in a better way.</div>
+
+<div class="alert alert-info"><i class="icon-info-sign"></i><i>StructureMap.Web</i><span> is distributed as a Nuget at </span><a href="http://www.nuget.org/packages/StructureMap.Web">http://www.nuget.org/packages/StructureMap.Web</a><span> and can be installed from the command line with either:</span><p><code>ripple install StructureMap.Web -p {your project name}</code></p><p> - or -</p><p><code>PM&gt; Install-Package StructureMap.Web</code></p></div>
+
+<p>In addition, the StructureMap.Web package adds the legacy ASP.Net related lifecycles for:</p>
+
+<ul>
+<li>HttpContext</li>
+<li>HttpSession</li>
+<li>Hybrid -- uses ThreadLocalStorage in the absence of an active HttpContext</li>
+<li>HybridSession</li>
+</ul>
+
+<pre data-linenums="20" class="prettyprint lang-cs">
+    public class AspNetRegistry : Registry
+    {
+        public AspNetRegistry()
+        {
+            For&lt;IWeirdThing&gt;().LifecycleIs&lt;HttpContextLifecycle&gt;();
+            For&lt;IGateway&gt;().LifecycleIs&lt;HybridLifecycle&gt;();
+            For&lt;IRule&gt;().LifecycleIs&lt;HttpSessionLifecycle&gt;();
+            For&lt;ICache&gt;().LifecycleIs&lt;HybridSessionLifecycle&gt;();
+        }
+    }
+</pre>
+
+<p>If you do use any of the HttpContext lifecycles, make sure you also do:</p>
+
+<pre data-linenums="14" class="prettyprint lang-cs">
+            HttpContextLifecycle.DisposeAndClearAll();
+</pre> 
+
+<p></section></p>
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br></br>
+    <hr></hr>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li><a href="/object-lifecycle" data-key="index">Object Lifecycles &#187;</a></li><li class="active"><a href="/object-lifecycle/supported-lifecycles" data-key="supported-lifecycles">Supported Lifecycles &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/object-lifecycle" title="Object Lifecycles">Previous</a></li><li><a href="/object-lifecycle/configuring-lifecycles" title="Configuring Lifecycles">Next</a></li></ul>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+
+<script type="text/javascript" src="/_content/scripts/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/bootstrap-prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs.js"></script>
+<script type="text/javascript" src="/_content/scripts/jquery.nestable.js"></script>
+<script type="text/javascript" src="/_content/scripts/toastr.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/diagnostics/bootstrap-scrollspy.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs-tools.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap-affix.js"></script>
+<script type="text/javascript" src="/_content/scripts/topics.js"></script>
+
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>
+      Powered by <a href="http://github.com/DarthFubuMVC/FubuDocs">FubuDocs</a>.
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

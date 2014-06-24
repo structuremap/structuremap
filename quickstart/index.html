@@ -1,0 +1,483 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>
+      StructureMap - A Gentle Quickstart</title>
+    
+<meta charset="utf-8"/>
+<meta name="description" content="FubuDocs"/>
+<meta name="author" content="FubuDocs"/>
+
+
+
+
+<link href="/_content/styles/sons-of-obsidian.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr-responsive.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.core.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.theme.css" rel="stylesheet" type="text/css" />
+
+<link media="screen" type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,300">
+
+    
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" position="relative">
+      
+    <div class="container">
+      
+      
+
+<div class="row">
+  <div class="span6">
+    <p class="logo">
+      <a href="/topics" title="Fubu" class="root-link"><span>Fubu</span></a>
+      <a href="/" title="The original IoC/DI Container for .Net" class="project-logo"><span>StructureMap</span></a>
+    </p>
+  </div>
+  <div class="span6">
+    <div class="top-header text-right">
+      <em>
+        <em><a href="http://groups.google.com/group/structuremap-users?hl=en">Join our vibrant mailing list</a></em>
+      </em>
+      <div class="social">
+        <a href="https://github.com/structuremap/structuremap" class="ico-github"><img alt="Github" src="/_content/images/github-icon.png" /></a>
+      </div>
+    </div>
+  </div>
+</div>
+      
+
+      <div id="nav-follow" class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li class="active"><a href="/quickstart" data-key="quickstart">A Gentle Quickstart &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/" title="StructureMap">Previous</a></li><li><a href="/glossary" title="Glossary">Next</a></li></ul>
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        
+        
+
+        <div class="row">
+          <div class="span3 sidebar" data-spy="affix" data-offset-top="150" data-offset-bottom="200">
+            
+            <h3 class="half-margin">Topics</h3>
+            <ul id="page-toc" class="nav nav-tabs nav-stacked bs-docs-sidebar">
+            </ul>
+            <br/>
+            <h3>
+              StructureMap v1.0.0
+            </h3>
+
+            <br/>
+            <h3 class="no-margin">Next</h3>
+<p><a href="/glossary" data-key="glossary">Glossary</a></p>
+<h3 class="no-margin">Previous</h3>
+<p><a href="/" data-key="index">StructureMap</a></p>
+          </div>
+          <div class="span9">
+
+              <h1 class="no-margin">A Gentle Quickstart</h1>
+              <hr class="header-line topic-line"></hr>
+
+            <!--Title: A Gentle Quickstart-->
+<!--Url: quickstart-->
+<p>StructureMap was built to </p>
+
+<p>Before you get started with StructureMap it's recommended that you first get comfortable with the <a href="/software-design-concepts" data-key="concepts">Software Design Concepts</a> 
+of <a href="http://codebetter.com/jeremymiller/2005/10/06/the-dependency-injection-pattern-�-what-is-it-and-why-do-i-care/">Dependency Injection</a> 
+and <a href="http://codebetter.com/jeremymiller/2005/09/20/what�s-so-great-about-inversion-of-control/">Inversion Of Control</a>. 
+It's important that you structure and build your application with these concepts in mind.</p>
+
+<p>Assuming that you're already familiar with those concepts, or you'd really rather skip the pedantry and jump right into concrete code, the first thing to do is, go <a href="/get-structuremap" data-key="get-structuremap">Get StructureMap</a> and jump into usage.</p>
+
+<p><section><h4 id="main-usage" class="section-header">Main Usage</h4></p>
+
+<p>By and large, you really only do two kinds of things with StructureMap:</p>
+
+<ol>
+<li><p>Configure the container by registering the <strong>what</strong> and <strong>how</strong> StructureMap should build or find requested services.</p></li>
+<li><p>Resolve instances of a service or dependency.
+</section></p></li>
+</ol>
+
+<p><section><h4 id="configuring-the-container" class="section-header">Configuring the container</h4></p>
+
+<p>As of the 3.0 release, StructureMap provides a streamlined fluent interface called the <em>Registry DSL</em> to configure a StructureMap
+Container with both explicit registrations and conventional auto-registrations.  StructureMap no longer supports Xml configuration or MEF-style attribute configuration.  </p>
+
+<div class="alert alert-info"><i class="icon-info-sign"></i>The static <code>ObjectFactory</code> wrapper for Container is still available in 3.0, but we strongly recommend against using it for new applications.  It only exists for easier compatibility with older installations.</div>
+
+<p>The first step in using StructureMap is configuring a <code>Container</code> object. The following examples are based on the usage of the <a href="/registration/registry-dsl" data-key="registry-dsl">Registry DSL</a>.</p>
+
+<p>Let's say that you have a simple set of services like this:</p>
+
+<pre data-linenums="15" class="prettyprint lang-cs">
+    public interface IBar
+    {
+    }
+
+    public class Bar : IBar
+    {
+    }
+
+    public interface IFoo
+    {
+    }
+
+    public class Foo : IFoo
+    {
+        public IBar Bar { get; private set; }
+
+        public Foo(IBar bar)
+        {
+            if (bar == null) throw new ArgumentNullException(&quot;bar&quot;);
+            Bar = bar;
+        }
+    }
+
+</pre>
+
+<p>A simple configuration of a StructureMap Container might then be:</p>
+
+<pre data-linenums="13" class="prettyprint lang-cs">
+// Example #1 - Create an container instance and directly pass in the configuration.
+var container1 = new Container(c =&gt;
+{
+    c.For&lt;IFoo&gt;().Use&lt;Foo&gt;();
+    c.For&lt;IBar&gt;().Use&lt;Bar&gt;();
+});
+
+// Example #2 - Create an container instance but add configuration later.
+var container2 = new Container();
+
+container2.Configure(c =&gt;
+{
+    c.For&lt;IFoo&gt;().Use&lt;Foo&gt;();
+    c.For&lt;IBar&gt;().Use&lt;Bar&gt;();
+});
+
+// Example #3 - Initialize the static ObjectFactory container.
+ObjectFactory.Initialize(i =&gt;
+{
+    i.For&lt;IFoo&gt;().Use&lt;Foo&gt;();
+    i.For&lt;IBar&gt;().Use&lt;Bar&gt;();
+});
+</pre>
+
+<p>Initializing or configuring the container is usually done at application startup and is located as close as possible to the application's entry point. 
+This place is sometimes referred to as the composition root of the application. 
+In our example we are composing our application's object graph by connecting abstractions to concrete types.</p>
+
+<p>We are using the fluent API <code>For<TInterface>().Use<TConcrete>()</code> which registers a default instance for a given plugin type (the TInterface type in this case). In our example we want an new instance of <code>Foo</code> every time we request the abstraction <code>IFoo</code>.</p>
+
+<p>The recommended way of using the <a href="/registration/registry-dsl" data-key="registry-dsl">Registry DSL</a> is by defining one or more <code>Registry</code> classes. Typically, you would subclass the <code>Registry</code> class, 
+then use the Fluent API methods exposed by the <code>Registry</code> class to describe a <code>Container</code> configuration. </p>
+
+<p>Here's a sample <code>Registry</code> class used to configure the same types as in our previous example:</p>
+
+<pre data-linenums="6" class="prettyprint lang-cs">
+public class FooBarRegistry : Registry
+{
+    public FooBarRegistry()
+    {
+        For&lt;IFoo&gt;().Use&lt;Foo&gt;();
+        For&lt;IBar&gt;().Use&lt;Bar&gt;();
+    }
+}
+</pre>
+
+<p>When you set up a <code>Container</code> or <code>ObjectFactory</code>, you need to simply direct the <code>Container</code> to use the configuration in that <code>Registry</code> class.</p>
+
+<pre data-linenums="41" class="prettyprint lang-cs">
+// Example #1
+var container1 = new Container(new FooBarRegistry());
+
+// Example #2
+var container2 = new Container(c =&gt;
+{
+    c.AddRegistry&lt;FooBarRegistry&gt;();
+});
+
+// Example #3
+ObjectFactory.Initialize(c =&gt;
+{
+    c.AddRegistry&lt;FooBarRegistry&gt;();
+});
+</pre>
+
+<div class="alert alert-info"><i class="icon-info-sign"></i>The StructureMap team highly recommends using <code>Registry</code> classes for your real application configuration.  The syntax is shorter inside the Registry class constructor than from within the <code>Container</code> constructor method. Registry classes can be used to modularize the configuration of a bigger application into more manageable chunks.  Lastly, using <code>Registry</code> classes makes it easier to stand up additional <code>Container</code> objects in testing scenarios that reflect the real application composition.</div>
+
+<p>In real world applications you also have to deal with repetitive similar registrations. Such registrations are tedious, easy to forget and can be a weak spot in your application. StructureMap provides <a href="/registration/auto-registration-and-conventions" data-key="auto-registration-and-conventions">Auto-Registration and Conventions</a>  which mitigates this pain and eases the maintenance burden. StructureMap exposes this feature through the <a href="/registration/registry-dsl" data-key="registry-dsl">Registry DSL</a> by the <code>Scan</code> method.</p>
+
+<p>In our example there is an reoccuring pattern, we are connecting the plugin type <code>ISomething</code> to a concrete type <code>Something</code>, meaning <code>IFoo</code> to <code>Foo</code> and <code>IBar</code> to <code>Bar</code>. Wouldn't it be cool if we could write a convention for exactly doing that? Fortunatly StructureMap has already one build in. Let's see how we can create an container with the same configuration as in the above examples.</p>
+
+<pre data-linenums="61" class="prettyprint lang-cs">
+// Example #1
+var container1 = new Container(c =&gt;
+    c.Scan(scanner =&gt;
+    {
+        scanner.TheCallingAssembly();
+        scanner.WithDefaultConventions();
+    }));
+
+// Example #2
+var container2 = new Container();
+
+container2.Configure(c =&gt;
+    c.Scan(scanner =&gt;
+    {
+        scanner.TheCallingAssembly();
+        scanner.WithDefaultConventions();
+    }));
+
+// Example #3
+ObjectFactory.Initialize(i =&gt;
+    i.Scan(scanner =&gt;
+    {
+        scanner.TheCallingAssembly();
+        scanner.WithDefaultConventions();
+    }));
+</pre>
+
+<p>We instruct the scanner to scan through the calling assembly with default conventions on. This wil find and registers the default instance for <code>IFoo</code> and <code>IBar</code> which are obviously the concrete types <code>Foo</code> and <code>Bar</code>. Now whenever you add an additional interface <code>IMoreFoo</code> and a class <code>MoreFoo</code> to your application's code base, it's automatically picked up by the scanner. </p>
+
+<p>Sometimes classes need to be suplied with some primitive value in its constructor. For example the <code>System.Data.SqlClient.SqlConnection</code> needs to be supplied with the connection string in its constructor. No problem, just set up the value of the constructor argument in the bootstrapping:</p>
+
+<pre data-linenums="92" class="prettyprint lang-cs">
+var container = new Container(c =&gt;
+{
+    //just for demo purposes, normally you don&#39;t want to embed the connection string directly into code.
+    c.For&lt;IDbConnection&gt;().Use&lt;SqlConnection&gt;().Ctor&lt;string&gt;().Is(&quot;YOUR_CONNECTION_STRING&quot;);    
+    //a better way would be providing a delegate that retrieves the value from your app config.    
+});
+</pre>
+
+<p>So far you have seen an couple of ways to work with the <a href="/registration/registry-dsl" data-key="registry-dsl">Registry DSL</a> and configure an <code>Container</code> object or <code>ObjectFactory</code>. We have seen examples of configuration that allows us to build objects that doesn't depend on anything like the <code>Bar</code> class, or do depend on other types like the <code>Foo</code> class needs an instance of <code>IBar</code>. In our last example we have seen configuration for objects that needs some primitive types like strings in its constructor function.</p>
+
+<p>Now that we have done some basic configuration, it's time to move on to the next step of the main usage: resolving instances of a service or dependency.
+</section></p>
+
+<p><section><h4 id="resolving-instances" class="section-header">Resolving instances of a service or dependency</h4></p>
+
+<p>This will be the easy part of interacting with StructureMap. During application execution, you will be needing the services you registered in the container. When you resolve a service, depending on the <a href="/object-lifecycle" data-key="index">Object Lifecycles</a>, a new instance of the service will be created by StructureMap or StructureMap is delegating the responsibility of resolving the instance to external code. This all depends on your configuration for that specific service. All of our examples so far let's StructureMap create the instance for the service.</p>
+
+<p>In our bootstrapping of the container we didn't specified any lifecycle. In short, a lifecycle let's you specify how long an instance is tracked by StructureMap. More information on this subject can be found in the <a href="/object-lifecycle" data-key="index">Object Lifecycles</a> chapter. The default lifecycle for all services is <a href=""><code>Transient</code></a>. This means that a new instance will be created for each request to the container. These instances aren't tracked by the container. Lifecycles for services can be defined through code or XML.</p>
+
+<p>Before we can resolve services from the container, we need an reference to a <code>Container</code> object or <code>ObjectFactory</code>. For our examples we are going to use the static <code>ObjectFactory</code> class, which is StructureMap's implementation of a <a href="http://todo.com">Service Locator</a>.</p>
+
+<pre data-linenums="12" class="prettyprint lang-cs">
+var fooInstance = ObjectFactory.GetInstance&lt;IFoo&gt;();
+</pre>
+
+<p>This will create an instance of the class <code>Foo</code>. Before creating this instance, StructureMap will inspect the constructor and see that it needs to supply an instance of <code>IBar</code>. Because we also provided configuration for <code>IBar</code>, StructureMap wil be able to create an instance of the <code>Bar</code> class and injects that into the constructor of the <code>Foo</code> class. The resulting instance of <code>Foo</code> will be returned to the caller.</p>
+
+<p>StructureMap is also able to resolve weakly typed services. When you only have a <code>Type</code> object that you need to  get resolved, you can use the non generic <code>GetInstance</code> method.</p>
+
+<pre data-linenums="19" class="prettyprint lang-cs">
+Type foo = typeof(IFoo);
+
+var fooInstance = ObjectFactory.GetInstance(foo);
+</pre>
+
+<p>Both <code>GetInstance</code> methods will provide you the default instance of the <code>IFoo</code>. That is, StructureMap could have multiple configurations for the <code>IFoo</code> plugin type, but can only have one default instance. Let's alter the configuration so that there will be two <code>IFoo</code> registrations.</p>
+
+<pre data-linenums="105" class="prettyprint lang-cs">
+ObjectFactory.Initialize(i =&gt;
+{
+    i.For&lt;IFoo&gt;().Use&lt;Foo&gt;();
+    i.For&lt;IFoo&gt;().Use&lt;SomeOtherFoo&gt;();
+    i.For&lt;IBar&gt;().Use&lt;Bar&gt;();
+});
+</pre>
+
+<p>The last registration for <code>IFoo</code> will be the default instance. So whenever you want to resolve the service <code>IFoo</code> you will get an instance of <code>SomeOtherFoo</code>. But what if you want all foo's? That's easy.</p>
+
+<pre data-linenums="28" class="prettyprint lang-cs">
+IEnumerable&lt;IFoo&gt; fooInstances = ObjectFactory.GetAllInstances&lt;IFoo&gt;();
+</pre>
+
+<p>When you request a service that's unknown to StructureMap you will be presented with a StructureMap exception, complaining that there is no default instance defined for the requested service type. If you don't want this exception to occur you can use the <code>TryGetInstance</code> method. </p>
+
+<pre data-linenums="35" class="prettyprint lang-cs">
+var blahInstance = ObjectFactory.Container.TryGetInstance&lt;IBlah&gt;();
+
+Debug.Assert(blahInstance != null, String.Format(&quot;no default instance for {0}&quot;, typeof(IBlah).FullName));
+</pre>
+
+<p>This will try to create or find the default instance of the requested service type. It will returns the default value (i.e. <code>null</code>) of the requested service if it's not known to the container. The condition of the assertion will be false because <code>blahInstance</code> will be <code>null</code>.</p>
+
+<p>StructureMap's <code>ObjectFactory</code> class should be used with caution because a <a href="">Service Locator</a> is largely considered an anti-pattern. Meaning the use of the <code>ObjectFactory</code> class through your code is not recommended. Typically, you must try to minimize the number of service locator usages in your system to a bare minimum. Most of the value of an IoC tool is in automatically doing Dependency Injection. This is possible by a feature called <a href="/the-container/auto-wiring" data-key="auto-wiring">Auto Wiring</a> and can most effectivly be utilized in your application's <a href="#integration">integration</a> setup. This ensures  that needed services get resolved from a central, top level location in your application, making the need for manual resolution rare.</p>
+
+<p>For supporting different use cases, StructureMap supports a wide variety of methods that you can use for resolving services. These will be adressed in the <a href="/resolving" data-key="index">Resolving Services</a> chapter.
+</section></p>
+
+<p><section><h4 id="an-even-simpler-usage" class="section-header">An even simpler usage</h4></p>
+
+<p>There is an even a simpler usage than the main usage because StructureMap allows you to resolve instances without configuring the container. StructureMap is able to resolve <strong>concrete types</strong> without configuration as long as it has a default constructor or a constructor where the arguments are concrete types too.  It's important that the entire tree of constructor arguments are concrete types where eventually all leave types have a default constructor.</p>
+
+<p>Let's say we have the following object model, which represents the weather condition for a certain location.</p>
+
+<pre data-linenums="49" class="prettyprint lang-cs">
+    public class Weather
+    {
+        public Location Location { get; set; }
+        public Atmosphere Atmosphere { get; set; }
+        public Wind Wind { get; set; }
+        public Condition Condition { get; set; }
+
+        public Weather(Location location, Atmosphere atmosphere, Wind wind, Condition condition)
+        {
+            Location = location;
+            Atmosphere = atmosphere;
+            Wind = wind;
+            Condition = condition;
+        }
+    }
+
+    public class Location
+    {
+        //some properties
+    }
+
+    public class Atmosphere
+    {
+        //some properties
+    }
+
+    public class Wind
+    {
+        //some properties        
+    }
+
+    public class Condition
+    {
+        //some properties        
+    }
+
+</pre>
+
+<p>Before we can resolve the concrete <code>Weather</code> type, we need an instance of an <code>Container</code> object or <code>ObjectFactory</code>. As mentioned earlier, these objects defines a generic <code>GetInstance</code> method which can build us an instance of the <code>Weather</code> type.</p>
+
+<p>You can create a container yourself or use the statically accessed container.</p>
+
+<pre data-linenums="44" class="prettyprint lang-cs">
+var container = new Container();
+var weather1 = container.GetInstance&lt;Weather&gt;();
+
+var weather2 = ObjectFactory.Container.GetInstance&lt;Weather&gt;();
+    weather2 = ObjectFactory.GetInstance&lt;Weather&gt;(); //short version for above.
+</pre>
+
+<p>The reason why we don't need to supply any configuration is because StructureMap supports a concept called <a href="/the-container/auto-wiring" data-key="auto-wiring">Auto Wiring</a>. It's basically a smart way of building instances of types by looking to the constructors of the requested and all the needed underlaying types. During this inspection StructureMap also uses any provided configuration to help building the requested service or dependency.</p>
+
+<p>In our example, where there isn't any configuration available, StructureMap looks at the constructor of the requested <code>Weather</code> type. It sees that it depends on four concrete types which all have a default constructor. StructureMap is therefor able to create an instance for all of them and inject them into the <code>Weather</code> constructor. After that the <code>Weather</code> instance is returned to the caller.</p>
+
+<p>Most of the time you will be mapping abstractions to concrete types, but as you have seen StructureMap supports other use cases as well.
+</section></p>
+
+<p><section><h4 id="integration" class="section-header">Integrating StructureMap within your application</h4></p>
+
+<p>At some point you will want to integrate StructureMap into your application. Whether you are using Windows Presentation Foundation (WPF), FubuMVC, ASP.NET WebForms, ASP.NET MVC or any other framework or technology, you will have to do some sort of plumbing and bootstrapping. Depending on the used technology or framework there can be important integration points that you will have to use to fully enable the power of StructureMap.</p>
+
+<p>While StructureMap doesn't provide integration support out of the box for all of the frameworks and technologies out there, we do find it important to help you get started with integrating StructureMap into your application. That said, StructureMap does provide integration support for <a href="http://fubuworld.com/fubumvc">FubuMVC</a> (a web framework, which is part of the same family as StructureMap).</p>
+
+<p>We have created some starter integration guides for the most common frameworks and technologies. Those guides aren't the one and true way, most of the time, integrating StructureMap can be done in various ways.</p>
+
+<ul>
+<li><p><a href="/integrations" data-key="index">Integrations</a></p>
+
+<ul>
+<li><a href="/integrations/fubumvc-and-fubutransportation" data-key="fubumvc-and-fubutransportation">FubuMVC and FubuTransportation</a></li>
+<li><a href="/integrations/aspnet-mvc" data-key="aspnet-mvc">ASP.Net MVC</a></li>
+<li><a href="/integrations/web-api" data-key="Web-API">Web API</a></li>
+<li><a href="/integrations/nancyfx" data-key="nancyfx">NancyFx</a></li>
+<li><a href="/integrations/simpleweb" data-key="simpleweb">Simple.Web</a></li>
+<li><a href="/integrations/signalr" data-key="signalr">SignalR</a></li>
+<li><a href="/integrations/nservicebus" data-key="nservicebus">NServiceBus</a></li>
+<li><a href="/integrations/masstransit" data-key="masstransit">MassTransit</a></li>
+<li><a href="/integrations/entity-framework" data-key="entity-framework">Entity Framework</a></li>
+<li><a href="/integrations/nhibernate" data-key="nhibernate">NHibernate</a></li>
+<li><a href="/integrations/automapper" data-key="automapper">AutoMapper</a>
+</section>
+<section><h4 id="when-things-go-wrong" class="section-header">What to do when things go wrong?</h4></li>
+</ul></li>
+</ul>
+
+<p>StructureMap, and any other IoC tool for that matter, is configuration intensive, which means that their will be problems in that configuration. We're all moving to more convention based type registration, so more stuff is happening off stage and out of your sight, making debugging the configuration even trickier. Not to worry (too much), StructureMap has some diagnostic abilities to help you solve configuration problems:</p>
+
+<ul>
+<li><a href="/interpreting-exceptions" data-key="interpreting-exceptions">Interpreting Exceptions</a></li>
+<li><a href="/diagnostics" data-key="index">Diagnostics</a>
+<ul>
+<li><a href="/diagnostics/whatdoihave" data-key="whatdoihave">WhatDoIHave()</a></li>
+<li><a href="/diagnostics/validating-container-configuration" data-key="validating-container-configuration">Validating Container Configuration</a></li>
+<li><a href="/diagnostics/environment-tests" data-key="environment-tests">Environment Tests</a></li>
+<li><a href="/diagnostics/build-plans" data-key="build-plans">Build Plans</a></li>
+<li><a href="/diagnostics/using-the-container-model" data-key="using-the-container-model">Using the Container Model</a>
+</section></li>
+</ul></li>
+</ul>
+
+<p><section><h4 id="need-help" class="section-header">Need Help?</h4></p>
+
+<ul>
+<li>There is a <a href="http://groups.google.com/group/structuremap-users?hl=en">google group</a> for StructureMap support.</li>
+<li>You can ask questions on <a href="http://stackoverflow.com/">StackOverflow</a>.
+</section></li>
+</ul>
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br></br>
+    <hr></hr>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li class="active"><a href="/quickstart" data-key="quickstart">A Gentle Quickstart &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/" title="StructureMap">Previous</a></li><li><a href="/glossary" title="Glossary">Next</a></li></ul>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+
+<script type="text/javascript" src="/_content/scripts/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/bootstrap-prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs.js"></script>
+<script type="text/javascript" src="/_content/scripts/jquery.nestable.js"></script>
+<script type="text/javascript" src="/_content/scripts/toastr.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/diagnostics/bootstrap-scrollspy.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs-tools.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap-affix.js"></script>
+<script type="text/javascript" src="/_content/scripts/topics.js"></script>
+
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>
+      Powered by <a href="http://github.com/DarthFubuMVC/FubuDocs">FubuDocs</a>.
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,166 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>
+      StructureMap - Get all Services by Plugin Type</title>
+    
+<meta charset="utf-8"/>
+<meta name="description" content="FubuDocs"/>
+<meta name="author" content="FubuDocs"/>
+
+
+
+
+<link href="/_content/styles/sons-of-obsidian.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr-responsive.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.core.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.theme.css" rel="stylesheet" type="text/css" />
+
+<link media="screen" type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,300">
+
+    
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" position="relative">
+      
+    <div class="container">
+      
+      
+
+<div class="row">
+  <div class="span6">
+    <p class="logo">
+      <a href="/topics" title="Fubu" class="root-link"><span>Fubu</span></a>
+      <a href="/" title="The original IoC/DI Container for .Net" class="project-logo"><span>StructureMap</span></a>
+    </p>
+  </div>
+  <div class="span6">
+    <div class="top-header text-right">
+      <em>
+        <em><a href="http://groups.google.com/group/structuremap-users?hl=en">Join our vibrant mailing list</a></em>
+      </em>
+      <div class="social">
+        <a href="https://github.com/structuremap/structuremap" class="ico-github"><img alt="Github" src="/_content/images/github-icon.png" /></a>
+      </div>
+    </div>
+  </div>
+</div>
+      
+
+      <div id="nav-follow" class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li><a href="/resolving" data-key="index">Resolving Services &#187;</a></li><li class="active"><a href="/resolving/get-all-services-by-plugin-type" data-key="get-all-services-by-plugin-type">Get all Services by Plugin Type &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/resolving/get-a-service-by-plugin-type-and-name" title="Get a Service by Plugin Type and Name">Previous</a></li><li><a href="/resolving/try-getting-an-optional-service-by-plugin-type" title="Try Getting an Optional Service by Plugin Type">Next</a></li></ul>
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        
+        
+
+        <div class="row">
+          <div class="span3 sidebar" data-spy="affix" data-offset-top="150" data-offset-bottom="200">
+            
+            <h3 class="half-margin">Topics</h3>
+            <ul id="page-toc" class="nav nav-tabs nav-stacked bs-docs-sidebar">
+            </ul>
+            <br/>
+            <h3>
+              StructureMap v1.0.0
+            </h3>
+
+            <br/>
+            <h3 class="no-margin">Next</h3>
+<p><a href="/resolving/try-getting-an-optional-service-by-plugin-type" data-key="try-getting-an-optional-service-by-plugin-type">Try Getting an Optional Service by Plugin Type</a></p>
+<h3 class="no-margin">Previous</h3>
+<p><a href="/resolving/get-a-service-by-plugin-type-and-name" data-key="get-a-service-by-plugin-type-and-name">Get a Service by Plugin Type and Name</a></p>
+          </div>
+          <div class="span9">
+
+              <h1 class="no-margin">Get all Services by Plugin Type</h1>
+              <hr class="header-line topic-line"></hr>
+
+            <!--Title: Get all Services by Plugin Type-->
+<!--Url: get-all-services-by-plugin-type-->
+<p>Once in a while you might want to get an enumerable of all the configured objects for a PluginType.  That's done with the <code>GetAllInstances()</code> method shown below:</p>
+
+<pre data-linenums="54" class="prettyprint lang-cs">
+        [Test]
+        public void get_all_instances()
+        {
+            var container = new Container(x =&gt;
+            {
+                x.For&lt;IWidget&gt;().Add&lt;AWidget&gt;().Named(&quot;A&quot;);
+                x.For&lt;IWidget&gt;().Add&lt;BWidget&gt;().Named(&quot;B&quot;);
+                x.For&lt;IWidget&gt;().Add&lt;CWidget&gt;().Named(&quot;C&quot;);
+            });
+
+            container.GetAllInstances&lt;IWidget&gt;()
+                .Select(x =&gt; x.GetType())
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
+
+            // or
+
+            container.GetAllInstances(typeof(IWidget))
+                .OfType&lt;IWidget&gt;() // returns an IEnumerable, so I&#39;m casting here
+                .Select(x =&gt; x.GetType())
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
+        }
+</pre>
+
+<div class="alert alert-info"><i class="icon-info-sign"></i><code>GetAllInstances()</code> respects the order in which the actual instances are configured in the Container.  Be warned that some other IoC tools make different assuptions if you are coming from a different tool.</div>
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br></br>
+    <hr></hr>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li><a href="/resolving" data-key="index">Resolving Services &#187;</a></li><li class="active"><a href="/resolving/get-all-services-by-plugin-type" data-key="get-all-services-by-plugin-type">Get all Services by Plugin Type &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/resolving/get-a-service-by-plugin-type-and-name" title="Get a Service by Plugin Type and Name">Previous</a></li><li><a href="/resolving/try-getting-an-optional-service-by-plugin-type" title="Try Getting an Optional Service by Plugin Type">Next</a></li></ul>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+
+<script type="text/javascript" src="/_content/scripts/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/bootstrap-prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs.js"></script>
+<script type="text/javascript" src="/_content/scripts/jquery.nestable.js"></script>
+<script type="text/javascript" src="/_content/scripts/toastr.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/diagnostics/bootstrap-scrollspy.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs-tools.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap-affix.js"></script>
+<script type="text/javascript" src="/_content/scripts/topics.js"></script>
+
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>
+      Powered by <a href="http://github.com/DarthFubuMVC/FubuDocs">FubuDocs</a>.
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

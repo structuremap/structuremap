@@ -1,0 +1,226 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>
+      StructureMap - Object Lifecycles</title>
+    
+<meta charset="utf-8"/>
+<meta name="description" content="FubuDocs"/>
+<meta name="author" content="FubuDocs"/>
+
+
+
+
+<link href="/_content/styles/sons-of-obsidian.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr-responsive.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.core.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.theme.css" rel="stylesheet" type="text/css" />
+
+<link media="screen" type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,300">
+
+    
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" position="relative">
+      
+    <div class="container">
+      
+      
+
+<div class="row">
+  <div class="span6">
+    <p class="logo">
+      <a href="/topics" title="Fubu" class="root-link"><span>Fubu</span></a>
+      <a href="/" title="The original IoC/DI Container for .Net" class="project-logo"><span>StructureMap</span></a>
+    </p>
+  </div>
+  <div class="span6">
+    <div class="top-header text-right">
+      <em>
+        <em><a href="http://groups.google.com/group/structuremap-users?hl=en">Join our vibrant mailing list</a></em>
+      </em>
+      <div class="social">
+        <a href="https://github.com/structuremap/structuremap" class="ico-github"><img alt="Github" src="/_content/images/github-icon.png" /></a>
+      </div>
+    </div>
+  </div>
+</div>
+      
+
+      <div id="nav-follow" class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li class="active"><a href="/object-lifecycle" data-key="index">Object Lifecycles &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/the-container" title="The Container">Previous</a></li><li><a href="/object-lifecycle/supported-lifecycles" title="Supported Lifecycles">Next</a></li></ul>
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        
+        
+
+        <div class="row">
+          <div class="span3 sidebar" data-spy="affix" data-offset-top="150" data-offset-bottom="200">
+            
+            <h3 class="half-margin">Topics</h3>
+            <ul id="page-toc" class="nav nav-tabs nav-stacked bs-docs-sidebar">
+            </ul>
+            <br/>
+            <h3>
+              StructureMap v1.0.0
+            </h3>
+
+            <br/>
+            <h3 class="no-margin">Next</h3>
+<p><a href="/object-lifecycle/supported-lifecycles" data-key="supported-lifecycles">Supported Lifecycles</a></p>
+<h3 class="no-margin">Previous</h3>
+<p><a href="/the-container" data-key="index">The Container</a></p>
+          </div>
+          <div class="span9">
+
+              <h1 class="no-margin">Object Lifecycles</h1>
+              <hr class="header-line topic-line"></hr>
+
+            <!--Title: Object Lifecycles-->
+<!--Url: object-lifecycle-->
+<p>One of the most valuable functions of using an IoC container tool is its ability to manage the object <em>lifecycle</em> (creating and disposing objects) and <em>scoping</em> (shared objects)
+of your system's services so you can focus on the actual functionality instead of busy work. </p>
+
+<p>Some services like data cache's and <a href="http://martinfowler.com/eaaDev/EventAggregator.html">event aggregators</a> in your system will need to be shared across requests, screens, and handlers.
+Other services should be created new every time you ask the container for one.  Another set of services need to be <em>scoped</em> to an HTTP request or a logical transaction such that
+every request to the container for a service originating within the context of a single HTTP request gets the same object instance. </p>
+
+<p>In all the cases above, StructureMap will assemble object graphs for you using the correct scoping of each dependency.  Likewise, StructureMap can help you
+with object cleanup by calling <code>IDisposable.Dispose()</code> as appropriate when an object lifecyle is completed.</p>
+
+<div class="alert alert-info"><i class="icon-info-sign"></i>StructureMap isn't magic, you'll still need to be cognizant of the need for object cleanup.  See the section on best practices for more guidance.</div>
+
+<p><section><h4 id="motivation" class="section-header">Motivation for Container Managed Scope</h4> </p>
+
+<p>In the bad old days, we used the infamous <a href="http://c2.com/cgi/wiki?SingletonPattern">Singleton pattern</a>
+like so for objects that really needed to be scoped as one for the entire system:</p>
+
+<pre data-linenums="4" class="prettyprint lang-cs">
+    public class EvilSingleton
+    {
+        public static readonly EvilSingleton Instance = new EvilSingleton();
+
+        private EvilSingleton()
+        {
+        }
+
+        public void DoSomething()
+        {
+            // do something with the static data here
+        }
+    }
+
+
+    public class EvilSingletonUser
+    {
+        public void DoWork()
+        {
+            EvilSingleton.Instance.DoSomething();
+        }
+    }
+</pre>
+
+<p>The code above isn't terribly difficult to write or understand, but using a Singleton has some negative effects on your code explained in <a href="http://c2.com/cgi/wiki?SingletonsAreEvil">Singletons are Evil</a> and my own writing at <a href="http://codebetter.com/jeremymiller/2005/08/04/chill-out-on-the-singleton-fetish">Chill out on the Singleton Fetish</a>.</p>
+
+<p>Instead, let's just use StructureMap to handle the singleton scoping instead and rewrite the code sample above as:</p>
+
+<pre data-linenums="7" class="prettyprint lang-cs">
+    public interface ISingletonDependency
+    {
+        void DoSomething();
+    }
+
+    public class Configuration : Registry
+    {
+        public Configuration()
+        {
+            // Tell StructureMap that all types
+            // of ISingletonDependency are
+            // to be scoped as &quot;singletons&quot;
+            For&lt;ISingletonDependency&gt;()
+                .Singleton();
+        }
+    }
+
+    // This version of the class just uses constructor 
+    // injection to get an object instance of
+    // ISingletonDependency.
+    public class DependencyUser
+    {
+        private readonly ISingletonDependency _dependency;
+
+        public DependencyUser(ISingletonDependency dependency)
+        {
+            _dependency = dependency;
+        }
+
+        public void DoWork()
+        {
+            _dependency.DoSomething();
+        }
+    }
+
+</pre>
+
+<p>The big advantage to the second, StructureMap-managed singleton scoping is that my <code>DependencyUser</code> class does not have to have any knowledge of
+how the <code>ISingletonDependency</code> object is built and certainly no coupling to the hard Singleton mechanics from the first sample that was so harmful in the past.
+</section></p>
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br></br>
+    <hr></hr>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li class="active"><a href="/object-lifecycle" data-key="index">Object Lifecycles &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/the-container" title="The Container">Previous</a></li><li><a href="/object-lifecycle/supported-lifecycles" title="Supported Lifecycles">Next</a></li></ul>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+
+<script type="text/javascript" src="/_content/scripts/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/bootstrap-prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs.js"></script>
+<script type="text/javascript" src="/_content/scripts/jquery.nestable.js"></script>
+<script type="text/javascript" src="/_content/scripts/toastr.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/diagnostics/bootstrap-scrollspy.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs-tools.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap-affix.js"></script>
+<script type="text/javascript" src="/_content/scripts/topics.js"></script>
+
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>
+      Powered by <a href="http://github.com/DarthFubuMVC/FubuDocs">FubuDocs</a>.
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

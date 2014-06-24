@@ -1,0 +1,188 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>
+      StructureMap - Custom Lifecycles</title>
+    
+<meta charset="utf-8"/>
+<meta name="description" content="FubuDocs"/>
+<meta name="author" content="FubuDocs"/>
+
+
+
+
+<link href="/_content/styles/sons-of-obsidian.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr-responsive.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.core.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.theme.css" rel="stylesheet" type="text/css" />
+
+<link media="screen" type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,300">
+
+    
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" position="relative">
+      
+    <div class="container">
+      
+      
+
+<div class="row">
+  <div class="span6">
+    <p class="logo">
+      <a href="/topics" title="Fubu" class="root-link"><span>Fubu</span></a>
+      <a href="/" title="The original IoC/DI Container for .Net" class="project-logo"><span>StructureMap</span></a>
+    </p>
+  </div>
+  <div class="span6">
+    <div class="top-header text-right">
+      <em>
+        <em><a href="http://groups.google.com/group/structuremap-users?hl=en">Join our vibrant mailing list</a></em>
+      </em>
+      <div class="social">
+        <a href="https://github.com/structuremap/structuremap" class="ico-github"><img alt="Github" src="/_content/images/github-icon.png" /></a>
+      </div>
+    </div>
+  </div>
+</div>
+      
+
+      <div id="nav-follow" class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li><a href="/object-lifecycle" data-key="index">Object Lifecycles &#187;</a></li><li class="active"><a href="/object-lifecycle/custom-lifecycles" data-key="custom-lifecycles">Custom Lifecycles &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/object-lifecycle/configuring-lifecycles" title="Configuring Lifecycles">Previous</a></li><li><a href="/interception-and-decorators" title="Interception and Decorators">Next</a></li></ul>
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        
+        
+
+        <div class="row">
+          <div class="span3 sidebar" data-spy="affix" data-offset-top="150" data-offset-bottom="200">
+            
+            <h3 class="half-margin">Topics</h3>
+            <ul id="page-toc" class="nav nav-tabs nav-stacked bs-docs-sidebar">
+            </ul>
+            <br/>
+            <h3>
+              StructureMap v1.0.0
+            </h3>
+
+            <br/>
+            <h3 class="no-margin">Next</h3>
+<p><a href="/interception-and-decorators" data-key="interception-and-decorators">Interception and Decorators</a></p>
+<h3 class="no-margin">Previous</h3>
+<p><a href="/object-lifecycle/configuring-lifecycles" data-key="configuring-lifecycles">Configuring Lifecycles</a></p>
+          </div>
+          <div class="span9">
+
+              <h1 class="no-margin">Custom Lifecycles</h1>
+              <hr class="header-line topic-line"></hr>
+
+            <!--Title: Custom Lifecycles-->
+<!--Url: custom-lifecycles-->
+<p>Lifecycle's in StructureMap are pluggable.  To create your own custom lifecycle, make an implementation of the <code>ILifecycle</code> interface like this one:</p>
+
+<pre data-linenums="199" class="prettyprint lang-cs">
+    public class CustomLifecycle : ILifecycle
+    {
+        public static LifecycleObjectCache Cache = new LifecycleObjectCache();
+
+        public string Description
+        {
+            get
+            {
+                return &quot;Custom&quot;;
+            }
+        }
+
+        public void EjectAll(ILifecycleContext context)
+        {
+            // Here you&#39;d remove all the existing objects
+            // from the cache and call IDisposable.Dispose()
+            // as appropriate
+        }
+
+        public IObjectCache FindCache(ILifecycleContext context)
+        {
+            // using the context, &quot;find&quot; the appropriate
+            // IObjectCache object
+            return Cache;
+        }
+    }
+</pre>
+
+<p>Registering your custom lifecycle can be done like this:</p>
+
+<pre data-linenums="228" class="prettyprint lang-cs">
+    public class UsingCustomLifecycle : Registry
+    {
+        public UsingCustomLifecycle()
+        {
+            // at the Plugin Type level
+            For&lt;IService&gt;().LifecycleIs&lt;CustomLifecycle&gt;();
+
+            // at the Instance level
+            For&lt;IService&gt;().Use&lt;AService&gt;()
+                .LifecycleIs&lt;CustomLifecycle&gt;();
+        }
+    }
+</pre>
+
+<p>Most of the built in <code>ILifecycle</code> implementations use <code>LifecycleObjectCache</code> internally, but you may also need to create your own <code>IObjectCache</code> implementation.</p>
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br></br>
+    <hr></hr>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li><a href="/object-lifecycle" data-key="index">Object Lifecycles &#187;</a></li><li class="active"><a href="/object-lifecycle/custom-lifecycles" data-key="custom-lifecycles">Custom Lifecycles &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/object-lifecycle/configuring-lifecycles" title="Configuring Lifecycles">Previous</a></li><li><a href="/interception-and-decorators" title="Interception and Decorators">Next</a></li></ul>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+
+<script type="text/javascript" src="/_content/scripts/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/bootstrap-prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs.js"></script>
+<script type="text/javascript" src="/_content/scripts/jquery.nestable.js"></script>
+<script type="text/javascript" src="/_content/scripts/toastr.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/diagnostics/bootstrap-scrollspy.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs-tools.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap-affix.js"></script>
+<script type="text/javascript" src="/_content/scripts/topics.js"></script>
+
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>
+      Powered by <a href="http://github.com/DarthFubuMVC/FubuDocs">FubuDocs</a>.
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

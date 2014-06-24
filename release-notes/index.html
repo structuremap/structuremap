@@ -1,0 +1,164 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>
+      StructureMap - Release Notes</title>
+    
+<meta charset="utf-8"/>
+<meta name="description" content="FubuDocs"/>
+<meta name="author" content="FubuDocs"/>
+
+
+
+
+<link href="/_content/styles/toastr.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr-responsive.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.core.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.theme.css" rel="stylesheet" type="text/css" />
+
+<link media="screen" type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,300">
+
+    
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" position="relative">
+      
+    <div class="container">
+      
+      
+
+<div class="row">
+  <div class="span6">
+    <p class="logo">
+      <a href="/topics" title="Fubu" class="root-link"><span>Fubu</span></a>
+      <a href="/" title="The original IoC/DI Container for .Net" class="project-logo"><span>StructureMap</span></a>
+    </p>
+  </div>
+  <div class="span6">
+    <div class="top-header text-right">
+      <em>
+        <em><a href="http://groups.google.com/group/structuremap-users?hl=en">Join our vibrant mailing list</a></em>
+      </em>
+      <div class="social">
+        <a href="https://github.com/structuremap/structuremap" class="ico-github"><img alt="Github" src="/_content/images/github-icon.png" /></a>
+      </div>
+    </div>
+  </div>
+</div>
+      
+
+      <div id="nav-follow" class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li class="active"><a href="/release-notes" data-key="release-notes">Release Notes &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/history" title="History">Previous</a></li></ul>
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        
+        
+
+        <div class="row">
+          <div class="span3 sidebar" data-spy="affix" data-offset-top="150" data-offset-bottom="200">
+            
+            <h3 class="half-margin">Topics</h3>
+            <ul id="page-toc" class="nav nav-tabs nav-stacked bs-docs-sidebar">
+            </ul>
+            <br/>
+            <h3>
+              StructureMap v1.0.0
+            </h3>
+
+            <br/>
+            <h3 class="no-margin">Previous</h3>
+<p><a href="/history" data-key="history">History</a></p>
+          </div>
+          <div class="span9">
+
+              <h1 class="no-margin">Release Notes</h1>
+              <hr class="header-line topic-line"></hr>
+
+            <!--Title: Release Notes-->
+<!--Url: release-notes--><p><section><h4 id="3.0.1" class="section-header">Release Notes 3.0.1</h4>
+Bug fix release.  See the <a href="https://github.com/structuremap/structuremap/issues?milestone=1&amp;page=1&amp;state=closed">closed GitHub issues</a> for more information.</section></p>
+
+<p><section><h4 id="3.0" class="section-header">Release Notes 3.0</h4></p>
+
+<ul>
+<li><p>The exception messages provide contextual information about what StructureMap was trying to do when things went wrong.</p></li>
+<li><p>The nested container implementation is vastly improved, much faster (100X in my testing against a big application), and doesn’t have the massive singleton behavior bug from 2.6.*.</p></li>
+<li><p>All old <code>[Obsolete]</code> 2.5 registration syntax has been removed, and there’s been a major effort to enforce consistency throughout the registration API’s.</p></li>
+<li><p>The original StructureMap.dll has been broken up into a couple pieces.  The main assembly will be targeting PCL compliance thanks to the diligent efforts of Frank Quednau, and that means that Xml configuration and anything to do with ASP.Net has been devolved into separate assemblies and eventually into different Nuget packages.  This means that StructureMap will theoretically support WP8 and other versions of .Net for the very first time.  God help me.</p></li>
+<li><p>The strong naming has been removed.  My thought is to distribute separate Nuget packages with unsigned versions for sane folks and signed versions for enterprise-y folks.</p></li>
+<li><p>Lifecycle (scope) can be set individually on each Instance (stupid limitation left over from the very early days)
+Constructor selection can be specified per Instance.</p></li>
+<li><p>Improved diagnostics, both at runtime and for the container configuration.</p></li>
+<li><p>Improved runtime performance, especially for deep object graphs with inline dependencies (i.e., <span>LINK TO PROJECT &#39;FubuMVC&#39;</span> behavior chains).</p></li>
+<li><p>The interception model has been completely redesigned.</p></li>
+<li><p>The ancient attribute model for StructureMap configuration has been mostly removed.</p></li>
+<li><p>The “Profile” model has been much improved.</p></li>
+<li><p>The Xml configuration has been heavily streamlined.</p></li>
+<li><p>Internally, the old <code>PipelineGraph</code>, <code>InstanceFactory</code>, <code>ProfileManager</code> architecture is all gone. The new <code>PipelineGraph</code> implementations just wrap one or more <code>PluginGraph</code> objects, so there’s vastly less data structure shuffling gone on internally.</p></li>
+</ul>
+
+<p><strong>Related links:</strong></p>
+
+<ul>
+<li>http://jeremydmiller.com/2014/02/18/structuremap-3-is-gonna-tell-you-whats-wrong-and-where-it-hurts/</li>
+<li>http://jeremydmiller.com/2014/01/17/structuremap-3-0-is-very-nearly-done-no-seriously/</li>
+<li>http://jeremydmiller.com/2013/02/22/big-update-on-structuremap-3-0-progress/</li>
+<li>http://jeremydmiller.com/2013/01/30/lets-try-this-again-structuremap-3-0-in-en-route-as-of-now/
+</section></li>
+</ul>
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br></br>
+    <hr></hr>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li class="active"><a href="/release-notes" data-key="release-notes">Release Notes &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/history" title="History">Previous</a></li></ul>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+
+<script type="text/javascript" src="/_content/scripts/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs.js"></script>
+<script type="text/javascript" src="/_content/scripts/jquery.nestable.js"></script>
+<script type="text/javascript" src="/_content/scripts/toastr.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/diagnostics/bootstrap-scrollspy.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs-tools.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap-affix.js"></script>
+<script type="text/javascript" src="/_content/scripts/topics.js"></script>
+
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>
+      Powered by <a href="http://github.com/DarthFubuMVC/FubuDocs">FubuDocs</a>.
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

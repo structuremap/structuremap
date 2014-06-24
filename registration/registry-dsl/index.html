@@ -1,0 +1,221 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>
+      StructureMap - Registry DSL</title>
+    
+<meta charset="utf-8"/>
+<meta name="description" content="FubuDocs"/>
+<meta name="author" content="FubuDocs"/>
+
+
+
+
+<link href="/_content/styles/sons-of-obsidian.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr-responsive.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.core.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.theme.css" rel="stylesheet" type="text/css" />
+
+<link media="screen" type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,300">
+
+    
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" position="relative">
+      
+    <div class="container">
+      
+      
+
+<div class="row">
+  <div class="span6">
+    <p class="logo">
+      <a href="/topics" title="Fubu" class="root-link"><span>Fubu</span></a>
+      <a href="/" title="The original IoC/DI Container for .Net" class="project-logo"><span>StructureMap</span></a>
+    </p>
+  </div>
+  <div class="span6">
+    <div class="top-header text-right">
+      <em>
+        <em><a href="http://groups.google.com/group/structuremap-users?hl=en">Join our vibrant mailing list</a></em>
+      </em>
+      <div class="social">
+        <a href="https://github.com/structuremap/structuremap" class="ico-github"><img alt="Github" src="/_content/images/github-icon.png" /></a>
+      </div>
+    </div>
+  </div>
+</div>
+      
+
+      <div id="nav-follow" class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li><a href="/registration" data-key="index">Registration &#187;</a></li><li class="active"><a href="/registration/registry-dsl" data-key="registry-dsl">Registry DSL &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/registration" title="Registration">Previous</a></li><li><a href="/registration/auto-registration-and-conventions" title="Auto-Registration and Conventions">Next</a></li></ul>
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        
+        
+
+        <div class="row">
+          <div class="span3 sidebar" data-spy="affix" data-offset-top="150" data-offset-bottom="200">
+            
+            <h3 class="half-margin">Topics</h3>
+            <ul id="page-toc" class="nav nav-tabs nav-stacked bs-docs-sidebar">
+            </ul>
+            <br/>
+            <h3>
+              StructureMap v1.0.0
+            </h3>
+
+            <br/>
+            <h3 class="no-margin">Next</h3>
+<p><a href="/registration/auto-registration-and-conventions" data-key="auto-registration-and-conventions">Auto-Registration and Conventions</a></p>
+<h3 class="no-margin">Previous</h3>
+<p><a href="/registration" data-key="index">Registration</a></p>
+          </div>
+          <div class="span9">
+
+              <h1 class="no-margin">Registry DSL</h1>
+              <hr class="header-line topic-line"></hr>
+
+            <!--Title: Registry DSL-->
+<!--Url: registry-dsl-->
+<p>Creating <code>Registry</code> classes is the recommended way of using the Registry DSL. </p>
+
+<p>The Registry DSL is mostly a <a href="http://martinfowler.com/bliki/FluentInterface.html">fluent interface</a> with some nested <a href="http://en.wikipedia.org/wiki/Closure_%28computer_programming%29">closure</a> 
+usage. The intent of the Registry DSL is to make the configuration process as 
+error free as possible by using "compiler safe" expressions and defensive 
+programming to point out missing data.</p>
+
+<p><section><h4 id="registry-class" class="section-header">The Registry Class</h4></p>
+
+<p>On all but the smallest systems, the main unit of configuration will probably be 
+the <code>Registry</code> class.  Typically, you would subclass the <code>Registry</code> class, then 
+use the Fluent Interface methods exposed by the Registry class to create Container 
+configuration. Here's a sample <code>Registry</code> class below used to configure an 
+instance of an <code>IWidget</code> interface:</p>
+
+<p><pre data-linenums="47" class="prettyprint lang-cs">
+        public class PurpleRegistry : Registry
+        {
+            public PurpleRegistry()
+            {
+                For&lt;IWidget&gt;().Use&lt;AWidget&gt;();
+            }
+        }
+</pre></section></p>
+
+<p><section><h4 id="including-registries" class="section-header">Including Registries</h4></p>
+
+<p>The next question is "how does my new <code>Registry</code> class get used?" </p>
+
+<p>When you set up a <code>Container</code> or <code>ObjectFactory</code>, you need to simply direct the 
+<code>Container</code> to use the configuration in that <code>Registry</code> class:</p>
+
+<p><pre data-linenums="113" class="prettyprint lang-cs">
+        [Test]
+        public void include<em>a</em>registry()
+        {
+            var registry = new Registry();
+            registry.IncludeRegistry&lt;YellowBlueRegistry&gt;();
+            registry.IncludeRegistry&lt;RedGreenRegistry&gt;();
+            registry.IncludeRegistry&lt;PurpleRegistry&gt;();
+            // build a container
+            var container = new Container(registry);
+            // verify the default implementation and total registered implementations
+            container.GetInstance&lt;IWidget&gt;().ShouldBeOfType&lt;AWidget&gt;();
+            container.GetAllInstances&lt;IWidget&gt;().Count().ShouldEqual(5);
+        }
+</pre></section></p>
+
+<p><section><h4 id="named-instances" class="section-header">Named Instances</h4></p>
+
+<p>When you have multiple implementations of an interface, it can often be useful to
+name instances. To retrieve a specific implementation:</p>
+
+<pre data-linenums="69" class="prettyprint lang-cs">
+        [Test]
+        public void SimpleCaseWithNamedInstance()
+        {
+            container = new Container(x =&gt; { x.For&lt;IWidget&gt;().Add&lt;AWidget&gt;().Named(&quot;MyInstance&quot;); });
+            // retrieve an instance by name
+            var widget = (AWidget) container.GetInstance&lt;IWidget&gt;(&quot;MyInstance&quot;);
+            Assert.IsNotNull(widget);
+        }
+</pre>
+
+<p>You can also register named instances with the following shorthand:</p>
+
+<p><pre data-linenums="30" class="prettyprint lang-cs">
+        [Test]
+        public void A<em>concrete</em>type<em>is</em>available<em>by</em>name<em>when</em>it<em>is</em>added<em>by</em>the<em>shorthand</em>mechanism()
+        {
+            IContainer container = new Container(r =&gt; r.For&lt;IAddTypes&gt;().AddInstances(x =&gt; {
+                x.Type&lt;RedAddTypes&gt;().Named(&quot;Red&quot;);
+                x.Type&lt;GreenAddTypes&gt;().Named(&quot;Green&quot;);
+                x.Type&lt;BlueAddTypes&gt;().Named(&quot;Blue&quot;);
+                x.Type&lt;PurpleAddTypes&gt;();
+            }));
+            // retrieve the instances by name
+            container.GetInstance&lt;IAddTypes&gt;(&quot;Red&quot;).IsType&lt;RedAddTypes&gt;();
+            container.GetInstance&lt;IAddTypes&gt;(&quot;Green&quot;).IsType&lt;GreenAddTypes&gt;();
+            container.GetInstance&lt;IAddTypes&gt;(&quot;Blue&quot;).IsType&lt;BlueAddTypes&gt;();
+        }
+</pre></section></p>
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br></br>
+    <hr></hr>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li><a href="/registration" data-key="index">Registration &#187;</a></li><li class="active"><a href="/registration/registry-dsl" data-key="registry-dsl">Registry DSL &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/registration" title="Registration">Previous</a></li><li><a href="/registration/auto-registration-and-conventions" title="Auto-Registration and Conventions">Next</a></li></ul>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+
+<script type="text/javascript" src="/_content/scripts/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/bootstrap-prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs.js"></script>
+<script type="text/javascript" src="/_content/scripts/jquery.nestable.js"></script>
+<script type="text/javascript" src="/_content/scripts/toastr.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/diagnostics/bootstrap-scrollspy.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs-tools.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap-affix.js"></script>
+<script type="text/javascript" src="/_content/scripts/topics.js"></script>
+
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>
+      Powered by <a href="http://github.com/DarthFubuMVC/FubuDocs">FubuDocs</a>.
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
