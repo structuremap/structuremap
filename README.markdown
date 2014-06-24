@@ -31,7 +31,7 @@ Building the Source
 
 A copy of the [StructureMap website and documentation][3] is
 in the `StructureMap.Docs` folder.  To run the documentation
-website, run ``rake fubudocs:run` or `fubudocs run -o` in the
+website, run `rake fubudocs:run` or `fubudocs run -o` in the
 command prompt.
 
 Please post any questions or bugs to the
