@@ -1,100 +1,204 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
-	<head>
-		<title>StructureMap Home Page</title>
-		<link rel="stylesheet" type="text/css" href="style.css" />
-		<script type="text/javascript" src="jquery-1.2.6.js"></script>
-		<script type="text/javascript" src="structuremap.js"></script>
-	</head>
-	<body>
 
-				<p>
-					StructureMap is a <a href="http://www.martinfowler.com/articles/injection.html">Dependency 
-						Injection</a> / <a href="InversionOfControl.htm">Inversion of Control</a> tool for .Net that can be used to improve the&nbsp;architectural 
-					qualities of an object oriented system by reducing the mechanical costs of good 
-					design techniques. StructureMap can enable looser coupling between classes and 
-					their dependencies, improve the testability of a class structure, and provide 
-					generic flexibility mechanisms. Used judiciously, StructureMap can greatly 
-					enhance the opportunities for code reuse by minimizing direct coupling between 
-					classes and configuration mechanisms.</p>
-                <p>
-                    StructureMap is released under the permissive Apache 2 OSS license.&nbsp; You are
-                    free to download, modify, or redistribute StructureMap in any way you see fit <b>
-                    without restriction</b>.</p>
-                <p>
-                    Consider using StructureMap if you:</p>
-				<ul>
-					<li>
-					Require significant extensibility
-					<li>
-					    Simply want a generic configuration tool<li>
-					    Want to support multiple deployment configurations<li>
-					Are using a Test-Driven Development philosophy or want to largely automate 
-					testing
-					<li>
-					Want to isolate a troublesome subsystem or provide smooth migration paths away 
-					from legacy interfaces
-					<li>
-						Need a great deal of configurable&nbsp;properties or plugin hot spots&nbsp;</li>
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>
+      StructureMap - StructureMap</title>
+    
+<meta charset="utf-8"/>
+<meta name="description" content="FubuDocs"/>
+<meta name="author" content="FubuDocs"/>
+
+
+
+
+<link href="/_content/styles/toastr.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr-responsive.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.core.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.theme.css" rel="stylesheet" type="text/css" />
+
+<link media="screen" type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,300">
+
+    
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" position="relative">
+      
+    <div class="container">
+      
+      
+
+<div class="row">
+  <div class="span6">
+    <p class="logo">
+      <a href="/topics" title="Fubu" class="root-link"><span>Fubu</span></a>
+      <a href="/" title="The original IoC/DI Container for .Net" class="project-logo"><span>StructureMap</span></a>
+    </p>
+  </div>
+  <div class="span6">
+    <div class="top-header text-right">
+      <em>
+        <em><a href="http://groups.google.com/group/structuremap-users?hl=en">Join our vibrant mailing list</a></em>
+      </em>
+      <div class="social">
+        <a href="https://github.com/structuremap/structuremap" class="ico-github"><img alt="Github" src="/_content/images/github-icon.png" /></a>
+      </div>
+    </div>
+  </div>
+</div>
+      
+
+      <div id="nav-follow" class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <ul class="nav"><li class="active"><a href="/" data-key="index">StructureMap &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/quickstart" title="A Gentle Quickstart">Next</a></li></ul>
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        
+        
+
+        <div class="row">
+          <div class="span3 sidebar" data-spy="affix" data-offset-top="150" data-offset-bottom="200">
+            
+            <h3 class="half-margin">Topics</h3>
+            <ul id="page-toc" class="nav nav-tabs nav-stacked bs-docs-sidebar">
+            </ul>
+            <br/>
+            <h3>
+              StructureMap v1.0.0
+            </h3>
+
+            <br/>
+            <h3 class="no-margin">Next</h3>
+<p><a href="/quickstart" data-key="quickstart">A Gentle Quickstart</a></p>
+          </div>
+          <div class="span9">
+
+
+            <!--Title: StructureMap-->
+
+
+<div class="well">
+	<div class="container">
+		<div class="row">
+			<div class="span6">
+				<h2>StructureMap</h2>
+				<p class="lead tag-line half-margin">The original IoC/DI Container for .Net</p>
+				<p class="margin"></p>
+				
+        <!--
+        <div class="accordion-group">
+					<div class="accordion-heading">
+						<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#nugets">
+							Associated NuGets
+						</a>
+					</div>
+          
+          
+						<div id="nugets" class="accordion-body collapse">
+							<div class="accordion-inner">
+								<dl>
+										<dt>
+											<a href="http://nuget.org/Packages/FubuMVC.StructureMap3">FubuMVC.StructureMap3</a>
+										</dt>
+										<dd>StructureMap3 bootstrapping for FubuMVC applications</dd>
+										<dt>
+											<a href="http://nuget.org/Packages/structuremap.automocking.moq">structuremap.automocking.moq</a>
+										</dt>
+										<dd>AutoMocker with StructureMap for Moq</dd>
+										<dt>
+											<a href="http://nuget.org/Packages/structuremap.automocking">structuremap.automocking</a>
+										</dt>
+										<dd>StructureMap AutoMocker for RhinoMocks</dd>
+										<dt>
+											<a href="http://nuget.org/Packages/structuremap">structuremap</a>
+										</dt>
+										<dd>StructureMap is a Dependency Injection / Inversion of Control tool for .Net that can be used to improve the architectural qualities of an object oriented system by reducing the mechanical costs of good design techniques. StructureMap can enable looser coupling between classes and their dependencies, improve the testability of a class structure, and provide generic flexibility mechanisms. Used judiciously, StructureMap can greatly enhance the opportunities for code reuse by minimizing direct coupling between classes and configuration mechanisms.</dd>
+										<dt>
+											<a href="http://nuget.org/Packages/structuremap.web">structuremap.web</a>
+										</dt>
+										<dd>This is a package that provides support for Web-related lifecycles in StructureMap.</dd>
+								</dl>
+							</div>
+
+						</div>
+				</div>
+        
+			</div>
+			<div class="span4" id="status-widget">
+        <!--
+				<h3 class="half-margin">Build Status</h3>
+				<ul class="build-list" id="build-widget" data-build-type="!{Model.TeamCityBuildType}">
 				</ul>
-				<p>Do not use StructureMap if an application or process requires little 
-					flexibility. The abstraction and indirection afforded by StructureMap is 
-					unnecessary and even harmful in simpler systems or processes.&nbsp;</p>
-                <p>The easiest way to get started is with the <a href="QuickStart.htm">StructureMap 
-                    QuickStart</a>.&nbsp; Please send any questions or suggestions to the
-                    <a href="http://groups.google.com/group/structuremap-users/post?hl=en">
-                    StructureMap User Group</a> on Google Groups.</p>
-                <p>&nbsp;</p>
-				<h2>Status</h2>
-				<p>StructureMap is the oldest IoC/DI tool for .Net development and has been used in multiple production systems 
-				since 
-					June 2004.&nbsp; The current version 2.5.2 was released in January 2009, with a 
-                    2.6 release scheduled for no later than the end of January 2009.&nbsp; StructureMap is 
-                    primarily maintained and developed by   
-				<a href="mailto:jeremydmiller@yahoo.com?subject=StructureMap">Jeremy D. Miller</a>,
-				<a href="http://codebetter.com/blogs/jeremy.miller">The 
-				Shade Tree Developer</a> and 
-                    <a href="http://www.lostechies.com/blogs/joshuaflanagan/default.aspx">Joshua Flanagan</a> with other contributions from 
-                    the community.</p>
-                <hr />
-                <h2>Related Links:</h2>
-        <ul>
-            <li><a href="http://flimflan.com/blog/HelloStructureMap.aspx">Hello StructureMap</a>
-            </li>
-            <li><a href="http://frickinsweet.com/ryanlanciaux.com/post/Very-Quick-and-Simple-Dependency-Injection-with-StructureMap.aspx">
-                Very Quick and Simple Dependency Injection with StructureMap</a> </li>
-            <li><a href="http://dimecasts.net/Casts/ByTag/StructureMap">StructureMap ScreenCasts on 
-                DimeCasts</a> </li>
-            <li><a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/10/25/initializing-and-configuring-a-structuremap-container.aspx">
-                Initializing and Configuring a StructureMap Container</a> </li>
-            <li><a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/10/25/embedding-structuremap-configuration-into-the-app-config-file.aspx">
-                Embedding StructureMap configuration into the App.config file</a> </li>
-            <li><a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/10/25/the-structuremap-config-file.aspx">
-                The StructureMap.Config File</a> </li>
-            <li><a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/10/18/using-the-structuremap-container-independent-of-objectfactory.aspx">
-                Using the StructureMap Container independent of ObjectFactory</a> </li>
-            <li><a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/10/18/profile-s-in-structuremap.aspx">
-                Profile’s in StructureMap</a> </li>
-            <li><a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/10/18/using-structuremap-2-5-to-scan-all-assemblies-in-a-folder.aspx">
-                Using StructureMap 2.5 to scan all assemblies in a folder</a> </li>
-            <li><a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/10/08/setter-injection-in-structuremap-2-5.aspx">
-                Setter Injection in StructureMap 2.5</a> </li>
-            <li><a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/09/25/using-structuremap-2-5-to-inject-your-entity-objects-into-services.aspx">
-                Using StructureMap 2.5 to inject your Entity objects into Services</a> </li>
-            <li><a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/09/10/using-the-structuremap-container-independently-of-objectfactory.aspx">
-                Using the StructureMap Container independently of ObjectFactory</a> </li>
-            <li><a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/08/20/smartinstance-in-structuremap-2-5.aspx">
-                “SmartInstance” in StructureMap 2.5</a> </li>
-            <li><a href="http://devlicio.us/blogs/derik_whittaker/archive/2008/08/13/contextual-binding-with-structuremap-2-5.aspx">
-                Contextual Binding with StructureMap 2.5</a> </li>
-            <li><a href="http://www.lostechies.com/blogs/chad_myers/archive/2008/06/11/neat-tricks-with-structuremap.aspx">
-                Neat Tricks with StructureMap</a> </li>
-            <li><a href="http://www.lostechies.com/blogs/jimmy_bogard/archive/2008/07/29/integrating-structuremap-with-wcf.aspx">
-                Integrating StructureMap with WCF</a> </li>
-        </ul>
-	
-				<hr />
-                <p>&nbsp;</p>
+        -->
+      </div>
+        <div class="span6">
+          <h3 class="half-margin" id="community">Community</h3>
+          <a class="btn btn-info" href="https://github.com/structuremap/structuremap">Github</a>
+          <a class="btn btn-inverse" href="http://groups.google.com/group/structuremap-users?hl=en">Mailing List</a>
+        </div>
 
-	</body>
+			
+		</div>
+	</div>
+</div>
+
+StructureMap is the oldest, continuously used IoC/DI container for .Net with an original release and usage in a production application all the way back in June 2004 on .Net 1.1.  
+The current 3.0 release represents 10 years of lessons learned in the StructureMap and greater .Net community -- while also wiping away a **lot** of legacy design
+decisions that no longer make sense today.
+
+<br></br>
+
+<div><h2 class="half-margin">Table of Contents</h2><ul class="table-of-contents"><li><a href="/quickstart">A Gentle Quickstart</a></li><li><a href="/glossary">Glossary</a></li><li><a href="/get-structuremap">Get StructureMap</a></li><li><a href="/features">Features</a></li><li><a href="/software-design-concepts">Software Design Concepts</a></li><li><a href="/registration">Registration</a><ul><li><a href="/registration/registry-dsl">Registry DSL</a></li><li><a href="/registration/auto-registration-and-conventions">Auto-Registration and Conventions</a></li><li><a href="/registration/inline-dependencies">Inline Dependencies</a></li><li><a href="/registration/changing-configuration-at-runtime">Changing Configuration at Runtime</a></li><li><a href="/registration/setter-injection-policies">Setter Injection Policies</a></li><li><a href="/registration/on-missing-family-policies">On Missing Family Policies</a></li><li><a href="/registration/constructor-selection">Constructor Selection</a></li><li><a href="/registration/configuring-the-raw-model">Configuring the Raw Model</a></li><li><a href="/registration/fallback-services">Fallback Services</a></li><li><a href="/registration/xml registration">XML registration</a></li></ul></li><li><a href="/resolving">Resolving Services</a><ul><li><a href="/resolving/get-a-service-by-plugintype">Get a Service by PluginType</a></li><li><a href="/resolving/get-a-service-by-plugin-type-and-name">Get a Service by Plugin Type and Name</a></li><li><a href="/resolving/get-all-services-by-plugin-type">Get all Services by Plugin Type</a></li><li><a href="/resolving/try-getting-an-optional-service-by-plugin-type">Try Getting an Optional Service by Plugin Type</a></li><li><a href="/resolving/try-geting-an-optional-service-by-plugin-type-and-name">Try Geting an Optional Service by Plugin Type and Name</a></li><li><a href="/resolving/passing-arguments-at-runtime">Passing Arguments at Runtime</a></li><li><a href="/resolving/requesting-a-concrete-type">Requesting a Concrete Type</a></li></ul></li><li><a href="/the-container">The Container</a><ul><li><a href="/the-container/structuremap-assumptions">StructureMap Assumptions</a></li><li><a href="/the-container/auto-wiring">Auto Wiring</a></li><li><a href="/the-container/working-with-the-icontext-at-build-time">Working with the IContext at Build Time</a></li><li><a href="/the-container/forwarding-requests-for-a-type-to-another-type">Forwarding Requests for a Type to Another Type</a></li><li><a href="/the-container/profiles-and-child-containers">Profiles and Child Containers</a></li><li><a href="/the-container/nested-containers">Nested Containers (Per Request/Transaction)</a></li><li><a href="/the-container/working-with-generic-types">Working with Generic Types</a></li><li><a href="/the-container/working-with-enumerable-types">Working with Enumerable Types</a></li><li><a href="/the-container/handling-missing-named-instances">Handling Missing Named Instances</a></li></ul></li><li><a href="/object-lifecycle">Object Lifecycles</a><ul><li><a href="/object-lifecycle/supported-lifecycles">Supported Lifecycles</a></li><li><a href="/object-lifecycle/configuring-lifecycles">Configuring Lifecycles</a></li><li><a href="/object-lifecycle/custom-lifecycles">Custom Lifecycles</a></li></ul></li><li><a href="/interception-and-decorators">Interception and Decorators</a></li><li><a href="/interpreting-exceptions">Interpreting Exceptions</a></li><li><a href="/diagnostics">Diagnostics</a><ul><li><a href="/diagnostics/whatdoihave">WhatDoIHave()</a></li><li><a href="/diagnostics/validating-container-configuration">Validating Container Configuration</a></li><li><a href="/diagnostics/environment-tests">Environment Tests</a></li><li><a href="/diagnostics/build-plans">Build Plans</a></li><li><a href="/diagnostics/using-the-container-model">Using the Container Model</a></li></ul></li><li><a href="/extensions">Extensions</a><ul><li><a href="/extensions/automocking">AutoMocking</a></li><li><a href="/extensions/autofactory">AutoFactory</a></li><li><a href="/extensions/3rd-party">3rd Party</a></li></ul></li><li><a href="/integrations">Integrations</a><ul><li><a href="/integrations/fubumvc-and-fubutransportation">FubuMVC and FubuTransportation</a></li><li><a href="/integrations/aspnet-mvc">ASP.Net MVC</a></li><li><a href="/integrations/web-api">Web API</a></li><li><a href="/integrations/nancyfx">NancyFx</a></li><li><a href="/integrations/simpleweb">Simple.Web</a></li><li><a href="/integrations/signalr">SignalR</a></li><li><a href="/integrations/nservicebus">NServiceBus</a></li><li><a href="/integrations/masstransit">MassTransit</a></li><li><a href="/integrations/entity-framework">Entity Framework</a></li><li><a href="/integrations/nhibernate">NHibernate</a></li><li><a href="/integrations/automapper">AutoMapper</a></li></ul></li><li><a href="/architecture">Internals and Architecture</a></li><li><a href="/best-practices">Best Practices</a></li><li><a href="/faq">FAQ</a></li><li><a href="/roadmap">Roadmap</a></li><li><a href="/history">History</a></li><li><a href="/release-notes">Release Notes</a></li></ul></div>
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br></br>
+    <hr></hr>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav"><li class="active"><a href="/" data-key="index">StructureMap &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/quickstart" title="A Gentle Quickstart">Next</a></li></ul>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+
+<script type="text/javascript" src="/_content/scripts/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/build-status.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs.js"></script>
+<script type="text/javascript" src="/_content/scripts/jquery.nestable.js"></script>
+<script type="text/javascript" src="/_content/scripts/toastr.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/diagnostics/bootstrap-scrollspy.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs-tools.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap-affix.js"></script>
+<script type="text/javascript" src="/_content/scripts/topics.js"></script>
+
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>
+      Powered by <a href="http://github.com/DarthFubuMVC/FubuDocs">FubuDocs</a>.
+    </p>
+  </div>
+</footer>
+  </body>
 </html>

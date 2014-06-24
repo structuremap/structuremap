@@ -1,0 +1,373 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>
+      StructureMap - Glossary</title>
+    
+<meta charset="utf-8"/>
+<meta name="description" content="FubuDocs"/>
+<meta name="author" content="FubuDocs"/>
+
+
+
+
+<link href="/_content/styles/sons-of-obsidian.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/twitter/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/toastr-responsive.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.core.css" rel="stylesheet" type="text/css" />
+<link href="/_content/styles/fubudocs.theme.css" rel="stylesheet" type="text/css" />
+
+<link media="screen" type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,300">
+
+    
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" position="relative">
+      
+    <div class="container">
+      
+      
+
+<div class="row">
+  <div class="span6">
+    <p class="logo">
+      <a href="/topics" title="Fubu" class="root-link"><span>Fubu</span></a>
+      <a href="/" title="The original IoC/DI Container for .Net" class="project-logo"><span>StructureMap</span></a>
+    </p>
+  </div>
+  <div class="span6">
+    <div class="top-header text-right">
+      <em>
+        <em><a href="http://groups.google.com/group/structuremap-users?hl=en">Join our vibrant mailing list</a></em>
+      </em>
+      <div class="social">
+        <a href="https://github.com/structuremap/structuremap" class="ico-github"><img alt="Github" src="/_content/images/github-icon.png" /></a>
+      </div>
+    </div>
+  </div>
+</div>
+      
+
+      <div id="nav-follow" class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li class="active"><a href="/glossary" data-key="glossary">Glossary &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/quickstart" title="A Gentle Quickstart">Previous</a></li><li><a href="/get-structuremap" title="Get StructureMap">Next</a></li></ul>
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        
+        
+
+        <div class="row">
+          <div class="span3 sidebar" data-spy="affix" data-offset-top="150" data-offset-bottom="200">
+            
+            <h3 class="half-margin">Topics</h3>
+            <ul id="page-toc" class="nav nav-tabs nav-stacked bs-docs-sidebar">
+            </ul>
+            <br/>
+            <h3>
+              StructureMap v1.0.0
+            </h3>
+
+            <br/>
+            <h3 class="no-margin">Next</h3>
+<p><a href="/get-structuremap" data-key="get-structuremap">Get StructureMap</a></p>
+<h3 class="no-margin">Previous</h3>
+<p><a href="/quickstart" data-key="quickstart">A Gentle Quickstart</a></p>
+          </div>
+          <div class="span9">
+
+              <h1 class="no-margin">Glossary</h1>
+              <hr class="header-line topic-line"></hr>
+
+            <!--Title: Glossary-->
+<p>There are some terms that reoccur throughout the documentation and show up in the StructureMap API. Understanding these terms and how they relate to StructureMap isn't a prerequisite to using StructureMap, but it helps.</p>
+
+<p><section><h4 id="container" class="section-header">Container</h4>
+Tools like StructureMap are generally known as <em>Inversion of Control (IoC) Containers</em> or <em>Dependency Injection (DI) Containers</em>. In the Java world they are also known as <em>Lightweight Containers</em> to differentiate them from the older <em>EJB Containers</em>.</p>
+
+<p>A container is a tool that can help you composing object graphs and managing their scope (lifecycle). Altough you can do Inversion of Control and Dependecy Injection manually, using tools like StructureMap makes you far more productive and succesfull in doing so.</p>
+
+<p>Obviously there is more to a container then resolving services and managing their scope, but in the core that's just what it is. Before you can do so you need to tell StructureMap, the container, how it must compose those objects graphs and what their lifecycle is. This is called registration and can be done in various mixed ways. The strongly recommend way would be using the <a href="/registration/registry-dsl" data-key="registry-dsl">Registry DSL</a>. In your registration your bassicaly mapping abstractions to concrete types and define their lifecycle.</p>
+
+<p>A simple example of a container using the <a href="/registration/registry-dsl" data-key="registry-dsl">Registry DSL</a>:</p>
+
+<pre data-linenums="6" class="prettyprint lang-cs">
+public class FooBarRegistry : Registry
+{
+    public FooBarRegistry()
+    {
+        For&lt;IFoo&gt;().Use&lt;Foo&gt;();
+        For&lt;IBar&gt;().Use&lt;Bar&gt;();
+    }
+}
+</pre>
+
+<pre data-linenums="8" class="prettyprint lang-cs">
+var container = new Container(c =&gt;
+{
+    c.AddRegistry&lt;FooBarRegistry&gt;();
+});
+</pre>
+
+<p>Because we didn't specify the lifecycle for both registrations, the default <code>Transient</code> lifecycle will be used.  This will instruct the container to create a new instance for every request for a plugin type <code>IFoo</code> or <code>IBar</code>. </p>
+
+<p>More advanced features that the container can do are things like: Interception, Auto-Wiring, Forwarding Types.<br />
+</section></p>
+
+<p><section><h4 id="nested-container" class="section-header">Nested Container</h4>
+A nested container is kind of like a temporary clone of a existing container, but scoped for short lived transactions or web requests. For example you can add additional configuration for contextual, scoped services or for making sure that whenever the nested container is disposed all the transient objects that the container created and implements <code>IDisposable</code> are disposed as well.</p>
+
+<p>You can ask a existing container to create a nested container for you like in the following example:</p>
+
+<pre data-linenums="19" class="prettyprint lang-cs">
+using (IContainer nested = someExistingContainer.GetNestedContainer())
+{
+    // pull other objects from the nested container and do work with those services
+    var service = nested.GetInstance&lt;IService&gt;();
+    service.DoSomething();
+}
+</pre>
+
+<p>For more detailed information about nested containers and their special properties you can read the <a href="/the-container/nested-containers" data-key="nested-containers">Nested Containers (Per Request/Transaction)</a> topic.
+</section></p>
+
+<p><section><h4 id="plugin-and-plugged-type" class="section-header">PluginType and PluggedType</h4>
+The term plugin type is used throughout the code and documentation to mean the type that you want to register or resolve. More generally this type is known as the service type. This type can be a concrete class or in most cases, it will be a form of abstraction like an abstract class or interface. </p>
+
+<p>The term plugged type means the actual concrete type that you get when you request the plugin type. This type must obviously implement the plugin type contract.</p>
+
+<p>In your registration you could have something like this:</p>
+
+<pre data-linenums="17" class="prettyprint lang-cs">
+public class FooRegistry : Registry
+{
+    public FooRegistry()
+    {
+        For&lt;IFoo&gt;().Use&lt;Foo&gt;();        
+    }
+}
+</pre>
+
+<pre data-linenums="31" class="prettyprint lang-cs">
+//For&lt;PLUGINTYPE&gt;().Use&lt;PLUGGEDTYPE&gt;()
+
+var container = new Container(c =&gt;
+{
+    c.AddRegistry&lt;FooRegistry&gt;();
+});
+
+container.GetInstance&lt;IFoo&gt;();
+
+//container.GetInstance&lt;PLUGINTYPE&gt;()
+</pre>
+
+<p>If you request an object of <code>IFoo</code>, you'll get an instance of the <code>Foo</code> class. In this case, <code>IFoo</code> is the plugin type (what you're asking for) and <code>Foo</code> is the plugged type (the concrete class you'll get that fulfills, implements the plugin type contract).
+</section></p>
+
+<p><section><h4 id="plugin-family" class="section-header">PluginFamily</h4>
+This term you will not see so often because it's mostly used by StructureMap itself. A <code>PluginFamily</code> represents a <a href="http://en.wikipedia.org/wiki/Common_Language_Runtime">CLR</a> type (the plugin type) that StructureMap can build, and all of the possible plugged types that implement the <a href="http://en.wikipedia.org/wiki/Common_Language_Runtime">CLR</a> type.</p>
+
+<p>In the following code StructureMap internally creates one <code>PluginFamily</code> of the plugin type <code>IFoo</code> with two instances <code>Foo</code> and <code>SomeOtherFoo</code>, where <code>Foo</code> is the default instance because it's registered through <code>For&lt;PLUGIN_TYPE&gt;().Use&lt;PLUGGED_TYPE&gt;()</code>.</p>
+
+<pre data-linenums="47" class="prettyprint lang-cs">
+var container = new Container(c =&gt;
+{
+    c.For&lt;IFoo&gt;().Use&lt;Foo&gt;();
+    c.For&lt;IFoo&gt;().Add&lt;SomeOtherFoo&gt;();
+});
+</pre> 
+
+<p>Before StructureMap 3.0 you have probably seen the term used in an exception message when you request a plugin type that doesn't have a default instance defined.</p>
+
+<pre><code>StructureMap Exception Code:  202
+No Default Instance defined for PluginFamily [plugin type]
+</code></pre>
+
+<p>This specific exception message is gone in 3.0 because the exception messages where vastly improved in version 3.0.
+</section></p>
+
+<p><section><h4 id="plugin-graph" class="section-header">Plugin Graph</h4></p>
+
+<p>A <code>PluginGraph</code> is the configuration model of the runtime configuration of a StructureMap container. The <code>PluginGraph</code> model can be manipulated directly in StructureMap 3.0 for
+any kind of special convention that doesn't fit into the existing conventional support.</section></p>
+
+<p><section><h4 id="pipeline-graph" class="section-header">PipelineGraph</h4></section></p>
+
+<p><section><h4 id="instance" class="section-header">Instance</h4></p>
+
+<p>In StructureMap terms, an "Instance" is a way to build or locate a named object instance for a requested PluginType.  An "Instance" does not automatically equate to a concrete type.  For example, let's say that we're building a system to automate a warehouse.  Our system might consume an interface called IShippingService that acts as a Gateway to various ways of shipping boxes out of our warehouse.</p>
+
+<pre data-linenums="33" class="prettyprint lang-cs">
+    public interface IShippingService
+    {
+        void ShipIt();
+    }
+</pre>
+
+<p>Our warehouse system might have to interact with three types of shipping:  domestic, international, and intra-company or internal shipments.  The internal shipping service runs in process with the warehouse application, but domestic and international shipping is done by invoking external web services.  The registration of the IShippingService Instances might look like this:</p>
+
+<pre data-linenums="63" class="prettyprint lang-cs">
+    public class ShippingRegistry : Registry
+    {
+        public ShippingRegistry()
+        {
+            For&lt;IShippingService&gt;().AddInstances(x =&gt; {
+                x.Type&lt;ShippingWebService&gt;()
+                    .Ctor&lt;string&gt;(&quot;url&quot;).Is(&quot;a url&quot;)
+                    .Named(&quot;Domestic&quot;);
+
+                x.Type&lt;ShippingWebService&gt;()
+                    .Ctor&lt;string&gt;(&quot;url&quot;).Is(&quot;a different url&quot;)
+                    .Named(&quot;International&quot;);
+
+                x.Type&lt;InternalShippingService&gt;().Named(&quot;Internal&quot;);
+            });
+        }
+    }
+</pre>
+
+<p>In the registration code above, there are three "Instance's."  You can access the various IShippingService Instance's by name:</p>
+
+<pre data-linenums="87" class="prettyprint lang-cs">
+            var container = new Container(new ShippingRegistry());
+
+            // Accessing the IShippingService Instance&#39;s by name
+            var internationalService = container.GetInstance&lt;IShippingService&gt;(&quot;International&quot;);
+            var domesticService = container.GetInstance&lt;IShippingService&gt;(&quot;Domestic&quot;);
+            var internalService = container.GetInstance&lt;IShippingService&gt;(&quot;Internal&quot;);
+
+</pre>
+
+<p>Asking for the "International" or the "Domestic" instance of IShippingService will both return an object of type ShippingWebService, but the two objects will be differently configured with unique Url's.</p>
+
+<p>There is an actual class in StructureMap that represents an "<a href="https://github.com/structuremap/structuremap/blob/master/src/StructureMap/Pipeline/Instance.cs">Instance</a>."  </p>
+
+<p>When you call <code>Container.GetInstance&lt;T&gt;("the instance that I want")</code> or <code>Container.GetInstance&lt;T&gt;()</code>, the internal <code>Container</code> object is locating the correct Instance object and then using the Instance's internal <em>build plan</em> to resolve or construct the actual object.
+</section></p>
+
+<p><section><h4 id="lifecycle" class="section-header">Lifecycle (or Scope)</h4></p>
+
+<p>The power of an IoC container isn't just in building object graphs for you, it's also about <em>scoping</em> an object graph to what StructureMap calls a <em>lifecycle</em>.  Think of it this way,
+when you ask StructureMap for a service or much more commonly when StructureMap is filling a dependency behind the scenes, do you want:</p>
+
+<ul>
+<li>A brand new, unique object each time?</li>
+<li>The exact same object as the rest of the graph is using?</li>
+<li>The exact same object every single time throughout the application?
+</section></li>
+</ul>
+
+<p><section><h4 id="registry" class="section-header">Registry</h4></p>
+
+<p>A <code>Registry</code> or a sub class of <code>Registry</code> is a class that let's you create reusable configuration for StructureMap containers.
+</section></p>
+
+<p><section><h4 id="profile" class="section-header">Profile</h4></p>
+
+<p>StructureMap 3.0 features a complete rewrite of the ancient <em>Profile</em> functionality where you can create your base Container configuration with additional <em>Profile</em> 
+configuration that overrides one or more of the parent Container defaults.  The <em>Profile</em> functionality was originally meant to handle difference between
+development, testing, and production environments but has been more commonly used for multi-tenancy situations.  Think of a <em>Profile</em> as an application or tenant mode.
+</section></p>
+
+<p><section><h4 id="auto-wiring" class="section-header">Auto wiring</h4>
+You'd never get anything done if you had to tell StructureMap how to build each and every constructor or setter dependency on every concrete class.  Fortunately, StructureMap like
+most IoC container tools, supports the concept of <em>auto-wiring</em> -- meaning that StructureMap can happily infer dependency requirements from constructor functions and setter
+rules and fill those dependencies with the default configuration for the declared dependency type.</p>
+
+<p>Let's just see it in action:</p>
+
+<pre data-linenums="8" class="prettyprint lang-cs">
+    public interface Xman{}
+    public class Cyclops : Xman{}
+
+    public interface Avenger{}
+    public class IronMan : Avenger{}
+
+    public class CrossoverEvent
+    {
+        public Xman Xman { get; set; }
+        public Avenger Avenger { get; set; }
+
+        public CrossoverEvent(Xman xman, Avenger avenger)
+        {
+            Xman = xman;
+            Avenger = avenger;
+        }
+    }
+
+    public class UsingCrossover
+    {
+        [Test]
+        public void showing_auto_wiring()
+        {
+            var container = new Container(x =&gt; {
+                x.For&lt;Xman&gt;().Use&lt;Cyclops&gt;();
+                x.For&lt;Avenger&gt;().Use&lt;IronMan&gt;();
+            });
+
+            // Notice that at no point did we define how to 
+            // build CrossoverEvent.  
+            var @event = container.GetInstance&lt;CrossoverEvent&gt;();
+            @event.Avenger.ShouldBeOfType&lt;IronMan&gt;();
+            @event.Xman.ShouldBeOfType&lt;Cyclops&gt;();
+        }
+    }
+</pre>
+
+<p></section></p>
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br></br>
+    <hr></hr>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav"><li><a href="/" data-key="index">StructureMap &#187;</a></li><li class="active"><a href="/glossary" data-key="glossary">Glossary &#187;</a></li></ul>
+<ul class="nav" style="float:right"><li><a href="/quickstart" title="A Gentle Quickstart">Previous</a></li><li><a href="/get-structuremap" title="Get StructureMap">Next</a></li></ul>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+
+<script type="text/javascript" src="/_content/scripts/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/bootstrap-prettify.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs.js"></script>
+<script type="text/javascript" src="/_content/scripts/jquery.nestable.js"></script>
+<script type="text/javascript" src="/_content/scripts/toastr.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap.min.js"></script>
+<script type="text/javascript" src="/_content/scripts/diagnostics/bootstrap-scrollspy.js"></script>
+<script type="text/javascript" src="/_content/scripts/fubudocs-tools.js"></script>
+<script type="text/javascript" src="/_content/scripts/twitter/bootstrap-affix.js"></script>
+<script type="text/javascript" src="/_content/scripts/topics.js"></script>
+
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>
+      Powered by <a href="http://github.com/DarthFubuMVC/FubuDocs">FubuDocs</a>.
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

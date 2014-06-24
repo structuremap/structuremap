@@ -1,0 +1,35 @@
+#Constraints
+{
+    padding: 0pt 0.7em;
+}
+
+#nodes
+{
+    width:600px;
+    margin-left: 0;
+}
+
+#nodes ul {
+    margin-left: 20px;
+}
+#nodes ul li {
+    color: #666;
+}
+#nodes li
+{
+    list-style-type: none;
+    margin-top:10px;
+}
+#nodes .behavior {
+    color: #000;
+}
+h2.route
+{
+    margin-bottom:0;
+}
+.route span {
+    color: #ccc;
+}
+.arrow {
+    margin-left: 20px;
+}
