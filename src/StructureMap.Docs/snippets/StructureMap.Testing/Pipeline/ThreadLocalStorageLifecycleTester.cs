@@ -62,6 +62,14 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void object_has_been_created()
+        {
+            container.Model.For<Rule>().Default.ObjectHasBeenCreated().ShouldBeFalse();
+            var r1 = container.GetInstance<Rule>();
+            container.Model.For<Rule>().Default.ObjectHasBeenCreated().ShouldBeTrue();
+        }
+
+        [Test]
         public void FindUniqueInstancePerThread()
         {
             var t1 = new Thread(findRule1);

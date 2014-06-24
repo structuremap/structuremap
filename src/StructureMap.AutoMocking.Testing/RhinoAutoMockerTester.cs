@@ -93,5 +93,37 @@ namespace StructureMap.AutoMocking.Testing
             // This retrieves the mock object for IMockedService
             autoMocker.Get<IMockedService>().AssertWasCalled(s => s.Go());
         }
+
+        [Test]
+        public void use_a_mock_object_for_concrete_class_dependency()
+        {
+            var autoMocker = new RhinoAutoMocker<ClassThatUsesConcreteDependency>();
+
+            
+
+            autoMocker.ClassUnderTest.Dependency.Go();
+
+            autoMocker.Get<ConcreteDependency>().AssertWasCalled(x => x.Go());
+        }
+    }
+
+    public class ClassThatUsesConcreteDependency
+    {
+        private readonly ConcreteDependency _dependency;
+
+        public ClassThatUsesConcreteDependency(ConcreteDependency dependency)
+        {
+            _dependency = dependency;
+        }
+
+        public ConcreteDependency Dependency
+        {
+            get { return _dependency; }
+        }
+    }
+
+    public class ConcreteDependency
+    {
+        public virtual void Go(){}
     }
 }

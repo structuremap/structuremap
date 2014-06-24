@@ -28,7 +28,7 @@ namespace StructureMap.AutoMocking
 
         public PluginFamily Build(Type pluginType)
         {
-            if (pluginType.IsConcrete())
+            if (pluginType.IsConcrete() && pluginType.GetConstructors().All(x => x.GetParameters().Count() != 0))
             {
                 return null;
             }

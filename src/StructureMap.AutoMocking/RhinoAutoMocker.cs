@@ -27,6 +27,7 @@ namespace StructureMap.AutoMocking
         {
             ServiceLocator = createLocator(mockMode);
             Container = new AutoMockedContainer(ServiceLocator);
+            Container.Configure(x => x.For<T>().Use<T>());
         }
 
         private ServiceLocator createLocator(MockMode mode)

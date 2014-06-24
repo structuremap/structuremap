@@ -177,8 +177,7 @@ namespace StructureMap.AutoMocking
         /// <typeparam name="T"></typeparam>
         public void UseConcreteClassFor<T>() where T : class
         {
-            var concreteClass = Container.GetInstance<T>();
-            Container.Inject(concreteClass);
+            Container.Configure(x => x.For<T>().Use<T>());
         }
 
         /// <summary>
