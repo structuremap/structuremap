@@ -52,11 +52,11 @@ namespace StructureMap.Pipeline
             _lock.EnterUpgradeableReadLock();
             try
             {
-				if (_instances.Contains(instance))
-				{
-					throw new StructureMapBuildException("Bi-directional dependency relationship detected!" +
-														 Environment.NewLine + "Check the StructureMap stacktrace below:");
-				}
+                if (_instances.Contains(instance))
+                {
+                    throw new StructureMapBuildException("Bi-directional dependency relationship detected!" +
+                                                         Environment.NewLine + "Check the StructureMap stacktrace below:");
+                }
 
                 if (_objects.ContainsKey(key))
                 {
