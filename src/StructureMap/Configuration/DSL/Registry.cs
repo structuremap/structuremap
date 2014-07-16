@@ -317,6 +317,15 @@ namespace StructureMap.Configuration.DSL
         {
             private readonly Registry _parent;
 
+            private Action<PluginGraph> alter
+            {
+                set
+                {
+                    _parent.PoliciesChanged = true;
+                    _parent.alter = value;
+                }
+            }
+
             public PoliciesExpression(Registry parent)
             {
                 _parent = parent;
@@ -328,7 +337,7 @@ namespace StructureMap.Configuration.DSL
             /// <param name="policy"></param>
             public void Interceptors(IInterceptorPolicy policy)
             {
-                _parent.alter = graph => graph.Policies.Interceptors.Add(policy);
+                alter = graph => graph.Policies.Interceptors.Add(policy);
             }
 
             /// <summary>
@@ -338,7 +347,7 @@ namespace StructureMap.Configuration.DSL
             /// <typeparam name="T"></typeparam>
             public void OnMissingFamily<T>() where T : IFamilyPolicy, new()
             {
-                _parent.alter = graph => graph.AddFamilyPolicy(new T());
+                alter = graph => graph.AddFamilyPolicy(new T());
             }
 
             /// <summary>
@@ -348,7 +357,7 @@ namespace StructureMap.Configuration.DSL
             /// <param name="policy"></param>
             public void OnMissingFamily(IFamilyPolicy policy)
             {
-                _parent.alter = graph => graph.AddFamilyPolicy(policy);
+                alter = graph => graph.AddFamilyPolicy(policy);
             }
 
             /// <summary>
@@ -356,7 +365,7 @@ namespace StructureMap.Configuration.DSL
             /// </summary>
             public void Configure(IPluginGraphConfiguration pluginGraphConfig)
             {
-                _parent.alter = pluginGraphConfig.Configure;
+                alter = pluginGraphConfig.Configure;
                 _parent.register = pluginGraphConfig.Register;
             }
 
@@ -375,7 +384,7 @@ namespace StructureMap.Configuration.DSL
             /// <param name="constructorSelector"></param>
             public void ConstructorSelector(IConstructorSelector constructorSelector)
             {
-                _parent.alter = x => x.Policies.ConstructorSelector.Add(constructorSelector);
+                alter = x => x.Policies.ConstructorSelector.Add(constructorSelector);
             }
 
             /// <summary>
@@ -401,7 +410,7 @@ namespace StructureMap.Configuration.DSL
                 var convention = new SetterConvention();
                 action(convention);
 
-                _parent.alter = graph => convention.As<SetterConventionRule>().Configure(graph.Policies.SetterRules);
+                alter = graph => convention.As<SetterConventionRule>().Configure(graph.Policies.SetterRules);
             }
 
             /// <summary>
@@ -414,10 +423,12 @@ namespace StructureMap.Configuration.DSL
             {
                 Func<PropertyInfo, bool> predicate = prop => prop.PropertyType == typeof (TPluginType);
 
-                _parent.alter = graph => graph.Policies.SetterRules.Add(predicate);
+                alter = graph => graph.Policies.SetterRules.Add(predicate);
 
                 return _parent.For<TPluginType>();
             }
         }
+
+        internal bool PoliciesChanged { get; set; }
     }
 }

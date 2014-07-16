@@ -17,4 +17,6 @@ FubuRake::Solution.new do |sln|
 	sln.fubudocs_enabled = true
 	
 	#sln.ci_steps = ['compile:net45wp8']
+	
+	sln.export_docs({:repository => 'git@github.com:structuremap/structuremap', :branch => 'jekyll'})
 end

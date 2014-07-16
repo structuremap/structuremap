@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -142,6 +143,15 @@ namespace StructureMap
             registry.Registries.Each(x => builder.Add(x));
 
             builder.RunConfigurations();
+
+            if (registry.HasPolicyChanges())
+            {
+                Instances.GetAllInstances().ToArray().Each(x => x.ClearBuildPlan());
+
+                Profiles.AllProfiles().ToArray()
+                    .Each(x => x.Instances.GetAllInstances().ToArray().Each(i => i.ClearBuildPlan()));
+
+            }
         }
 
         public ILifecycle DetermineLifecycle(Type pluginType, Instance instance)

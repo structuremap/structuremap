@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
@@ -22,6 +23,11 @@ namespace StructureMap
         internal IList<Registry> Registries
         {
             get { return _registries; }
+        }
+
+        internal bool HasPolicyChanges()
+        {
+            return PoliciesChanged || _registries.Any(x => x.PoliciesChanged);
         }
 
         /// <summary>

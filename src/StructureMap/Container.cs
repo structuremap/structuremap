@@ -373,10 +373,6 @@ namespace StructureMap
             {
                 _pipelineGraph.Configure(configure);
 
-                _pipelineGraph.Instances.GetAllInstances().Each(x => x.ClearBuildPlan());
-
-                _pipelineGraph.Profiles.AllProfiles()
-                    .Each(x => x.Instances.GetAllInstances().Each(i => i.ClearBuildPlan()));
 
                 if (Role == ContainerRole.Nested)
                 {
