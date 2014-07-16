@@ -47,17 +47,17 @@ namespace StructureMap.Pipeline
 
         public object Get(Type pluginType, Instance instance, IBuildSession session)
         {
-            if (_instances.Contains(instance))
-            {
-                throw new StructureMapBuildException("Bi-directional dependency relationship detected!" +
-                                                     Environment.NewLine + "Check the StructureMap stacktrace below:");
-            }
-
             object result;
             var key = instance.InstanceKey(pluginType);
             _lock.EnterUpgradeableReadLock();
             try
             {
+                if (_instances.Contains(instance))
+                {
+                    throw new StructureMapBuildException("Bi-directional dependency relationship detected!" +
+                                                         Environment.NewLine + "Check the StructureMap stacktrace below:");
+                }
+
                 if (_objects.ContainsKey(key))
                 {
                     result = _objects[key];
