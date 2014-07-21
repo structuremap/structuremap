@@ -9,6 +9,7 @@ namespace StructureMap
     /// A convenience "Containment" to hold your container if you are planning to have a single static <see cref="IContainer"/> instance in your application.
     /// 
     /// </summary>
+    [Obsolete("ObjectFactory will be removed in a future 4.0 release of StructureMap. Favor the usage of the Container class for future work")]
     public static class ObjectFactory
     {
         private static readonly object _lockObject = new object();

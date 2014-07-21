@@ -68,6 +68,19 @@ namespace StructureMap.Testing.Pipeline
             w2.ShouldBeTheSameAs(w3);
         }
 
+        [Test, Ignore("Not built yet")]
+        public void build_a_func_by_string()
+        {
+            var container = new Container(x => {
+                x.For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("green").Named("green");
+                x.For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("blue").Named("blue");
+                x.For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("red").Named("red");
+            });
+
+            var func = container.GetInstance<Func<string, IWidget>>();
+            func("green").ShouldBeOfType<ColorWidget>().Color.ShouldEqual("green");
+        }
+
         public class ConcreteClass
         {
         }

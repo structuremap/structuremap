@@ -102,6 +102,8 @@ namespace StructureMap.Graph
 
         private void assertInstanceIsValidForThisPluginType(Instance instance)
         {
+            if (instance.ReturnedType == typeof (object)) return;
+
             if (instance.ReturnedType != null &&
                 !instance.ReturnedType.CanBeCastTo(_pluginType))
             {

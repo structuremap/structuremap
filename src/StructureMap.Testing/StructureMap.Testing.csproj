@@ -209,6 +209,7 @@
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
     <Compile Include="Bugs\MixedConfigureAndInitializeMissingInstanceProblem.cs" />
     <Compile Include="Bugs\OpenGenericWithConstraints.cs" />
+    <Compile Include="Bugs\Register_Lambda_against_Type_Bug_274.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
     <Compile Include="Bugs\Setter_policies_when_the_build_plan_is_created_by_a_nested_container.cs" />
     <Compile Include="Bugs\SingletonShouldBeLazy.cs" />

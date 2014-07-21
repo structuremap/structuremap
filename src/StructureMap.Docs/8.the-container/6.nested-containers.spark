@@ -2,6 +2,114 @@
 <!--Url: nested-containers-->
 
 <markdown>
-TODO(Write some content!)
+
+_Nested Container's_ are a powerful feature in StructureMap for service resolution and clean object disposal in the 
+context of short lived operations. Nested Container's were introduced in version 2.6, but greatly improved in both performance (100X reduction in the time to create a nested container in a large application) and _ahem_ [lifecycle
+mechanics](http://github.com/structuremap/structuremap/issues/3) as a major goal of the 3.0 release.
+
+The original use case and impetus for building this feature was a simplistic message handling system that dequeued
+messages from a Sql Server table (please forget for a second the wisdom of using Sql Server as a queueing system), deserialized
+the contents into a .Net object, then created the proper handler object for that message type and executed that handler -- all within
+a single . 
+
+
+
+Why not just use `HttpContext` based lifecycles like we've always done in the past? Because `HttpContext` is not supported by the any
+type of [OWIN](http://www.strathweb.com/2013/05/the-future-is-now-owin-and-multi-hosting-asp-net-web-applications/) web host and will not be a part of ASP.Net vNext. Using a Nested Container per HTTP request is a better, lighterweight way
+to scope services to an HTTP request without coupling your code to what will soon be legacy ASP.Net runtime code.
+
+At the time of this document, Nested Container's per HTTP request or message are supported by frameworks like [FubuMVC](http://fubuworld.com/fubumvc), [FubuTransportation](http://fubuworld.com/fubutransportation),
+[MassTransit](http://masstransit-project.com), 
+ASP.Net MVC through the [StructureMap.MVC5](https://www.nuget.org/packages/StructureMap.MVC5/) nuget package, and Web API with the [StructureMap.WebApi2](https://www.nuget.org/packages/StructureMap.WebApi2/) nuget.
+ 
+The StructureMap integrations for NancyFx and NServiceBus do not support StructureMap nested containers at this time but may in the future.
+
+
+
+
+
+<Section title="Creation" id="creation">
+Creating a nested container is as simple as calling the `IContainer.GetNestedContainer()` method as shown below:
+<Snippet name="nested-creation" />
+
+
+</Section>
+
+
+
+
+
+<Section title="Lifecycle Rules" id="lifecycles">
+
+While StructureMap supports several object instance lifecycles out of the boxy, in idiomatic usage of StructureMap the only common lifecyles are:
+
+1. `Transient` - The default lifecycle. A new object is created for a configured Instance on each request to the container
+1. `Singleton` - One instance is constructed and used over the entire Container lifetime
+
+In the context of a Nested Container however, the `Transient` scoping now applies to the Nested Container itself:
+
+<Snippet name="nested-transients" />
+
+`Instance's` scoped to anything but `Transient` are resolved as normal, but through the parent container:
+
+<Snippet name="nested-singletons" />
+
+TODO(link to lifecycles)
+
+</Section>
+
+
+
+
+<Section title="Overriding Services from the Parent" id="overrides">
+A nested container is a new Container object that still retains access to the parent container that created it so that it can
+efficiently share registrations, policies, and cached _build plan's_. **There is no need to recreate registrations from the parent container
+into the nested container and doing so makes StructureMap work less efficiently.** You can, however, register register services into the nested container that override the parent container.
+
+The [FubuMVC web framework](http://fubuworld.com/fubumvc) uses a Nested Container per HTTP request. During an HTTP request, FubuMVC injects services
+for the current HTTP request and response to a nested container before creating the actual services that will handle the request. The
+FubuMVC mechanics are conceptually similar to this code sample:
+
+<Snippet name="nested-overriding" />
+
+When handling requests for new services, a nested container first checks its own configuration.
+
+<Info>While the 3.0 version of nested containers acts like a <a href="http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">Chain of Responsibility</a> pattern to apply its own overrides, the earlier version
+ of StructureMap made a complete copy of the underlying Container configuration. This crime against computer science was removed in 3.0 and hence, the 100X 
+ improvement in the time it takes StructureMap to create a nested container.</Info>
+
+
+</Section>
+
+
+
+<Section title="Lazy Resolution" id="lazy">
+<Snippet name="nested-func-lazy-and-container-resolution" />
+</Section>
+
+<Section title="Profiles" id="profiles">
+<Snippet name="nested-profiles" />
+</Section>
+
+<Section title="Disposing Services" id="disposing">
+<Snippet name="nested-disposal" />
+</Section>
+
+
 </markdown>
+
+<Info><code>ObjectFactory</code> will be marked as <code>[Obsolete]</code> soon and removed in a forthcoming 4.0 release. In practice, the static
+service locator has too much potential to be misused and causes harmful coupling from application code to StructureMap infrastructure.</Info>
+
+
+
+
+
+
+
+
+<Snippet name="nested-colors" />
+<Snippet name="nested-http" />
+
+
 
