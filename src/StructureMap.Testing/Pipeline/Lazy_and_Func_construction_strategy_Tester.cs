@@ -68,7 +68,7 @@ namespace StructureMap.Testing.Pipeline
             w2.ShouldBeTheSameAs(w3);
         }
 
-        [Test, Ignore("Not built yet")]
+        [Test]
         public void build_a_func_by_string()
         {
             var container = new Container(x => {

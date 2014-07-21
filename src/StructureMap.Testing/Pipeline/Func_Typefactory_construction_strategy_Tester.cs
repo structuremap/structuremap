@@ -39,9 +39,9 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void nothing_special_about_a_string_input()
         {
-            var c4 = new Container().GetInstance<Func<string, ConcreteClass4>>()("Hello");
+            var c4 = new Container().GetInstance<Func<double, ConcreteClass4>>()(123.4);
             c4.ShouldNotBeNull();
-            c4.S.ShouldEqual("Hello");
+            c4.S.ShouldEqual(123.4);
         }
 
         public class ConcreteClass1 : IFoo
@@ -71,12 +71,12 @@ namespace StructureMap.Testing.Pipeline
 
         public class ConcreteClass4
         {
-            public ConcreteClass4(string s)
+            public ConcreteClass4(double s)
             {
                 S = s;
             }
 
-            public string S { get; private set; }
+            public double S { get; private set; }
         }
     }
 }

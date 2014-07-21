@@ -20,6 +20,7 @@ namespace StructureMap.Graph
             if (!type.GetTypeInfo().IsGenericType) return null;
 
             var basicType = type.GetGenericTypeDefinition();
+
             if (!_graph.Families.Has(basicType))
             {
 

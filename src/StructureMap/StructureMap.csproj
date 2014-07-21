@@ -161,6 +161,7 @@
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />
     <Compile Include="Graph\FirstInterfaceConvention.cs" />
+    <Compile Include="Graph\FuncBuildByNamePolicy.cs" />
     <Compile Include="Graph\GenericConnectionScanner.cs" />
     <Compile Include="Graph\GenericsPluginGraph.cs" />
     <Compile Include="Graph\HasLifecycle.cs" />

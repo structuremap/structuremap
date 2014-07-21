@@ -60,8 +60,12 @@ namespace StructureMap
 
         private void addCloseGenericPolicyTo(PluginGraph graph)
         {
+            
+
             var policy = new CloseGenericFamilyPolicy(graph);
             graph.AddFamilyPolicy(policy);
+
+            graph.AddFamilyPolicy(new FuncBuildByNamePolicy());
 
             graph.Profiles.Each(addCloseGenericPolicyTo);
         }
