@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ProjectRoot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ProjectRoot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <TagLine>The original IoC/DI Container for .Net</TagLine>
   <Name>StructureMap</Name>
   <GitHubPage>https://github.com/structuremap/structuremap</GitHubPage>
@@ -11,6 +11,10 @@
     <PublishedNuget>
       <Name>FubuMVC.StructureMap3</Name>
       <Description>StructureMap3 bootstrapping for FubuMVC applications</Description>
+    </PublishedNuget>
+    <PublishedNuget>
+      <Name>structuremap.autofactory</Name>
+      <Description>StructureMap AutoFactory</Description>
     </PublishedNuget>
     <PublishedNuget>
       <Name>structuremap.automocking.moq</Name>

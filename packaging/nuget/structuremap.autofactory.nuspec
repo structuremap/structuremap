@@ -4,6 +4,7 @@
     <id>structuremap.autofactory</id>
     <authors>Jimmy Bogard, Jeremy D. Miller</authors>
     <owners>Jimmy Bogard, Jeremy D. Miller</owners>
+	<version>3.0.5</version>
     <licenseUrl>https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT</licenseUrl>
     <projectUrl>http://structuremap.net/structuremap/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
