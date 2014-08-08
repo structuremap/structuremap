@@ -98,7 +98,7 @@ namespace StructureMap.AutoMocking.Testing
         public void use_a_mock_object_for_concrete_class_dependency()
         {
             var autoMocker = new RhinoAutoMocker<ClassThatUsesConcreteDependency>();
-
+            autoMocker.UseMockForType<ConcreteDependency>();
             
 
             autoMocker.ClassUnderTest.Dependency.Go();

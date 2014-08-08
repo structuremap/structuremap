@@ -24,13 +24,11 @@ namespace StructureMap.AutoMocking
         }
 
         public RhinoAutoMocker(MockMode mockMode)
+            : base(createLocator(mockMode))
         {
-            ServiceLocator = createLocator(mockMode);
-            Container = new AutoMockedContainer(ServiceLocator);
-            Container.Configure(x => x.For<T>().Use<T>());
         }
 
-        private ServiceLocator createLocator(MockMode mode)
+        private static ServiceLocator createLocator(MockMode mode)
         {
             switch (mode)
             {

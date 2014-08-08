@@ -14,6 +14,13 @@ namespace StructureMap.AutoMocking
         TTargetClass ClassUnderTest { get; }
 
         /// <summary>
+        /// Forces the auto mocking container to use a mock object
+        /// for type T. You may have to do this for concrete types
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        void UseMockForType<T>() where T : class;
+
+        /// <summary>
         ///     Accesses the underlying AutoMockedContainer
         /// </summary>
         AutoMockedContainer Container { get; }
@@ -89,7 +96,27 @@ namespace StructureMap.AutoMocking
     public class AutoMocker<TTargetClass> : IAutoMocker<TTargetClass> where TTargetClass : class
     {
         private TTargetClass _classUnderTest;
+
+        public AutoMocker(ServiceLocator serviceLocator)
+        {
+            ServiceLocator = serviceLocator;
+            Container = new AutoMockedContainer(ServiceLocator);
+            Container.Configure(x => x.For<TTargetClass>().Use<TTargetClass>());
+        }
+
         protected ServiceLocator ServiceLocator { get; set; }
+
+        public void UseMockForType<T>() where T : class
+        {
+            var service = ServiceLocator.Service<T>();
+            Container.Configure(x => x.For<T>().Use(service));
+        }
+
+        /// <summary>
+        ///     Accesses the underlying AutoMockedContainer
+        /// </summary>
+        public AutoMockedContainer Container { get; protected set; }
+
 
         /// <summary>
         ///     Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in for all of its dependencies
@@ -107,10 +134,6 @@ namespace StructureMap.AutoMocking
             }
         }
 
-        /// <summary>
-        ///     Accesses the underlying AutoMockedContainer
-        /// </summary>
-        public AutoMockedContainer Container { get; protected set; }
 
         /// <summary>
         ///     Calling this method will immediately create a "Partial" mock
