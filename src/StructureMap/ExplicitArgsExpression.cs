@@ -28,7 +28,7 @@ namespace StructureMap
         /// <summary>
         /// Pass in additional arguments by type
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="pluginType"></param>
         /// <param name="arg"></param>
         /// <returns></returns>
         ExplicitArgsExpression With(Type pluginType, object arg);
@@ -77,7 +77,7 @@ namespace StructureMap
         /// <summary>
         /// Pass in additional arguments by type
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="pluginType"></param>
         /// <param name="arg"></param>
         /// <returns></returns>
         public ExplicitArgsExpression With(Type pluginType, object arg)
@@ -125,6 +125,15 @@ namespace StructureMap
         public object GetInstance(Type type)
         {
             return _container.GetInstance(type, _args);
+        }
+
+        /// <summary>
+        /// Gets the default instance of the pluginType using the explicitly configured arguments from the "args"
+        /// </summary>
+        /// <returns></returns>
+        public object GetInstance(Type type, string name)
+        {
+            return _container.GetInstance(type, _args, name);
         }
 
 
