@@ -94,7 +94,7 @@ namespace StructureMap.AutoMocking.Testing
             autoMocker.Get<IMockedService>().AssertWasCalled(s => s.Go());
         }
 
-        [Test]
+        [Test, Ignore("This behavior is inconsistent with SM 2.6.x.")]
         public void use_a_mock_object_for_concrete_class_dependency()
         {
             var autoMocker = new RhinoAutoMocker<ClassThatUsesConcreteDependency>();
