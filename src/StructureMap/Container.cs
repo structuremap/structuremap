@@ -347,7 +347,7 @@ namespace StructureMap
         {
             try
             {
-                var session = new BuildSession(_pipelineGraph, instance.Name);
+                var session = new BuildSession(_pipelineGraph, instance.Name) {RootType = instance.ReturnedType};
                 return session.FindObject(pluginType, instance);
             }
             catch (StructureMapException e)
@@ -612,7 +612,17 @@ namespace StructureMap
                 ? defaultInstance
                 : basicInstance.Override(args);
 
-            var session = new BuildSession(_pipelineGraph, requestedName, args);
+            if (instance == null)
+            {
+                throw new StructureMapConfigurationException("No default instance or named instance '{0}' for requested plugin type {1}", requestedName, pluginType.GetFullName());
+            }
+
+            var session = new BuildSession(_pipelineGraph, requestedName, args)
+            {
+                RootType = instance.ReturnedType
+            };
+
+            
 
             return session.FindObject(pluginType, instance);
         }

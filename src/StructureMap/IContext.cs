@@ -102,5 +102,11 @@ namespace StructureMap
         /// contextual logging dependencies
         /// </summary>
         Type ParentType { get; }
+
+        /// <summary>
+        /// The type of the requested object at the very top of the 
+        /// object graph
+        /// </summary>
+        Type RootType { get; }
     }
 }

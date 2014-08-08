@@ -108,6 +108,8 @@ namespace StructureMap
             if (pluginType == null) throw new ArgumentNullException("pluginType");
             if (instance == null) throw new ArgumentNullException("instance");
 
+            if (RootType == null) RootType = instance.ReturnedType;
+
             var plan = instance.ResolveBuildPlan(pluginType, _pipelineGraph.Policies);
             return plan.Build(this, this);
         }
@@ -160,6 +162,8 @@ namespace StructureMap
                 throw ex;
             }
 
+            RootType = instance.ReturnedType;
+
             return FindObject(pluginType, instance);
         }
 
@@ -196,9 +200,12 @@ namespace StructureMap
             }
         }
 
+        public Type RootType { get; internal set; }
+
         // This is where all Creation happens
         public virtual object FindObject(Type pluginType, Instance instance)
         {
+            RootType = instance.ReturnedType;
             var lifecycle = _pipelineGraph.DetermineLifecycle(pluginType, instance);
             return _sessionCache.GetObject(pluginType, instance, lifecycle);
         }

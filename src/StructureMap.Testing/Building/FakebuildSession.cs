@@ -124,5 +124,6 @@ namespace StructureMap.Testing.Building
         }
 
         public Type ParentType { get; private set; }
+        public Type RootType { get; private set; }
     }
 }
