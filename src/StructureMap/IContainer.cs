@@ -312,5 +312,11 @@ namespace StructureMap
         /// <param name="action"></param>
         /// <returns></returns>
         ExplicitArgsExpression With(Action<IExplicitArgsExpression> action);
+
+        /// <summary>
+        /// Creates a new, anonymous child container
+        /// </summary>
+        /// <returns></returns>
+        IContainer CreateChildContainer();
     }
 }

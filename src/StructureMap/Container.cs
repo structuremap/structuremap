@@ -421,6 +421,16 @@ namespace StructureMap
         }
 
         /// <summary>
+        /// Creates a new, anonymous child container
+        /// </summary>
+        /// <returns></returns>
+        public IContainer CreateChildContainer()
+        {
+            var pipeline = _pipelineGraph.Profiles.NewChild();
+            return new Container(pipeline);
+        }
+
+        /// <summary>
         /// The profile name of this container
         /// </summary>
         public string ProfileName
