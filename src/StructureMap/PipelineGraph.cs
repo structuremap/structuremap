@@ -136,6 +136,11 @@ namespace StructureMap
             var registry = new ConfigurationExpression();
             configure(registry);
 
+            if (registry.HasPolicyChanges() && Role == ContainerRole.Nested)
+            {
+                throw new StructureMapConfigurationException("Policy changes to a nested container are not allowed. Policies can only be applied to the root container");
+            }
+
             var builder = new PluginGraphBuilder(_pluginGraph);
             builder.Add(registry);
 
@@ -146,6 +151,8 @@ namespace StructureMap
 
             if (registry.HasPolicyChanges())
             {
+                
+
                 Instances.GetAllInstances().ToArray().Each(x => x.ClearBuildPlan());
 
                 Profiles.AllProfiles().ToArray()

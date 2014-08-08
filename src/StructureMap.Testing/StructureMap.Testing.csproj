@@ -201,6 +201,7 @@
     <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
     <Compile Include="Bugs\ConnectImplementationsToTypesClosing_is_wonky_in_Registry_added_by_Configure.cs" />
     <Compile Include="Bugs\Defensive_check_for_public_ctors.cs" />
+    <Compile Include="Bugs\do_not_allow_policy_changes_in_nested_container_issue_284.cs" />
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
     <Compile Include="Bugs\Exception_Within_Exception_Bug.cs" />
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
