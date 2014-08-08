@@ -157,6 +157,7 @@
     <Compile Include="Graph\CompositeFilter.cs" />
     <Compile Include="Graph\CompositePredicate.cs" />
     <Compile Include="Graph\DefaultConventionScanner.cs" />
+    <Compile Include="Graph\EnumerableFamilyPolicy.cs" />
     <Compile Include="Graph\FamilyAttribute.cs" />
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />

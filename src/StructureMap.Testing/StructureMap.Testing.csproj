@@ -371,6 +371,7 @@
     <Compile Include="Query\ModelIntegrationTester.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="RegistryExtensions.cs" />
+    <Compile Include="Resolving_ienumerable_types.cs" />
     <Compile Include="Resolving_mixed_open_and_closed_generic_types.cs" />
     <Compile Include="Samples\Interception\Event_Aggregator_Registration.cs" />
     <Compile Include="Samples\LifecycleSamples\Singleton\NoSingleton.cs" />

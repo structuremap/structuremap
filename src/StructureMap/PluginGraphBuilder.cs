@@ -66,6 +66,7 @@ namespace StructureMap
             graph.AddFamilyPolicy(policy);
 
             graph.AddFamilyPolicy(new FuncBuildByNamePolicy());
+            graph.AddFamilyPolicy(new EnumerableFamilyPolicy());
 
             graph.Profiles.Each(addCloseGenericPolicyTo);
         }
