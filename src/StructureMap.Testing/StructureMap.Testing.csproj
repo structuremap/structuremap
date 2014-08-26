@@ -209,6 +209,7 @@
     <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
     <Compile Include="Bugs\Jimmys_silly_open_generics_bug.cs" />
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
+    <Compile Include="Bugs\MemoryLeak_bug_289.cs" />
     <Compile Include="Bugs\MixedConfigureAndInitializeMissingInstanceProblem.cs" />
     <Compile Include="Bugs\OpenGenericWithConstraints.cs" />
     <Compile Include="Bugs\Register_Lambda_against_Type_Bug_274.cs" />

@@ -118,7 +118,9 @@ namespace StructureMap
 
         public void RegisterContainer(IContainer container)
         {
-            _pluginGraph.Families[typeof (IContainer)].SetDefault(new ObjectInstance(container));
+            var containerInstance = new ObjectInstance(container);
+            containerInstance.SetLifecycleTo<TransientLifecycle>();
+            _pluginGraph.Families[typeof (IContainer)].SetDefault(containerInstance);
         }
 
         public IPipelineGraph ToNestedGraph()

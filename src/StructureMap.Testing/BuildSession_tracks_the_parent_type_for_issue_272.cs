@@ -214,5 +214,36 @@ namespace StructureMap.Testing
             get { return _rootType; }
         }
     }
+
+
+    public static class LogManager
+    {
+        // Give me a Logger with the correctly
+        // configured logging rules and sources
+        // matching the type I'm passing in
+        public static Logger ForType(Type type)
+        {
+            return new Logger(type);
+        } 
+    }
+
+    public class LoggerSample
+    {
+        public void contextual_logging()
+        {
+            // IContext.RootType is new for 3.1
+            var container = new Container(_ => {
+                _.For<Logger>()
+                    .Use(c => LogManager.ForType(c.RootType))
+                    .AlwaysUnique();
+            });
+
+            // Resolve the logger for the type one level up
+            container = new Container(_ => {
+                _.For<Logger>().Use(c => LogManager.ForType(c.ParentType))
+                    .AlwaysUnique();
+            });
+        }
+    }
     
 }

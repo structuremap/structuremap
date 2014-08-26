@@ -1,5 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Security.Cryptography;
+using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
@@ -30,6 +34,8 @@ namespace StructureMap.Testing
 
             Debug.WriteLine(container.WhatDoIHave());
         }
+
+
 
         [Test]
         public void render_the_fallback_instance_if_it_exists()
