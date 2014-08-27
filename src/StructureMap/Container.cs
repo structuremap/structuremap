@@ -15,6 +15,7 @@ namespace StructureMap
     public class Container : IContainer
     {
         private IPipelineGraph _pipelineGraph;
+        private readonly object _syncLock = new object();
 
         public static IContainer For<T>() where T : Registry, new()
         {
@@ -381,7 +382,7 @@ namespace StructureMap
         /// <param name="configure"></param>
         public void Configure(Action<ConfigurationExpression> configure)
         {
-            lock (this)
+            lock (_syncLock)
             {
                 _pipelineGraph.Configure(configure);
 
