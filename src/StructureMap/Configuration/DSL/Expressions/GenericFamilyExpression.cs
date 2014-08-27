@@ -199,9 +199,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
-        /// Registers an IBuildInterceptor for this Plugin Type that executes before
-        /// any object of this PluginType is created.  IBuildInterceptor's can be
-        /// used to create a custom scope
+        /// Assign a lifecycle to the PluginFamily
         /// </summary>
         /// <param name="lifecycle"></param>
         /// <returns></returns>
