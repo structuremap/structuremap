@@ -319,4 +319,6 @@ namespace StructureMap
         /// <returns></returns>
         IContainer CreateChildContainer();
     }
+
+
 }

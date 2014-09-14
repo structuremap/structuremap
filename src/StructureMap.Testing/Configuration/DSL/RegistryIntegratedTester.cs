@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AutomaticallyFindRegistryFromAssembly()
         {
-            ObjectFactory.Initialize(x => {
+            var container = new Container(x => {
                 x.Scan(s => {
                     s.AssemblyContainingType<RedGreenRegistry>();
                     s.LookForRegistries();
@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Configuration.DSL
             });
 
             var colors = new List<string>();
-            foreach (var widget in ObjectFactory.GetAllInstances<IWidget>())
+            foreach (var widget in container.GetAllInstances<IWidget>())
             {
                 if (!(widget is ColorWidget))
                 {

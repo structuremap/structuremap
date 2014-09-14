@@ -170,12 +170,12 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void fetch_the_object()
         {
-            ObjectFactory.Initialize(
-                x => { x.For<IHandler<Shipment>>().Use<ShipmentHandler>(); });
+            var container = new Container(
+                x => x.For<IHandler<Shipment>>().Use<ShipmentHandler>());
 
             var shipment = new Shipment();
             var handler =
-                ObjectFactory.Container.ForObject(shipment).GetClosedTypeOf(typeof (IHandler<>)).As<IHandler>();
+                container.ForObject(shipment).GetClosedTypeOf(typeof (IHandler<>)).As<IHandler>();
 
             handler.ShouldBeOfType<ShipmentHandler>().Shipment.ShouldBeTheSameAs(shipment);
         }

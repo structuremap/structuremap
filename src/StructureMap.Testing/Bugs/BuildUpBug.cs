@@ -8,7 +8,7 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void Test()
         {
-            ObjectFactory.Initialize(x => {
+            var container = new Container(x => {
                 x.ForConcreteType<SomeDbRepository>().Configure.
                     Ctor<string>("connectionString").Is("some connection string");
 
@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Bugs
 
             var webPage = new SomeWebPage();
 
-            ObjectFactory.BuildUp(webPage);
+            container.BuildUp(webPage);
 
             webPage.DbRepository.ConnectionString.ShouldEqual("some connection string");
         }

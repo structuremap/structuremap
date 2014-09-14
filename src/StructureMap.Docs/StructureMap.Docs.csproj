@@ -41,11 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="samples\glossary\glossary.cs" />
-    <Compile Include="samples\model.cs" />
-    <Compile Include="samples\quickstart\configuring_the_container.cs" />
-    <Compile Include="samples\registries.cs" />
-    <Compile Include="samples\quickstart\resolving_instances.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

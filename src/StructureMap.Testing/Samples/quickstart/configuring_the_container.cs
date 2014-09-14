@@ -27,6 +27,8 @@ container2.Configure(c =>
 });
 
 // Example #3 - Initialize the static ObjectFactory container.
+// NOTE: ObjectFactory has been deprecated and will be removed
+// in a future 4.0 release
 ObjectFactory.Initialize(i =>
 {
     i.For<IFoo>().Use<Foo>();
@@ -47,11 +49,8 @@ var container2 = new Container(c =>
     c.AddRegistry<FooBarRegistry>();
 });
 
-// Example #3
-ObjectFactory.Initialize(c =>
-{
-    c.AddRegistry<FooBarRegistry>();
-});
+// Example #3 -- create a container for a single Registry
+var container3 = Container.For<FooBarRegistry>();
 // ENDSAMPLE
         }
         
@@ -76,13 +75,7 @@ container2.Configure(c =>
         scanner.WithDefaultConventions();
     }));
 
-// Example #3
-ObjectFactory.Initialize(i =>
-    i.Scan(scanner =>
-    {
-        scanner.TheCallingAssembly();
-        scanner.WithDefaultConventions();
-    }));
+
 // ENDSAMPLE
         }
         
@@ -102,8 +95,7 @@ var container = new Container(c =>
         public void configure_multiple_services_of_the_same_type()
         {
 // SAMPLE: quickstart-configure-multiple-services-of-the-same-type
-ObjectFactory.Initialize(i =>
-{
+var container = new Container(i => {
     i.For<IFoo>().Use<Foo>();
     i.For<IFoo>().Use<SomeOtherFoo>();
     i.For<IBar>().Use<Bar>();

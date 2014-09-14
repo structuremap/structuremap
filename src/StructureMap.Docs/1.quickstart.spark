@@ -2,12 +2,15 @@
 <!--Url: quickstart-->
 
 <markdown>
-StructureMap was built to 
+The first thing you should know is that StructureMap (and other IoC tools like it) are designed to
+make compositional and modular software designs easier to build by offloading the grubby mechanics of
+resolving dependencies, reading configuration data, and assembling object graphs to the IoC tool instead
+of cluttering up your application code.
 
 Before you get started with StructureMap it's recommended that you first get comfortable with the <TopicLink name="concepts" /> 
-of [Dependency Injection](http://codebetter.com/jeremymiller/2005/10/06/the-dependency-injection-pattern-–-what-is-it-and-why-do-i-care/) 
-and [Inversion Of Control](http://codebetter.com/jeremymiller/2005/09/20/what’s-so-great-about-inversion-of-control/). 
-It's important that you structure and build your application with these concepts in mind.
+of [Dependency Injection](http://codebetter.com/jeremymiller/2005/10/06/the-dependency-injection-pattern-%E2%80%93-what-is-it-and-why-do-i-care/) 
+and [Inversion Of Control](http://codebetter.com/jeremymiller/2005/09/20/what%E2%80%99s-so-great-about-inversion-of-control/). 
+It's important that you structure and build your application with these concepts in mind to fully utilize StructureMap's abilities.
 
 Assuming that you're already familiar with those concepts, or you'd really rather skip the pedantry and jump right into concrete code, the first thing to do is, go <TopicLink name="get-structuremap" /> and jump into usage.
 
@@ -15,101 +18,25 @@ Assuming that you're already familiar with those concepts, or you'd really rathe
 
 By and large, you really only do two kinds of things with StructureMap:
 
-1. Configure the container by registering the **what** and **how** StructureMap should build or find requested services.
+1. Configure the container by registering the **what** and **how** StructureMap should build or find requested services based on a type and/or name.
 
-2. Resolve instances of a service or dependency.
+2. Resolve object instances of a service or dependency built out with all of its dependencies.
 
-</Section>
-
-<Section title="Configuring the container" id="configuring-the-container">
-
-As of the 3.0 release, StructureMap provides a streamlined fluent interface called the _Registry DSL_ to configure a StructureMap
-Container with both explicit registrations and conventional auto-registrations.  StructureMap no longer supports Xml configuration or MEF-style attribute configuration.  
-
-<Info>The static <code>ObjectFactory</code> wrapper for Container is still available in 3.0, but we strongly recommend against using it for new applications.  It only exists for easier compatibility with older installations.</Info>
-
-The first step in using StructureMap is configuring a <code>Container</code> object. The following examples are based on the usage of the <TopicLink name="registration/registry-dsl" />.
-
-Let's say that you have a simple set of services like this:
-
+So let's say that you have a simple object model like so:
 <Snippet name="foobar-model" />
 
-A simple configuration of a StructureMap Container might then be:
+You could explicitly build a StructureMap `Container` object to build these types like this:
 
-<Snippet name="quickstart-configure-the-container" />
+<Snippet name="foobar-quickstart1" />
 
-Initializing or configuring the container is usually done at application startup and is located as close as possible to the application's entry point. 
-This place is sometimes referred to as the composition root of the application. 
-In our example we are composing our application's object graph by connecting abstractions to concrete types.
+or utilize StructureMap's type scanning conventions to configure the relationships and do the same thing like this:
 
-We are using the fluent API <code>For<TInterface>().Use<TConcrete>()</code> which registers a default instance for a given plugin type (the TInterface type in this case). In our example we want an new instance of `Foo` every time we request the abstraction `IFoo`.
-
-The recommended way of using the <TopicLink name="registration/registry-dsl" /> is by defining one or more <code>Registry</code> classes. Typically, you would subclass the <code>Registry</code> class, 
-then use the Fluent API methods exposed by the <code>Registry</code> class to describe a <code>Container</code> configuration. 
-
-Here's a sample <code>Registry</code> class used to configure the same types as in our previous example:
-
-<Snippet name="foobar-registry" />
-
-When you set up a <code>Container</code> or <code>ObjectFactory</code>, you need to simply direct the <code>Container</code> to use the configuration in that <code>Registry</code> class.
-
-<Snippet name="quickstart-configure-the-container-using-a-registry" />
-
-<Info>The StructureMap team highly recommends using <code>Registry</code> classes for your real application configuration.  The syntax is shorter inside the Registry class constructor than from within the <code>Container</code> constructor method. Registry classes can be used to modularize the configuration of a bigger application into more manageable chunks.  Lastly, using <code>Registry</code> classes makes it easier to stand up additional <code>Container</code> objects in testing scenarios that reflect the real application composition.</Info>
-
-In real world applications you also have to deal with repetitive similar registrations. Such registrations are tedious, easy to forget and can be a weak spot in your application. StructureMap provides <TopicLink name="registration/auto-registration-and-conventions" />  which mitigates this pain and eases the maintenance burden. StructureMap exposes this feature through the <TopicLink name="registration/registry-dsl" /> by the `Scan` method.
-
-In our example there is an reoccuring pattern, we are connecting the plugin type `ISomething` to a concrete type `Something`, meaning `IFoo` to `Foo` and `IBar` to `Bar`. Wouldn't it be cool if we could write a convention for exactly doing that? Fortunatly StructureMap has already one build in. Let's see how we can create an container with the same configuration as in the above examples.
-
-<Snippet name="quickstart-configure-the-container-using-auto-registrations-and-conventions" />
-
-We instruct the scanner to scan through the calling assembly with default conventions on. This wil find and registers the default instance for `IFoo` and `IBar` which are obviously the concrete types `Foo` and `Bar`. Now whenever you add an additional interface `IMoreFoo` and a class `MoreFoo` to your application's code base, it's automatically picked up by the scanner. 
-
-Sometimes classes need to be suplied with some primitive value in its constructor. For example the `System.Data.SqlClient.SqlConnection` needs to be supplied with the connection string in its constructor. No problem, just set up the value of the constructor argument in the bootstrapping:
-
-<Snippet name="quickstart-container-with-primitive-value" />
-
-So far you have seen an couple of ways to work with the <TopicLink name="registration/registry-dsl" /> and configure an `Container` object or `ObjectFactory`. We have seen examples of configuration that allows us to build objects that doesn't depend on anything like the `Bar` class, or do depend on other types like the `Foo` class needs an instance of `IBar`. In our last example we have seen configuration for objects that needs some primitive types like strings in its constructor function.
-
-Now that we have done some basic configuration, it's time to move on to the next step of the main usage: resolving instances of a service or dependency.
+<Snippet name="foobar-quickstart2" />
 
 </Section>
 
-<Section title="Resolving instances of a service or dependency" id="resolving-instances">
 
-This will be the easy part of interacting with StructureMap. During application execution, you will be needing the services you registered in the container. When you resolve a service, depending on the <TopicLink name="object-lifecycle" />, a new instance of the service will be created by StructureMap or StructureMap is delegating the responsibility of resolving the instance to external code. This all depends on your configuration for that specific service. All of our examples so far let's StructureMap create the instance for the service.
 
-In our bootstrapping of the container we didn't specified any lifecycle. In short, a lifecycle let's you specify how long an instance is tracked by StructureMap. More information on this subject can be found in the <TopicLink name="object-lifecycle" /> chapter. The default lifecycle for all services is [`Transient`](). This means that a new instance will be created for each request to the container. These instances aren't tracked by the container. Lifecycles for services can be defined through code or XML.
-
-Before we can resolve services from the container, we need an reference to a `Container` object or `ObjectFactory`. For our examples we are going to use the static `ObjectFactory` class, which is StructureMap's implementation of a [Service Locator](http://todo.com).
-
-<Snippet name="quickstart-resolve-strongly-typed-instance" />
-
-This will create an instance of the class `Foo`. Before creating this instance, StructureMap will inspect the constructor and see that it needs to supply an instance of `IBar`. Because we also provided configuration for `IBar`, StructureMap wil be able to create an instance of the `Bar` class and injects that into the constructor of the `Foo` class. The resulting instance of `Foo` will be returned to the caller.
-
-StructureMap is also able to resolve weakly typed services. When you only have a `Type` object that you need to  get resolved, you can use the non generic `GetInstance` method.
-
-<Snippet name="quickstart-resolve-weakly-typed-instance" />
-
-Both `GetInstance` methods will provide you the default instance of the `IFoo`. That is, StructureMap could have multiple configurations for the `IFoo` plugin type, but can only have one default instance. Let's alter the configuration so that there will be two `IFoo` registrations.
-
-<Snippet name="quickstart-configure-multiple-services-of-the-same-type" />
-
-The last registration for `IFoo` will be the default instance. So whenever you want to resolve the service `IFoo` you will get an instance of `SomeOtherFoo`. But what if you want all foo's? That's easy.
-
-<Snippet name="quickstart-resolve-all-instances-of-foo" />
-
-When you request a service that's unknown to StructureMap you will be presented with a StructureMap exception, complaining that there is no default instance defined for the requested service type. If you don't want this exception to occur you can use the `TryGetInstance` method. 
-
-<Snippet name="quickstart-resolve-unknown-instance-blah" />
-
-This will try to create or find the default instance of the requested service type. It will returns the default value (i.e. `null`) of the requested service if it's not known to the container. The condition of the assertion will be false because `blahInstance` will be `null`.
-
-StructureMap's `ObjectFactory` class should be used with caution because a [Service Locator]() is largely considered an anti-pattern. Meaning the use of the `ObjectFactory` class through your code is not recommended. Typically, you must try to minimize the number of service locator usages in your system to a bare minimum. Most of the value of an IoC tool is in automatically doing Dependency Injection. This is possible by a feature called <TopicLink name="the-container/auto-wiring" /> and can most effectivly be utilized in your application's [integration](#integration) setup. This ensures  that needed services get resolved from a central, top level location in your application, making the need for manual resolution rare.
-
-For supporting different use cases, StructureMap supports a wide variety of methods that you can use for resolving services. These will be adressed in the <TopicLink name="resolving" /> chapter.
-
-</Section>
 
 <Section title="An even simpler usage" id="an-even-simpler-usage">
 

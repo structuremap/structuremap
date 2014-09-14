@@ -95,7 +95,7 @@ namespace StructureMap.Testing.DocumentationExamples
 
             // Without generics
             var internationalService2 =
-                (IShippingService) ObjectFactory.GetNamedInstance(typeof (IShippingService), "International");
+                (IShippingService) container.GetInstance(typeof (IShippingService), "International");
 
 
             internationalService.ShipIt();
@@ -103,7 +103,7 @@ namespace StructureMap.Testing.DocumentationExamples
             internationalService2.ShipIt();
 
             var serviceName = determineShippingService();
-            var service = ObjectFactory.GetNamedInstance<IShippingService>(serviceName);
+            var service = container.GetInstance<IShippingService>(serviceName);
 
 
             service.ShipIt();
@@ -120,7 +120,8 @@ namespace StructureMap.Testing.DocumentationExamples
         {
             var result = new ValidationResult();
 
-            var validators = ObjectFactory.GetAllInstances<InvoiceValidator>();
+            var container = Container.For<ShippingRegistry>();
+            var validators = container.GetAllInstances<InvoiceValidator>();
             foreach (var validator in validators)
             {
                 validator.Validate(invoice, result);
@@ -134,7 +135,8 @@ namespace StructureMap.Testing.DocumentationExamples
         {
             var result = new ValidationResult();
 
-            var validators = ObjectFactory.GetAllInstances(typeof (InvoiceValidator));
+            var container = Container.For<ShippingRegistry>();
+            var validators = container.GetAllInstances(typeof (InvoiceValidator));
             foreach (InvoiceValidator validator in validators)
             {
                 validator.Validate(invoice, result);
@@ -199,14 +201,7 @@ namespace StructureMap.Testing.DocumentationExamples
             });
 
 
-            // Adding configuration from an extension Assembly
-            // after ObjectFactory is already configured
-            ObjectFactory.Configure(x => {
-                x.Scan(scan => {
-                    scan.Assembly("MyCompany.MyApp.ExtensionAssembly");
-                    scan.LookForRegistries();
-                });
-            });
+
         }
     }
 
@@ -244,10 +239,10 @@ namespace StructureMap.Testing.DocumentationExamples
         // the IoC container in a harmful way.  This class cannot be used in either
         // production or testing without a valid IoC configuration.  Plus, you're writing more
         // code
-        public ShippingScreenPresenter()
+        public ShippingScreenPresenter(IContainer container)
         {
-            _service = ObjectFactory.GetInstance<IShippingService>();
-            _repository = ObjectFactory.GetInstance<IRepository>();
+            _service = container.GetInstance<IShippingService>();
+            _repository = container.GetInstance<IRepository>();
         }
 
         #region IPresenter Members

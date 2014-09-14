@@ -1,4 +1,6 @@
 ﻿using System;
+using StructureMap.Graph;
+using StructureMap.Testing;
 
 namespace StructureMap.Docs.samples
 {
@@ -9,20 +11,11 @@ namespace StructureMap.Docs.samples
         void DoSomething();
     }
 
-    #region FooBar Model
 
 // SAMPLE: foobar-model
-    public interface IBar
-    {
-    }
-
-    public class Bar : IBar
-    {
-    }
-
-    public interface IFoo
-    {
-    }
+    public interface IBar{}
+    public class Bar : IBar{}
+    public interface IFoo{}
 
     public class Foo : IFoo
     {
@@ -30,20 +23,59 @@ namespace StructureMap.Docs.samples
 
         public Foo(IBar bar)
         {
-            if (bar == null) throw new ArgumentNullException("bar");
             Bar = bar;
         }
     }
+// ENDSAMPLE
+
+
+    public static class GoFooBarModel
+    {
+        public static void Quickstart1()
+        {
+// SAMPLE: foobar-quickstart1
+// Configure and build a brand new
+// StructureMap Container object
+var container = new Container(_ => {
+    _.For<IFoo>().Use<Foo>();
+    _.For<IBar>().Use<Bar>();
+});
+
+// Now, resolve a new object instance of IFoo
+container.GetInstance<IFoo>()
+    // should be type Foo
+    .ShouldBeOfType<Foo>()
+
+    // and the IBar dependency too
+    .Bar.ShouldBeOfType<Foo>();
+
 
 // ENDSAMPLE
+        }
+
+        public static void Quickstart2()
+        {
+// SAMPLE: foobar-quickstart2
+var container = new Container(_ =>
+{
+    _.Scan(x => {
+        x.TheCallingAssembly();
+        x.WithDefaultConventions();
+    });
+});
+
+container.GetInstance<IFoo>()
+    .ShouldBeOfType<Foo>()
+    .Bar.ShouldBeOfType<Foo>();
+
+// ENDSAMPLE
+        }
+    }
 
     public class SomeOtherFoo : IFoo
     {
     }
 
-    #endregion
-  
-    #region Concrete Weather Model
 
 // SAMPLE: concrete-weather-model
     public class Weather
@@ -83,7 +115,5 @@ namespace StructureMap.Docs.samples
     }
 
 // ENDSAMPLE
-
-    #endregion
 
 }

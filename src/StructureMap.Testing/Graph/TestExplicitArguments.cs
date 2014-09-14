@@ -1,7 +1,5 @@
-using System;
 using System.Linq;
 using NUnit.Framework;
-using StructureMap.Building;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Graph
@@ -9,16 +7,6 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class TestExplicitArguments
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-            ObjectFactory.Initialize(x => { });
-        }
-
-        #endregion
-
         public interface IExplicitTarget
         {
         }
@@ -86,7 +74,6 @@ namespace StructureMap.Testing.Graph
                 )
             {
             }
-
         }
 
         public class SpecialNode : Node
@@ -161,14 +148,14 @@ namespace StructureMap.Testing.Graph
         public void ExplicitArguments_can_return_child_by_name()
         {
             var theNode = new Node();
-            var container = new Container(x => { x.For<IView>().Use<View>(); });
+            var container = new Container(x => x.For<IView>().Use<View>());
             container.With("node").EqualTo(theNode).GetInstance<Command>().Node.ShouldBeTheSameAs(theNode);
         }
 
         [Test]
         public void Fill_in_argument_by_name()
         {
-            var container = new Container(x => { x.For<IView>().Use<View>(); });
+            var container = new Container(x => x.For<IView>().Use<View>());
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -186,7 +173,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_type()
         {
-            var container = new Container(x => { x.For<IView>().Use<View>(); });
+            var container = new Container(x => x.For<IView>().Use<View>());
 
             var theNode = new SpecialNode();
             var theTrade = new Trade();
@@ -202,14 +189,14 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void Fill_in_argument_by_type_with_ObjectFactory()
+        public void Fill_in_argument_by_type_with_Container()
         {
-            ObjectFactory.Initialize(x => { x.For<IView>().Use<View>(); });
+            var container = new Container(x => x.For<IView>().Use<View>());
 
             var theNode = new SpecialNode();
             var theTrade = new Trade();
 
-            var command = ObjectFactory.Container
+            var command = container
                 .With(typeof (Node), theNode)
                 .With(theTrade)
                 .GetInstance<Command>();
@@ -222,42 +209,42 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void NowDoItWithObjectFactoryItself()
         {
-            ObjectFactory.Initialize(x => {
+            var container = new Container(x => {
                 x.ForConcreteType<ExplicitTarget>().Configure
                     .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").Is("Jeremy");
             });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
-            var firstTarget = ObjectFactory.GetInstance<ExplicitTarget>();
+            var firstTarget = container.GetInstance<ExplicitTarget>();
             firstTarget.Provider.ShouldBeOfType<RedProvider>();
 
             // Now, set the explicit arg for IProvider
             var theBlueProvider = new BlueProvider();
-            var secondTarget = ObjectFactory.Container.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>();
+            var secondTarget = container.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>();
             Assert.AreSame(theBlueProvider, secondTarget.Provider);
         }
 
         [Test]
-        public void NowDoItWithObjectFactoryItself_with_new_API()
+        public void NowDoItWith_Container_Itself_with_new_API()
         {
-            ObjectFactory.Initialize(x => {
+            var container = new Container(x => {
                 x.For<ExplicitTarget>().Use<ExplicitTarget>()
                     .Ctor<IProvider>().IsSpecial(child => child.Type<RedProvider>())
                     .Ctor<string>("name").Is("Jeremy");
             });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
-            ObjectFactory.GetInstance<ExplicitTarget>().Provider.IsType<RedProvider>();
+            container.GetInstance<ExplicitTarget>().Provider.IsType<RedProvider>();
 
             // Now, set the explicit arg for IProvider
             var theBlueProvider = new BlueProvider();
-            ObjectFactory.Container.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>()
+            container.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>()
                 .Provider.ShouldBeTheSameAs(theBlueProvider);
         }
 
         [Test]
-        public void OverrideAPrimitiveWithObjectFactory()
+        public void override_a_primitive()
         {
             var container = new Container(x => {
                 x.ForConcreteType<ExplicitTarget>().Configure
@@ -347,22 +334,24 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void PassAnArgumentIntoExplicitArgumentsForARequestedInterfaceUsingObjectFactory()
+        public void PassAnArgumentIntoExplicitArgumentsForARequestedInterfaceUsing_Container()
         {
-            ObjectFactory.Initialize(x => { x.For<IProvider>().Use<LumpProvider>(); });
+            var container = new Container(x => x.For<IProvider>().Use<LumpProvider>());
 
 
             var theLump = new Lump();
 
-            var provider = (LumpProvider) ObjectFactory.Container.With(theLump).GetInstance<IProvider>();
+            var provider = (LumpProvider) container.With(theLump).GetInstance<IProvider>();
             Assert.AreSame(theLump, provider.Lump);
         }
 
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsThatMightNotAlreadyBeRegistered()
         {
+            var container = new Container();
+
             var theLump = new Lump();
-            var provider = ObjectFactory.Container.With(theLump).GetInstance<LumpProvider>();
+            var provider = container.With(theLump).GetInstance<LumpProvider>();
             Assert.AreSame(theLump, provider.Lump);
         }
 

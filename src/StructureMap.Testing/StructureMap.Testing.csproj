@@ -190,6 +190,7 @@
     <Compile Include="AutoWiringExamples.cs" />
     <Compile Include="BidirectionalDependencies.cs" />
     <Compile Include="Bugs\AddValueDirectlyWithGenericUsage.cs" />
+    <Compile Include="Bugs\Andreas_forwarding_issue.cs" />
     <Compile Include="Bugs\Bug_101.cs" />
     <Compile Include="Bugs\Bug_235_for_look_for_registries_through_assemblies.cs" />
     <Compile Include="Bugs\Bug_244_using_Func_of_string_as_a_dependency.cs" />
@@ -215,7 +216,6 @@
     <Compile Include="Bugs\Register_Lambda_against_Type_Bug_274.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
     <Compile Include="Bugs\Setter_policies_when_the_build_plan_is_created_by_a_nested_container.cs" />
-    <Compile Include="Bugs\SingletonShouldBeLazy.cs" />
     <Compile Include="Bugs\Specify_Lifecycle_in_Configure_TesterTester.cs" />
     <Compile Include="Bugs\Specify_Lifecycle_on_open_generic_Tester.cs" />
     <Compile Include="Bugs\StaticPropertyCausesJITExceptionTester.cs" />
@@ -375,10 +375,15 @@
     <Compile Include="RegistryExtensions.cs" />
     <Compile Include="Resolving_ienumerable_types.cs" />
     <Compile Include="Resolving_mixed_open_and_closed_generic_types.cs" />
+    <Compile Include="Samples\glossary\glossary.cs" />
     <Compile Include="Samples\Interception\Event_Aggregator_Registration.cs" />
     <Compile Include="Samples\LifecycleSamples\Singleton\NoSingleton.cs" />
     <Compile Include="Samples\LifecycleSamples\Singleton\EvilSingleton.cs" />
     <Compile Include="Samples\Lifecycles_Samples.cs" />
+    <Compile Include="Samples\model.cs" />
+    <Compile Include="Samples\quickstart\configuring_the_container.cs" />
+    <Compile Include="Samples\quickstart\resolving_instances.cs" />
+    <Compile Include="Samples\registries.cs" />
     <Compile Include="SessionCacheTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />

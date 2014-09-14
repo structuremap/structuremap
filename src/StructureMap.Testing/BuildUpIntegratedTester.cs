@@ -26,13 +26,13 @@ namespace StructureMap.Testing
         public void create_a_setter_rule_and_see_it_applied_in_BuildUp_through_ObjectFactory()
         {
             var theGateway = new DefaultGateway();
-            ObjectFactory.Initialize(x => {
+            var container = new Container(x => {
                 x.For<IGateway>().Use(theGateway);
 
                 // First we create a new Setter Injection Policy that
                 // forces StructureMap to inject all public properties
                 // where the PropertyType is IGateway
-                x.Policies.SetAllProperties(y => { y.OfType<IGateway>(); });
+                x.Policies.SetAllProperties(y => y.OfType<IGateway>());
             });
 
             // Create an instance of BuildUpTarget1
@@ -40,7 +40,7 @@ namespace StructureMap.Testing
 
             // Now, call BuildUp() on target, and
             // we should see the Gateway property assigned
-            ObjectFactory.BuildUp(target);
+            container.BuildUp(target);
 
             target.Gateway.ShouldBeTheSameAs(theGateway);
         }
