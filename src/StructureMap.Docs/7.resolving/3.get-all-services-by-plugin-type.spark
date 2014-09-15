@@ -3,6 +3,9 @@
 
 <markdown>
 
+Please see <TopicLink name="the-container/working-with-enumerable-types" /> for a lot more information about what's going on behind the
+scenes.
+
 Once in a while you might want to get an enumerable of all the configured objects for a PluginType.  That's done with the `GetAllInstances()` method shown below:
 
 <Snippet name="get-all-instances" />
