@@ -132,22 +132,7 @@ namespace StructureMap
         /// <returns></returns>
         T GetInstance<T>(ExplicitArguments args);
 
-        /// <summary>
-        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
-        /// of type T should be "arg"
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="arg"></param>
-        /// <returns></returns>
-        ExplicitArgsExpression With<T>(T arg);
 
-        /// <summary>
-        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency or primitive argument
-        /// with the designated name should be the next value.
-        /// </summary>
-        /// <param name="argName"></param>
-        /// <returns></returns>
-        IExplicitProperty With(string argName);
 
         /// <summary>
         /// Gets the default instance of the pluginType using the explicitly configured arguments from the "args"
@@ -210,7 +195,6 @@ namespace StructureMap
         /// <returns></returns>
         ExplicitArgsExpression With(Type pluginType, object arg);
 
-
         /// <summary>
         /// Starts a request for an instance or instances with explicitly configured
         /// arguments
@@ -218,6 +202,23 @@ namespace StructureMap
         /// <param name="action"></param>
         /// <returns></returns>
         ExplicitArgsExpression With(Action<IExplicitArgsExpression> action);
+
+        /// <summary>
+        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
+        /// of type T should be "arg"
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        ExplicitArgsExpression With<T>(T arg);
+
+        /// <summary>
+        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency or primitive argument
+        /// with the designated name should be the next value.
+        /// </summary>
+        /// <param name="argName"></param>
+        /// <returns></returns>
+        IExplicitProperty With(string argName);
 
         /// <summary>
         /// Shortcut syntax for using an object to find a service that handles
