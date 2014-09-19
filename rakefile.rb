@@ -18,5 +18,5 @@ FubuRake::Solution.new do |sln|
 	
 	#sln.ci_steps = ['compile:net45wp8']
 	
-	sln.export_docs({:repository => 'git@github.com:structuremap/structuremap', :branch => 'jekyll'})
+	sln.export_docs({:repository => 'git@github.com:structuremap/structuremap.github.com.git', :branch => 'master'})
 end

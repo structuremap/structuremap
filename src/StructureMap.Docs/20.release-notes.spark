@@ -2,8 +2,29 @@
 <!--Url: release-notes-->
 <markdown>
 
-<Section title="Release Notes 3.0.1" id="3.0.1">
-Bug fix release.  See the [closed GitHub issues](https://github.com/structuremap/structuremap/issues?milestone=1&page=1&state=closed) for more information.
+StructureMap is attempting to follow a strict [SemVer](http://semver.org) versioning policy.
+
+<Section title="3.1.*" id="bugfix30">
+
+Click on any release version to see the list of closed GitHub issues related to any of the 3.1 releases.
+
+* [3.1.2](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A3.1.2+is%3Aclosed) -- reduces thread contention issues on Container.Configure() calls at runtime
+* [3.1.1](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A3.1.1+is%3Aclosed) -- fixed a potentially significant memory  leak issue
+* [3.1.0](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A3.1.0+is%3Aclosed) -- new functionality on `IContext`
+
+
+</Section>
+
+<Section title="3.0.* Bug Fix Releases" id="bugfix30">
+
+Click on any release version to see the list of closed GitHub issues related to a bugfix release.
+
+* [3.0.5](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A3.0.5+is%3Aclosed)
+* [3.0.4](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A3.0.4+is%3Aclosed)
+* [3.0.3](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A3.0.3+is%3Aclosed)
+* [3.0.2](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A3.0.2+is%3Aclosed)
+* [3.0.1](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A3.0.1+is%3Aclosed)
+
 </Section>
 
 <Section title="Release Notes 3.0" id="3.0">
