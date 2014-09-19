@@ -10,12 +10,25 @@ using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing
 {
+
     [TestFixture]
     public class WhatDoIHave_Smoke_Tester
     {
         [Test]
+        public void empty_container()
+        {
+            // SAMPLE: whatdoihave-simple
+            var container = new Container();
+            var report = container.WhatDoIHave();
+
+            Debug.WriteLine(report);
+            // ENDSAMPLE
+        }
+
+        [Test]
         public void display_one_service_for_an_interface()
         {
+            // SAMPLE: what_do_i_have_container
             var container = new Container(x => {
                 x.For<IEngine>().Use<Hemi>().Named("The Hemi");
 
@@ -31,8 +44,11 @@ namespace StructureMap.Testing
                 x.For<IEngine>().UseIfNone<VTwelve>();
                 x.For<IEngine>().MissingNamedInstanceIs.ConstructedBy(c => new NamedEngine(c.RequestedName));
             });
+            // ENDSAMPLE
 
+            // SAMPLE: whatdoihave_everything
             Debug.WriteLine(container.WhatDoIHave());
+            // ENDSAMPLE
         }
 
 
@@ -139,7 +155,31 @@ namespace StructureMap.Testing
                 x.For<IWidget>().Use<AWidget>();
             });
 
+            // SAMPLE: whatdoihave-assembly
             Debug.WriteLine(container.WhatDoIHave(assembly:typeof(IWidget).Assembly));
+            // ENDSAMPLE
+        }
+
+        [Test]
+        public void filtering_examples()
+        {
+            // SAMPLE: whatdoihave-filtering
+            var container = new Container();
+
+            // Filter by the Assembly of the Plugin Type
+            var byAssembly = container.WhatDoIHave(assembly: typeof (IWidget).Assembly);
+
+            // Only report on the specified Plugin Type
+            var byPluginType = container.WhatDoIHave(pluginType:typeof(IWidget));
+
+            // Filter to Plugin Type's in the named namespace
+            // The 'IsInNamespace' test will include child namespaces
+            var byNamespace = container.WhatDoIHave(@namespace: "StructureMap.Testing.Widget");
+
+            // Filter by a case insensitive string.Contains() match
+            // against the Plugin Type name
+            var byType = container.WhatDoIHave(typeName: "Widget");
+            // ENDSAMPLE
         }
 
         [Test]
@@ -161,7 +201,9 @@ namespace StructureMap.Testing
                 x.For<IWidget>().Use<AWidget>();
             });
 
+            // SAMPLE: whatdoihave-plugintype
             Debug.WriteLine(container.WhatDoIHave(pluginType:typeof(IWidget)));
+            // ENDSAMPLE
         }
 
         [Test]
@@ -185,7 +227,9 @@ namespace StructureMap.Testing
                 x.For<AWidget>().Use<AWidget>();
             });
 
+            // SAMPLE: whatdoihave-type
             Debug.WriteLine(container.WhatDoIHave(typeName:"Widget"));
+            // ENDSAMPLE
         }
 
         [Test]
@@ -209,7 +253,9 @@ namespace StructureMap.Testing
                 x.For<AWidget>().Use<AWidget>();
             });
 
+            // SAMPLE: whatdoihave-namespace
             Debug.WriteLine(container.WhatDoIHave(@namespace:"System"));
+            // ENDSAMPLE
         }
     }
 
