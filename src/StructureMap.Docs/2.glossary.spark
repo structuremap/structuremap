@@ -4,11 +4,12 @@
 There are some terms that reoccur throughout the documentation and show up in the StructureMap API. Understanding these terms and how they relate to StructureMap isn't a prerequisite to using StructureMap, but it helps.
 
 <Section title="Container" id="container">
+
 Tools like StructureMap are generally known as *Inversion of Control (IoC) Containers* or *Dependency Injection (DI) Containers*. In the Java world they are also known as *Lightweight Containers* to differentiate them from the older *EJB Containers*.
 
 A container is a tool that can help you composing object graphs and managing their scope (lifecycle). Altough you can do Inversion of Control and Dependecy Injection manually, using tools like StructureMap makes you far more productive and succesfull in doing so.
 
-Obviously there is more to a container then resolving services and managing their scope, but in the core that's just what it is. Before you can do so you need to tell StructureMap, the container, how it must compose those objects graphs and what their lifecycle is. This is called registration and can be done in various mixed ways. The strongly recommend way would be using the <TopicLink name="registration/registry-dsl" />. In your registration your bassicaly mapping abstractions to concrete types and define their lifecycle.
+Obviously there is more to a container then resolving services and managing their scope, but in the core that's just what it is. Before you can do so you need to tell StructureMap, the container, how it must compose those objects graphs and what their lifecycle is. This is called registration and can be done in various mixed ways. The strongly recommend way would be using the <TopicLink name="registration/registry-dsl" />. In your registration your basicaly mapping abstractions to concrete types and define their lifecycle.
 
 A simple example of a container using the <TopicLink name="registration/registry-dsl" />:
 
@@ -23,7 +24,7 @@ More advanced features that the container can do are things like: Interception, 
 </Section>
 
 <Section title="Nested Container" id="nested-container">
-A nested container is kind of like a temporary clone of a existing container, but scoped for short lived transactions or web requests. For example you can add additional configuration for contextual, scoped services or for making sure that whenever the nested container is disposed all the transient objects that the container created and implements `IDisposable` are disposed as well.
+A nested container is used to mark the scope of short lived transactions or web requests and track and clean up objects implementing the `IDisposable` interface for that operation.
 
 You can ask a existing container to create a nested container for you like in the following example:
 
@@ -60,7 +61,7 @@ Before StructureMap 3.0 you have probably seen the term used in an exception mes
 	StructureMap Exception Code:  202
 	No Default Instance defined for PluginFamily [plugin type]
 
-This specific exception message is gone in 3.0 because the exception messages where vastly improved in version 3.0.
+This specific exception message is gone in 3.0 because the exception messages were modernized in version 3.0 and.
 
 </Section>
 
@@ -70,13 +71,10 @@ A `PluginGraph` is the configuration model of the runtime configuration of a Str
 any kind of special convention that doesn't fit into the existing conventional support.
 </Section>
 
-<Section title="PipelineGraph" id="pipeline-graph">
-</Section>
 
 <Section title="Instance" id="instance">
 
-
-In StructureMap terms, an "Instance" is a way to build or locate a named object instance for a requested PluginType.  An "Instance" does not automatically equate to a concrete type.  For example, let's say that we're building a system to automate a warehouse.  Our system might consume an interface called IShippingService that acts as a Gateway to various ways of shipping boxes out of our warehouse.
+In StructureMap terms, an "Instance" is a configured and named strategy to build or locate a named object instance for a requested Plugin Type.  An "Instance" does not automatically equate to a concrete type.  For example, let's say that we're building a system to automate a warehouse.  Our system might consume an interface called IShippingService that acts as a Gateway to various ways of shipping boxes out of our warehouse.
 
 <Snippet name="IShippingService" />
 
@@ -94,6 +92,8 @@ There is an actual class in StructureMap that represents an "[Instance](https://
 
 
 When you call `Container.GetInstance<T>("the instance that I want")` or `Container.GetInstance<T>()`, the internal `Container` object is locating the correct Instance object and then using the Instance's internal _build plan_ to resolve or construct the actual object.
+
+A StructureMap "Instance" is a close analogue for what many other IoC tools call a "Component."
 
 </Section>
 
