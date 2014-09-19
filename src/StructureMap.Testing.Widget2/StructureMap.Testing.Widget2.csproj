@@ -95,10 +95,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StructureMap.LegacyAttributeSupport\StructureMap.LegacyAttributeSupport.csproj">
-      <Project>{840415d3-247d-449a-bc79-605d0a1c6f81}</Project>
-      <Name>StructureMap.LegacyAttributeSupport</Name>
-    </ProjectReference>
     <ProjectReference Include="..\StructureMap\StructureMap.csproj">
       <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
       <Name>StructureMap</Name>
