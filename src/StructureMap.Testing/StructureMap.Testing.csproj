@@ -199,6 +199,7 @@
     <Compile Include="Bugs\Bug_248_do_not_allow_lifecycle_registrations_to_nested_container.cs" />
     <Compile Include="Bugs\Bug_251_do_not_add_null_values_to_plugin_family_instance_cache.cs" />
     <Compile Include="Bugs\Bug_255_InstanceAttribute_Implementation.cs" />
+    <Compile Include="Bugs\Bug_295_named_registrations_to_nested_container.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
     <Compile Include="Bugs\closed_type_generic_is_in_get_all.cs" />
     <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
