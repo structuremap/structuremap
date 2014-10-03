@@ -11,5 +11,6 @@ namespace StructureMap.Pipeline
         void Eject(Type pluginType, Instance instance);
         void DisposeAndClear();
     }
+
     // ENDSAMPLE
 }

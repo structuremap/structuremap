@@ -176,7 +176,7 @@ namespace StructureMap.Pipeline
         {
             unchecked
             {
-                return ((Name != null ? Name.GetHashCode() : 0)*397) ^
+                return ((_originalName != null ? _originalName.GetHashCode() : 0)*397) ^
                        (pluginType != null ? pluginType.AssemblyQualifiedName.GetHashCode() : 0);
             }
         }

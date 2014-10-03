@@ -25,6 +25,8 @@ namespace StructureMap
             var childGraph = new PluginGraph();
             var instances = new ComplexInstanceGraph(_root, childGraph, ContainerRole.ProfileOrChild);
         
+            // RIGHT HERE, WE NEED TO USE A DIFFERENT SINGLETON CACHE
+
             return new PipelineGraph(childGraph, instances, _root, _root.Singletons, _root.Transients);
         }
 
