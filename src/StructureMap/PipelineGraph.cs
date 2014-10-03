@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Query;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
@@ -161,6 +163,29 @@ namespace StructureMap
                     .Each(x => x.Instances.GetAllInstances().ToArray().Each(i => i.ClearBuildPlan()));
 
             }
+        }
+
+        public void ValidateValidNestedScoping()
+        {
+            var descriptions = new List<string>();
+
+            _pluginGraph.Families.Each(family => {
+                family.Instances.Where(x => !(x is IValue)).Each(instance => {
+                    var lifecycle = instance.DetermineLifecycle(family.Lifecycle);
+                    if (!(lifecycle is IAppropriateForNestedContainer))
+                    {
+                        descriptions.Add("{0} or plugin type {1} has lifecycle {2}".ToFormat(instance.Description, family.PluginType.GetFullName(), lifecycle.Description));
+                    }
+                });
+            });
+
+            if (!descriptions.Any()) return;
+
+            var message =
+                "Only registrations of the default Transient, UniquePerRequest, and prebuilt objects are valid for nested containers.  Remember that 'Transient' instances will be built once per nested container.  If you need this functionality, try using a Child/Profile container instead\n";
+            message += string.Join("\n", descriptions);
+
+            throw new InvalidOperationException(message);
         }
 
         public ILifecycle DetermineLifecycle(Type pluginType, Instance instance)

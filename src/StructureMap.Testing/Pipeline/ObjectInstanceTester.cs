@@ -30,13 +30,6 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-        [Test]
-        public void always_able_to_be_in_nested_container()
-        {
-            new ObjectInstance(new StubbedGateway())
-                .IsValidInNestedContainer()
-                .ShouldBeTrue();
-        }
 
         [Test]
         public void to_dependency_source()
@@ -71,7 +64,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void object_instance_is_a_singleton()
         {
-            new ObjectInstance(new DisposableGuy()).Lifecycle.ShouldBeOfType<SingletonLifecycle>();
+            new ObjectInstance(new DisposableGuy()).Lifecycle.ShouldBeOfType<ObjectLifecycle>();
         }
 
         [Test]

@@ -226,6 +226,7 @@
     <Compile Include="Pipeline\NullInstance.cs" />
     <Compile Include="Pipeline\NulloTransientCache.cs" />
     <Compile Include="Pipeline\ObjectInstance.cs" />
+    <Compile Include="Pipeline\ObjectLifecycle.cs" />
     <Compile Include="Pipeline\ReaderWriterLockExtensions.cs" />
     <Compile Include="Pipeline\ReferencedInstance.cs" />
     <Compile Include="Pipeline\SingletonLifecycle.cs" />

@@ -389,26 +389,11 @@ namespace StructureMap
 
                 if (Role == ContainerRole.Nested)
                 {
-                    validateValidNestedScoping();
+                    _pipelineGraph.ValidateValidNestedScoping();
                 }
             }
         }
 
-        // Pure, unadulterated hoakum below.  GH-248
-        private void validateValidNestedScoping()
-        {
-            var descriptions = _pipelineGraph.Instances.ImmediateInstances()
-                .Where(x => !x.IsValidInNestedContainer())
-                .Select(x => x.Description + " has lifecycle " + x.Lifecycle).ToArray();
-
-            if (!descriptions.Any()) return;
-
-            var message =
-                "Only registrations of the default Transient, UniquePerRequest, and prebuilt objects are valid for nested containers.  Remember that 'Transient' instances will be built once per nested container.  If you need this functionality, try using a Child/Profile container instead\n";
-            message += string.Join("\n", descriptions);
-
-            throw new InvalidOperationException(message);
-        }
 
         /// <summary>
         /// Get the child container for the named profile

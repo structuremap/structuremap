@@ -3,12 +3,13 @@ using System;
 namespace StructureMap.Pipeline
 {
     /// <summary>
-    /// Makes sure that every request for this object returns a unique object
+    /// Used internally to mark objects that are injected directly into the container
     /// </summary>
-    public class UniquePerRequestLifecycle : LifecycleBase, IAppropriateForNestedContainer
+    public class ObjectLifecycle : LifecycleBase
     {
         public override void EjectAll(ILifecycleContext context)
         {
+            
         }
 
         public override IObjectCache FindCache(ILifecycleContext context)

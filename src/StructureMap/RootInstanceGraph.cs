@@ -74,5 +74,13 @@ namespace StructureMap
         {
             return GetAllInstances();
         }
+
+        public PluginGraph ImmediatePluginGraph
+        {
+            get
+            {
+                return _pluginGraph;
+            }
+        }
     }
 }

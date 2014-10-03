@@ -27,5 +27,6 @@ namespace StructureMap.Pipeline
         {
             return _lifecycles[typeof (T)];
         }
+
     }
 }

@@ -3,6 +3,11 @@ using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
+    public interface IValue
+    {
+        object Value { get; }
+    }
+
     public class ObjectInstance : ObjectInstance<object, object>
     {
         public ObjectInstance(object anObject) : base(anObject)
@@ -10,7 +15,7 @@ namespace StructureMap.Pipeline
         }
     }
 
-    public class ObjectInstance<TReturned, TPluginType> : ExpressedInstance<ObjectInstance<TReturned, TPluginType>, TReturned, TPluginType>, IDisposable where TReturned : class, TPluginType
+    public class ObjectInstance<TReturned, TPluginType> : ExpressedInstance<ObjectInstance<TReturned, TPluginType>, TReturned, TPluginType>, IValue, IDisposable where TReturned : class, TPluginType
     {
         private TReturned _object;
 
@@ -23,12 +28,15 @@ namespace StructureMap.Pipeline
 
             _object = anObject;
 
-            SetLifecycleTo<SingletonLifecycle>();
+            SetLifecycleTo<ObjectLifecycle>();
         }
 
-        public override bool IsValidInNestedContainer()
+        object IValue.Value
         {
-            return true;
+            get
+            {
+                return _object;
+            }
         }
 
         protected override ObjectInstance<TReturned, TPluginType> thisInstance

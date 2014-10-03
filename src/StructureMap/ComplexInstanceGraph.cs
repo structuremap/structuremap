@@ -88,5 +88,13 @@ namespace StructureMap
         {
             return _pluginGraph.Families.SelectMany(x => x.Instances);
         }
+
+        public PluginGraph ImmediatePluginGraph
+        {
+            get
+            {
+                return _pluginGraph;
+            }
+        }
     }
 }

@@ -121,31 +121,6 @@ namespace StructureMap.Testing.Pipeline
             });
         }
 
-        private bool nestedIsValidForLifecycle(ILifecycle lifecycle)
-        {
-            var instance = new InstanceUnderTest();
-            instance.SetLifecycleTo(lifecycle);
-
-            return instance.IsValidInNestedContainer();
-        }
-
-        [Test]
-        public void is_not_valid_in_nested_container_for_any_lifecycle_but_unique_or_transient()
-        {
-            nestedIsValidForLifecycle(Lifecycles.Transient).ShouldBeTrue();
-            nestedIsValidForLifecycle(Lifecycles.Unique).ShouldBeTrue();
-
-            nestedIsValidForLifecycle(Lifecycles.Singleton).ShouldBeFalse();
-            nestedIsValidForLifecycle(Lifecycles.ThreadLocal).ShouldBeFalse();
-            nestedIsValidForLifecycle(MockRepository.GenerateMock<ILifecycle>()).ShouldBeFalse();
-        }
-
-        [Test]
-        public void is_valid_for_nested_container_if_the_lifecycle_is_null()
-        {
-            new InstanceUnderTest().IsValidInNestedContainer()
-                .ShouldBeTrue();
-        }
     }
 
     public class InstanceUnderTest : Instance

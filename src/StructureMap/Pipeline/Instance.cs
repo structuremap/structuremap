@@ -186,15 +186,6 @@ namespace StructureMap.Pipeline
             return Lifecycle ?? parent ?? Lifecycles.Transient;
         }
 
-        public virtual bool IsValidInNestedContainer()
-        {
-            if (Lifecycle == null) return true;
-            if (Lifecycle is TransientLifecycle) return true;
-            if (Lifecycle is UniquePerRequestLifecycle) return true;
-
-            return false;
-        }
-
         protected bool Equals(Instance other)
         {
             return string.Equals(_originalName, other._originalName);

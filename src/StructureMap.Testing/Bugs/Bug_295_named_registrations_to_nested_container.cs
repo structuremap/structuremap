@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Diagnostics;
+using NUnit.Framework;
 using System;
 
 namespace StructureMap.Testing.Bugs
@@ -14,17 +15,30 @@ namespace StructureMap.Testing.Bugs
             var child1 = container.CreateChildContainer();
             var child1Thing = Thing1.Build("child1");
             child1.Configure(_ => _.For<IThing>().Add(child1Thing).Named("A"));
-            var containerChild1Thing = child1.GetInstance<IThing>("A");
-            Assert.AreEqual(child1Thing, containerChild1Thing);
+
+            child1.GetInstance<IThing>("A").ShouldBeTheSameAs(child1Thing);
+
+            Debug.WriteLine(container.WhatDoIHave());
 
             var child2 = container.CreateChildContainer();
             var child2Thing = Thing1.Build("child2");
+            
             child2.Configure(_ => _.For<IThing>().Add(child2Thing).Named("A"));
+
+            child2.GetInstance<IThing>("A")
+                .ShouldBeTheSameAs(child2Thing);
+
+            child2.TryGetInstance<IThing>("A")
+                .ShouldBeTheSameAs(child2Thing);
+
+
+
             var child2ContainerThing = child2.TryGetInstance<IThing>("A");
             Assert.AreEqual(child2Thing, child2ContainerThing);
 
             var parentContainerThing = container.TryGetInstance<IThing>("A");
             parentContainerThing.ShouldBeNull();
+
         }
 
         [Test]
@@ -68,6 +82,11 @@ namespace StructureMap.Testing.Bugs
             parentContainerThing.ShouldBeNull();
         }
 
+
+        // ******** THIS ONE IS NOT VALID. SINGLETON MAKE NO SENSE IN THIS CONTEXT ************
+        // As of now, I've tightened the validation logic to make Configure() blow up
+        // if you try to register a singleton to a nested container
+        /*
         [Test]
         public void named_registrations_with_singleton_should_be_isolated_on_nested_containers()
         {
@@ -86,7 +105,7 @@ namespace StructureMap.Testing.Bugs
             var parentContainerThing = container.TryGetInstance<IThing>("A");
             parentContainerThing.ShouldBeNull();
         }
-
+        */
 
 
         public interface IThing { }

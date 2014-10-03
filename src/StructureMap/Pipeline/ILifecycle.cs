@@ -7,6 +7,8 @@ namespace StructureMap.Pipeline
         IObjectCache FindCache(ILifecycleContext context);
     }
 
+    public interface IAppropriateForNestedContainer{}
+
     public abstract class LifecycleBase : ILifecycle
     {
         public string Description
@@ -18,7 +20,7 @@ namespace StructureMap.Pipeline
         public abstract IObjectCache FindCache(ILifecycleContext context);
     }
 
-    public class TransientLifecycle : LifecycleBase
+    public class TransientLifecycle : LifecycleBase, IAppropriateForNestedContainer
     {
         public override void EjectAll(ILifecycleContext context)
         {

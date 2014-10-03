@@ -77,6 +77,11 @@ namespace StructureMap
 
         public object GetObject(Type pluginType, Instance instance, ILifecycle lifecycle)
         {
+            if (instance is IValue)
+            {
+                return _resolver.BuildNewInSession(pluginType, instance);
+            }
+            
             if (lifecycle is UniquePerRequestLifecycle)
             {
                 return _resolver.BuildNewInSession(pluginType, instance);
