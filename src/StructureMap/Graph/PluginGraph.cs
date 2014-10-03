@@ -285,7 +285,12 @@ namespace StructureMap.Graph
 
         void IDisposable.Dispose()
         {
-            _singletonCache.DisposeAndClear();
+            _families.Each(family => {
+                family.Instances.Each(instance => {
+                    _singletonCache.Eject(family.PluginType, instance);
+                });
+            });
+            
 
             _profiles.Each(x => x.SafeDispose());
             _profiles.Clear();

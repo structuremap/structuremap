@@ -114,6 +114,11 @@ namespace StructureMap
 
         public void Dispose()
         {
+            if (Role == ContainerRole.Root)
+            {
+                _singletons.DisposeAndClear();
+            }
+
             _transients.DisposeAndClear();
             _pluginGraph.SafeDispose();
         }

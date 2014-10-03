@@ -548,8 +548,8 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer(string profileName)
         {
-            var pipeine = _pipelineGraph.Profiles.For(profileName).ToNestedGraph();
-            return new Container(pipeine);
+            var pipeline = _pipelineGraph.Profiles.For(profileName).ToNestedGraph();
+            return new Container(pipeline);
         }
 
         private bool _disposedLatch;
