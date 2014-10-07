@@ -2,6 +2,9 @@
 <!--Url: integrations-->
 
 <markdown>
-TODO(Write some content!)
+Integration adapters and recipes for StructureMap with several popular .Net frameworks are available.
+
+<TableOfContents />
+ 
 </markdown>
 
