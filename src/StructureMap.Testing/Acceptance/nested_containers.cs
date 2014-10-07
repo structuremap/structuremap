@@ -6,21 +6,40 @@ namespace StructureMap.Testing.Acceptance
     [TestFixture]
     public class nested_containers
     {
+
         // SAMPLE: nested-creation
+        public interface IWorker
+        {
+            void DoWork();
+        }
+
+        public class Worker : IWorker, IDisposable
+        {
+            public void DoWork()
+            {
+                // do stuff!
+            }
+
+            public void Dispose()
+            {
+                // clean up
+            }
+        }
+
         [Test]
         public void creating_a_nested_container()
         {
-            // From ObjectFactory, but please stop using ObjectFactory
-            using (var nested = ObjectFactory.Container.GetNestedContainer())
-            {
-                // do stuff
-            }
-
             // From an IContainer object
-            var container = new Container();
+            var container = new Container(_ => {
+                _.For<IWorker>().Use<Worker>();
+            });
+
             using (var nested = container.GetNestedContainer())
             {
-                // do stuff
+                // This object is disposed when the nested container
+                // is disposed
+                var worker = nested.GetInstance<IWorker>();
+                worker.DoWork();
             }
         }
         // ENDSAMPLE
