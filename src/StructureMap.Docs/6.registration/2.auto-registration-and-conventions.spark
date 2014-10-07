@@ -45,12 +45,25 @@ a type within that assembly.
 Excluding additional types or namespaces is as easy as calling the corresponding method
 again.
 
-</Section>
-
 <Snippet name="scan-exclusions" />
 
+</Section>
 
-TODO(Conventions)
+<Section title="Custom Registration Conventions" id="custom">
+
+It's just not possible (or desirable) for StructureMap to include every possible type of auto registration
+convention users might want, but that's okay because StructureMap allows you to create and use your own
+conventions through the `IRegistrationConvention` interface:
+
+<Snippet name="IRegistrationConvention" />
+
+Let's say that you'd like a custom convention that just registers a concrete type against all the interfaces
+that it implements. You could then build a custom `IRegistrationConvention` class like the following example: 
+
+<Snippet name="custom-registration-convention" />
+
+</Section>
+
 
 </markdown>
 
