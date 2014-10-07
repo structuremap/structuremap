@@ -9,6 +9,7 @@ namespace StructureMap.Testing.Acceptance
     [TestFixture]
     public class setting_lifecycle_scope
     {
+
         [Test]
         public void can_specify_at_family_level()
         {
@@ -22,17 +23,29 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeTheSameAs(container.GetInstance<Rule>());
         }
 
+        // SAMPLE: lifecycle-rules
         [Test]
-        public void can_override_lifecycle_at_instance()
+        public void lifecycle_precedence()
         {
             var container = new Container(x => {
-                x.For<Rule>().Singleton();
+                x.For<IWidget>().Use<AWidget>();
 
+                // Configure the default lifecycle for
+                // a PluginType (Rule)
+                x.For<Rule>().Singleton();
+                x.For<Rule>().Add<ARule>().Named("C");
+
+                // Configure the lifecycle for a single Instance
                 x.For<Rule>().Add<ARule>().Named("A").Transient();
                 x.For<Rule>().Add<ARule>().Named("B").AlwaysUnique();
-                x.For<Rule>().Add<ARule>().Named("C");
+                
             });
 
+            // The default lifecycle is Transient
+            container.Model.For<IWidget>().Default
+                .Lifecycle.ShouldBeOfType<TransientLifecycle>();
+
+            // Override at the Family
             container.Model.For<Rule>().Lifecycle.ShouldBeOfType<SingletonLifecycle>();
             container.Model.For<Rule>().Find("C").Lifecycle.ShouldBeOfType<SingletonLifecycle>();
 
@@ -51,5 +64,6 @@ namespace StructureMap.Testing.Acceptance
                     .ShouldNotBeTheSameAs(nested.GetInstance<Rule>("B"));
             }
         }
+        // ENDSAMPLE
     }
 }

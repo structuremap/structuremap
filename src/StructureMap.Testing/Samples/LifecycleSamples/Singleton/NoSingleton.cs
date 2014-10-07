@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Samples.LifecycleSamples.Singleton
 
     // This version of the class just uses constructor 
     // injection to get an object instance of
-    // ISingletonDependency.
+    // ISingletonDependency. 
     public class DependencyUser
     {
         private readonly ISingletonDependency _dependency;
@@ -31,11 +31,6 @@ namespace StructureMap.Testing.Samples.LifecycleSamples.Singleton
         public DependencyUser(ISingletonDependency dependency)
         {
             _dependency = dependency;
-        }
-
-        public void DoWork()
-        {
-            _dependency.DoSomething();
         }
     }
 
