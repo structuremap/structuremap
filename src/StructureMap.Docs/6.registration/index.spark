@@ -35,7 +35,7 @@ When you set up a <code>Container</code> or <code>ObjectFactory</code>, you need
 
 <Snippet name="quickstart-configure-the-container-using-a-registry" />
 
-<Info>The StructureMap team highly recommends using `Registry` classes for your real application configuration.  The syntax is shorter inside the Registry class constructor than from within the <code>Container</code> constructor method. Registry classes can be used to modularize the configuration of a bigger application into more manageable chunks.  Lastly, using <code>Registry</code> classes makes it easier to stand up additional <code>Container</code> objects in testing scenarios that reflect the real application composition.</Info>
+<Info>The StructureMap team highly recommends using <code>Registry</code> classes for your real application configuration.  The syntax is shorter inside the Registry class constructor than from within the <code>Container</code> constructor method. In addition, Registry classes can be used to modularize the configuration of a bigger application into more manageable chunks.  Lastly, using <code>Registry</code> classes makes it easier to stand up additional <code>Container</code> objects in testing scenarios that reflect the real application composition.</Info>
 
 In real world applications you also have to deal with repetitive similar registrations. Such registrations are tedious, easy to forget and can be a weak spot in your application. StructureMap provides <TopicLink name="registration/auto-registration-and-conventions" />  which mitigates this pain and eases the maintenance burden. StructureMap exposes this feature through the <TopicLink name="registration/registry-dsl" /> by the `Scan` method.
 
