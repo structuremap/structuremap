@@ -173,6 +173,7 @@
     <Compile Include="Acceptance\builder_for_open_generic_type.cs" />
     <Compile Include="Acceptance\build_by_lambdas.cs" />
     <Compile Include="Acceptance\child_containers.cs" />
+    <Compile Include="Acceptance\constructor_selection.cs" />
     <Compile Include="Acceptance\contextual_building.cs" />
     <Compile Include="Acceptance\ejecting_instances.cs" />
     <Compile Include="Acceptance\explicit_arguments.cs" />

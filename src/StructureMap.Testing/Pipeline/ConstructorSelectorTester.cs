@@ -22,6 +22,39 @@ namespace StructureMap.Testing.Pipeline
                 .ShouldEqual(7);
         }
 
+        // SAMPLE: select-the-greediest-ctor
+        public class GreaterThanRule : Rule
+        {
+            public string Attribute { get; set; }
+            public int Value { get; set; }
+
+            public GreaterThanRule()
+            {
+            }
+
+            public GreaterThanRule(string attribute, int value)
+            {
+                Attribute = attribute;
+                Value = value;
+            }
+        }
+
+        [Test]
+        public void using_the_greediest_ctor()
+        {
+            var container = new Container(_ => {
+                _.ForConcreteType<GreaterThanRule>().Configure
+                    .Ctor<string>("attribute").Is("foo")
+                    .Ctor<int>("value").Is(42);
+            });
+
+            var rule = container.GetInstance<GreaterThanRule>();
+            rule.Attribute.ShouldEqual("foo");
+            rule.Value.ShouldEqual(42);
+        }
+
+        // ENDSAMPLE
+
         [Test]
         public void should_get_the_greediest_constructor_if_there_is_more_than_one()
         {
