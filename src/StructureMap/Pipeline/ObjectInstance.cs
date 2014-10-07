@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using StructureMap.Building;
+using StructureMap.Diagnostics;
 
 namespace StructureMap.Pipeline
 {
@@ -15,7 +17,7 @@ namespace StructureMap.Pipeline
         }
     }
 
-    public class ObjectInstance<TReturned, TPluginType> : ExpressedInstance<ObjectInstance<TReturned, TPluginType>, TReturned, TPluginType>, IValue, IDisposable where TReturned : class, TPluginType
+    public class ObjectInstance<TReturned, TPluginType> : ExpressedInstance<ObjectInstance<TReturned, TPluginType>, TReturned, TPluginType>, IBuildPlan, IValue, IDisposable where TReturned : class, TPluginType
     {
         private TReturned _object;
 
@@ -78,6 +80,27 @@ namespace StructureMap.Pipeline
         public override Type ReturnedType
         {
             get { return _object.GetType(); }
+        }
+
+        protected override IBuildPlan buildPlan(Type pluginType, Policies policies)
+        {
+            var interceptors = determineInterceptors(pluginType, policies);
+            if (!interceptors.Any())
+            {
+                return this;
+            }
+
+            return base.buildPlan(pluginType, policies);
+        }
+
+        void IBuildPlanVisitable.AcceptVisitor(IBuildPlanVisitor visitor)
+        {
+            visitor.InnerBuilder(new Constant(_object.GetType(), _object));
+        }
+
+        object IBuildPlan.Build(IBuildSession session, IContext context)
+        {
+            return _object;
         }
     }
 }

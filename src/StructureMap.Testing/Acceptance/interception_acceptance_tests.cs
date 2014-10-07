@@ -250,6 +250,21 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<WidgetHolder>()
                 .Inner.ShouldBeOfType<AWidget>();
         }
+
+        [Test]
+        public void intercept_a_literal_object()
+        {
+            var widget = new AWidget();
+            var container = new Container(x =>
+            {
+                x.For<IWidget>().DecorateAllWith(w => new WidgetHolder(w));
+                x.For<IWidget>().Use(widget);
+            });
+
+            container.GetInstance<IWidget>()
+                .ShouldBeOfType<WidgetHolder>()
+                .Inner.ShouldBeTheSameAs(widget);
+        }
     }
 
     public abstract class Activateable

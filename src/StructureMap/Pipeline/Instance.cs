@@ -144,13 +144,12 @@ namespace StructureMap.Pipeline
             return "Instance of {0} -- {1}".ToFormat(typeName, Description);
         }
 
-        private IBuildPlan buildPlan(Type pluginType, Policies policies)
+        protected virtual IBuildPlan buildPlan(Type pluginType, Policies policies)
         {
             try
             {
                 var builderSource = ToBuilder(pluginType, policies);
-                var interceptors =
-                    policies.Interceptors.SelectInterceptors(pluginType, this).Union(_interceptors);
+                var interceptors = determineInterceptors(pluginType, policies);
 
                 return new BuildPlan(pluginType, this, builderSource, policies, interceptors);
             }
@@ -165,6 +164,13 @@ namespace StructureMap.Pipeline
                     "Error while trying to create the BuildPlan for {0}.\nPlease check the inner exception".ToFormat(
                         toDescription(pluginType)), e);
             }
+        }
+
+        protected IEnumerable<IInterceptor> determineInterceptors(Type pluginType, Policies policies)
+        {
+            var interceptors =
+                policies.Interceptors.SelectInterceptors(pluginType, this).Union(_interceptors);
+            return interceptors;
         }
 
         /// <summary>
