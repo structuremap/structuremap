@@ -97,6 +97,17 @@ namespace StructureMap.Building
 
             var builder = innerSource.ToExpression(Parameters.Session, Parameters.Context);
 
+            // Special optimized case: returning a constant instance can never fail, therefore using
+            // extra time to compile a relatively complex Expression is not necesarry.
+            //
+            // Profiling has shown that compiling this expression can take between 0.5ms to as much as 3ms.
+            // This will increase performance of resolving injected instances from nested containers.
+            if (builder.NodeType == ExpressionType.Constant && _pluginType.IsAssignableFrom(builder.Type))
+            {
+                var value = ((ConstantExpression)builder).Value;
+                return (Func<IBuildSession, IContext, object>)((bs, c) => value);
+            }
+
             if (builder.Type != _pluginType)
             {
                 builder = Expression.Convert(builder, _pluginType);
