@@ -20,7 +20,19 @@ namespace StructureMap.Testing.Configuration.DSL
 
         #endregion
 
+        public interface SomethingElseEntirely : Something, SomethingElse
+        {
+        }
+
+        public interface SomethingElse
+        {
+        }
+
         public interface Something
+        {
+        }
+
+        public class OrangeSomething : SomethingElseEntirely
         {
         }
 
@@ -169,6 +181,19 @@ namespace StructureMap.Testing.Configuration.DSL
             });
 
             container.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Red");
+        }
+
+        [Test]
+        public void CreatePluginFamilyWithReferenceToAnotherFamily()
+        {
+            var container = new Container(r =>
+            {
+                r.For<SomethingElseEntirely>().Use<OrangeSomething>();
+                r.For<SomethingElse>().Use(context => context.GetInstance<SomethingElseEntirely>());
+                r.For<Something>().Use(context => context.GetInstance<SomethingElseEntirely>());
+            });
+
+            container.GetInstance<SomethingElseEntirely>().ShouldBeOfType<OrangeSomething>();
         }
 
         [Test]
