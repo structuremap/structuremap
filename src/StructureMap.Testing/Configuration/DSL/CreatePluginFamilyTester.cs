@@ -189,11 +189,22 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(r =>
             {
                 r.For<SomethingElseEntirely>().Use<OrangeSomething>();
-                r.For<SomethingElse>().Use(context => context.GetInstance<SomethingElseEntirely>());
-                r.For<Something>().Use(context => context.GetInstance<SomethingElseEntirely>());
+                r.For<SomethingElse>().Use(context =>
+                    // If the return is cast to OrangeSomething, this works.
+                    context.GetInstance<SomethingElseEntirely>());
+                r.For<Something>().Use(context => 
+                    // If the return is cast to OrangeSomething, this works.
+                    context.GetInstance<SomethingElseEntirely>());
             });
 
-            container.GetInstance<SomethingElseEntirely>().ShouldBeOfType<OrangeSomething>();
+            var orangeSomething = container.GetInstance<SomethingElseEntirely>();
+            orangeSomething.ShouldBeOfType<OrangeSomething>();
+            container.GetInstance<SomethingElse>()
+                .ShouldBeOfType<OrangeSomething>()
+                .ShouldEqual(orangeSomething);
+            container.GetInstance<Something>()
+                .ShouldBeOfType<OrangeSomething>()
+                .ShouldEqual(orangeSomething);
         }
 
         [Test]
