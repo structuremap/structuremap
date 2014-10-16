@@ -5,6 +5,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
+    // SAMPLE: EnumerableFamilyPolicy
     public class EnumerableFamilyPolicy : IFamilyPolicy
     {
         public PluginFamily Build(Type type)
@@ -29,6 +30,7 @@ namespace StructureMap.Graph
             
         }
     }
+    // ENDSAMPLE
 
     public class AllPossibleInstance : Instance
     {

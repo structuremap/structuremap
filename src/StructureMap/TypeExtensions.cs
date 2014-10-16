@@ -9,6 +9,16 @@ namespace StructureMap.TypeRules
 
     public static partial class TypeExtensions
     {
+        public static bool IsConcreteWithDefaultCtor(this Type type)
+        {
+            if (type.IsConcrete())
+            {
+                return type.GetConstructor(new Type[0]) != null;
+            }
+
+            return false;
+        }
+
         internal static bool HasAttribute<T>(this MemberInfo provider) where T : Attribute
         {
             var atts = provider.GetCustomAttributes(typeof (T), true);
