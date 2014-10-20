@@ -12,7 +12,50 @@ namespace StructureMap.Pipeline
 {
     public abstract class Instance : HasLifecycle, IDescribed
     {
-        private readonly string _originalName;
+		public class MissingInstance : Instance
+		{
+			public Instance InnerInstance { get; private set; }
+			public string RequestedName { get; private set; }
+
+			public MissingInstance(string requestedName, Instance innerInstance)
+			{
+				InnerInstance = innerInstance;
+				RequestedName = requestedName;
+				_originalName += "++" + requestedName + "++";
+			}
+
+			public override IDependencySource ToDependencySource(Type pluginType)
+			{
+				return InnerInstance.ToDependencySource(pluginType);
+			}
+
+			public override string Description
+			{
+				get { return InnerInstance.Description; }
+			}
+
+			public override Type ReturnedType
+			{
+				get { return InnerInstance.ReturnedType; }
+			}
+
+			protected override IBuildPlan buildPlan(Type pluginType, Policies policies)
+			{
+				return InnerInstance.buildPlan(pluginType, policies);
+			}
+
+			public override IDependencySource ToBuilder(Type pluginType, Policies policies)
+			{
+				return InnerInstance.ToBuilder(pluginType, policies);
+			}
+
+			public override Instance CloseType(Type[] types)
+			{
+				return InnerInstance.CloseType(types);
+			}
+		}
+
+        private string _originalName;
         private string _name;
 
         private readonly IList<IInterceptor> _interceptors = new List<IInterceptor>();

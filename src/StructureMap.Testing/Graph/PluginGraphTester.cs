@@ -128,8 +128,9 @@ namespace StructureMap.Testing.Graph
             var instance = new SmartInstance<BigThingy>().Named("red");
             graph.Families[typeof (BigThingy)].MissingInstance = instance;
 
-            graph.FindInstance(typeof (BigThingy), "green")
-                .ShouldBeTheSameAs(instance);
+            var missingInstance = graph.FindInstance(typeof (BigThingy), "green") as Instance.MissingInstance;
+			missingInstance.ShouldNotBeNull();
+			missingInstance.InnerInstance.ShouldBeTheSameAs(instance);
         }
 
 

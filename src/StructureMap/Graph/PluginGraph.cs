@@ -265,7 +265,13 @@ namespace StructureMap.Graph
         {
             if (!HasFamily(pluginType)) return null;
 
-            return _families[pluginType].GetInstance(name) ?? _families[pluginType].MissingInstance;
+            var instance = _families[pluginType].GetInstance(name);
+	        if (instance != null) return instance;
+
+	        instance = _families[pluginType].MissingInstance;
+	        if (instance == null) return null;
+
+			return new Instance.MissingInstance(name, instance);
         }
 
         /// <summary>

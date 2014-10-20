@@ -85,8 +85,13 @@ namespace StructureMap.Testing.Pipeline
             var missing = new ObjectInstance(new AWidget());
             family.MissingInstance = missing;
 
-            graph.FindInstance(typeof (IWidget), "anything").ShouldBeTheSameAs(missing);
-            graph.FindInstance(typeof (IWidget), Guid.NewGuid().ToString()).ShouldBeTheSameAs(missing);
+            var missingInstance = graph.FindInstance(typeof (IWidget), "anything") as Instance.MissingInstance;
+			missingInstance.ShouldNotBeNull();
+			missingInstance.InnerInstance.ShouldBeTheSameAs(missing);
+
+            missingInstance = graph.FindInstance(typeof (IWidget), Guid.NewGuid().ToString()) as Instance.MissingInstance;
+			missingInstance.ShouldNotBeNull();
+			missingInstance.InnerInstance.ShouldBeTheSameAs(missing);
         }
 
     }
