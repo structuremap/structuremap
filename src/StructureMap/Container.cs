@@ -619,6 +619,9 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer(string profileName)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             var pipeline = _pipelineGraph.Profiles.For(profileName).ToNestedGraph();
             return new Container(pipeline);
         }
