@@ -49,6 +49,8 @@ namespace StructureMap
 
         internal Container(IPipelineGraph pipelineGraph)
         {
+            if (pipelineGraph == null) throw new ArgumentNullException("pipelineGraph");
+
             Name = Guid.NewGuid().ToString();
 
             _pipelineGraph = pipelineGraph;
