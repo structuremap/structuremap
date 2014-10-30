@@ -117,6 +117,9 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, ExplicitArguments args)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 var defaultInstance = _pipelineGraph.Instances.GetDefault(pluginType);
