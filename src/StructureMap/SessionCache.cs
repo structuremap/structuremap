@@ -37,6 +37,8 @@ namespace StructureMap
 
         public object GetDefault(Type pluginType, IPipelineGraph pipelineGraph)
         {
+            if (pipelineGraph == null) throw new ArgumentNullException("pipelineGraph");
+
             if (_defaults.ContainsKey(pluginType))
             {
                 return _defaults[pluginType];
