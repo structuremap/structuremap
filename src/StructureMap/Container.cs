@@ -529,6 +529,9 @@ namespace StructureMap
         /// <returns></returns>
         public IExplicitProperty With(string argName)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             return new ExplicitArgsExpression(this).With(argName);
         }
 
