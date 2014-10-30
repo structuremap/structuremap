@@ -44,6 +44,8 @@ namespace StructureMap
         public PipelineGraph(PluginGraph pluginGraph, IInstanceGraph instances, IPipelineGraph root,
             IObjectCache singletons, IObjectCache transients)
         {
+            if (pluginGraph == null) throw new ArgumentNullException("pluginGraph");
+
             _pluginGraph = pluginGraph;
             _instances = instances;
 
