@@ -591,6 +591,9 @@ namespace StructureMap
         /// <returns></returns>
         public CloseGenericTypeExpression ForObject(object subject)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             return new CloseGenericTypeExpression(subject, this);
         }
 
