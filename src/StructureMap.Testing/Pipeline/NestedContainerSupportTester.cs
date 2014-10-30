@@ -262,7 +262,9 @@ namespace StructureMap.Testing.Pipeline
             var child = parent.GetNestedContainer();
             child.Dispose();
 
-            Assert.Throws<ObjectDisposedException>(() => child.GetInstance(typeof (AWidget)));
+            var exception = Assert.Throws<ObjectDisposedException>(() => child.GetInstance(typeof (AWidget)));
+            Console.WriteLine(exception);
+            Assert.That(exception.ObjectName, Is.EqualTo(child.Name));
         }
     }
 }
