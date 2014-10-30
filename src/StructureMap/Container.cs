@@ -189,6 +189,9 @@ namespace StructureMap
         /// <returns></returns>
         public IEnumerable<T> GetAllInstances<T>(ExplicitArguments args)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
