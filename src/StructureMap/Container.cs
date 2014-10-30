@@ -572,6 +572,9 @@ namespace StructureMap
         /// </example>
         public OpenGenericTypeExpression ForGenericType(Type templateType)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             return new OpenGenericTypeExpression(templateType, this);
         }
 
