@@ -459,7 +459,13 @@ namespace StructureMap
         /// </summary>
         public string ProfileName
         {
-            get { return _pipelineGraph.Profile; }
+            get
+            {
+                if (_disposedLatch)
+                    throw new ObjectDisposedException(Name);
+
+                return _pipelineGraph.Profile;
+            }
         }
 
         /// <summary>
