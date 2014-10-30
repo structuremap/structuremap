@@ -24,6 +24,8 @@ namespace StructureMap
 
         public SessionCache(IBuildSession resolver)
         {
+            if (resolver == null) throw new ArgumentNullException("resolver");
+
             _resolver = resolver;
         }
 
