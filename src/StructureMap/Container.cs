@@ -554,6 +554,9 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         public void EjectAllInstancesOf<T>()
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             _pipelineGraph.Ejector.EjectAllInstancesOf<T>();
         }
 
