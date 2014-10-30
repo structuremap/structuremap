@@ -447,6 +447,9 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer CreateChildContainer()
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             var pipeline = _pipelineGraph.Profiles.NewChild();
             return new Container(pipeline);
         }
