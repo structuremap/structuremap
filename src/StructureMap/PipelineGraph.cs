@@ -45,6 +45,7 @@ namespace StructureMap
             IObjectCache singletons, IObjectCache transients)
         {
             if (pluginGraph == null) throw new ArgumentNullException("pluginGraph");
+            if (instances == null) throw new ArgumentNullException("instances");
 
             _pluginGraph = pluginGraph;
             _instances = instances;
