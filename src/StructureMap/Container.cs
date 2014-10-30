@@ -542,6 +542,9 @@ namespace StructureMap
         /// </summary>
         public void AssertConfigurationIsValid()
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             PipelineGraphValidator.AssertNoErrors(_pipelineGraph);
         }
 
