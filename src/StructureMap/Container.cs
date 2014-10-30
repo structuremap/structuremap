@@ -143,6 +143,9 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, ExplicitArguments args, string name)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 var namedInstance = _pipelineGraph.Instances.FindInstance(pluginType, name);
