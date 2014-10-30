@@ -23,6 +23,8 @@ namespace StructureMap
 
         public static IPipelineGraph BuildRoot(PluginGraph pluginGraph)
         {
+            if (pluginGraph == null) throw new ArgumentNullException("pluginGraph");
+
             return new PipelineGraph(pluginGraph, new RootInstanceGraph(pluginGraph), null, pluginGraph.SingletonCache,
                 new NulloTransientCache());
         }
