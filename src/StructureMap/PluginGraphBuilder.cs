@@ -25,6 +25,8 @@ namespace StructureMap
 
         public PluginGraphBuilder(PluginGraph graph)
         {
+            if (graph == null) throw new ArgumentNullException("graph");
+
             _graph = graph;
         }
 
