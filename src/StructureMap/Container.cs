@@ -603,6 +603,9 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer()
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             var container = new Container(_pipelineGraph.ToNestedGraph());
             container.Name = "Nested-" + container.Name;
 
