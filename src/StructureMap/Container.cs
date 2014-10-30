@@ -434,6 +434,9 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetProfile(string profileName)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             var pipeline = _pipelineGraph.Profiles.For(profileName);
             return new Container(pipeline);
         }
