@@ -321,6 +321,9 @@ namespace StructureMap
         /// <param name="target"></param>
         public void BuildUp(object target)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 new BuildSession(_pipelineGraph).BuildUp(target);
