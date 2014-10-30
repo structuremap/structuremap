@@ -245,6 +245,9 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, string instanceKey)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 return new BuildSession(_pipelineGraph, instanceKey).CreateInstance(pluginType, instanceKey);
