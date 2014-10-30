@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Graph;
@@ -248,6 +249,20 @@ namespace StructureMap.Testing.Pipeline
             childWidget1.ShouldBeTheSameAs(childWidget2);
             childWidget1.ShouldBeTheSameAs(childWidget3);
             childWidget1.ShouldNotBeTheSameAs(parentWidget);
+        }
+
+        [Test]
+        public void resolving_from_disposed_container_throws_ObjectDisposedException()
+        {
+            var parent = new Container(x =>
+            {
+                // IWidget is a "transient"
+                x.For<IWidget>().Use<AWidget>();
+            });
+            var child = parent.GetNestedContainer();
+            child.Dispose();
+
+            Assert.Throws<ObjectDisposedException>(() => child.GetInstance(typeof (AWidget)));
         }
     }
 }
