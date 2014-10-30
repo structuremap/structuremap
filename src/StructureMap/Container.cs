@@ -654,6 +654,9 @@ namespace StructureMap
         /// <param name="instance"></param>
         public void Inject<TPluginType>(TPluginType instance) where TPluginType : class
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             Configure(x => x.For<TPluginType>().Use(instance));
         }
 
