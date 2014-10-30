@@ -478,6 +478,9 @@ namespace StructureMap
         public string WhatDoIHave(Type pluginType = null, Assembly assembly = null, string @namespace = null,
             string typeName = null)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             var writer = new WhatDoIHaveWriter(_pipelineGraph);
             return writer.GetText(new ModelQuery
             {
