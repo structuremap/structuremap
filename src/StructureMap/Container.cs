@@ -500,6 +500,9 @@ namespace StructureMap
         /// <returns></returns>
         public ExplicitArgsExpression With<T>(T arg)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             return new ExplicitArgsExpression(this).With(arg);
         }
 
