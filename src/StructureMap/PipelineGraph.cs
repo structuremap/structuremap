@@ -46,6 +46,7 @@ namespace StructureMap
         {
             if (pluginGraph == null) throw new ArgumentNullException("pluginGraph");
             if (instances == null) throw new ArgumentNullException("instances");
+            if (singletons == null) throw new ArgumentNullException("singletons");
 
             _pluginGraph = pluginGraph;
             _instances = instances;
