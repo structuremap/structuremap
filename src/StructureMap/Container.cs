@@ -267,6 +267,9 @@ namespace StructureMap
         /// <returns></returns>
         public object TryGetInstance(Type pluginType, string instanceKey)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
