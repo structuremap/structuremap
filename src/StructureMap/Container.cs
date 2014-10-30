@@ -668,6 +668,9 @@ namespace StructureMap
         /// </summary>
         public void Inject(Type pluginType, object @object)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             Configure(x => x.For(pluginType).Use(@object));
         }
 
