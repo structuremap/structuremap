@@ -515,6 +515,9 @@ namespace StructureMap
         /// <returns></returns>
         public ExplicitArgsExpression With(Type pluginType, object arg)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             return new ExplicitArgsExpression(this).With(pluginType, arg);
         }
 
