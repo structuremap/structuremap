@@ -142,7 +142,7 @@ namespace StructureMap.Pipeline
 
             var closedInstance = new ConstructorInstance(closedType);
 
-            _dependencies.Each(arg => { closedInstance._dependencies.Add(arg.CloseType(types)); });
+            _dependencies.Each(arg => closedInstance._dependencies.Add(arg.CloseType(types)));
 
             return closedInstance;
         }

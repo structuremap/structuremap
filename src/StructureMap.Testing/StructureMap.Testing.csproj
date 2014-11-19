@@ -180,6 +180,7 @@
     <Compile Include="Acceptance\enumerable_instances.cs" />
     <Compile Include="Acceptance\explicit_arguments.cs" />
     <Compile Include="Acceptance\full_stack_container_usage.cs" />
+    <Compile Include="Acceptance\inline_dependencies.cs" />
     <Compile Include="Acceptance\interception_acceptance_tests.cs" />
     <Compile Include="Acceptance\lifecycle_creation.cs" />
     <Compile Include="Acceptance\nested_containers.cs" />
