@@ -30,9 +30,14 @@ namespace StructureMap.Pipeline
         public object Resolve(Type pluginType, Instance instance, BuildSession session)
         {
             IObjectCache cache = FindCache(pluginType, instance, session);
+
+            object returnValue = cache.Get(pluginType, instance);
+            if (returnValue != null)
+                return returnValue;
+
             lock (cache.Locker)
             {
-                object returnValue = cache.Get(pluginType, instance);
+                returnValue = cache.Get(pluginType, instance);
                 if (returnValue == null)
                 {
                     returnValue = ConstructNew(pluginType, instance, session);
