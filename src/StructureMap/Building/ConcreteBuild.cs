@@ -55,7 +55,7 @@ namespace StructureMap.Building
         {
             var @delegate = ToDelegate() as Func<IBuildSession, IContext, object>;
 
-            return @delegate(session, context);
+            return @delegate != null ? @delegate(session, context) : null;
         }
 
         public T Build<T>(IBuildSession session) where T : class
