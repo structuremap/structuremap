@@ -535,10 +535,8 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer()
         {
-            var container = new Container(_pipelineGraph.ToNestedGraph());
-            container.Name = "Nested-" + container.Name;
-
-            return container;
+            var pipeline = _pipelineGraph.ToNestedGraph();
+            return GetNestedContainer(pipeline);
         }
 
         /// <summary>
@@ -549,7 +547,17 @@ namespace StructureMap
         public IContainer GetNestedContainer(string profileName)
         {
             var pipeline = _pipelineGraph.Profiles.For(profileName).ToNestedGraph();
-            return new Container(pipeline);
+            return GetNestedContainer(pipeline);
+        }
+
+        private IContainer GetNestedContainer(IPipelineGraph pipeline)
+        {
+            var container = new Container(pipeline)
+            {
+                Name = "Nested-" + Name
+            };
+
+            return container;
         }
 
         private bool _disposedLatch;
