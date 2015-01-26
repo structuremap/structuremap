@@ -215,6 +215,7 @@
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
     <Compile Include="Bugs\Exception_Within_Exception_Bug.cs" />
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
+    <Compile Include="Bugs\GenericVarianceResolution.cs" />
     <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
     <Compile Include="Bugs\Jimmys_silly_open_generics_bug.cs" />
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
