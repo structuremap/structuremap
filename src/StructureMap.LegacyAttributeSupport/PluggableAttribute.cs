@@ -32,7 +32,7 @@ namespace StructureMap.LegacyAttributeSupport
             return (att != null);
         }
 
-        public override void Alter(ConstructorInstance instance)
+        public override void Alter(IConfiguredInstance instance)
         {
   
         }

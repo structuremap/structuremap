@@ -1,46 +1,59 @@
 using System;
-using StructureMap.Graph;
-using StructureMap.TypeRules;
+using System.Linq;
+using StructureMap.Building;
+using StructureMap.Diagnostics;
 
 namespace StructureMap.Pipeline
 {
-    public class NullInstance : Instance
+    public interface IValue
     {
-        protected override string getDescription()
-        {
-            return "NULL";
-        }
+        object Value { get; }
+    }
 
-        protected override object build(Type pluginType, BuildSession session)
+    public class ObjectInstance : ObjectInstance<object, object>
+    {
+        public ObjectInstance(object anObject) : base(anObject)
         {
-            return null;
         }
     }
 
-    public class ObjectInstance : ExpressedInstance<ObjectInstance>, IDisposable
+    public class ObjectInstance<TReturned, TPluginType> : ExpressedInstance<ObjectInstance<TReturned, TPluginType>, TReturned, TPluginType>, IBuildPlan, IValue, IDisposable where TReturned : class, TPluginType
     {
-        private object _object;
+        private TReturned _object;
 
-        public ObjectInstance(object anObject)
+        public ObjectInstance(TReturned anObject)
         {
-            CopyAsIsWhenClosingInstance = true;
-
-            if (anObject == null)
+            if (null == anObject)
             {
                 throw new ArgumentNullException("anObject");
             }
 
             _object = anObject;
+
+            SetLifecycleTo<ObjectLifecycle>();
         }
 
+        object IValue.Value
+        {
+            get
+            {
+                return _object;
+            }
+        }
 
-        protected override ObjectInstance thisInstance { get { return this; } }
+        protected override ObjectInstance<TReturned, TPluginType> thisInstance
+        {
+            get { return this; }
+        }
 
-        public object Object { get { return _object; } }
+        public TReturned Object
+        {
+            get { return _object; }
+        }
 
         public void Dispose()
         {
-            bool isContainer = _object is IContainer;
+            var isContainer = _object is IContainer;
             if (!isContainer)
             {
                 _object.SafeDispose();
@@ -49,20 +62,9 @@ namespace StructureMap.Pipeline
             _object = null;
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        public override string Description
         {
-            return _object;
-        }
-
-
-        protected override bool canBePartOfPluginFamily(PluginFamily family)
-        {
-            return _object.GetType().CanBeCastTo(family.PluginType);
-        }
-
-        protected override string getDescription()
-        {
-            return "Object:  " + _object;
+            get { return "Object:  " + _object; }
         }
 
         public override string ToString()
@@ -70,15 +72,35 @@ namespace StructureMap.Pipeline
             return string.Format("LiteralInstance: {0}", _object);
         }
 
-        protected override Type getConcreteType(Type pluginType)
+        public override IDependencySource ToDependencySource(Type pluginType)
         {
-            return _object.GetType();
+            return new Constant(pluginType, _object);
         }
 
-        public ObjectInstance Named(string name)
+        public override Type ReturnedType
         {
-            Name = name;
-            return this;
+            get { return _object.GetType(); }
+        }
+
+        protected override IBuildPlan buildPlan(Type pluginType, Policies policies)
+        {
+            var interceptors = determineInterceptors(pluginType, policies);
+            if (!interceptors.Any())
+            {
+                return this;
+            }
+
+            return base.buildPlan(pluginType, policies);
+        }
+
+        void IBuildPlanVisitable.AcceptVisitor(IBuildPlanVisitor visitor)
+        {
+            visitor.InnerBuilder(new Constant(_object.GetType(), _object));
+        }
+
+        object IBuildPlan.Build(IBuildSession session, IContext context)
+        {
+            return _object;
         }
     }
 }

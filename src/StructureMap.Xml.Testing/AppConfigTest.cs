@@ -15,7 +15,7 @@ namespace StructureMap.Xml.Testing
     public class AppConfigTest
     {
 
-        [Test]
+        [Test, Ignore("Until we rewrite the Xml config")]
         public void PullConfigurationFromTheAppConfig()
         {
             var c = new Container(x =>

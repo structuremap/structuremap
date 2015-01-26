@@ -1,30 +1,28 @@
 using System;
-using System.Collections.Generic;
+using System.Reflection;
+using StructureMap.Building.Interception;
 
 namespace StructureMap.Pipeline
 {
-    public enum CannotFindProperty
-    {
-        ThrowException,
-        Ignore
-    }
-
     public interface IConfiguredInstance
     {
-        string Name { get; }
+        string Name { get; set; }
         Type PluggedType { get; }
 
-        object Get(string propertyName, Type pluginType, BuildSession buildSession);
+        DependencyCollection Dependencies { get; }
 
-        T Get<T>(string propertyName, BuildSession session);
+        void AddInterceptor(IInterceptor interceptor);
+        ConstructorInstance Override(ExplicitArguments arguments);
 
-        bool HasProperty(string propertyName, BuildSession session);
+        void SetLifecycleTo<T>() where T : ILifecycle, new();
 
-        void SetChild(string name, Instance instance);
-        void SetValue(Type type, object value, CannotFindProperty cannotFind);
-        void SetValue(string name, object value);
-        void SetCollection(string name, IEnumerable<Instance> children);
+        void SetLifecycleTo(ILifecycle lifecycle);
 
-        string GetProperty(string propertyName);
+        ILifecycle Lifecycle { get; }
+
+        /// <summary>
+        /// Explicitly select a constructor
+        /// </summary>
+        ConstructorInfo Constructor { get; set; }
     }
 }

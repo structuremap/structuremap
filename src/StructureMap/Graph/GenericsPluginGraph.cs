@@ -1,4 +1,6 @@
 using System;
+using System.Reflection;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
@@ -12,38 +14,38 @@ namespace StructureMap.Graph
             }
             catch (Exception e)
             {
-                string message =
+                var message =
                     string.Format("Could not Determine Whether Type '{0}' plugs into Type '{1}'",
-                                  pluginType.Name,
-                                  pluggedType.Name);
-                throw new ApplicationException(message, e);
+                        pluginType.Name,
+                        pluggedType.Name);
+                throw new ArgumentException(message, e);
             }
         }
 
         private static bool checkGenericType(Type pluggedType, Type pluginType)
         {
-            if (pluginType.IsAssignableFrom(pluggedType)) return true;
+            if (pluginType.GetTypeInfo().IsAssignableFrom(pluggedType.GetTypeInfo())) return true;
 
 
 // check interfaces
-            foreach (Type type in pluggedType.GetInterfaces())
+            foreach (var type in pluggedType.GetInterfaces())
             {
-                if (!type.IsGenericType)
+                if (!type.GetTypeInfo().IsGenericType)
                 {
                     continue;
                 }
 
-                if (type.GetGenericTypeDefinition().Equals(pluginType))
+                if (type.GetGenericTypeDefinition() == pluginType)
                 {
                     return true;
                 }
             }
 
-            if (pluggedType.BaseType.IsGenericType)
+            if (pluggedType.GetTypeInfo().BaseType.GetTypeInfo().IsGenericType)
             {
-                Type baseType = pluggedType.BaseType.GetGenericTypeDefinition();
+                var baseType = pluggedType.GetTypeInfo().BaseType.GetGenericTypeDefinition();
 
-                if (baseType.Equals(pluginType))
+                if (baseType == pluginType)
                 {
                     return true;
                 }

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using StructureMap.Building;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
@@ -13,31 +16,41 @@ namespace StructureMap.Pipeline
             typeof (List<>)
         };
 
+        public override Type ReturnedType
+        {
+            get { return null; }
+        }
+
         public static IEnumerable<Type> OpenEnumerableTypes
         {
-            get
+            get { return _enumerableTypes; }
+        }
+
+        public static Type DetermineElementType(Type pluginType)
+        {
+            if (pluginType.IsArray)
             {
-                return _enumerableTypes;
+                return pluginType.GetElementType();
             }
+
+            return pluginType.GetGenericArguments().First();
         }
 
         private readonly IEnumerable<Instance> _children;
-        private readonly IEnumerableCoercion _coercion;
-        private readonly string _description;
 
-        public EnumerableInstance(Type propertyType, IEnumerable<Instance> children)
+        public EnumerableInstance(IEnumerable<Instance> children)
         {
-            _description = propertyType.FullName;
-
             _children = children;
-            _coercion = DetermineCoercion(propertyType);
         }
 
-        public IEnumerable<Instance> Children { get { return _children; } }
+        public IEnumerable<Instance> Children
+        {
+            get { return _children; }
+        }
 
         public static IEnumerableCoercion DetermineCoercion(Type propertyType)
         {
-            Type coercionType = determineCoercionType(propertyType);
+            var coercionType = determineCoercionType(propertyType);
             return (IEnumerableCoercion) Activator.CreateInstance(coercionType);
         }
 
@@ -48,9 +61,9 @@ namespace StructureMap.Pipeline
                 return typeof (ArrayCoercion<>).MakeGenericType(propertyType.GetElementType());
             }
 
-            if (propertyType.IsGenericType)
+            if (propertyType.GetTypeInfo().IsGenericType)
             {
-                Type templateType = propertyType.GetGenericTypeDefinition();
+                var templateType = propertyType.GetGenericTypeDefinition();
                 if (_enumerableTypes.Contains(templateType))
                 {
                     return typeof (ListCoercion<>).MakeGenericType(propertyType.GetGenericArguments().First());
@@ -62,36 +75,39 @@ namespace StructureMap.Pipeline
                     propertyType.AssemblyQualifiedName));
         }
 
-        protected override string getDescription()
+        public override IDependencySource ToDependencySource(Type pluginType)
         {
-            return _description;
-        }
+            var coercion = DetermineCoercion(pluginType);
+            var elementType = coercion.ElementType;
 
-        protected override object build(Type pluginType, BuildSession session)
-        {
-            Type elementType = _coercion.ElementType;
-
-            IEnumerable<object> objects = buildObjects(elementType, session);
-            return _coercion.Convert(objects);
-        }
-
-        private IEnumerable<object> buildObjects(Type elementType, BuildSession session)
-        {
-            if (_children == null)
+            if (!_children.Any())
             {
-                return session.GetAllInstances(elementType);
+                return new AllPossibleValuesDependencySource(pluginType);
             }
 
-            return _children.Select(x => x.Build(elementType, session));
+            var items = _children.Select(x => x.ToDependencySource(elementType)).ToArray();
+
+            if (pluginType.IsArray)
+            {
+                return new ArrayDependencySource(elementType, items);
+            }
+
+            var parentType = pluginType.GetGenericTypeDefinition();
+            return parentType == typeof (List<>)
+                ? new ListDependencySource(elementType, items)
+                : new ArrayDependencySource(elementType, items);
+        }
+
+        public override string Description
+        {
+            get { return "Enumerable Instance"; }
         }
 
         public static bool IsEnumerable(Type type)
         {
             if (type.IsArray) return true;
 
-            return type.IsGenericType && type.GetGenericTypeDefinition().IsIn(_enumerableTypes);
+            return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition().IsIn(_enumerableTypes);
         }
-
-
     }
 }

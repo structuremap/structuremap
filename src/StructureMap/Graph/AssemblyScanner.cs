@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Configuration;
@@ -19,7 +17,10 @@ namespace StructureMap.Graph
 
         private readonly List<Action<PluginGraph>> _postScanningActions = new List<Action<PluginGraph>>();
 
-        public int Count { get { return _assemblies.Count; } }
+        public int Count
+        {
+            get { return _assemblies.Count; }
+        }
 
 
         public void Assembly(Assembly assembly)
@@ -32,12 +33,12 @@ namespace StructureMap.Graph
 
         public void Assembly(string assemblyName)
         {
-            Assembly(AppDomain.CurrentDomain.Load(assemblyName));
+            Assembly(AssemblyLoader.ByName(assemblyName));
         }
 
         public void Convention<T>() where T : IRegistrationConvention, new()
         {
-            IRegistrationConvention previous = _conventions.FirstOrDefault(scanner => scanner is T);
+            var previous = _conventions.FirstOrDefault(scanner => scanner is T);
             if (previous == null)
             {
                 With(new T());
@@ -49,24 +50,14 @@ namespace StructureMap.Graph
             Convention<FindRegistriesScanner>();
         }
 
-        public void TheCallingAssembly()
-        {
-            Assembly callingAssembly = findTheCallingAssembly();
-
-            if (callingAssembly != null)
-            {
-                _assemblies.Add(callingAssembly);
-            }
-        }
-
         public void AssemblyContainingType<T>()
         {
-            _assemblies.Add(typeof (T).Assembly);
+            AssemblyContainingType(typeof(T));
         }
 
         public void AssemblyContainingType(Type type)
         {
-            _assemblies.Add(type.Assembly);
+            _assemblies.Add(type.GetTypeInfo().Assembly);
         }
 
         public FindAllTypesFilter AddAllTypesOf<TPluginType>()
@@ -123,53 +114,6 @@ namespace StructureMap.Graph
             _postScanningActions.Add(modifyGraph);
         }
 
-        public void AssembliesFromApplicationBaseDirectory()
-        {
-            AssembliesFromApplicationBaseDirectory(a => true);
-        }
-
-        public void AssembliesFromApplicationBaseDirectory(Predicate<Assembly> assemblyFilter)
-        {
-            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-            AssembliesFromPath(baseDirectory, assemblyFilter);
-            string binPath = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
-            if (Directory.Exists(binPath))
-            {
-                AssembliesFromPath(binPath, assemblyFilter);
-            }
-        }
-
-        public void AssembliesFromPath(string path)
-        {
-            AssembliesFromPath(path, a => true);
-        }
-
-        public void AssembliesFromPath(string path, Predicate<Assembly> assemblyFilter)
-        {
-            IEnumerable<string> assemblyPaths = Directory.GetFiles(path)
-                .Where(file =>
-                       Path.GetExtension(file).Equals(
-                           ".exe",
-                           StringComparison.OrdinalIgnoreCase)
-                       ||
-                       Path.GetExtension(file).Equals(
-                           ".dll",
-                           StringComparison.OrdinalIgnoreCase));
-
-            foreach (string assemblyPath in assemblyPaths)
-            {
-                Assembly assembly = null;
-                try
-                {
-                    assembly = System.Reflection.Assembly.LoadFrom(assemblyPath);
-                }
-                catch
-                {
-                }
-                if (assembly != null && assemblyFilter(assembly)) Assembly(assembly);
-            }
-        }
 
         public void With(IRegistrationConvention convention)
         {
@@ -188,39 +132,12 @@ namespace StructureMap.Graph
         }
 
 
-
         public bool Contains(string assemblyName)
         {
-            foreach (Assembly assembly in _assemblies)
-            {
-                if (assembly.GetName().Name == assemblyName)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return _assemblies
+                .Select(assembly => new AssemblyName(assembly.FullName))
+                .Any(aName => aName.Name == assemblyName);
         }
-
-        private static Assembly findTheCallingAssembly()
-        {
-            var trace = new StackTrace(false);
-
-            Assembly thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
-            Assembly callingAssembly = null;
-            for (int i = 0; i < trace.FrameCount; i++)
-            {
-                StackFrame frame = trace.GetFrame(i);
-                Assembly assembly = frame.GetMethod().DeclaringType.Assembly;
-                if (assembly != thisAssembly)
-                {
-                    callingAssembly = assembly;
-                    break;
-                }
-            }
-            return callingAssembly;
-        }
-
 
 
         /// <summary>
@@ -246,6 +163,10 @@ namespace StructureMap.Graph
         {
             var convention = new GenericConnectionScanner(openGenericType);
             With(convention);
+
+            ModifyGraphAfterScan(graph => {
+                convention.Apply(graph);
+            });
             return new ConfigureConventionExpression(convention);
         }
 

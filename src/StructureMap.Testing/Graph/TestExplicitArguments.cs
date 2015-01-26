@@ -1,26 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Pipeline;
-using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class TestExplicitArguments
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-            ObjectFactory.Initialize(x => {  });
-        }
-
-        #endregion
-
         public interface IExplicitTarget
         {
         }
@@ -45,9 +31,15 @@ namespace StructureMap.Testing.Graph
             }
 
 
-            public string Name { get { return _name; } }
+            public string Name
+            {
+                get { return _name; }
+            }
 
-            public IProvider Provider { get { return _provider; } }
+            public IProvider Provider
+            {
+                get { return _provider; }
+            }
         }
 
         public interface IProvider
@@ -71,19 +63,16 @@ namespace StructureMap.Testing.Graph
         {
         }
 
-        public class SpecialInstance : Instance
+        public class SpecialInstance : LambdaInstance<ClassWithNoArgs>
         {
-            protected override string getDescription()
-            {
-                return string.Empty;
-            }
-
-            protected override object build(Type pluginType, BuildSession session)
-            {
+            public SpecialInstance() : base("builds ClassWithNoArgs", session => {
                 return new ClassWithNoArgs
                 {
                     TheAddress = (Address) session.GetInstance(typeof (Address))
                 };
+            }
+                )
+            {
             }
         }
 
@@ -111,10 +100,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void can_build_a_concrete_type_from_explicit_args_passed_into_a_named_instance()
         {
-            var container = new Container(x =>
-            {
-                x.For<ColorWithLump>().AddInstances(o =>
-                {
+            var container = new Container(x => {
+                x.For<ColorWithLump>().AddInstances(o => {
                     o.Type<ColorWithLump>().Ctor<string>("color").Is("red").Named("red");
                     o.Type<ColorWithLump>().Ctor<string>("color").Is("green").Named("green");
                     o.Type<ColorWithLump>().Ctor<string>("color").Is("blue").Named("blue");
@@ -145,8 +132,7 @@ namespace StructureMap.Testing.Graph
         {
             var theTrade = new Trade();
 
-            IContainer container = new Container(r =>
-            {
+            IContainer container = new Container(r => {
                 r.For<IView>().Use<TradeView>();
                 r.For<Node>().Use<TradeNode>();
             });
@@ -162,14 +148,14 @@ namespace StructureMap.Testing.Graph
         public void ExplicitArguments_can_return_child_by_name()
         {
             var theNode = new Node();
-            var container = new Container(x => { x.For<IView>().Use<View>(); });
+            var container = new Container(x => x.For<IView>().Use<View>());
             container.With("node").EqualTo(theNode).GetInstance<Command>().Node.ShouldBeTheSameAs(theNode);
         }
 
         [Test]
         public void Fill_in_argument_by_name()
         {
-            var container = new Container(x => { x.For<IView>().Use<View>(); });
+            var container = new Container(x => x.For<IView>().Use<View>());
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -187,7 +173,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_type()
         {
-            var container = new Container(x => { x.For<IView>().Use<View>(); });
+            var container = new Container(x => x.For<IView>().Use<View>());
 
             var theNode = new SpecialNode();
             var theTrade = new Trade();
@@ -203,14 +189,14 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void Fill_in_argument_by_type_with_ObjectFactory()
+        public void Fill_in_argument_by_type_with_Container()
         {
-            ObjectFactory.Initialize(x => { x.For<IView>().Use<View>(); });
+            var container = new Container(x => x.For<IView>().Use<View>());
 
             var theNode = new SpecialNode();
             var theTrade = new Trade();
 
-            var command = ObjectFactory.Container
+            var command = container
                 .With(typeof (Node), theNode)
                 .With(theTrade)
                 .GetInstance<Command>();
@@ -223,59 +209,56 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void NowDoItWithObjectFactoryItself()
         {
-            ObjectFactory.Initialize(x =>
-            {
+            var container = new Container(x => {
                 x.ForConcreteType<ExplicitTarget>().Configure
                     .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").Is("Jeremy");
             });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
-            var firstTarget = ObjectFactory.GetInstance<ExplicitTarget>();
+            var firstTarget = container.GetInstance<ExplicitTarget>();
             firstTarget.Provider.ShouldBeOfType<RedProvider>();
 
             // Now, set the explicit arg for IProvider
             var theBlueProvider = new BlueProvider();
-            var secondTarget = ObjectFactory.Container.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>();
+            var secondTarget = container.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>();
             Assert.AreSame(theBlueProvider, secondTarget.Provider);
         }
 
         [Test]
-        public void NowDoItWithObjectFactoryItself_with_new_API()
+        public void NowDoItWith_Container_Itself_with_new_API()
         {
-            ObjectFactory.Initialize(x =>
-            {
+            var container = new Container(x => {
                 x.For<ExplicitTarget>().Use<ExplicitTarget>()
-                    .Ctor<IProvider>().Is(child => child.Type<RedProvider>())
+                    .Ctor<IProvider>().IsSpecial(child => child.Type<RedProvider>())
                     .Ctor<string>("name").Is("Jeremy");
             });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
-            ObjectFactory.GetInstance<ExplicitTarget>().Provider.IsType<RedProvider>();
+            container.GetInstance<ExplicitTarget>().Provider.IsType<RedProvider>();
 
             // Now, set the explicit arg for IProvider
             var theBlueProvider = new BlueProvider();
-            ObjectFactory.Container.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>()
+            container.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>()
                 .Provider.ShouldBeTheSameAs(theBlueProvider);
         }
 
         [Test]
-        public void OverrideAPrimitiveWithObjectFactory()
+        public void override_a_primitive()
         {
-            ObjectFactory.Initialize(x =>
-            {
+            var container = new Container(x => {
                 x.ForConcreteType<ExplicitTarget>().Configure
                     .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").Is("Jeremy");
             });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
-            var firstTarget = ObjectFactory.GetInstance<ExplicitTarget>();
-            Assert.AreEqual("Jeremy", firstTarget.Name);
+            container.GetInstance<ExplicitTarget>()
+                .Name.ShouldEqual("Jeremy");
 
             // Now, set the explicit arg for IProvider
-            var secondTarget = ObjectFactory.Container.With("name").EqualTo("Julia").GetInstance<ExplicitTarget>();
-            Assert.AreEqual("Julia", secondTarget.Name);
+            container.With("name").EqualTo("Lindsey").GetInstance<ExplicitTarget>()
+                .Name.ShouldEqual("Lindsey");
         }
 
         [Test]
@@ -283,8 +266,7 @@ namespace StructureMap.Testing.Graph
         {
             // The Container is constructed with 2 instances
             // of TradeView
-            var container = new Container(r =>
-            {
+            var container = new Container(r => {
                 r.For<TradeView>().Use<TradeView>();
                 r.For<TradeView>().Add<SecuredTradeView>();
             });
@@ -301,8 +283,7 @@ namespace StructureMap.Testing.Graph
         {
             // The Container is constructed with 2 instances
             // of TradeView
-            var container = new Container(r =>
-            {
+            var container = new Container(r => {
                 r.For<TradeView>().Use<TradeView>();
                 r.For<TradeView>().Add<SecuredTradeView>();
             });
@@ -353,30 +334,31 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void PassAnArgumentIntoExplicitArgumentsForARequestedInterfaceUsingObjectFactory()
+        public void PassAnArgumentIntoExplicitArgumentsForARequestedInterfaceUsing_Container()
         {
-            ObjectFactory.Initialize(x => { x.For<IProvider>().Use<LumpProvider>(); });
+            var container = new Container(x => x.For<IProvider>().Use<LumpProvider>());
 
 
             var theLump = new Lump();
 
-            var provider = (LumpProvider)ObjectFactory.Container.With(theLump).GetInstance<IProvider>();
+            var provider = (LumpProvider) container.With(theLump).GetInstance<IProvider>();
             Assert.AreSame(theLump, provider.Lump);
         }
 
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsThatMightNotAlreadyBeRegistered()
         {
+            var container = new Container();
+
             var theLump = new Lump();
-            var provider = ObjectFactory.Container.With(theLump).GetInstance<LumpProvider>();
+            var provider = container.With(theLump).GetInstance<LumpProvider>();
             Assert.AreSame(theLump, provider.Lump);
         }
 
         [Test]
         public void PassExplicitArgsIntoInstanceManager()
         {
-            var container = new Container(r =>
-            {
+            var container = new Container(r => {
                 r.ForConcreteType<ExplicitTarget>().Configure
                     .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").Is("Jeremy");
@@ -434,7 +416,7 @@ namespace StructureMap.Testing.Graph
         public void use_explicit_type_arguments_with_custom_instance()
         {
             var container =
-                new Container(x => { x.For<ClassWithNoArgs>().Use(new SpecialInstance()); });
+                new Container(x => { x.For<ClassWithNoArgs>().UseInstance(new SpecialInstance()); });
 
             var address = new Address();
 
@@ -459,9 +441,15 @@ namespace StructureMap.Testing.Graph
             _lump = lump;
         }
 
-        public string Color { get { return _color; } }
+        public string Color
+        {
+            get { return _color; }
+        }
 
-        public Lump Lump { get { return _lump; } }
+        public Lump Lump
+        {
+            get { return _lump; }
+        }
     }
 
     public class LumpProvider : TestExplicitArguments.IProvider
@@ -474,7 +462,10 @@ namespace StructureMap.Testing.Graph
         }
 
 
-        public Lump Lump { get { return _lump; } }
+        public Lump Lump
+        {
+            get { return _lump; }
+        }
     }
 
 
@@ -491,7 +482,10 @@ namespace StructureMap.Testing.Graph
             _trade = trade;
         }
 
-        public Trade Trade { get { return _trade; } }
+        public Trade Trade
+        {
+            get { return _trade; }
+        }
     }
 
     public class SecuredTradeView : TradeView
@@ -527,11 +521,20 @@ namespace StructureMap.Testing.Graph
             _view = view;
         }
 
-        public Trade Trade { get { return _trade; } }
+        public Trade Trade
+        {
+            get { return _trade; }
+        }
 
-        public Node Node { get { return _node; } }
+        public Node Node
+        {
+            get { return _node; }
+        }
 
-        public IView View { get { return _view; } }
+        public IView View
+        {
+            get { return _view; }
+        }
     }
 
     public class TradeNode : Node
@@ -543,7 +546,10 @@ namespace StructureMap.Testing.Graph
             _trade = trade;
         }
 
-        public Trade Trade { get { return _trade; } }
+        public Trade Trade
+        {
+            get { return _trade; }
+        }
     }
 
     public class ConcreteThatNeedsString
@@ -555,6 +561,9 @@ namespace StructureMap.Testing.Graph
             _name = name;
         }
 
-        public string Name { get { return _name; } }
+        public string Name
+        {
+            get { return _name; }
+        }
     }
 }

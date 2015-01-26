@@ -1,0 +1,72 @@
+<!--Title: Passing Arguments at Runtime-->
+<!--Url: passing-arguments-at-runtime-->
+
+<markdown>
+
+Most of the time you will be using StructureMap to build objects based on pre-canned configuration established upfront, but StructureMap
+also has the capability to supply dependencies by type or named parameters (if you know the name of constructor arguments or setter property names) to the Container at runtime using the `IContainer.With()` methods.
+
+Why would you use this? Here are a few examples from my own usage over the years:
+
+1. In adhoc code, retrieve some service but override a `connectionString` constructor argument to connect to a different database
+1. If you were to use StructureMap as a configuration intermediary, it becomes common to use this mechanism to swap out configuration on the fly
+1. Inject an Entity object into a service (uncommon now, but I did this on several systems years ago)
+1. Inject something contextual that can only be built at runtime like an ASP.Net HttpContext into a pre-configured object graph
+
+Now, for some samples. Let's say that we have some classes like so:
+
+<Snippet name="explicit-domain"/>
+
+and unless stated otherwise in a sample, a `Container` configured like so:
+
+<Snippet name="explicit-arg-container" />
+
+
+<Section title="Passing Named Arguments" id="named">
+
+The original usage of explicit arguments was to replace primitive arguments to constructor functions like this sample:
+
+<Snippet name="explicit-named-arguments" />
+
+The canonical usage is overriding file paths, database connection string, or urls.
+
+</Section>
+
+<Section title="Passing Arguments with a Fluent Interface" id="fluent">
+
+You can invoke the explicit argument passing as a fluent interface starting with
+`IContainer.With()` like the following sample:
+
+<Snippet name="explicit-fluent-interface" />
+
+</Section>
+
+<Section title="Using a Nested Closure" id="nested">
+
+If you dislike fluent interfaces or want to pass in a *lot* of dependencies,
+the nested closure syntax might be more usable:
+
+<Snippet name="explicit-defaults-with-nested-closure" />
+
+</Section>
+
+
+<Section title="Using the ExplicitArguments object" id="by-type">
+
+Finally, you can also pass an object of type `ExplicitArguments` directly to an overload
+of the `IContainer.GetInstance()` method:
+
+<Snippet name="explicit-use-explicit-args" />
+
+</Section>
+
+</markdown>
+
+
+
+
+
+
+
+
+

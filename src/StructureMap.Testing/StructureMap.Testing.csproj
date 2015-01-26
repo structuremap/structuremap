@@ -93,46 +93,22 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NestedLibrary\NestedLibrary.csproj">
+      <Project>{dcdb6c5f-8d8a-4542-8f50-1a72e4d883e8}</Project>
+      <Name>NestedLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Net4\StructureMap.Net4.csproj">
+      <Project>{6d812b81-cf2e-4df1-9f73-bc19e5a6a019}</Project>
+      <Name>StructureMap.Net4</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Web\StructureMap.Web.csproj">
+      <Project>{fa8fdbc9-46ed-4976-a554-a5a1079bd765}</Project>
+      <Name>StructureMap.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StructureMap\StructureMap.csproj">
       <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
       <Name>StructureMap</Name>
     </ProjectReference>
-    <Reference Include="Castle.Core">
-      <HintPath>..\packages\Castle.Core.3.1.0\lib\net35\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.mocks, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
-    </Reference>
-    <Reference Include="pnunit.framework, Version=1.0.4109.34242, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
-    </Reference>
-    <Reference Include="System">
-      <Name>System</Name>
-    </Reference>
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms">
-      <Name>System.Windows.Forms</Name>
-    </Reference>
-    <Reference Include="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
     <ProjectReference Include="..\StructureMap.AutoFactory\StructureMap.AutoFactory.csproj">
       <Project>{3C6A4946-3CD9-4B74-87C5-A06EF49920FA}</Project>
       <Name>StructureMap.AutoFactory</Name>
@@ -166,14 +142,51 @@
       <Project>{E21E1651-3E32-47B7-A290-F461E63FEAD2}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core\lib\net40-client\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks">
+      <HintPath>..\packages\NUnit\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\packages\NUnit\lib\pnunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\packages\RhinoMocks\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Acceptance\builder_for_open_generic_type.cs" />
+    <Compile Include="Acceptance\build_by_lambdas.cs" />
+    <Compile Include="Acceptance\child_containers.cs" />
+    <Compile Include="Acceptance\constructor_selection.cs" />
+    <Compile Include="Acceptance\contextual_building.cs" />
+    <Compile Include="Acceptance\custom_registration_convention.cs" />
+    <Compile Include="Acceptance\ejecting_instances.cs" />
+    <Compile Include="Acceptance\enumerable_instances.cs" />
+    <Compile Include="Acceptance\explicit_arguments.cs" />
     <Compile Include="Acceptance\full_stack_container_usage.cs" />
+    <Compile Include="Acceptance\inline_dependencies.cs" />
+    <Compile Include="Acceptance\interception_acceptance_tests.cs" />
     <Compile Include="Acceptance\lifecycle_creation.cs" />
+    <Compile Include="Acceptance\nested_containers.cs" />
+    <Compile Include="Acceptance\nested_registry_declarations.cs" />
+    <Compile Include="Acceptance\setter_rules_are_reset_by_configure.cs" />
+    <Compile Include="Acceptance\setting_lifecycle_scope.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -182,25 +195,71 @@
     <Compile Include="AutoWiringExamples.cs" />
     <Compile Include="BidirectionalDependencies.cs" />
     <Compile Include="Bugs\AddValueDirectlyWithGenericUsage.cs" />
+    <Compile Include="Bugs\Andreas_forwarding_issue.cs" />
+    <Compile Include="Bugs\Bug_101.cs" />
+    <Compile Include="Bugs\Bug_235_for_look_for_registries_through_assemblies.cs" />
+    <Compile Include="Bugs\Bug_244_using_Func_of_string_as_a_dependency.cs" />
+    <Compile Include="Bugs\Bug_245_singleton_scope_and_default_conventions.cs" />
+    <Compile Include="Bugs\Bug_247_ConnectOpenTypesToImplementations_doubling_up_registrations.cs" />
+    <Compile Include="Bugs\Bug_248_do_not_allow_lifecycle_registrations_to_nested_container.cs" />
+    <Compile Include="Bugs\Bug_251_do_not_add_null_values_to_plugin_family_instance_cache.cs" />
+    <Compile Include="Bugs\Bug_255_InstanceAttribute_Implementation.cs" />
+    <Compile Include="Bugs\Bug_295_named_registrations_to_nested_container.cs" />
+    <Compile Include="Bugs\Bug_313.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
+    <Compile Include="Bugs\closed_type_generic_is_in_get_all.cs" />
     <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
+    <Compile Include="Bugs\ConnectImplementationsToTypesClosing_is_wonky_in_Registry_added_by_Configure.cs" />
+    <Compile Include="Bugs\Defensive_check_for_public_ctors.cs" />
+    <Compile Include="Bugs\do_not_allow_policy_changes_in_nested_container_issue_284.cs" />
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
+    <Compile Include="Bugs\Exception_Within_Exception_Bug.cs" />
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
-    <Compile Include="Bugs\GetAllInstancesShouldObserveKeys.cs" />
     <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
+    <Compile Include="Bugs\Jimmys_silly_open_generics_bug.cs" />
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
+    <Compile Include="Bugs\MemoryLeak_bug_289.cs" />
     <Compile Include="Bugs\MixedConfigureAndInitializeMissingInstanceProblem.cs" />
     <Compile Include="Bugs\OpenGenericWithConstraints.cs" />
+    <Compile Include="Bugs\Register_Lambda_against_Type_Bug_274.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
-    <Compile Include="Bugs\SingletonShouldBeLazy.cs" />
-    <Compile Include="Bugs\SpecifyScopeInConfigureTester.cs" />
-    <Compile Include="Bugs\SpecifyScopeOnOpenGenericsTester.cs" />
+    <Compile Include="Bugs\Setter_policies_when_the_build_plan_is_created_by_a_nested_container.cs" />
+    <Compile Include="Bugs\Specify_Lifecycle_in_Configure_TesterTester.cs" />
+    <Compile Include="Bugs\Specify_Lifecycle_on_open_generic_Tester.cs" />
     <Compile Include="Bugs\StaticPropertyCausesJITExceptionTester.cs" />
     <Compile Include="Bugs\TryGetInstanceWithOpenGenericsBugTester.cs" />
+    <Compile Include="Bugs\User_says_SetAllProperties_does_not_work.cs" />
     <Compile Include="Bugs\UseSingleImplementationConventionInMultipleScans.cs" />
+    <Compile Include="Building\AllPossibleEnumerableDependency_resolution_Tester.cs" />
+    <Compile Include="Building\array_expression_building.cs" />
+    <Compile Include="Building\BuildPlanTester.cs" />
+    <Compile Include="Building\BuildPlan_AcceptVisitor_Behavior.cs" />
+    <Compile Include="Building\BuildUpPlanTester.cs" />
+    <Compile Include="Building\ConcreteBuild_accepts_the_BuildPlanVisitor.cs" />
+    <Compile Include="Building\ConcreteBuild_description_building_Tester.cs" />
+    <Compile Include="Building\ConcreteBuild_exception_throwing_Tester.cs" />
+    <Compile Include="Building\ConcreteTypeTester.cs" />
+    <Compile Include="Building\ConstructorStepTester.cs" />
+    <Compile Include="Building\constructor_expression_building.cs" />
+    <Compile Include="Building\complex_concrete_build_with_child_dependencies.cs" />
+    <Compile Include="Building\DefaultDependencySourceTester.cs" />
+    <Compile Include="Building\Dependency_Visiting_Tester.cs" />
+    <Compile Include="Building\FakeBuildSession.cs" />
+    <Compile Include="Building\Interception\ActivatorInterceptorTester.cs" />
+    <Compile Include="Building\Interception\DecoratorInterceptorTester.cs" />
+    <Compile Include="Building\Interception\DecoratorPolicyTester.cs" />
+    <Compile Include="Building\Interception\FuncInterceptorTester.cs" />
+    <Compile Include="Building\Interception\InterceptionPlanTester.cs" />
+    <Compile Include="Building\Interception\InterceptionPoliciesTester.cs" />
+    <Compile Include="Building\Interception\InterceptorPolicyTester.cs" />
+    <Compile Include="Building\LifecycleDependencySourceTester.cs" />
+    <Compile Include="Building\list_expression_building.cs" />
+    <Compile Include="Building\mixed_constructor_setter_and_fields.cs" />
+    <Compile Include="Building\setter_expression_building.cs" />
+    <Compile Include="Building\TryCatchWrapperTester.cs" />
     <Compile Include="BuildSessionTester.cs" />
+    <Compile Include="BuildSession_tracks_the_parent_type_for_issue_272.cs" />
     <Compile Include="BuildUpIntegratedTester.cs" />
-    <Compile Include="BuildUpTester.cs" />
     <Compile Include="ConcreteClassCreationTester.cs" />
     <Compile Include="Configuration\DSL\AddInstanceTester.cs" />
     <Compile Include="Configuration\DSL\AddTypesTester.cs" />
@@ -208,30 +267,32 @@
     <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
     <Compile Include="Configuration\DSL\GenericFamilyExpressionTester.cs" />
     <Compile Include="Configuration\DSL\InjectArrayTester.cs" />
-    <Compile Include="Configuration\DSL\InstanceExpressionTester.cs" />
     <Compile Include="Configuration\DSL\InterceptAllInstancesOfPluginTypeTester.cs" />
     <Compile Include="Configuration\DSL\InterceptorTesting.cs" />
     <Compile Include="Configuration\DSL\profiles_acceptance_tester.cs" />
     <Compile Include="Configuration\DSL\ProgrammaticConstructorSelectionTester.cs" />
     <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
+    <Compile Include="Configuration\DSL\UseIfNoneTests.cs" />
     <Compile Include="Configuration\GraphBuilderTester.cs" />
-    <Compile Include="Configuration\SimplePluginFactory.cs" />
-    <Compile Include="Construction\BuilderCompilerTester.cs" />
-    <Compile Include="Construction\ConstructorFunctionBuilderTester.cs" />
-    <Compile Include="Construction\SetterBuilderTester.cs" />
-    <Compile Include="Construction\StubArguments.cs" />
-    <Compile Include="Debugging.cs" />
+    <Compile Include="Container_role_assignment_and_profile_name_Tester.cs" />
+    <Compile Include="Diagnostics\AssertConfigurationIsValid_Smoke_Tester.cs" />
+    <Compile Include="Diagnostics\BuildPlanVisualizationSmokeTester.cs" />
+    <Compile Include="Diagnostics\BuildPlanVisualizerTester.cs" />
+    <Compile Include="Diagnostics\TreeView\TreeWriter_Smoke_Tester.cs" />
+    <Compile Include="Diagnostics\VisualizationRegistry.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
     <Compile Include="Examples.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Examples\BuildUp.cs" />
-    <Compile Include="Examples\CustomInstance.cs" />
-    <Compile Include="Examples\Interception.cs" />
-    <Compile Include="Examples\RegisteringWithTheAPI.cs" />
+    <Compile Include="Examples\FamilyPolicies\custom_policy_for_configuration.cs" />
+    <Compile Include="Examples\MultiTenancy\missing_instance_rule_overrides.cs" />
+    <Compile Include="Examples\Resolving\OptionalDependencies.cs" />
+    <Compile Include="Examples\Resolving\SimpleScenarios.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Graph\AssemblyScannerTester.cs" />
+    <Compile Include="Graph\ComplexInstanceGraphTester.cs" />
     <Compile Include="Graph\ContainerConstructorAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -244,7 +305,7 @@
     <Compile Include="Graph\FindAllTypesFilterTester.cs" />
     <Compile Include="Graph\FirstInterfaceConventionTester.cs" />
     <Compile Include="Graph\GenericConnectionScannerTester.cs" />
-    <Compile Include="Graph\RootPipelineGraphTester.cs" />
+    <Compile Include="Graph\RootInstanceGraphTester.cs" />
     <Compile Include="Graph\SingleImplementationScannerTester.cs" />
     <Compile Include="Graph\TestExplicitArguments.cs" />
     <Compile Include="Graph\FillDependenciesTester.cs">
@@ -253,10 +314,6 @@
     <Compile Include="Graph\ContainerTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\Interceptors\CompoundInterceptorTester.cs" />
-    <Compile Include="Graph\Interceptors\InterceptorLibraryTester.cs" />
-    <Compile Include="Graph\Interceptors\MockTypeInterceptor.cs" />
-    <Compile Include="Graph\Interceptors\TypeInterceptionTester.cs" />
     <Compile Include="Graph\TypeFindingTester.cs" />
     <Compile Include="Diagnostics\TextReportWriterSmokeTester.cs" />
     <Compile Include="GenericsAcceptanceTester.cs" />
@@ -274,47 +331,47 @@
     <Compile Include="Graph\PluginGraphTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\PluginTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\SetterInjectionTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\TypePathTester.cs" />
-    <Compile Include="InstanceMementoInstanceCreationTester.cs" />
+    <Compile Include="InstanceExtensions.cs" />
     <Compile Include="ModelQueryTester.cs" />
     <Compile Include="ObjectFactoryInitializeTester.cs" />
-    <Compile Include="Pipeline\BuildStackTester.cs" />
+    <Compile Include="Pipeline\ArgumentTester.cs" />
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
+    <Compile Include="Pipeline\ConstructorInstance_throws_informative_exception_on_build_plan_failures.cs" />
+    <Compile Include="Pipeline\ConstructorSelectorTester.cs" />
+    <Compile Include="Pipeline\DependencyCollectionTester.cs" />
     <Compile Include="Pipeline\EnumerableInstanceTester.cs" />
-    <Compile Include="Pipeline\Instance_finding_its_owner.cs" />
     <Compile Include="Pipeline\LambdaInstanceTester.cs" />
     <Compile Include="Pipeline\ContainerDisposalTester.cs" />
     <Compile Include="Pipeline\ContainerIsInTheContainerTester.cs" />
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
     <Compile Include="Pipeline\GenericsHelperExpressionTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
-    <Compile Include="Pipeline\LazyFuncTester.cs" />
+    <Compile Include="Pipeline\Func_Typefactory_construction_strategy_Tester.cs" />
+    <Compile Include="Pipeline\Lazy_and_Func_construction_strategy_Tester.cs" />
     <Compile Include="Pipeline\LifecyclesTester.cs" />
     <Compile Include="Pipeline\LifecycleObjectCacheTester.cs" />
+    <Compile Include="Pipeline\NullInstanceTester.cs" />
     <Compile Include="Pipeline\NulloTransientCacheTester.cs" />
     <Compile Include="Pipeline\ObjectInstanceTester.cs" />
     <Compile Include="Pipeline\MissingInstanceTester.cs" />
     <Compile Include="Pipeline\NestedContainerSupportTester.cs" />
     <Compile Include="Pipeline\ObjectBuilderTester.cs" />
     <Compile Include="Pipeline\OptionalSetterInjectionTester.cs" />
-    <Compile Include="Pipeline\PrototypeInstanceTester.cs" />
     <Compile Include="Pipeline\RedirectingTester.cs" />
     <Compile Include="Pipeline\RedirectTester.cs" />
     <Compile Include="Pipeline\ReferencedInstanceTester.cs" />
-    <Compile Include="Pipeline\SerializedInstanceTester.cs" />
     <Compile Include="Pipeline\SingletonLifecycleTester.cs" />
     <Compile Include="Pipeline\SmartInstanceTester.cs" />
     <Compile Include="Pipeline\StubBuildSession.cs" />
     <Compile Include="Pipeline\ThreadLocalStorageLifecycleTester.cs" />
     <Compile Include="Pipeline\TransientLifecycleTester.cs" />
+    <Compile Include="PoliciesTester.cs" />
     <Compile Include="PrimitiveArrayTester.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -325,21 +382,32 @@
     <Compile Include="Query\ClosedTypeConfigurationIntegrationTester.cs" />
     <Compile Include="Query\InstanceRefTester.cs" />
     <Compile Include="Query\ModelIntegrationTester.cs" />
-    <Compile Include="ReadingRegistriesFromXmlTester.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="RegistryExtensions.cs" />
+    <Compile Include="Resolving_ienumerable_types.cs" />
+    <Compile Include="Resolving_mixed_open_and_closed_generic_types.cs" />
+    <Compile Include="Samples\glossary\glossary.cs" />
+    <Compile Include="Samples\Interception\Event_Aggregator_Registration.cs" />
+    <Compile Include="Samples\LifecycleSamples\Singleton\NoSingleton.cs" />
+    <Compile Include="Samples\LifecycleSamples\Singleton\EvilSingleton.cs" />
+    <Compile Include="Samples\Lifecycles_Samples.cs" />
+    <Compile Include="Samples\model.cs" />
+    <Compile Include="Samples\quickstart\configuring_the_container.cs" />
+    <Compile Include="Samples\quickstart\resolving_instances.cs" />
+    <Compile Include="Samples\registries.cs" />
     <Compile Include="SessionCacheTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
     <Compile Include="PerRequestInterceptorTester.cs" />
-    <Compile Include="TestUtility.cs" />
-    <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeExtensionsTester.cs" />
+    <Compile Include="Util\Cache_multi_threading_basher.cs" />
+    <Compile Include="Util\LightweightCacheTester.cs" />
+    <Compile Include="WhatDoIHave_Smoke_Tester.cs" />
     <None Include="..\structuremap.snk">
       <Link>structuremap.snk</Link>
     </None>
-    <None Include="packages.config" />
+    <None Include="ripple.dependencies.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -384,7 +452,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AutoFactories\Supporting\" />
-    <Folder Include="Util\" />
+    <Folder Include="Samples\NestedContainers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -1,5 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
+using StructureMap.Graph;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
 
@@ -95,9 +96,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void simple_case()
         {
-            container.Model.For<I1>().Instances.Select(x => x.ConcreteType).ShouldHaveTheSameElementsAs(typeof (C1),
-                                                                                                        typeof (C2));
-            container.Model.For<I2>().Instances.Select(x => x.ConcreteType).Any().ShouldBeFalse();
+            container.Model.For<I1>().Instances.Any(x => x.ReturnedType == typeof (C1)).ShouldBeTrue();
+            container.Model.For<I1>().Instances.Any(x => x.ReturnedType == typeof (C2)).ShouldBeTrue();
+
+            container.Model.For<I2>().Instances.Select(x => x.ReturnedType).Any().ShouldBeFalse();
         }
     }
 }

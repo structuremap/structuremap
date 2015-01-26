@@ -39,11 +39,21 @@ namespace StructureMap.Testing.Graph
 
 
         [Test]
+        public void throw_exception_if_instance_is_not_compatible_with_PluginType_in_AddInstance()
+        {
+            var family = new PluginFamily(typeof(IGateway));
+            Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(() =>
+            {
+                family.AddInstance(new SmartInstance<ColorRule>());
+            });
+        }
+
+        [Test]
         public void If_PluginFamily_only_has_one_instance_make_that_the_default()
         {
             var family = new PluginFamily(typeof (IGateway));
-            string theInstanceKey = "the default";
-            ConfiguredInstance instance = new ConfiguredInstance(typeof (TheGateway)).Named(theInstanceKey);
+            var theInstanceKey = "the default";
+            var instance = new ConfiguredInstance(typeof (TheGateway)).Named(theInstanceKey);
             family.AddInstance(instance);
 
             family.GetDefaultInstance().ShouldBeTheSameAs(instance);
@@ -53,6 +63,7 @@ namespace StructureMap.Testing.Graph
         public class LoggingFamilyAttribute : FamilyAttribute
         {
             public static bool Called { get; set; }
+
             public override void Alter(PluginFamily family)
             {
                 Called = true;
@@ -62,13 +73,11 @@ namespace StructureMap.Testing.Graph
         [LoggingFamily]
         public class FamilyGateway
         {
-            
         }
 
         [LoggingFamily]
         public interface IFamilyInterface
         {
-            
         }
 
         [Test]
@@ -76,21 +85,19 @@ namespace StructureMap.Testing.Graph
         {
             LoggingFamilyAttribute.Called = false;
 
-            var testFamily = typeof(FamilyGateway);
+            var testFamily = typeof (FamilyGateway);
 
             var family = new PluginFamily(testFamily);
 
             LoggingFamilyAttribute.Called.ShouldBeTrue();
-
         }
 
         [Test]
         public void PluginFamily_uses_family_attribute_when_present_on_interface()
         {
-
             LoggingFamilyAttribute.Called = false;
 
-            var testFamily = typeof(IFamilyInterface);
+            var testFamily = typeof (IFamilyInterface);
 
             var family = new PluginFamily(testFamily);
             LoggingFamilyAttribute.Called.ShouldBeTrue();
@@ -98,20 +105,20 @@ namespace StructureMap.Testing.Graph
 
 
         [Test]
-        public void SetScopeToSingleton()
+        public void set_the_lifecycle_to_Singleton()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
 
-            family.SetScopeTo(Lifecycles.Singleton);
+            family.SetLifecycleTo(Lifecycles.Singleton);
             family.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
         [Test]
-        public void SetScopeToThreadLocal()
+        public void set_the_lifecycle_to_ThreadLocal()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
 
-            family.SetScopeTo(Lifecycles.ThreadLocal);
+            family.SetLifecycleTo(Lifecycles.ThreadLocal);
             family.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
 
@@ -136,8 +143,8 @@ namespace StructureMap.Testing.Graph
             family.AddType(typeof (DataTableProvider), "table");
 
             family.Instances.Single()
-                  .ShouldBeOfType<ConstructorInstance>()
-                  .PluggedType.ShouldEqual(typeof (DataTableProvider));
+                .ShouldBeOfType<ConstructorInstance>()
+                .PluggedType.ShouldEqual(typeof (DataTableProvider));
         }
 
         [Test]
@@ -156,22 +163,12 @@ namespace StructureMap.Testing.Graph
 
             family.AddType(typeof (DataTableProvider));
             family.Instances.Single()
-                  .ShouldBeOfType<ConstructorInstance>()
-                  .PluggedType.ShouldEqual(typeof (DataTableProvider));
+                .ShouldBeOfType<ConstructorInstance>()
+                .PluggedType.ShouldEqual(typeof (DataTableProvider));
 
 
             family.AddType(typeof (DataTable));
             family.Instances.Count().ShouldEqual(1);
-        }
-
-        [Test]
-        public void adding_an_instance_sets_itself_as_the_parent()
-        {
-            var family = new PluginFamily(typeof (IGateway));
-            var instance = new ConfiguredInstance(typeof (TheGateway));
-
-            family.AddInstance(instance);
-            instance.Parent.ShouldBeTheSameAs(family);
         }
 
         [Test]
@@ -180,9 +177,10 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof (IServiceProvider));
             var instance = new SmartInstance<DataSet>();
 
+            family.Fallback = new SmartInstance<DataSet>();
             family.SetDefault(instance);
 
-            family.AddInstance(new NullInstance());
+            family.AddInstance(new SmartInstance<FakeServiceProvider>());
             family.AddType(typeof (DataSet));
 
             family.RemoveAll();
@@ -190,6 +188,14 @@ namespace StructureMap.Testing.Graph
             family.GetDefaultInstance().ShouldBeNull();
 
             family.Instances.Count().ShouldEqual(0);
+        }
+
+        public class FakeServiceProvider : IServiceProvider
+        {
+            public object GetService(Type serviceType)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         [Test]

@@ -16,7 +16,7 @@ namespace StructureMap.Configuration.DSL
     /// </summary>
     public class SetterConvention : SetterConventionRule
     {
-        private readonly IList<Func<PropertyInfo, bool>> _rules = new List<Func<PropertyInfo, bool>>(); 
+        private readonly IList<Func<PropertyInfo, bool>> _rules = new List<Func<PropertyInfo, bool>>();
 
         /// <summary>
         /// Directs StructureMap to treat all public setters of type T as

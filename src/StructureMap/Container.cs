@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using StructureMap.Configuration.DSL;
-using StructureMap.Construction;
 using StructureMap.Diagnostics;
-using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Query;
@@ -15,8 +15,14 @@ namespace StructureMap
     public class Container : IContainer
     {
         private IPipelineGraph _pipelineGraph;
+        private readonly object _syncLock = new object();
 
-        public Container(Action<ConfigurationExpression> action) : this(RootPipelineGraph.For(action))
+        public static IContainer For<T>() where T : Registry, new()
+        {
+            return new Container(new T());
+        }
+
+        public Container(Action<ConfigurationExpression> action) : this(PipelineGraph.For(action))
         {
         }
 
@@ -37,7 +43,7 @@ namespace StructureMap
         ///     PluginGraph containing the instance and type definitions
         ///     for the Container
         /// </param>
-        public Container(PluginGraph pluginGraph) : this(new RootPipelineGraph(pluginGraph))
+        public Container(PluginGraph pluginGraph) : this(PipelineGraph.BuildRoot(pluginGraph))
         {
         }
 
@@ -46,7 +52,7 @@ namespace StructureMap
             Name = Guid.NewGuid().ToString();
 
             _pipelineGraph = pipelineGraph;
-            _pipelineGraph.Outer.Families[typeof(IContainer)].SetDefault(new ObjectInstance(this));
+            _pipelineGraph.RegisterContainer(this);
         }
 
         /// <summary>
@@ -54,7 +60,7 @@ namespace StructureMap
         /// </summary>
         public IModel Model
         {
-            get { return new Model(_pipelineGraph); }
+            get { return _pipelineGraph.ToModel(); }
         }
 
         /// <summary>
@@ -88,10 +94,17 @@ namespace StructureMap
             return (TPluginType) GetInstance(typeof (TPluginType), args);
         }
 
+        /// <summary>
+        /// Gets the default instance of T, but built with the overridden
+        /// arguments from args
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public T GetInstance<T>(ExplicitArguments args, string name)
         {
-            Instance namedInstance = _pipelineGraph.FindInstance(typeof (T), name);
-            return (T) buildInstanceWithArgs(typeof (T), namedInstance, args, name);
+            return (T) GetInstance(typeof (T), args, name);
         }
 
         /// <summary>
@@ -102,12 +115,40 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, ExplicitArguments args)
         {
-            Instance defaultInstance = _pipelineGraph.GetDefault(pluginType);
-            string requestedName = Plugin.DEFAULT;
+            try
+            {
+                var defaultInstance = _pipelineGraph.Instances.GetDefault(pluginType);
+                var requestedName = BuildSession.DEFAULT;
 
-            return buildInstanceWithArgs(pluginType, defaultInstance, args, requestedName);
+                return buildInstanceWithArgs(pluginType, defaultInstance, args, requestedName);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance({0} ,{1})", pluginType.GetFullName(), args);
+                throw;
+            }
         }
 
+        /// <summary>
+        /// Gets the named instance of the pluginType using the explicitly configured arguments from the "args"
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="args"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public object GetInstance(Type pluginType, ExplicitArguments args, string name)
+        {
+            try
+            {
+                var namedInstance = _pipelineGraph.Instances.FindInstance(pluginType, name);
+                return buildInstanceWithArgs(pluginType, namedInstance, args, name);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance<{0}>({1}, '{2}')", pluginType.GetFullName(), args, name);
+                throw;
+            }
+        }
 
         /// <summary>
         ///     Gets all configured instances of type T using explicitly configured arguments from the "args"
@@ -117,15 +158,36 @@ namespace StructureMap
         /// <returns></returns>
         public IEnumerable GetAllInstances(Type type, ExplicitArguments args)
         {
-            var session = new BuildSession(_pipelineGraph, Plugin.DEFAULT, args);
-            return session.GetAllInstances(type);
+            try
+            {
+                var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
+                return session.GetAllInstances(type);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetAllInstances({0}, {1})", type.GetFullName(), args);
+                throw;
+            }
         }
 
-
+        /// <summary>
+        /// Gets the default instance of type T using the explicitly configured arguments from the "args"
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public IEnumerable<T> GetAllInstances<T>(ExplicitArguments args)
         {
-            var session = new BuildSession(_pipelineGraph, Plugin.DEFAULT, args);
-            return session.GetAllInstances<T>();
+            try
+            {
+                var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
+                return session.GetAllInstances<T>();
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetAllInstances<{0}>({1})", typeof (T).GetFullName(), args);
+                throw;
+            }
         }
 
 
@@ -146,8 +208,16 @@ namespace StructureMap
         /// <returns></returns>
         public IEnumerable<T> GetAllInstances<T>()
         {
-            var session = new BuildSession(_pipelineGraph);
-            return session.GetAllInstances<T>();
+            try
+            {
+                var session = new BuildSession(_pipelineGraph);
+                return session.GetAllInstances<T>();
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetAllInstances<{0}>()", typeof (T).GetFullName());
+                throw;
+            }
         }
 
         /// <summary>
@@ -158,7 +228,15 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, string instanceKey)
         {
-            return new BuildSession(_pipelineGraph, instanceKey).CreateInstance(pluginType, instanceKey);
+            try
+            {
+                return new BuildSession(_pipelineGraph, instanceKey).CreateInstance(pluginType, instanceKey);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance({0}, '{1}')", pluginType.GetFullName(), instanceKey);
+                throw;
+            }
         }
 
         /// <summary>
@@ -169,9 +247,17 @@ namespace StructureMap
         /// <returns></returns>
         public object TryGetInstance(Type pluginType, string instanceKey)
         {
-            return !_pipelineGraph.HasInstance(pluginType, instanceKey)
-                       ? null
-                       : GetInstance(pluginType, instanceKey);
+            try
+            {
+                return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
+                    ? null
+                    : GetInstance(pluginType, instanceKey);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.TryGetInstance({0}, '{1}')", pluginType.GetFullName(), instanceKey);
+                throw;
+            }
         }
 
         /// <summary>
@@ -181,9 +267,17 @@ namespace StructureMap
         /// <returns></returns>
         public object TryGetInstance(Type pluginType)
         {
-            return !_pipelineGraph.HasDefaultForPluginType(pluginType)
-                       ? null
-                       : GetInstance(pluginType);
+            try
+            {
+                return !_pipelineGraph.Instances.HasDefaultForPluginType(pluginType)
+                    ? null
+                    : GetInstance(pluginType);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.TryGetInstance({0})", pluginType.GetFullName());
+                throw;
+            }
         }
 
         /// <summary>
@@ -204,13 +298,15 @@ namespace StructureMap
         /// <param name="target"></param>
         public void BuildUp(object target)
         {
-            Type pluggedType = target.GetType();
-            IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
-                                           ?? new ConfiguredInstance(pluggedType);
-
-            IInstanceBuilder builder = _pipelineGraph.Outer.BuilderFor(pluggedType);
-            var arguments = new Arguments(instance, new BuildSession(_pipelineGraph));
-            builder.BuildUp(arguments, target);
+            try
+            {
+                new BuildSession(_pipelineGraph).BuildUp(target);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.BuildUp({0})", target);
+                throw;
+            }
         }
 
         /// <summary>
@@ -230,7 +326,15 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType)
         {
-            return new BuildSession(_pipelineGraph).GetInstance(pluginType);
+            try
+            {
+                return new BuildSession(_pipelineGraph).GetInstance(pluginType);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance({0})", pluginType.GetFullName());
+                throw;
+            }
         }
 
 
@@ -242,8 +346,16 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, Instance instance)
         {
-            var session = new BuildSession(_pipelineGraph, instance.Name);
-            return session.FindObject(pluginType, instance);
+            try
+            {
+                var session = new BuildSession(_pipelineGraph, instance.Name) {RootType = instance.ReturnedType};
+                return session.FindObject(pluginType, instance);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance({0}, Instance: {1})", pluginType.GetFullName(), instance.Description);
+                throw;
+            }
         }
 
         /// <summary>
@@ -253,7 +365,15 @@ namespace StructureMap
         /// <returns></returns>
         public IEnumerable GetAllInstances(Type pluginType)
         {
-            return new BuildSession(_pipelineGraph).GetAllInstances(pluginType);
+            try
+            {
+                return new BuildSession(_pipelineGraph).GetAllInstances(pluginType);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetAllInstances({0})", pluginType.GetFullName());
+                throw;
+            }
         }
 
         /// <summary>
@@ -262,31 +382,66 @@ namespace StructureMap
         /// <param name="configure"></param>
         public void Configure(Action<ConfigurationExpression> configure)
         {
-            lock (this)
+            lock (_syncLock)
             {
-                var registry = new ConfigurationExpression();
-                configure(registry);
+                _pipelineGraph.Configure(configure);
 
-                var builder = new PluginGraphBuilder(_pipelineGraph.Outer);
-                builder.Add(registry);
 
-                builder.RunConfigurations();
+                if (Role == ContainerRole.Nested)
+                {
+                    _pipelineGraph.ValidateValidNestedScoping();
+                }
             }
         }
 
+
+        /// <summary>
+        /// Get the child container for the named profile
+        /// </summary>
+        /// <param name="profileName"></param>
+        /// <returns></returns>
         public IContainer GetProfile(string profileName)
         {
-            var pipeline = _pipelineGraph.ForProfile(profileName);
+            var pipeline = _pipelineGraph.Profiles.For(profileName);
             return new Container(pipeline);
+        }
+
+        /// <summary>
+        /// Creates a new, anonymous child container
+        /// </summary>
+        /// <returns></returns>
+        public IContainer CreateChildContainer()
+        {
+            var pipeline = _pipelineGraph.Profiles.NewChild();
+            return new Container(pipeline);
+        }
+
+        /// <summary>
+        /// The profile name of this container
+        /// </summary>
+        public string ProfileName
+        {
+            get { return _pipelineGraph.Profile; }
         }
 
         /// <summary>
         ///     Returns a report detailing the complete configuration of all PluginTypes and Instances
         /// </summary>
-        public string WhatDoIHave()
+        /// <param name="pluginType">Optional parameter to filter the results down to just this plugin type</param>
+        /// <param name="assembly">Optional parameter to filter the results down to only plugin types from this Assembly</param>
+        /// <param name="@namespace">Optional parameter to filter the results down to only plugin types from this namespace</param>
+        /// <param name="typeName">Optional parameter to filter the results down to any plugin type whose name contains this text</param>
+        public string WhatDoIHave(Type pluginType = null, Assembly assembly = null, string @namespace = null,
+            string typeName = null)
         {
             var writer = new WhatDoIHaveWriter(_pipelineGraph);
-            return writer.GetText();
+            return writer.GetText(new ModelQuery
+            {
+                Assembly = assembly,
+                Namespace = @namespace,
+                PluginType = pluginType,
+                TypeName = typeName
+            });
         }
 
         /// <summary>
@@ -331,13 +486,7 @@ namespace StructureMap
         /// </summary>
         public void AssertConfigurationIsValid()
         {
-            var session = new ValidationBuildSession(_pipelineGraph);
-            session.PerformValidations();
-
-            if (!session.Success)
-            {
-                throw new StructureMapConfigurationException(session.BuildErrorMessages());
-            }
+            PipelineGraphValidator.AssertNoErrors(_pipelineGraph);
         }
 
         /// <summary>
@@ -346,7 +495,7 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         public void EjectAllInstancesOf<T>()
         {
-            new GraphEjector(_pipelineGraph.Outer).EjectAllInstancesOf<T>();
+            _pipelineGraph.Ejector.EjectAllInstancesOf<T>();
         }
 
         /// <summary>
@@ -386,10 +535,8 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer()
         {
-            var container =  new Container(_pipelineGraph.ToNestedGraph());
-            container.Name = "Nested-" + container.Name;
-
-            return container;
+            var pipeline = _pipelineGraph.ToNestedGraph();
+            return GetNestedContainer(pipeline);
         }
 
         /// <summary>
@@ -399,12 +546,27 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer(string profileName)
         {
-            var pipeine = _pipelineGraph.ForProfile(profileName).ToNestedGraph();
-            return new Container(pipeine);
+            var pipeline = _pipelineGraph.Profiles.For(profileName).ToNestedGraph();
+            return GetNestedContainer(pipeline);
         }
+
+        private IContainer GetNestedContainer(IPipelineGraph pipeline)
+        {
+            var container = new Container(pipeline)
+            {
+                Name = "Nested-" + Name
+            };
+
+            return container;
+        }
+
+        private bool _disposedLatch;
 
         public void Dispose()
         {
+            if (_disposedLatch) return;
+            _disposedLatch = true;
+
             _pipelineGraph.SafeDispose();
             _pipelineGraph = null;
         }
@@ -424,15 +586,11 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="TPluginType"></typeparam>
         /// <param name="instance"></param>
-        public void Inject<TPluginType>(TPluginType instance)
+        public void Inject<TPluginType>(TPluginType instance) where TPluginType : class
         {
             Configure(x => x.For<TPluginType>().Use(instance));
         }
 
-        public void Inject<TPluginType>(string name, TPluginType value)
-        {
-            Configure(x => x.For<TPluginType>().Use(value).Named(name));
-        }
 
         /// <summary>
         ///     Injects the given object into a Container as the default for the designated
@@ -445,25 +603,41 @@ namespace StructureMap
         }
 
         private object buildInstanceWithArgs(Type pluginType, Instance defaultInstance, ExplicitArguments args,
-                                             string requestedName)
+            string requestedName)
         {
             if (defaultInstance == null && pluginType.IsConcrete())
             {
                 defaultInstance = new ConfiguredInstance(pluginType);
             }
 
-            var basicInstance = defaultInstance as ConstructorInstance;
+            var basicInstance = defaultInstance as IConfiguredInstance;
 
             var instance = basicInstance == null
-                                    ? defaultInstance
-                                    : basicInstance.Override(args);
+                ? defaultInstance
+                : basicInstance.Override(args);
 
-            var session = new BuildSession(_pipelineGraph, requestedName, args);
+            if (instance == null)
+            {
+                throw new StructureMapConfigurationException("No default instance or named instance '{0}' for requested plugin type {1}", requestedName, pluginType.GetFullName());
+            }
+
+            var session = new BuildSession(_pipelineGraph, requestedName, args)
+            {
+                RootType = instance.ReturnedType
+            };
+
+            
 
             return session.FindObject(pluginType, instance);
         }
 
-        public ExplicitArgsExpression With(Action<ExplicitArgsExpression> action)
+        /// <summary>
+        /// Starts a request for an instance or instances with explicitly configured
+        /// arguments
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public ExplicitArgsExpression With(Action<IExplicitArgsExpression> action)
         {
             var expression = new ExplicitArgsExpression(this);
             action(expression);
@@ -481,9 +655,12 @@ namespace StructureMap
             Configure(x => x.For(pluginType).Use(instance));
         }
 
-        private void nameContainer(IContainer container)
+        /// <summary>
+        /// Is this container the root, a profile or child, or a nested container?
+        /// </summary>
+        public ContainerRole Role
         {
-            container.Name = "Nested-" + container.Name;
+            get { return _pipelineGraph.Role; }
         }
 
         #region Nested type: GetInstanceAsExpression
@@ -507,7 +684,8 @@ namespace StructureMap
             {
                 if (!templateType.IsOpenGeneric())
                 {
-                    throw new StructureMapException(285);
+                    throw new StructureMapConfigurationException(
+                        "Type '{0}' is not an open generic type".ToFormat(templateType.GetFullName()));
                 }
 
                 _templateType = templateType;
@@ -532,4 +710,8 @@ namespace StructureMap
 
         #endregion
     }
+
+
+
+
 }

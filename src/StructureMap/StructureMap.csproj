@@ -1,373 +1,269 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
-    <AssemblyName>StructureMap</AssemblyName>
-    <AssemblyOriginatorKeyFile>..\structuremap.snk</AssemblyOriginatorKeyFile>
-    <DefaultClientScript>JScript</DefaultClientScript>
-    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
-    <DefaultTargetSchema>IE50</DefaultTargetSchema>
-    <DelaySign>false</DelaySign>
+    <ProjectGuid>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StructureMap</RootNamespace>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>
-    </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <SignAssembly>false</SignAssembly>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <AssemblyName>StructureMap</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\Debug\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>bin\Debug\StructureMap.XML</DocumentationFile>
+    <!-- <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile78</TargetFrameworkProfile> -->
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile5</TargetFrameworkProfile>
     <DebugSymbols>true</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>618,1591,1573,1711,1570</NoWarn>
-    <Optimize>false</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile>bin\Debug\StructureMap.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'NET45WP8' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile78</TargetFrameworkProfile>
+    <OutputPath>bin\NET45WP8\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\Release\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>bin\Release\StructureMap.XML</DocumentationFile>
-    <DebugSymbols>true</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>618,1591,1573,1711,1570</NoWarn>
-    <Optimize>true</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile5</TargetFrameworkProfile>
     <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Build|AnyCPU' ">
-    <OutputPath>..\..\build\StructureMap\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>StructureMap.xml</DocumentationFile>
-    <DebugSymbols>true</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>618, 1591</NoWarn>
-    <Optimize>false</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
-    <DebugType>full</DebugType>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Release\StructureMap.xml</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System">
-      <Name>System</Name>
-    </Reference>
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
-    <Reference Include="System.Web">
-      <Name>System.Web</Name>
-    </Reference>
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET45WP8|AnyCPU'">
+    <DocumentationFile>bin\NET45WP8\StructureMap.xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
-      <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Attributes\DefaultConstructorAttribute.cs" />
+    <Compile Include="Attributes\SetterPropertyAttribute.cs" />
+    <Compile Include="Attributes\ValidationMethodAttribute.cs" />
     <Compile Include="AutoMocking\AutoMockedContainer.cs" />
     <Compile Include="AutoMocking\AutoMocker.cs" />
     <Compile Include="AutoMocking\ServiceLocator.cs" />
+    <Compile Include="BasicExtensions.cs" />
+    <Compile Include="Building\AllPossibleValuesDependencySource.cs" />
+    <Compile Include="Building\ArrayDependencySource.cs" />
+    <Compile Include="Building\BuildPlan.cs" />
+    <Compile Include="Building\BuildUpPlan.cs" />
+    <Compile Include="Building\ConcreteBuild.cs" />
+    <Compile Include="Building\ConcreteType.cs" />
+    <Compile Include="Building\Constant.cs" />
+    <Compile Include="Building\ConstructorStep.cs" />
+    <Compile Include="Building\DefaultDependencySource.cs" />
+    <Compile Include="Building\DelegateExtensions.cs" />
+    <Compile Include="Building\DependencyProblem.cs" />
+    <Compile Include="Building\IBuildPlan.cs" />
+    <Compile Include="Building\IBuildPlanVisitable.cs" />
+    <Compile Include="Building\IDependencySource.cs" />
+    <Compile Include="Building\IDescribed.cs" />
+    <Compile Include="Building\IEnumerableDependencySource.cs" />
+    <Compile Include="Building\IHasSetters.cs" />
+    <Compile Include="Building\Interception\ActivatorInterceptor.cs" />
+    <Compile Include="Building\Interception\BlockPlan.cs" />
+    <Compile Include="Building\Interception\DecoratorInterceptor.cs" />
+    <Compile Include="Building\Interception\DecoratorPolicy.cs" />
+    <Compile Include="Building\Interception\FuncInterceptor.cs" />
+    <Compile Include="Building\Interception\IInterceptor.cs" />
+    <Compile Include="Building\Interception\IInterceptorPolicy.cs" />
+    <Compile Include="Building\Interception\InterceptionPlan.cs" />
+    <Compile Include="Building\Interception\InterceptorPolicy.cs" />
+    <Compile Include="Building\Interception\InterceptorFactory.cs" />
+    <Compile Include="Building\Interception\InterceptorPolicies.cs" />
+    <Compile Include="Building\Interception\InterceptorRole.cs" />
+    <Compile Include="Building\Interception\ParameterRewriter.cs" />
+    <Compile Include="Building\LifecycleDependencySource.cs" />
+    <Compile Include="Building\ListDependencySource.cs" />
+    <Compile Include="Building\Parameters.cs" />
+    <Compile Include="Building\PushPopWrapper.cs" />
+    <Compile Include="Building\ReferencedDependencySource.cs" />
+    <Compile Include="Building\Setter.cs" />
+    <Compile Include="Building\TryCatchWrapper.cs" />
     <Compile Include="BuildSession.cs" />
-    <Compile Include="ComplexPipelineGraph.cs" />
-    <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />
-    <Compile Include="Configuration\IPluginGraphConfiguration.cs" />
-    <Compile Include="Configuration\MalformedAliasException.cs" />
-    <Compile Include="Diagnostics\BuildError.cs" />
-    <Compile Include="Diagnostics\CharacterWidth.cs" />
-    <Compile Include="Diagnostics\DividerLine.cs" />
-    <Compile Include="Diagnostics\Error.cs" />
-    <Compile Include="Diagnostics\ErrorCollection.cs" />
-    <Compile Include="Diagnostics\GraphLog.cs" />
-    <Compile Include="Diagnostics\InstanceToken.cs" />
-    <Compile Include="Diagnostics\Line.cs" />
-    <Compile Include="Diagnostics\TextLine.cs" />
-    <Compile Include="Diagnostics\TextReportWriter.cs" />
-    <Compile Include="Diagnostics\WhatDoIHaveWriter.cs" />
-    <Compile Include="Exceptions\StructureMapConfigurationException.cs" />
-    <Compile Include="ExplicitArgsExpression.cs" />
-    <Compile Include="GraphEjector.cs" />
-    <Compile Include="Graph\CloseGenericFamilyPolicy.cs" />
-    <Compile Include="Graph\Constructor.cs" />
-    <Compile Include="Graph\FamilyAttribute.cs" />
-    <Compile Include="Graph\GenericConnectionScanner.cs" />
-    <Compile Include="Graph\HasScope.cs" />
-    <Compile Include="Graph\IArgumentVisitor.cs" />
-    <Compile Include="Graph\IFamilyPolicy.cs" />
-    <Compile Include="Graph\InstanceAttribute.cs" />
-    <Compile Include="Graph\IPluginFactory.cs" />
-    <Compile Include="Graph\AssemblyScanner.cs" />
-    <Compile Include="Graph\IPluginGraph.cs" />
-    <Compile Include="Graph\SetterRules.cs" />
-    <Compile Include="Graph\TypePool.cs" />
-    <Compile Include="IBuildSession.cs" />
-    <Compile Include="IGraphEjector.cs" />
-    <Compile Include="Interceptors\MatchedTypeInterceptor.cs" />
-    <Compile Include="IPipelineGraph.cs" />
-    <Compile Include="Pipeline\ArrayDefinitionExpression.cs" />
-    <Compile Include="Pipeline\ConfiguredInstance.cs" />
-    <Compile Include="Pipeline\ConfiguredInstance.Expressions.cs" />
-    <Compile Include="Pipeline\DependencyExpression.cs" />
-    <Compile Include="Pipeline\LambdaInstance.cs" />
-    <Compile Include="Pipeline\DefaultInstance.cs" />
-    <Compile Include="Pipeline\IConfiguredInstance.cs" />
-    <Compile Include="Pipeline\ILocationPolicy.cs" />
-    <Compile Include="Pipeline\Instance.cs" />
-    <Compile Include="Pipeline\InstanceMementoPropertyReader.cs" />
-    <Compile Include="Pipeline\ObjectInstance.cs" />
-    <Compile Include="Pipeline\PrototypeInstance.cs" />
-    <Compile Include="Pipeline\ReaderWriterLockExtensions.cs" />
-    <Compile Include="Pipeline\ReferencedInstance.cs" />
-    <Compile Include="Pipeline\NestedContainerTransientObjectCache.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Attributes\DefaultConstructorAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Attributes\SetterPropertyAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Attributes\ValidationMethodAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\ConfigurationConstants.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\DSL\Expressions\CreatePluginFamilyExpression.cs" />
-    <Compile Include="Configuration\DSL\ExpressionValidator.cs" />
-    <Compile Include="Pipeline\ExplicitArguments.cs" />
-    <Compile Include="Configuration\DSL\Registry.cs" />
-    <Compile Include="Configuration\IGraphBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\GraphBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Exceptions\InstancePropertyValueException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Exceptions\StructureMapException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\GenericsPluginGraph.cs" />
-    <Compile Include="Graph\Plugin.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\PluginFamily.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\PluginGraph.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\SetterProperty.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\SetterPropertyCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\TypePath.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IContainer.cs" />
-    <Compile Include="Container.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="InstanceMemento.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Interceptors\CompoundInterceptor.cs" />
-    <Compile Include="Interceptors\EnrichmentInterceptor.cs" />
-    <Compile Include="Interceptors\InstanceInterceptor.cs" />
-    <Compile Include="Interceptors\InterceptorLibrary.cs" />
-    <Compile Include="Interceptors\Interceptors.cs" />
-    <Compile Include="Interceptors\NulloInterceptor.cs" />
-    <Compile Include="Interceptors\StartupInterceptor.cs" />
-    <Compile Include="Interceptors\FilteredInstanceInterceptor.cs" />
-    <Compile Include="MemoryInstanceMemento.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ObjectFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="PluginGraphBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Query\ClosedPluginTypeConfiguration.cs" />
-    <Compile Include="RootPipelineGraph.cs" />
-    <Compile Include="SessionCache.cs" />
-    <Compile Include="Diagnostics\ValidationBuildSession.cs" />
-    <Compile Include="Util\LightweightCache.cs" />
-    <EmbeddedResource Include="StructureMapException.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\structuremap.snk">
-      <Link>Properties\structuremap.snk</Link>
-    </None>
     <Compile Include="CloseGenericTypeExpression.cs" />
+    <Compile Include="ComplexInstanceGraph.cs" />
     <Compile Include="ConfigurationExpression.cs" />
+    <Compile Include="Configuration\ConfigurationConstants.cs" />
+    <Compile Include="Configuration\DSL\Expressions\ConfigureConventionExpression.cs" />
+    <Compile Include="Configuration\DSL\Expressions\CreatePluginFamilyExpression.cs" />
+    <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\Expressions\InstanceExpression.cs" />
     <Compile Include="Configuration\DSL\IRegistry.cs" />
+    <Compile Include="Configuration\DSL\Registry.cs" />
     <Compile Include="Configuration\DSL\SetterConvention.cs" />
+    <Compile Include="Configuration\GraphBuilder.cs" />
+    <Compile Include="Configuration\IGraphBuilder.cs" />
+    <Compile Include="Configuration\IPluginGraphConfiguration.cs" />
     <Compile Include="Configuration\ITypeReader.cs" />
-    <Compile Include="Construction\BuilderCompiler.cs" />
-    <Compile Include="Construction\ConstructorFunctionBuilder.cs" />
-    <Compile Include="Construction\IArguments.cs" />
-    <Compile Include="Construction\InstanceBuilder.cs" />
-    <Compile Include="Construction\SetterBuilder.cs" />
-    <Compile Include="Diagnostics\DoctorResult.cs" />
+    <Compile Include="Configuration\MalformedAliasException.cs" />
+    <Compile Include="Container.cs" />
+    <Compile Include="ContainerRole.cs" />
+    <Compile Include="Diagnostics\BuildError.cs" />
+    <Compile Include="Diagnostics\CharacterWidth.cs" />
+    <Compile Include="Diagnostics\DependencyVisualizer.cs" />
+    <Compile Include="Diagnostics\DividerLine.cs" />
+    <Compile Include="Diagnostics\Error.cs" />
+    <Compile Include="Diagnostics\IBuildPlanVisitor.cs" />
+    <Compile Include="Diagnostics\IDependencyVisitor.cs" />
+    <Compile Include="Diagnostics\InstanceToken.cs" />
+    <Compile Include="Diagnostics\Line.cs" />
+    <Compile Include="Diagnostics\PipelineGraphValidator.cs" />
+    <Compile Include="Diagnostics\ProfileReport.cs" />
+    <Compile Include="Diagnostics\BuildPlanVisualizer.cs" />
+    <Compile Include="Diagnostics\TextLine.cs" />
+    <Compile Include="Diagnostics\TextReportWriter.cs" />
+    <Compile Include="Diagnostics\TreeView\Astericks.cs" />
+    <Compile Include="Diagnostics\TreeView\LeftBorder.cs" />
+    <Compile Include="Diagnostics\TreeView\Numbered.cs" />
+    <Compile Include="Diagnostics\TreeView\Outline.cs" />
+    <Compile Include="Diagnostics\TreeView\Section.cs" />
+    <Compile Include="Diagnostics\TreeView\Tabbed.cs" />
+    <Compile Include="Diagnostics\TreeView\Line.cs" />
+    <Compile Include="Diagnostics\TreeView\TitledWriter.cs" />
+    <Compile Include="Diagnostics\TreeView\TreeWriter.cs" />
     <Compile Include="Diagnostics\ValidationError.cs" />
-    <Compile Include="ErrorMessages.cs" />
-    <Compile Include="Example.cs" />
+    <Compile Include="Diagnostics\WhatDoIHaveWriter.cs" />
+    <Compile Include="Diagnostics\WriterExtensions.cs" />
+    <Compile Include="Exceptions\StructureMapBuildException.cs" />
+    <Compile Include="Exceptions\StructureMapBuildPlanException.cs" />
+    <Compile Include="Exceptions\StructureMapConfigurationException.cs" />
+    <Compile Include="Exceptions\StructureMapException.cs" />
+    <Compile Include="ExplicitArgsExpression.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="GraphEjector.cs" />
+    <Compile Include="Graph\AssemblyScanner.cs" />
+    <Compile Include="Graph\CloseGenericFamilyPolicy.cs" />
     <Compile Include="Graph\CompositeFilter.cs" />
     <Compile Include="Graph\CompositePredicate.cs" />
-    <Compile Include="Configuration\DSL\Expressions\ConfigureConventionExpression.cs" />
+    <Compile Include="Graph\DefaultConventionScanner.cs" />
+    <Compile Include="Graph\EnumerableFamilyPolicy.cs" />
+    <Compile Include="Graph\FamilyAttribute.cs" />
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />
     <Compile Include="Graph\FirstInterfaceConvention.cs" />
+    <Compile Include="Graph\FuncBuildByNamePolicy.cs" />
+    <Compile Include="Graph\GenericConnectionScanner.cs" />
+    <Compile Include="Graph\GenericsPluginGraph.cs" />
+    <Compile Include="Graph\HasLifecycle.cs" />
     <Compile Include="Graph\IAssemblyScanner.cs" />
+    <Compile Include="Graph\IFamilyPolicy.cs" />
     <Compile Include="Graph\ImplementationMap.cs" />
+    <Compile Include="Graph\InstanceAttribute.cs" />
+    <Compile Include="Graph\IPluginGraph.cs" />
     <Compile Include="Graph\IRegistrationConvention.cs" />
-    <Compile Include="Graph\DefaultConventionScanner.cs" />
+    <Compile Include="Graph\PluginFamily.cs" />
+    <Compile Include="Graph\PluginGraph.cs" />
+    <Compile Include="Graph\SetterRules.cs" />
+    <Compile Include="Graph\TypePath.cs" />
+    <Compile Include="Graph\TypePool.cs" />
+    <Compile Include="IBootstrapper.cs" />
+    <Compile Include="IBuildSession.cs" />
+    <Compile Include="IContainer.cs" />
     <Compile Include="IContext.cs" />
-    <Compile Include="Pipeline\AdapterClasses.cs" />
+    <Compile Include="IGraphEjector.cs" />
+    <Compile Include="IInstanceGraph.cs" />
+    <Compile Include="ILifecycleContext.cs" />
+    <Compile Include="InitializationExpression.cs" />
+    <Compile Include="InstanceMemento.cs" />
+    <Compile Include="IPipelineGraph.cs" />
+    <Compile Include="MemoryInstanceMemento.cs" />
+    <Compile Include="ObjectFactory.cs" />
+    <Compile Include="PipelineGraph.cs" />
+    <Compile Include="Pipeline\Argument.cs" />
+    <Compile Include="Pipeline\ArrayCoercion.cs" />
+    <Compile Include="Pipeline\ArrayDefinitionExpression.cs" />
+    <Compile Include="Pipeline\AttributeConstructorSelector.cs" />
+    <Compile Include="Pipeline\ConfiguredInstance.cs" />
+    <Compile Include="Pipeline\ConstructorInstance.cs" />
+    <Compile Include="Pipeline\ConstructorSelector.cs" />
+    <Compile Include="Pipeline\DefaultInstance.cs" />
+    <Compile Include="Pipeline\DependencyCollection.cs" />
+    <Compile Include="Pipeline\DependencyExpression.cs" />
+    <Compile Include="Pipeline\EnumerableInstance.cs" />
+    <Compile Include="Pipeline\ExplicitArguments.cs" />
+    <Compile Include="Pipeline\ExpressedInstance.cs" />
+    <Compile Include="Pipeline\GreediestConstructorSelector.cs" />
+    <Compile Include="Pipeline\IConfiguredInstance.cs" />
+    <Compile Include="Pipeline\IConstructorSelector.cs" />
+    <Compile Include="Pipeline\IEnumerableCoercion.cs" />
+    <Compile Include="Pipeline\ILifecycle.cs" />
+    <Compile Include="Pipeline\ILocationPolicy.cs" />
+    <Compile Include="Pipeline\Instance.cs" />
+    <Compile Include="Pipeline\InstanceMementoPropertyReader.cs" />
+    <Compile Include="Pipeline\IObjectCache.cs" />
+    <Compile Include="Pipeline\LambdaInstance.cs" />
+    <Compile Include="Pipeline\Lazy\FuncWithArgInstance.cs" />
+    <Compile Include="Pipeline\Lazy\FuncWithArgFactoryTemplate.cs" />
+    <Compile Include="Pipeline\Lazy\FuncFactoryTemplate.cs" />
+    <Compile Include="Pipeline\Lazy\FuncInstance.cs" />
+    <Compile Include="Pipeline\Lazy\LazyFactoryTemplate.cs" />
+    <Compile Include="Pipeline\Lazy\LazyInstance.cs" />
+    <Compile Include="Pipeline\LifecycleObjectCache.cs" />
+    <Compile Include="Pipeline\Lifecycles.cs" />
+    <Compile Include="Pipeline\ListCoercion.cs" />
+    <Compile Include="Pipeline\NestedContainerTransientObjectCache.cs" />
+    <Compile Include="Pipeline\NullInstance.cs" />
+    <Compile Include="Pipeline\NulloTransientCache.cs" />
+    <Compile Include="Pipeline\ObjectInstance.cs" />
+    <Compile Include="Pipeline\ObjectLifecycle.cs" />
+    <Compile Include="Pipeline\ReaderWriterLockExtensions.cs" />
+    <Compile Include="Pipeline\ReferencedInstance.cs" />
+    <Compile Include="Pipeline\SingletonLifecycle.cs" />
+    <Compile Include="Pipeline\SmartInstance.cs" />
+    <Compile Include="Pipeline\ThreadLocalStorageLifecycle.cs" />
+    <Compile Include="Pipeline\UniquePerRequestLifecycle.cs" />
+    <Compile Include="PluginGraphBuilder.cs" />
+    <Compile Include="Policies.cs" />
+    <Compile Include="Profiles.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\ClosedPluginTypeConfiguration.cs" />
     <Compile Include="Query\EmptyConfiguration.cs" />
     <Compile Include="Query\GenericFamilyConfiguration.cs" />
     <Compile Include="Query\IModel.cs" />
-    <Compile Include="Pipeline\Arguments.cs" />
-    <Compile Include="Pipeline\ArrayCoercion.cs" />
-    <Compile Include="Pipeline\ConstructorInstance.cs" />
-    <Compile Include="Pipeline\EnumerableInstance.cs" />
-    <Compile Include="Pipeline\IEnumerableCoercion.cs" />
-    <Compile Include="Pipeline\ILifecycle.cs" />
-    <Compile Include="Pipeline\IObjectCache.cs" />
-    <Compile Include="Pipeline\Lifecycles.cs" />
-    <Compile Include="Pipeline\ListCoercion.cs" />
-    <Compile Include="Pipeline\LifecycleObjectCache.cs" />
-    <Compile Include="Pipeline\NulloTransientCache.cs" />
-    <Compile Include="Pipeline\SingletonLifecycle.cs" />
-    <Compile Include="Pipeline\ThreadLocalStorageLifecycle.cs" />
-    <Compile Include="Pipeline\UniquePerRequestLifecycle.cs" />
     <Compile Include="Query\InstanceRef.cs" />
     <Compile Include="Query\IPluginTypeConfiguration.cs" />
-    <Compile Include="TypeExtensions.cs" />
-    <Compile Include="IBootstrapper.cs" />
-    <Compile Include="InitializationExpression.cs" />
     <Compile Include="Query\Model.cs" />
-    <Compile Include="Pipeline\BuildFrame.cs" />
-    <Compile Include="Pipeline\BuildStack.cs" />
-    <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />
-    <Compile Include="Pipeline\IStructuredInstance.cs" />
-    <Compile Include="Pipeline\SerializedInstance.cs" />
-    <Compile Include="Pipeline\SmartInstance.cs" />
     <Compile Include="ReflectionHelper.cs" />
+    <Compile Include="RootInstanceGraph.cs" />
+    <Compile Include="SessionCache.cs" />
     <Compile Include="Util\Cache.cs" />
+    <Compile Include="Util\LightweightCache.cs" />
+    <Compile Include="TypeExtensions.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
+  <ItemGroup Condition=" '$(Configuration)' != 'NET45WP8' ">
+    <Compile Include="TypeExtensions.NET4.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Source\" />
+  <ItemGroup Condition=" '$(Configuration)' == 'NET45WP8' ">
+    <Compile Include="TypeExtensions.NET45.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>

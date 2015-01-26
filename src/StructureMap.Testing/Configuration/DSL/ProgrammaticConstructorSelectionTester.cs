@@ -5,12 +5,12 @@ namespace StructureMap.Testing.Configuration.DSL
     [TestFixture]
     public class ProgrammaticConstructorSelectionTester
     {
-        [Test, Ignore("Pending a fix to GH-74")]
+        [Test]
         public void override_constructor_selection_in_code()
         {
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.ForConcreteType<ClassWithTwoConstructors>().Configure
+                    .SelectConstructor(() => new ClassWithTwoConstructors(34))
                     .Ctor<int>("age").Is(34);
             });
 

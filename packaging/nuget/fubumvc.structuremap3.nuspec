@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>FubuMVC.StructureMap3</id>
+    <version>0.0.0</version>
+    <authors>Jeremy D. Miller, Joshua Arnold, Corey Kaylor</authors>
+    <owners>Jeremy D. Miller</owners>
+    <licenseUrl>https://github.com/DarthFubuMVC/fubumvc/raw/master/license.txt</licenseUrl>
+    <projectUrl>http://fubuworld.com/fubumvc</projectUrl>
+    <iconUrl>https://github.com/DarthFubuMVC/fubu-collateral/raw/master/Icons/FubuMvc_256.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>StructureMap3 bootstrapping for FubuMVC applications</description>
+    <tags>web framework mvc fubumvc structuremap</tags>
+    <dependencies>
+      <dependency id="FubuMVC.Core" />
+      <dependency id="StructureMap" version="3.0.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\..\src\FubuMVC.StructureMap3\bin\release\FubuMVC.StructureMap3.*" target="lib\net40" />
+  </files>
+</package>

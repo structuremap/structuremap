@@ -1,10 +1,12 @@
 using System;
+using System.Linq.Expressions;
+using StructureMap.Building.Interception;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
+
     /// <summary>
     /// Expression Builder that has grammars for defining policies at the 
     /// PluginType level.  This expression is used for registering 
@@ -24,21 +26,20 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             if (scope != null)
             {
-                alterAndContinue(family => family.SetScopeTo(scope));
+                alterAndContinue(family => family.SetLifecycleTo(scope));
             }
         }
 
         private GenericFamilyExpression alterAndContinue(Action<PluginFamily> action)
         {
-            _registry.alter = graph =>
-            {
-                var family = graph.Families[_pluginType];
+            _registry.alter = graph => {
+                var family = graph.FindExistingOrCreateFamily(_pluginType);
+
                 action(family);
             };
 
             return this;
         }
-
 
 
         /// <summary>
@@ -65,8 +66,24 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Specify the "on missing named instance" configuration for this
+        /// PluginType
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public GenericFamilyExpression MissingNamedInstanceIs(Instance instance)
+        {
+            alterAndContinue(family => family.MissingInstance = instance);
+            return this;
+        }
 
-        public LambdaInstance<object> Use(Func<IContext, object> func)
+        /// <summary>
+        /// Register an Instance constructed by a Lambda Expression using IContext
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public LambdaInstance<object> Use(Expression<Func<IContext, object>> func)
         {
             var instance = new LambdaInstance<object>(func);
             Use(instance);
@@ -74,9 +91,42 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-        public LambdaInstance<object> Add(Func<IContext, object> func)
+        /// <summary>
+        /// Register an Instance constructed by a Func that uses IContex
+        /// </summary>
+        /// <param name="description">User friendly diagnostic description</param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public LambdaInstance<object> Use(string description, Func<IContext, object> func)
+        {
+            var instance = new LambdaInstance<object>(description, func);
+            Use(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Adds an additional Instance constructed by a Lambda Expression using IContext
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public LambdaInstance<object> Add(Expression<Func<IContext, object>> func)
         {
             var instance = new LambdaInstance<object>(func);
+            Add(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Adds an additional Instance constructed by a Func using IContext
+        /// </summary>
+        /// <param name="description">User friendly description for diagnostic purposes</param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public LambdaInstance<object> Add(string description, Func<IContext, object> func)
+        {
+            var instance = new LambdaInstance<object>(description, func);
             Add(instance);
 
             return instance;
@@ -95,6 +145,12 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Makes a previously registered Instance with the name 'instanceKey'
+        /// the default Instance for this PluginType
+        /// </summary>
+        /// <param name="instanceKey"></param>
+        /// <returns></returns>
         public ReferencedInstance Use(string instanceKey)
         {
             var instance = new ReferencedInstance(instanceKey);
@@ -120,12 +176,16 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-
+        /// <summary>
+        /// Adds an additional Instance against this PluginType
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
         public GenericFamilyExpression Add(Instance instance)
         {
             return alterAndContinue(family => family.AddInstance(instance));
         }
-        
+
         /// <summary>
         /// Configure this type as the supplied value
         /// </summary>
@@ -138,71 +198,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-
         /// <summary>
-        /// Register an Action to run against any object of this PluginType immediately after
-        /// it is created, but before the new object is passed back to the caller
-        /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
-        public GenericFamilyExpression OnCreationForAll(Action<object> action)
-        {
-            Func<object, object> func = raw =>
-            {
-                action(raw);
-                return raw;
-            };
-            return EnrichAllWith(func);
-        }
-
-        /// <summary>
-        /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreationForAll">OnCreationForAll()</see>,
-        /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
-        /// scenarios or to return a decorator.
-        /// </summary>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        public GenericFamilyExpression EnrichAllWith(Func<object, object> func)
-        {
-            _registry.alter = graph =>
-            {
-                var interceptor = new PluginTypeInterceptor(_pluginType, (c, o) => func(o));
-                graph.InterceptorLibrary.AddInterceptor(interceptor);
-            };
-
-            return this;
-        }
-
-        /// <summary>
-        /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreationForAll">OnCreationForAll()</see>,
-        /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
-        /// scenarios or to return a decorator.
-        /// </summary>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        public GenericFamilyExpression EnrichAllWith(Func<IContext, object, object> func)
-        {
-            _registry.alter = graph =>
-            {
-                var interceptor = new PluginTypeInterceptor(_pluginType, func);
-                graph.InterceptorLibrary.AddInterceptor(interceptor);
-            };
-
-            return this;
-        }
-
-        /// <summary>
-        /// Registers an IBuildInterceptor for this Plugin Type that executes before
-        /// any object of this PluginType is created.  IBuildInterceptor's can be
-        /// used to create a custom scope
+        /// Assign a lifecycle to the PluginFamily
         /// </summary>
         /// <param name="lifecycle"></param>
         /// <returns></returns>
         public GenericFamilyExpression LifecycleIs(ILifecycle lifecycle)
         {
-            return alterAndContinue(family => family.SetScopeTo(lifecycle));
+            return alterAndContinue(family => family.SetLifecycleTo(lifecycle));
         }
 
         /// <summary>
@@ -212,6 +215,22 @@ namespace StructureMap.Configuration.DSL.Expressions
         public GenericFamilyExpression Singleton()
         {
             return LifecycleIs(Lifecycles.Singleton);
+        }
+
+        /// <summary>
+        /// Applies a decorator type to all Instances that return a type that can be cast to this PluginType
+        /// </summary>
+        /// <param name="decoratorType"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public ConfiguredInstance DecorateAllWith(Type decoratorType, Func<Instance, bool> filter = null)
+        {
+            var instance = new ConfiguredInstance(decoratorType);
+            var policy = new DecoratorPolicy(_pluginType, instance, filter);
+
+            _registry.alter = graph => graph.Policies.Interceptors.Add(policy);
+
+            return instance;
         }
     }
 }

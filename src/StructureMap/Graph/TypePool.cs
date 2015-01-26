@@ -2,28 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using StructureMap.TypeRules;
 using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
     public class TypePool
     {
-        private readonly Cache<Assembly, Type[]> _types = new Cache<Assembly, Type[]>();
+        private readonly LightweightCache<Assembly, Type[]> _types = new LightweightCache<Assembly, Type[]>();
 
-        public TypePool(PluginGraph graph)
+        public TypePool()
         {
-            _types.OnMissing = assembly =>
-            {
-                try
-                {
-                    return assembly.GetExportedTypes();
-                }
-                catch (Exception ex)
-                {
-                    graph.Log.RegisterError(170, ex, assembly.FullName);
-                    return new Type[0];
-                }
-            };
+            _types.OnMissing = assembly => assembly.GetExportedTypes().ToArray();
         }
 
         public IEnumerable<Type> For(IEnumerable<Assembly> assemblies, CompositeFilter<Type> filter)

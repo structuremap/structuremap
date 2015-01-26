@@ -19,8 +19,7 @@ namespace StructureMap.Query
 
         public void Eject(Instance instance)
         {
-            instance.Lifecycle.FindCache(_pipelineGraph).Eject(_family.PluginType, instance);
-            
+            _pipelineGraph.Ejector.RemoveFromLifecycle(_family.PluginType, instance);
         }
 
         public object Build(Instance instance)
@@ -30,12 +29,20 @@ namespace StructureMap.Query
 
         public bool HasBeenCreated(Instance instance)
         {
-            return instance.Lifecycle.FindCache(_pipelineGraph).Has(_family.PluginType, instance);
+            return
+                _pipelineGraph.DetermineLifecycle(_family.PluginType, instance)
+                    .FindCache(_pipelineGraph)
+                    .Has(_family.PluginType, instance);
         }
 
         public string ProfileName
         {
-            get { return _pipelineGraph.Outer.ProfileName; }
+            get { return _pipelineGraph.Profile; }
+        }
+
+        public IPipelineGraph Pipeline
+        {
+            get { return _pipelineGraph; }
         }
 
         Type IFamily.PluginType
@@ -50,7 +57,8 @@ namespace StructureMap.Query
 
         public InstanceRef Default
         {
-            get { 
+            get
+            {
                 var instance = _family.GetDefaultInstance();
                 return instance == null ? null : new InstanceRef(instance, this);
             }
@@ -58,14 +66,14 @@ namespace StructureMap.Query
 
         public ILifecycle Lifecycle
         {
-            get { return _family.Lifecycle; }
+            get { return _pipelineGraph.Instances.DefaultLifecycleFor(_family.PluginType) ?? Lifecycles.Transient; }
         }
 
         public IEnumerable<InstanceRef> Instances
         {
             get
             {
-                foreach (Instance instance in _family.Instances)
+                foreach (var instance in _family.Instances)
                 {
                     yield return new InstanceRef(instance, this);
                 }
@@ -77,16 +85,35 @@ namespace StructureMap.Query
             return _family.Instances.Any();
         }
 
+        public void EjectAndRemove(Instance instance)
+        {
+            _pipelineGraph.Ejector.RemoveCompletely(_family.PluginType, instance);
+        }
+
         public void EjectAndRemove(InstanceRef instance)
         {
-            Eject(instance.Instance);
-            instance.Instance.SafeDispose();
-            _family.RemoveInstance(instance.Instance);
+            _pipelineGraph.Ejector.RemoveCompletely(_family.PluginType, instance.Instance);
         }
 
         public void EjectAndRemoveAll()
         {
             Instances.ToArray().Each(EjectAndRemove);
+        }
+
+        public InstanceRef Fallback
+        {
+            get
+            {
+                return _family.Fallback == null ? null : new InstanceRef(_family.Fallback, this);
+            }
+        }
+
+        public InstanceRef MissingNamedInstance
+        {
+            get
+            {
+                return _family.MissingInstance == null ? null : new InstanceRef(_family.MissingInstance, this);
+            }
         }
     }
 }

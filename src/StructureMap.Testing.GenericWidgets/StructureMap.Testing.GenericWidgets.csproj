@@ -85,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StructureMap.LegacyAttributeSupport\StructureMap.LegacyAttributeSupport.csproj">
-      <Project>{840415D3-247D-449A-BC79-605D0A1C6F81}</Project>
+      <Project>{840415d3-247d-449a-bc79-605d0a1c6f81}</Project>
       <Name>StructureMap.LegacyAttributeSupport</Name>
     </ProjectReference>
     <ProjectReference Include="..\StructureMap\StructureMap.csproj">

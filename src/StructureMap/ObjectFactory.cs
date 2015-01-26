@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -10,15 +9,21 @@ namespace StructureMap
     /// A convenience "Containment" to hold your container if you are planning to have a single static <see cref="IContainer"/> instance in your application.
     /// 
     /// </summary>
+    [Obsolete("ObjectFactory will be removed in a future 4.0 release of StructureMap. Favor the usage of the Container class for future work")]
     public static class ObjectFactory
     {
         private static readonly object _lockObject = new object();
-        private static Lazy<Container> _containerBuilder = new Lazy<Container>(defaultContainer,LazyThreadSafetyMode.ExecutionAndPublication);
+
+        private static Lazy<Container> _containerBuilder = new Lazy<Container>(defaultContainer,
+            LazyThreadSafetyMode.ExecutionAndPublication);
 
         /// <summary>
         /// The Container that is kept alive by the ObjectFactory
         /// </summary>
-        public static IContainer Container { get { return _containerBuilder.Value; } }
+        public static IContainer Container
+        {
+            get { return _containerBuilder.Value; }
+        }
 
         private static Container defaultContainer()
         {
@@ -44,7 +49,7 @@ namespace StructureMap
 
                 var graph = expression.BuildGraph();
                 var container = new Container(graph);
-                _containerBuilder = new Lazy<Container>(()=>container);
+                _containerBuilder = new Lazy<Container>(() => container);
                 nameContainer(container);
             }
         }
@@ -119,7 +124,7 @@ namespace StructureMap
 
         private static void nameContainer(IContainer container)
         {
-            container.Name = "ObjectFactory-" + container.Name; 
+            container.Name = "ObjectFactory-" + container.Name;
         }
     }
 }

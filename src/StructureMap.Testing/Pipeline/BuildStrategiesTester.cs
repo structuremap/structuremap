@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
@@ -9,15 +10,6 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class BuildStrategiesTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
         public class StubInstance : Instance
         {
             private readonly object _constructedObject;
@@ -28,14 +20,19 @@ namespace StructureMap.Testing.Pipeline
                 _constructedObject = constructedObject;
             }
 
-            protected override object build(Type pluginType, BuildSession session)
+            public override IDependencySource ToDependencySource(Type pluginType)
             {
-                return _constructedObject;
+                return new Constant(pluginType, _constructedObject);
             }
 
-            protected override string getDescription()
+            public override Type ReturnedType
             {
-                return "Stubbed";
+                get { return _constructedObject.GetType(); }
+            }
+
+            public override string Description
+            {
+                get { return "Stubbed"; }
             }
         }
 
@@ -43,10 +40,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Singleton_build_policy()
         {
-            var container = new Container(x =>
-            {
-                x.For<IService>().Singleton().AddInstances(o =>
-                {
+            var container = new Container(x => {
+                x.For<IService>().Singleton().AddInstances(o => {
                     o.Is.ConstructedBy(() => new ColorService("Red")).Named("Red");
                     o.Is.ConstructedBy(() => new ColorService("Green")).Named("Green");
                 });
@@ -80,11 +75,17 @@ namespace StructureMap.Testing.Pipeline
             disposable1 = new StubDisposable();
             disposable2 = new StubDisposable();
 
-            pipeline = new RootPipelineGraph(new PluginGraph());
+            pipeline = PipelineGraph.BuildRoot(new PluginGraph());
 
-            lifecycle.FindCache(pipeline).As<LifecycleObjectCache>().Set(typeof (IGateway), new StubInstance("a"), disposable1);
-            lifecycle.FindCache(pipeline).As<LifecycleObjectCache>().Set(typeof(IGateway), new StubInstance("b"), disposable2);
-            lifecycle.FindCache(pipeline).As<LifecycleObjectCache>().Set(typeof(IGateway), new StubInstance("c"), new object());
+            lifecycle.FindCache(pipeline)
+                .As<LifecycleObjectCache>()
+                .Set(typeof (IGateway), new StubInstance("a"), disposable1);
+            lifecycle.FindCache(pipeline)
+                .As<LifecycleObjectCache>()
+                .Set(typeof (IGateway), new StubInstance("b"), disposable2);
+            lifecycle.FindCache(pipeline)
+                .As<LifecycleObjectCache>()
+                .Set(typeof (IGateway), new StubInstance("c"), new object());
 
 
             lifecycle.EjectAll(pipeline);
@@ -95,7 +96,7 @@ namespace StructureMap.Testing.Pipeline
         private SingletonLifecycle lifecycle;
         private StubDisposable disposable1;
         private StubDisposable disposable2;
-        private RootPipelineGraph pipeline;
+        private IPipelineGraph pipeline;
 
         public class StubInstance : Instance
         {
@@ -104,14 +105,19 @@ namespace StructureMap.Testing.Pipeline
                 Name = name;
             }
 
-            protected override string getDescription()
+            public override Type ReturnedType
+            {
+                get { return null; }
+            }
+
+            public override IDependencySource ToDependencySource(Type pluginType)
             {
                 throw new NotImplementedException();
             }
 
-            protected override object build(Type pluginType, BuildSession session)
+            public override string Description
             {
-                throw new NotImplementedException();
+                get { throw new NotImplementedException(); }
             }
         }
 

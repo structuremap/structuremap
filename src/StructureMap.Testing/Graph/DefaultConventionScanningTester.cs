@@ -21,10 +21,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Process_to_Container()
         {
-            var container = new Container(registry =>
-            {
-                registry.Scan(x =>
-                {
+            var container = new Container(registry => {
+                registry.Scan(x => {
                     x.TheCallingAssembly();
                     x.Convention<DefaultConventionScanner>();
                 });
@@ -37,10 +35,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Process_to_Container_2()
         {
-            var container = new Container(registry =>
-            {
-                registry.Scan(x =>
-                {
+            var container = new Container(registry => {
+                registry.Scan(x => {
                     x.TheCallingAssembly();
                     x.With(new DefaultConventionScanner());
                 });
@@ -64,15 +60,14 @@ namespace StructureMap.Testing.Graph
             Assert.IsFalse(graph.Families.Has(typeof (IServer)));
             Assert.IsTrue(graph.Families.Has(typeof (IConvention)));
 
-            PluginFamily family = graph.Families[typeof (IConvention)];
+            var family = graph.Families[typeof (IConvention)];
             Assert.AreEqual(1, family.Instances.Count());
         }
 
         [Test]
         public void can_configure_plugin_families_via_dsl()
         {
-            var container = new Container(registry => registry.Scan(x =>
-            {
+            var container = new Container(registry => registry.Scan(x => {
                 x.TheCallingAssembly();
                 x.WithDefaultConventions().OnAddedPluginTypes(t => t.Singleton());
             }));
@@ -81,7 +76,6 @@ namespace StructureMap.Testing.Graph
             var secondInstance = container.GetInstance<IConvention>();
             secondInstance.ShouldBeTheSameAs(firstInstance);
         }
-
     }
 
     public interface IConvention

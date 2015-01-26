@@ -4,7 +4,6 @@ using System.Linq;
 using NUnit.Framework;
 using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.GenericWidgets;
-using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
 
@@ -15,17 +14,23 @@ namespace StructureMap.Testing.Query
     {
         #region Setup/Teardown
 
+        public interface IEngine
+        {
+        }
+
+        public class PushrodEngine : IEngine
+        {
+        }
+
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x =>
-            {
+            container = new Container(x => {
                 x.For(typeof (IService<>)).Add(typeof (Service<>));
                 x.For(typeof (IService<>)).Add(typeof (Service2<>));
 
                 x.For<IWidget>().Singleton().Use<AWidget>();
-                x.For<Rule>().AddInstances(o =>
-                {
+                x.For<Rule>().AddInstances(o => {
                     o.Type<DefaultRule>();
                     o.Type<ARule>();
                     o.Type<ColorRule>().Ctor<string>("color").Is("red");
@@ -46,8 +51,8 @@ namespace StructureMap.Testing.Query
         [Test]
         public void can_iterate_through_families_including_both_generics_and_normal()
         {
-            // +1 for "IContainer" itself + Func
-            container.Model.PluginTypes.Count().ShouldEqual(9);
+            // +1 for "IContainer" itself + Func + Lazy + FuncWithArg
+            container.Model.PluginTypes.Count().ShouldEqual(11); 
 
             container.Model.PluginTypes.Each(x => Debug.WriteLine(x.PluginType.FullName));
         }
@@ -86,7 +91,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void get_all_instances_from_the_top()
         {
-            container.Model.AllInstances.Count().ShouldEqual(12);
+            container.Model.AllInstances.Count().ShouldEqual(14); // Func/Func+Arg/Lazy are built in
         }
 
         [Test]

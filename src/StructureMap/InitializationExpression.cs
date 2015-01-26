@@ -1,15 +1,9 @@
-using System;
-using System.Xml;
 using StructureMap.Configuration.DSL;
-using StructureMap.Configuration.DSL.Expressions;
-using StructureMap.Graph;
-using StructureMap.Interceptors;
 
 namespace StructureMap
 {
     public interface IInitializationExpression : IRegistry
     {
-        
         /// <summary>
         /// Creates and adds a Registry object of type T.  
         /// </summary>
@@ -21,7 +15,6 @@ namespace StructureMap
         /// </summary>
         /// <param name="registry"></param>
         void AddRegistry(Registry registry);
-
     }
 
     public class InitializationExpression : ConfigurationExpression, IInitializationExpression

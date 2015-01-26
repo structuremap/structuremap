@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using StructureMap.Attributes;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
     public class SetterRules
     {
         private readonly List<Func<PropertyInfo, bool>> _setterRules = new List<Func<PropertyInfo, bool>>();
-    
-        public void Configure(Plugin plugin)
+
+        public SetterRules()
         {
-            foreach (var rule in _setterRules)
-            {
-                plugin.UseSetterRule(rule);
-            }
+            Add(p => p.HasAttribute<SetterPropertyAttribute>());
         }
 
         public void Clear()
@@ -30,6 +30,11 @@ namespace StructureMap.Graph
         public void Add(IEnumerable<Func<PropertyInfo, bool>> rules)
         {
             _setterRules.AddRange(rules);
+        }
+
+        public bool IsMandatory(PropertyInfo propertyInfo)
+        {
+            return _setterRules.Any(x => x(propertyInfo));
         }
     }
 }

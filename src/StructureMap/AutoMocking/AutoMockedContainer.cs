@@ -1,5 +1,8 @@
 using System;
+using System.Linq;
+using System.Reflection;
 using StructureMap.Graph;
+using StructureMap.TypeRules;
 using StructureMap.Pipeline;
 
 namespace StructureMap.AutoMocking
@@ -13,8 +16,9 @@ namespace StructureMap.AutoMocking
         {
             nameContainer(this);
 
+            Configure(x => x.Policies.OnMissingFamily(this));
+
             _locator = locator;
-            Model.Pipeline.Outer.AddFamilyPolicy(this);
         }
 
         private void nameContainer(IContainer container)
@@ -24,24 +28,25 @@ namespace StructureMap.AutoMocking
 
         public PluginFamily Build(Type pluginType)
         {
-            if (!pluginType.IsAbstract && pluginType.IsClass)
+            if (pluginType.IsConcrete())
             {
                 return null;
             }
 
             var family = new PluginFamily(pluginType);
-            family.SetDefault(() => {
-                var service = _locator.Service(pluginType);
 
-                return new ObjectInstance(service);
-            });
+            var service = _locator.Service(pluginType);
+
+            var instance = new ObjectInstance(service);
+
+            family.SetDefault(instance);
 
             return family;
         }
 
         public bool AppliesToHasFamilyChecks
         {
-            get { return false; }
+            get { return true; }
         }
     }
 }

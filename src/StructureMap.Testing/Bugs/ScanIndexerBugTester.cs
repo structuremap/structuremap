@@ -15,6 +15,10 @@ namespace StructureMap.Testing.Bugs
 
     public class ClassWithIndexer
     {
-        public string this[string key] { get { return key; } set { } }
+        public string this[string key]
+        {
+            get { return key; }
+            set { }
+        }
     }
 }

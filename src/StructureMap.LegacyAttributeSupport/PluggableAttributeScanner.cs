@@ -10,10 +10,10 @@ namespace StructureMap.LegacyAttributeSupport
         {
 
             throw new NotImplementedException("do it a different way");
-            if (PluggableAttribute.MarkedAsPluggable(type))
-            {
-                //registry.AddType(type);
-            }
+//            if (PluggableAttribute.MarkedAsPluggable(type))
+//            {
+//                //registry.AddType(type);
+//            }
         }
     }
 }

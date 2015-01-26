@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<StructureMap>
-  <Assembly Name="StructureMap.Testing.Widget" />
-  <PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="Green">
-    <Instance Type="Color" Key="Green">
-      <Property Name="color" Value="Green" />
-    </Instance>
-  </PluginFamily>
-</StructureMap>

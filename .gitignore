@@ -22,3 +22,9 @@ _UpgradeReport*/
 src/packages
 artifacts
 src/CommonAssemblyInfo.cs
+.bundle
+logs
+Gemfile.lock
+pak-WebContent.zip
+src/StructureMap.Docs/snippets
+fubudocs-export

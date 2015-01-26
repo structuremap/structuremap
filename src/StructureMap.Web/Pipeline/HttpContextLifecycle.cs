@@ -53,7 +53,10 @@ namespace StructureMap.Web.Pipeline
         protected virtual IDictionary findHttpDictionary()
         {
             if (!HasContext())
-                throw new StructureMapException(309);
+            {
+                throw new StructureMapException("You cannot use the HttpContextLifecycle outside of a web request. Try the HybridLifecycle instead.");
+                
+            }
 
             return HttpContext.Current.Items;
         }

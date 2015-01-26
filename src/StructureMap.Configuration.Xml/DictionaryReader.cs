@@ -27,7 +27,8 @@ namespace StructureMap.Configuration.Xml
             node.ForEachChild("Pair").Do(
                 element => builder.Read(element.GetAttribute("Key"), element.GetAttribute("Value")));
 
-            return new SerializedInstance(builder.Object);
+            throw new NotImplementedException("redo.");
+            //return new SerializedInstance(builder.Object);
         }
 
         #endregion

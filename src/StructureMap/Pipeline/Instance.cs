@@ -1,297 +1,215 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using StructureMap.Building;
+using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
-    public interface IDiagnosticInstance
-    {
-        bool CanBePartOfPluginFamily(PluginFamily family);
-        Instance FindInstanceForProfile(PluginFamily family, string profileName, GraphLog log);
-        InstanceToken CreateToken();
-    }
-
-    public abstract class Instance : HasScope, IDiagnosticInstance
+    public abstract class Instance : HasLifecycle, IDescribed
     {
         private readonly string _originalName;
-        private InstanceInterceptor _interceptor = new NulloInterceptor();
-        private string _name = Guid.NewGuid().ToString();
+        private string _name;
 
+        private readonly IList<IInterceptor> _interceptors = new List<IInterceptor>();
 
-        private PluginFamily _parent;
+        /// <summary>
+        /// Add an interceptor to only this Instance
+        /// </summary>
+        /// <param name="interceptor"></param>
+        public void AddInterceptor(IInterceptor interceptor)
+        {
+            if (ReturnedType != null && !ReturnedType.CanBeCastTo(interceptor.Accepts))
+            {
+                throw new ArgumentOutOfRangeException(
+                    "ReturnedType {0} cannot be cast to the Interceptor Accepts type {1}".ToFormat(
+                        ReturnedType.GetFullName(), interceptor.Accepts.GetFullName()));
+            }
+
+            _interceptors.Add(interceptor);
+        }
 
         protected Instance()
         {
-            _originalName = _name;
+            Id = Guid.NewGuid();
+            _originalName = _name = Id.ToString();
         }
 
-        public PluginFamily Parent
+        /// <summary>
+        /// Strategy for how this Instance would be built as
+        /// an inline dependency in the parent Instance's
+        /// "Build Plan"
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
+        public abstract IDependencySource ToDependencySource(Type pluginType);
+
+        /// <summary>
+        /// Creates an IDependencySource that can be used to build the object
+        /// represented by this Instance 
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="policies"></param>
+        /// <returns></returns>
+        public virtual IDependencySource ToBuilder(Type pluginType, Policies policies)
         {
-            get { return _parent; }
-            internal set
-            {
-                _parent = value;
-                scopedParent = _parent;
-            }
+            return ToDependencySource(pluginType);
         }
 
-        protected virtual bool doesRecordOnTheStack
+        public IEnumerable<IInterceptor> Interceptors
         {
-            get { return true; }
+            get { return _interceptors; }
         }
 
-        public InstanceInterceptor Interceptor
-        {
-            get { return _interceptor; }
-            set { _interceptor = value; }
-        }
-
-        internal bool IsReference { get; set; }
-        internal bool CopyAsIsWhenClosingInstance { get; set; }
-
-        #region IDiagnosticInstance Members
-
-        public string Name
+        public virtual string Name
         {
             get { return _name; }
             set { _name = value; }
         }
 
-        internal Type ConcreteType
+        public abstract string Description { get; }
+
+        public InstanceToken CreateToken()
         {
-            get { return getConcreteType(null); }
+            return new InstanceToken(Name, Description);
         }
 
-        internal string Description
+        /// <summary>
+        /// The known .Net Type built by this Instance.  May be null when indeterminate.
+        /// </summary>
+        public abstract Type ReturnedType { get; }
+
+        /// <summary>
+        /// Does this Instance have a user-defined name?
+        /// </summary>
+        /// <returns></returns>
+        public bool HasExplicitName()
         {
-            get { return getDescription(); }
+            return _name != _originalName;
         }
 
-        bool IDiagnosticInstance.CanBePartOfPluginFamily(PluginFamily family)
-        {
-            return canBePartOfPluginFamily(family);
-        }
-
-        Instance IDiagnosticInstance.FindInstanceForProfile(PluginFamily family, string profileName, GraphLog log)
-        {
-            return findMasterInstance(family, profileName, log);
-        }
-
-        InstanceToken IDiagnosticInstance.CreateToken()
-        {
-            return new InstanceToken(Name, getDescription());
-        }
-
-        #endregion
-
-        public virtual object Build(Type pluginType, BuildSession session)
-        {
-            markBuildStackStart(session, pluginType);
-
-            // "Build" the desired object
-            object rawValue = createRawObject(pluginType, session);
-
-            // Allow the Interceptor a chance to enhance, configure,  
-            // wrap with a decorator, or even replace the rawValue
-            object finalValue = applyInterception(rawValue, pluginType, session);
-
-            markBuildStackFinish(session);
-
-            return finalValue;
-        }
-
-        protected virtual void markBuildStackFinish(BuildSession session)
-        {
-            if (!doesRecordOnTheStack) return;
-
-            session.BuildStack.Pop();
-        }
-
-        protected virtual void markBuildStackStart(BuildSession session, Type pluginType)
-        {
-            if (!doesRecordOnTheStack) return;
-
-            var frame = new BuildFrame(pluginType, Name, getConcreteType(pluginType));
-            session.BuildStack.Push(frame);
-        }
-
-        private object createRawObject(Type pluginType, BuildSession session)
-        {
-            try
-            {
-                return build(pluginType, session);
-            }
-            catch (StructureMapException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(400, ex);
-            }
-        }
-
-        protected virtual Type getConcreteType(Type pluginType)
-        {
-            return pluginType;
-        }
-
-        protected abstract string getDescription();
-
-        protected void replaceNameIfNotAlreadySet(string name)
-        {
-            if (_name == _originalName)
-            {
-                _name = name;
-            }
-        }
-
-
-        private object applyInterception(object rawValue, Type pluginType, IContext context)
-        {
-            try
-            {
-                // Intercept with the Instance-specific InstanceInterceptor
-                return _interceptor.Process(rawValue, context);
-            }
-            catch (Exception e)
-            {
-                throw new StructureMapException(270, e, Name, pluginType);
-            }
-        }
-
-        [CLSCompliant(false)]
-        protected virtual object build(Type pluginType, BuildSession session)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual Instance findMasterInstance(PluginFamily family, string profileName, GraphLog log)
+        /// <summary>
+        /// Return the closed type value for this Instance
+        /// when starting from an open generic type
+        /// </summary>
+        /// <param name="types"></param>
+        /// <returns></returns>
+        public virtual Instance CloseType(Type[] types)
         {
             return this;
         }
 
-        [CLSCompliant(false)]
-        protected virtual bool canBePartOfPluginFamily(PluginFamily family)
+        private readonly object _buildLock = new object();
+        private IBuildPlan _plan;
+
+        /// <summary>
+        /// Resolves the IBuildPlan for this Instance.  The result is remembered
+        /// for subsequent requests
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="policies"></param>
+        /// <returns></returns>
+        public IBuildPlan ResolveBuildPlan(Type pluginType, Policies policies)
         {
-            return true;
+            lock (_buildLock)
+            {
+                return _plan ?? (_plan = buildPlan(pluginType, policies));
+            }
         }
 
-
-        internal virtual bool Matches(Plugin plugin)
+        /// <summary>
+        /// Clears out any remembered IBuildPlan for this Instance
+        /// </summary>
+        public void ClearBuildPlan()
         {
-            return false;
+            lock (_buildLock)
+            {
+                _plan = null;
+            }
         }
 
-        public virtual Instance CloseType(Type[] types)
+        private string toDescription(Type pluginType)
         {
-            return null;
+            var typeName = (pluginType ?? ReturnedType).GetFullName();
+
+            if (HasExplicitName())
+            {
+                return "Instance of {0} ({1}) -- {2}".ToFormat(typeName, Name, Description);
+            }
+
+            return "Instance of {0} -- {1}".ToFormat(typeName, Description);
         }
 
+        protected virtual IBuildPlan buildPlan(Type pluginType, Policies policies)
+        {
+            try
+            {
+                var builderSource = ToBuilder(pluginType, policies);
+                var interceptors = determineInterceptors(pluginType, policies);
+
+                return new BuildPlan(pluginType, this, builderSource, policies, interceptors);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Attempting to create a BuildPlan for " + toDescription(pluginType));
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapBuildPlanException(
+                    "Error while trying to create the BuildPlan for {0}.\nPlease check the inner exception".ToFormat(
+                        toDescription(pluginType)), e);
+            }
+        }
+
+        protected IEnumerable<IInterceptor> determineInterceptors(Type pluginType, Policies policies)
+        {
+            var interceptors =
+                policies.Interceptors.SelectInterceptors(pluginType, this).Union(_interceptors);
+            return interceptors;
+        }
+
+        /// <summary>
+        /// Creates a hash that is unique for this Instance and PluginType combination
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
         public int InstanceKey(Type pluginType)
         {
             unchecked
             {
-                return ((Name != null ? Name.GetHashCode() : 0)*397) ^
+                return ((_originalName != null ? _originalName.GetHashCode() : 0)*397) ^
                        (pluginType != null ? pluginType.AssemblyQualifiedName.GetHashCode() : 0);
             }
         }
 
-        public bool IsUnique()
+        public ILifecycle DetermineLifecycle(ILifecycle parent)
         {
-            return Lifecycle is UniquePerRequestLifecycle;
+            return Lifecycle ?? parent ?? Lifecycles.Transient;
         }
 
-        public PluginGraph Owner()
+        protected bool Equals(Instance other)
         {
-            if (Parent == null || Parent.Owner == null) return null;
-
-            var owner = Parent.Owner;
-            while (owner.Parent != null)
-            {
-                owner = owner.Parent;
-            }
-
-            return owner;
-        }
-    }
-
-    /// <summary>
-    ///     Base class for many of the Instance subclasses to support
-    ///     method chaining in the Registry DSL for common options
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public abstract class ExpressedInstance<T> : Instance
-    {
-        protected abstract T thisInstance { get; }
-
-
-        /// <summary>
-        ///     Set the name of this Instance
-        /// </summary>
-        /// <param name="instanceKey"></param>
-        /// <returns></returns>
-        public T Named(string instanceKey)
-        {
-            Name = instanceKey;
-            return thisInstance;
+            return string.Equals(_originalName, other._originalName);
         }
 
-        /// <summary>
-        ///     Register an Action to perform on the object created by this Instance
-        ///     before it is returned to the caller
-        /// </summary>
-        /// <typeparam name="THandler"></typeparam>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public T OnCreation<THandler>(Action<THandler> handler)
+        public override bool Equals(object obj)
         {
-            var interceptor = new StartupInterceptor<THandler>((c, o) => handler(o));
-            Interceptor = interceptor;
-
-            return thisInstance;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Instance) obj);
         }
 
-        /// <summary>
-        ///     Register a Func to potentially enrich or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <typeparam name="THandler"></typeparam>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public T EnrichWith<THandler>(EnrichmentHandler<THandler> handler)
+        public override int GetHashCode()
         {
-            var interceptor = new EnrichmentInterceptor<THandler>((c, o) => handler(o));
-            Interceptor = interceptor;
-
-            return thisInstance;
+            return (_originalName != null ? _originalName.GetHashCode() : 0);
         }
 
-        /// <summary>
-        ///     Register a Func to potentially enrich or substitute for the object
-        ///     created by this Instance before it is returned to the caller
-        /// </summary>
-        /// <typeparam name="THandler"></typeparam>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public T EnrichWith<THandler>(ContextEnrichmentHandler<THandler> handler)
-        {
-            var interceptor = new EnrichmentInterceptor<THandler>(handler);
-            Interceptor = interceptor;
-
-            return thisInstance;
-        }
-
-        /// <summary>
-        ///     Register an <see cref="InstanceInterceptor">InstanceInterceptor</see> with this Instance
-        /// </summary>
-        /// <param name="interceptor"></param>
-        /// <returns></returns>
-        public T InterceptWith(InstanceInterceptor interceptor)
-        {
-            Interceptor = interceptor;
-            return thisInstance;
-        }
+        public Guid Id { get; private set; }
     }
 }

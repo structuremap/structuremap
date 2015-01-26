@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
-using StructureMap.Testing.Widget;
 using System.Linq;
+using NUnit.Framework;
 
 namespace StructureMap.Testing.Bugs
 {
@@ -23,7 +22,11 @@ namespace StructureMap.Testing.Bugs
                 _Color = color;
             }
 
-            public string Color { get { return _Color; } }
+            public string Color
+            {
+                get { return _Color; }
+            }
+
             public void DoSomething()
             {
                 throw new NotImplementedException();
@@ -34,10 +37,8 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void ienumerable_arg_should_get_all_registered()
         {
-            var container = new Container(x =>
-            {
-                x.For<IWidget>().AddInstances(o =>
-                {
+            var container = new Container(x => {
+                x.For<IWidget>().AddInstances(o => {
                     o.Type<ColorWidget>().Ctor<string>("color").Is("red");
                     o.Type<ColorWidget>().Ctor<string>("color").Is("blue");
                     o.Type<ColorWidget>().Ctor<string>("color").Is("green");
@@ -56,7 +57,10 @@ namespace StructureMap.Testing.Bugs
                 _widgets = widgets;
             }
 
-            public IEnumerable<IWidget> Widgets { get { return _widgets; } }
+            public IEnumerable<IWidget> Widgets
+            {
+                get { return _widgets; }
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 using System;
+using System.Linq.Expressions;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
@@ -26,7 +28,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        ObjectInstance IsThis(T obj);
+        ObjectInstance<TReturned, T> IsThis<TReturned>(TReturned obj) where TReturned : class, T;
     }
 
 
@@ -91,8 +93,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="theObject"></param>
         /// <returns></returns>
-        ObjectInstance Object(T theObject);
-
+        ObjectInstance<TReturned, T> Object<TReturned>(TReturned theObject) where TReturned : class, T;
 
         /// <summary>
         /// Build the Instance with the constructor function and setter arguments.  Starts
@@ -100,7 +101,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <typeparam name="TPluggedType"></typeparam>
         /// <returns></returns>
-        SmartInstance<TPluggedType> Type<TPluggedType>();
+        SmartInstance<TPluggedType, T> Type<TPluggedType>() where TPluggedType : T;
 
         /// <summary>
         /// Build the Instance with the constructor function and setter arguments.  Use this
@@ -117,7 +118,16 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        LambdaInstance<T> ConstructedBy(Func<T> func);
+        LambdaInstance<TReturned, T> ConstructedBy<TReturned>(Expression<Func<TReturned>> func) where TReturned : T;
+
+        /// <summary>
+        /// Create an Instance that builds an object by calling a Lambda or
+        /// an anonymous delegate with no arguments
+        /// </summary>
+        /// <param name="func"></param>
+        /// <param name="description">Diagnostic description of func</param>
+        /// <returns></returns>
+        LambdaInstance<TReturned, T> ConstructedBy<TReturned>(string description, Func<TReturned> func) where TReturned : T;
 
         /// <summary>
         /// Create an Instance that builds an object by calling a Lambda or
@@ -126,7 +136,17 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        LambdaInstance<T> ConstructedBy(Func<IContext, T> func);
+        LambdaInstance<TReturned, T> ConstructedBy<TReturned>(Expression<Func<IContext, TReturned>> func) where TReturned : T;
+
+        /// <summary>
+        /// Create an Instance that builds an object by calling a Lambda or
+        /// an anonymous delegate with the <see cref="IContext">IContext</see> representing
+        /// the current object graph.
+        /// </summary>
+        /// <param name="func"></param>
+        /// <param name="description">Diagnostic description of the func</param>
+        /// <returns></returns>
+        LambdaInstance<TReturned, T> ConstructedBy<TReturned>(string description, Func<IContext, TReturned> func) where TReturned : T;
 
         /// <summary>
         /// Use the Instance of this PluginType with the specified name.  This is
@@ -144,22 +164,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <returns></returns>
         DefaultInstance TheDefault();
-
-        /// <summary>
-        /// Creates an Instance that stores this object of type T,
-        /// and returns a cloned copy of the template.  
-        /// </summary>
-        /// <param name="template"></param>
-        /// <returns></returns>
-        PrototypeInstance PrototypeOf(T template);
-
-        /// <summary>
-        /// Caches template as a serialized byte stream.  Uses deserialization
-        /// to create copies when the Instance is built.
-        /// </summary>
-        /// <param name="template"></param>
-        /// <returns></returns>
-        SerializedInstance SerializedCopyOf(T template);
     }
 
     public class InstanceExpression<T> : IInstanceExpression<T>
@@ -173,16 +177,29 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         #region IsExpression<T> Members
 
-        IInstanceExpression<T> IsExpression<T>.Is { get { return this; } }
+        IInstanceExpression<T> IsExpression<T>.Is
+        {
+            get { return this; }
+        }
 
+        /// <summary>
+        /// Use the specified Instance as the inline dependency
+        /// </summary>
+        /// <param name="instance"></param>
         public void IsThis(Instance instance)
         {
             returnInstance(instance);
         }
 
-        public ObjectInstance IsThis(T obj)
+        /// <summary>
+        /// Use a specific object as the inline dependency
+        /// </summary>
+        /// <typeparam name="TReturned"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public ObjectInstance<TReturned, T> IsThis<TReturned>(TReturned obj) where TReturned : class, T
         {
-            return returnInstance(new ObjectInstance(obj));
+            return returnInstance(new ObjectInstance<TReturned, T>(obj));
         }
 
         #endregion
@@ -192,11 +209,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             _action(instance);
         }
 
-        public SmartInstance<TTPluggedType> Type<TTPluggedType>()
+        public SmartInstance<TPluggedType, T> Type<TPluggedType>() where TPluggedType : T
         {
-            // TODO -- this needs to blow up if it's not a concrete type
+            if (!typeof (TPluggedType).IsConcrete())
+            {
+                throw new InvalidOperationException("This class can only be created for concrete TPluginType types");
+            }
 
-            return returnInstance(new SmartInstance<TTPluggedType>());
+            return returnInstance(new SmartInstance<TPluggedType, T>());
         }
 
         public ConfiguredInstance Type(Type type)
@@ -204,9 +224,9 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new ConfiguredInstance(type));
         }
 
-        public ObjectInstance Object(T theObject)
+        public ObjectInstance<TReturned, T> Object<TReturned>(TReturned theObject) where TReturned : class, T
         {
-            return returnInstance(new ObjectInstance(theObject));
+            return returnInstance(new ObjectInstance<TReturned, T>(theObject));
         }
 
         public ReferencedInstance TheInstanceNamed(string name)
@@ -219,24 +239,24 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new DefaultInstance());
         }
 
-        public LambdaInstance<T> ConstructedBy(Func<T> func)
+        public LambdaInstance<TReturned, T> ConstructedBy<TReturned>(Expression<Func<TReturned>> func) where TReturned : T
         {
-            return returnInstance(new LambdaInstance<T>(func));
+            return returnInstance(new LambdaInstance<TReturned, T>(func));
         }
 
-        public LambdaInstance<T> ConstructedBy(Func<IContext, T> func)
+        public LambdaInstance<TReturned, T> ConstructedBy<TReturned>(string description, Func<TReturned> func) where TReturned : T
         {
-            return returnInstance(new LambdaInstance<T>(func));
+            return returnInstance(new LambdaInstance<TReturned, T>(description, func));
         }
 
-        public PrototypeInstance PrototypeOf(T template)
+        public LambdaInstance<TReturned, T> ConstructedBy<TReturned>(Expression<Func<IContext, TReturned>> func) where TReturned : T
         {
-            return returnInstance(new PrototypeInstance((ICloneable) template));
+            return returnInstance(new LambdaInstance<TReturned, T>(func));
         }
 
-        public SerializedInstance SerializedCopyOf(T template)
+        public LambdaInstance<TReturned, T> ConstructedBy<TReturned>(string description, Func<IContext, TReturned> func) where TReturned : T
         {
-            return returnInstance(new SerializedInstance(template));
+            return returnInstance(new LambdaInstance<TReturned, T>(description, func));
         }
 
         private TInstance returnInstance<TInstance>(TInstance instance) where TInstance : Instance

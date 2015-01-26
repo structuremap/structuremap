@@ -9,8 +9,8 @@ namespace StructureMap.Testing
         public InitializeRegistry()
         {
             For<IWidget>().Add<ColorWidget>()
-                          .Ctor<string>("color").Is("Green")
-                          .Named("Green");
+                .Ctor<string>("color").Is("Green")
+                .Named("Green");
         }
     }
 

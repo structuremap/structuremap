@@ -16,9 +16,9 @@ namespace StructureMap.Testing.Query
         public void SetUp()
         {
             family = new PluginFamily(typeof (IService<>));
-            family.Owner = new PluginGraph("something");
+            new PluginGraph("something").AddFamily(family);
 
-            configuration = new GenericFamilyConfiguration(family);
+            configuration = new GenericFamilyConfiguration(family, PipelineGraph.BuildEmpty());
         }
 
         #endregion
@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Query
             family.AddInstance(instance);
             family.AddInstance(new ConfiguredInstance(typeof (Service2<>)));
 
-            InstanceRef iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
+            var iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
 
             configuration.EjectAndRemove(iRef);
 
@@ -63,7 +63,7 @@ namespace StructureMap.Testing.Query
             var secondInstance = new ConfiguredInstance(typeof (Service2<>));
             family.AddInstance(secondInstance);
 
-            InstanceRef iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
+            var iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
 
             configuration.EjectAndRemove(iRef);
 
@@ -82,7 +82,7 @@ namespace StructureMap.Testing.Query
             family.AddInstance(new ConfiguredInstance(typeof (Service<>)));
             family.AddInstance(new ConfiguredInstance(typeof (Service2<>)));
 
-            configuration.Instances.Select(x => x.ConcreteType)
+            configuration.Instances.Select(x => x.ReturnedType)
                 .ShouldHaveTheSameElementsAs(typeof (Service<>), typeof (Service2<>));
         }
 
@@ -98,7 +98,7 @@ namespace StructureMap.Testing.Query
             var instance = new ConfiguredInstance(typeof (Service<>));
             family.SetDefault(instance);
 
-            configuration.Default.ConcreteType.ShouldEqual(typeof (Service<>));
+            configuration.Default.ReturnedType.ShouldEqual(typeof (Service<>));
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace StructureMap.Testing.Query
         }
 
         [Test]
-        public void lifecycle_is_transient()
+        public void lifecycle_is_transient_by_default()
         {
             configuration.Lifecycle.ShouldBeOfType<TransientLifecycle>();
         }
@@ -131,7 +131,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void lifecyle_is_singleton()
         {
-            family.SetScopeTo(Lifecycles.Singleton);
+            family.SetLifecycleTo(Lifecycles.Singleton);
             configuration.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 

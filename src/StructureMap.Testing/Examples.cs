@@ -1,10 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
+using StructureMap.Graph;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.DocumentationExamples
@@ -21,16 +20,21 @@ namespace StructureMap.Testing.DocumentationExamples
         // StructureMap to use this property when
         // constructing a Repository instance
         [SetterProperty]
-        public IDataProvider Provider { set { _provider = value; } }
+        public IDataProvider Provider
+        {
+            set { _provider = value; }
+        }
 
         [SetterProperty]
         public bool ShouldCache { get; set; }
     }
 
+    // SAMPLE: IShippingService
     public interface IShippingService
     {
         void ShipIt();
     }
+    // ENDSAMPLE
 
     public class ShippingWebService : IShippingService
     {
@@ -55,12 +59,12 @@ namespace StructureMap.Testing.DocumentationExamples
         }
     }
 
+    // SAMPLE: ShippingRegistry
     public class ShippingRegistry : Registry
     {
         public ShippingRegistry()
         {
-            For<IShippingService>().AddInstances(x =>
-            {
+            For<IShippingService>().AddInstances(x => {
                 x.Type<ShippingWebService>()
                     .Ctor<string>("url").Is("a url")
                     .Named("Domestic");
@@ -73,27 +77,33 @@ namespace StructureMap.Testing.DocumentationExamples
             });
         }
     }
+    // ENDSAMPLE
 
     public class ClassThatUsesShippingService
     {
         public ClassThatUsesShippingService()
         {
+            // SAMPLE: getting-ishippingservice
+            var container = new Container(new ShippingRegistry());
+            
             // Accessing the IShippingService Instance's by name
-            var internationalService = ObjectFactory.GetNamedInstance<IShippingService>("International");
-            var domesticService = ObjectFactory.GetNamedInstance<IShippingService>("Domestic");
-            var internalService = ObjectFactory.GetNamedInstance<IShippingService>("Internal");
+            var internationalService = container.GetInstance<IShippingService>("International");
+            var domesticService = container.GetInstance<IShippingService>("Domestic");
+            var internalService = container.GetInstance<IShippingService>("Internal");
+
+            // ENDSAMPLE
 
             // Without generics
             var internationalService2 =
-                (IShippingService) ObjectFactory.GetNamedInstance(typeof (IShippingService), "International");
+                (IShippingService) container.GetInstance(typeof (IShippingService), "International");
 
 
             internationalService.ShipIt();
             domesticService.ShipIt();
             internationalService2.ShipIt();
 
-            string serviceName = determineShippingService();
-            var service = ObjectFactory.GetNamedInstance<IShippingService>(serviceName);
+            var serviceName = determineShippingService();
+            var service = container.GetInstance<IShippingService>(serviceName);
 
 
             service.ShipIt();
@@ -110,7 +120,8 @@ namespace StructureMap.Testing.DocumentationExamples
         {
             var result = new ValidationResult();
 
-            var validators = ObjectFactory.GetAllInstances<InvoiceValidator>();
+            var container = Container.For<ShippingRegistry>();
+            var validators = container.GetAllInstances<InvoiceValidator>();
             foreach (var validator in validators)
             {
                 validator.Validate(invoice, result);
@@ -124,7 +135,8 @@ namespace StructureMap.Testing.DocumentationExamples
         {
             var result = new ValidationResult();
 
-            var validators = ObjectFactory.GetAllInstances(typeof (InvoiceValidator));
+            var container = Container.For<ShippingRegistry>();
+            var validators = container.GetAllInstances(typeof (InvoiceValidator));
             foreach (InvoiceValidator validator in validators)
             {
                 validator.Validate(invoice, result);
@@ -155,8 +167,7 @@ namespace StructureMap.Testing.DocumentationExamples
     {
         public ScanningRegistry()
         {
-            Scan(x =>
-            {
+            Scan(x => {
                 // Add assembly by name.
                 x.Assembly("StructureMap.Testing.Widget");
 
@@ -170,8 +181,7 @@ namespace StructureMap.Testing.DocumentationExamples
             });
 
 
-            Scan(x =>
-            {
+            Scan(x => {
                 // I'm telling StructureMap to sweep a folder called "Extensions" directly
                 // underneath the application root folder for any assemblies
                 x.AssembliesFromPath("Extensions");
@@ -182,8 +192,7 @@ namespace StructureMap.Testing.DocumentationExamples
                 x.LookForRegistries();
             });
 
-            Scan(x =>
-            {
+            Scan(x => {
                 // This time I'm going to specify a filter on the assembly such that 
                 // only assemblies that have "Extension" in their name will be scanned
                 x.AssembliesFromPath("Extensions", assembly => assembly.GetName().Name.Contains("Extension"));
@@ -192,16 +201,7 @@ namespace StructureMap.Testing.DocumentationExamples
             });
 
 
-            // Adding configuration from an extension Assembly
-            // after ObjectFactory is already configured
-            ObjectFactory.Configure(x =>
-            {
-                x.Scan(scan =>
-                {
-                    scan.Assembly("MyCompany.MyApp.ExtensionAssembly");
-                    scan.LookForRegistries();
-                });
-            });
+
         }
     }
 
@@ -239,10 +239,10 @@ namespace StructureMap.Testing.DocumentationExamples
         // the IoC container in a harmful way.  This class cannot be used in either
         // production or testing without a valid IoC configuration.  Plus, you're writing more
         // code
-        public ShippingScreenPresenter()
+        public ShippingScreenPresenter(IContainer container)
         {
-            _service = ObjectFactory.GetInstance<IShippingService>();
-            _repository = ObjectFactory.GetInstance<IRepository>();
+            _service = container.GetInstance<IShippingService>();
+            _repository = container.GetInstance<IRepository>();
         }
 
         #region IPresenter Members
@@ -325,9 +325,15 @@ namespace StructureMap.Testing.DocumentationExamples
 
     public class ApplicationShell : Form, IApplicationShell
     {
-        public IQueryToolBar QueryToolBar { get { return null; } }
+        public IQueryToolBar QueryToolBar
+        {
+            get { return null; }
+        }
 
-        public IExplorerPane ExplorerPane { get { return null; } }
+        public IExplorerPane ExplorerPane
+        {
+            get { return null; }
+        }
     }
 
 
@@ -368,8 +374,7 @@ namespace StructureMap.Testing.DocumentationExamples
 
         public void BootstrapStructureMap()
         {
-            ObjectFactory.Initialize(x =>
-            {
+            ObjectFactory.Initialize(x => {
                 // initialization
             });
         }
@@ -378,7 +383,7 @@ namespace StructureMap.Testing.DocumentationExamples
         {
             if (_hasStarted)
             {
-                ObjectFactory.Initialize(_=>{});
+                ObjectFactory.Initialize(_ => { });
             }
             else
             {
@@ -423,8 +428,7 @@ namespace StructureMap.Testing.DocumentationExamples
             For<IService>().Use<RemoteService>();
 
             // Add multiple additional Instances of a PluginType
-            For<IService>().AddInstances(x =>
-            {
+            For<IService>().AddInstances(x => {
                 x.ConstructedBy(() => new ColorService("Red"));
 
                 x.Type<RemoteService>();

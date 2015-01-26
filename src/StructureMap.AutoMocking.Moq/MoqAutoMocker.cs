@@ -6,10 +6,9 @@ namespace StructureMap.AutoMocking.Moq
     /// <typeparam name="T">The concrete class being tested</typeparam>
     public class MoqAutoMocker<T> : AutoMocker<T> where T : class
     {
-        public MoqAutoMocker()
+        public MoqAutoMocker() : base(new MoqServiceLocator())
         {
-            _serviceLocator = new MoqServiceLocator();
-            _container = new AutoMockedContainer(_serviceLocator);
+            ServiceLocator = new MoqServiceLocator();
         }
     }
 }

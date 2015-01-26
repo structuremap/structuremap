@@ -20,7 +20,7 @@ namespace StructureMap.Diagnostics
 
         public void Write(TextWriter writer, CharacterWidth[] widths)
         {
-            foreach (CharacterWidth width in widths)
+            foreach (var width in widths)
             {
                 writer.Write(string.Empty.PadRight(width.Width, _character));
             }

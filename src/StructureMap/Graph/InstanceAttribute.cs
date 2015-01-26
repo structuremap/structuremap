@@ -6,6 +6,6 @@ namespace StructureMap.Graph
     [AttributeUsage(AttributeTargets.Class)]
     public abstract class InstanceAttribute : Attribute
     {
-        public abstract void Alter(ConstructorInstance instance);
+        public abstract void Alter(IConfiguredInstance instance);
     }
 }

@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using NUnit.Framework;
+using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget3;
 
@@ -16,19 +18,17 @@ namespace StructureMap.Testing.Configuration.DSL
             _lastService = null;
             recorder = new ContextRecorder();
 
-            _container = new Container(r =>
-            {
+            _container = new Container(r => {
                 r.For<ContextRecorder>().Use(recorder);
 
-                r.For<IService>().AddInstances(x =>
-                {
+                r.For<IService>().AddInstances(x => {
                     x.Type<ColorService>()
-                        .OnCreation(s => _lastService = s)
+                        .OnCreation("last service",s => _lastService = s)
                         .Named("Intercepted")
                         .Ctor<string>("color").Is("Red");
 
                     x.Type<ColorService>()
-                        .OnCreation((c, s) => c.GetInstance<ContextRecorder>().WasTouched = true)
+                        .OnCreation("last touched", (c, s) => c.GetInstance<ContextRecorder>().WasTouched = true)
                         .Named("InterceptedWithContext")
                         .Ctor<string>("color").Is("Red");
 
@@ -38,24 +38,23 @@ namespace StructureMap.Testing.Configuration.DSL
 
                     x.Object(new ColorService("Yellow"))
                         .Named("Yellow")
-                        .OnCreation<ColorService>(s => _lastService = s);
+                        .OnCreation("set the last service", s => _lastService = s);
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("Purple")
-                        .EnrichWith<IService>(s => new DecoratorService(s));
+                        .DecorateWith(s => new DecoratorService(s));
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("DecoratedWithContext")
-                        .EnrichWith<IService>((c, s) =>
-                        {
+                        .DecorateWith("decorated with context", (c, s) => {
                             c.GetInstance<ContextRecorder>().WasTouched = true;
                             return new DecoratorService(s);
                         });
 
-                    x.Type<ColorService>().Named("Decorated").EnrichWith<IService>(
+                    x.Type<ColorService>().Named("Decorated").DecorateWith(
                         s => new DecoratorService(s))
                         .Ctor<string>("color").Is("Orange");
 
                     x.Object(new ColorService("Yellow")).Named("Bad")
-                        .OnCreation<ColorService>(obj => { throw new ApplicationException("Bad!"); });
+                        .OnCreation("throw exception", obj => { throw new ApplicationException("Bad!"); });
                 });
             });
         }
@@ -127,15 +126,14 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void TrapFailureInInterceptor()
         {
-            try
-            {
+            var ex = Exception<StructureMapInterceptorException>.ShouldBeThrownBy(() => {
                 _container.GetInstance<IService>("Bad");
-                Assert.Fail("Should have thrown an error");
-            }
-            catch (StructureMapException e)
-            {
-                Assert.AreEqual(270, e.ErrorCode);
-            }
+            });
+
+            ex.Title.ShouldEqual(
+                "Activator interceptor failed during object creation.  See the inner exception for details.");
+
+            ex.Message.ShouldContain("throw exception");
         }
     }
 
@@ -149,7 +147,11 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
 
-        public IService Inner { get { return _inner; } }
+        public IService Inner
+        {
+            get { return _inner; }
+        }
+
         public void DoSomething()
         {
             throw new NotImplementedException();

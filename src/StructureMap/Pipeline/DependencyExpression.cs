@@ -1,14 +1,14 @@
 using System;
-using System.Configuration;
+using System.Linq.Expressions;
 using StructureMap.Configuration.DSL.Expressions;
 
 namespace StructureMap.Pipeline
 {
+
     /// <summary>
     /// Expression Builder that helps to define child dependencies inline 
     /// </summary>
-    /// <typeparam name="TChild"></typeparam>
-    public class DependencyExpression<TInstance, TChild> where TInstance : ConstructorInstance
+    public class DependencyExpression<TInstance, TChild> where TInstance : IConfiguredInstance
     {
         private readonly TInstance _instance;
         private readonly string _propertyName;
@@ -20,47 +20,60 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        /// Sets the value of the constructor argument to the key/value in the 
-        /// AppSettings
-        /// </summary>
-        /// <param name="appSettingKey">The key in appSettings for the value to use.</param>
-        /// <returns></returns>
-        public TInstance EqualToAppSetting(string appSettingKey)
-        {
-            return EqualToAppSetting(appSettingKey, null);
-        }
-
-        /// <summary>
-        /// Sets the value of the constructor argument to the key/value in the 
-        /// AppSettings when it exists. Otherwise uses the provided default value.
-        /// </summary>
-        /// <param name="appSettingKey">The key in appSettings for the value to use.</param>
-        /// <param name="defaultValue">The value to use if an entry for <paramref name="appSettingKey"/> does not exist in the appSettings section.</param>
-        /// <returns></returns>
-        public TInstance EqualToAppSetting(string appSettingKey, string defaultValue)
-        {
-            string propertyValue = ConfigurationManager.AppSettings[appSettingKey];
-            if (propertyValue == null) propertyValue = defaultValue;
-            _instance.SetValue(_propertyName, propertyValue);
-            return _instance;
-        }
-
-        /// <summary>
         /// Nested Closure to define a child dependency inline
         /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
-        public TInstance Is(Action<IInstanceExpression<TChild>> action)
+        public TInstance IsSpecial(Action<IInstanceExpression<TChild>> action)
         {
-            var expression = new InstanceExpression<TChild>(i => _instance.SetChild(_propertyName, i));
+            var expression =
+                new InstanceExpression<TChild>(i => _instance.Dependencies.Add(_propertyName, typeof (TChild), i));
             action(expression);
 
             return _instance;
         }
 
-        public TInstance Is(Func<IContext, TChild> func)
+        /// <summary>
+        /// Inline dependency by simple Lambda expression
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public TInstance Is(Expression<Func<TChild>> func)
         {
             var child = new LambdaInstance<TChild>(func);
+            return Is(child);
+        }
+
+        /// <summary>
+        /// Inline dependency by Lambda Func
+        /// </summary>
+        /// <param name="description">User friendly description for diagnostics</param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public TInstance Is(string description, Func<TChild> func)
+        {
+            var child = new LambdaInstance<TChild>(description, func);
+            return Is(child);
+        }
+
+        /// <summary>
+        /// Inline dependency by Lambda expression that uses IContext
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public TInstance Is(Expression<Func<IContext, TChild>> func)
+        {
+            var child = new LambdaInstance<TChild>(func);
+            return Is(child);
+        }
+
+        /// <summary>
+        /// Inline dependency by Lambda Func that uses IContext
+        /// </summary>
+        /// <param name="description">User friendly description for diagnostics</param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public TInstance Is(string description, Func<IContext, TChild> func)
+        {
+            var child = new LambdaInstance<TChild>(description, func);
             return Is(child);
         }
 
@@ -71,7 +84,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Is(Instance instance)
         {
-            _instance.SetChild(_propertyName, instance);
+            _instance.Dependencies.Add(_propertyName, typeof (TChild), instance);
             return _instance;
         }
 
@@ -82,7 +95,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Is(TChild value)
         {
-            _instance.SetValue(_propertyName, value);
+            _instance.Dependencies.Add(_propertyName, typeof (TChild), value);
             return _instance;
         }
 
@@ -115,7 +128,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Is<TConcreteType>() where TConcreteType : TChild
         {
-            return Is(new SmartInstance<TConcreteType>());
+            return Is(new SmartInstance<TConcreteType, TChild>());
         }
 
 
@@ -125,13 +138,19 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <typeparam name="TConcreteType"></typeparam>
         /// <returns></returns>
-        public TInstance Is<TConcreteType>(Action<SmartInstance<TConcreteType>> configure) where TConcreteType : TChild
+        public TInstance Is<TConcreteType>(Action<SmartInstance<TConcreteType, TChild>> configure) where TConcreteType : TChild
         {
-            var instance = new SmartInstance<TConcreteType>();
+            var instance = new SmartInstance<TConcreteType, TChild>();
             configure(instance);
             return Is(instance);
         }
 
+        /// <summary>
+        /// Use the named Instance of TChild for the inline
+        /// dependency here
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public TInstance Named(string name)
         {
             return Is(c => c.GetInstance<TChild>(name));

@@ -1,4 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<StructureMap>
-  <DefaultInstance PluginType="StructureMap.Testing.Bugs.IFooWithPrimitives, StructureMap.Testing" PluggedType="StructureMap.Testing.Bugs.FooWithPrimitives, StructureMap.Testing" Key="TEST" name="Test123" />
-</StructureMap>

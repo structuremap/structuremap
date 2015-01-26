@@ -1,20 +1,16 @@
-using System;
-using System.Runtime.Serialization;
+﻿using System;
 
-namespace StructureMap.Exceptions
+namespace StructureMap
 {
-    [Serializable]
-    public class StructureMapConfigurationException : ApplicationException
+    public class StructureMapConfigurationException : StructureMapException
     {
-        public StructureMapConfigurationException(string message)
-            : base(message)
+        public StructureMapConfigurationException(string message, params object[] parameters)
+            : base(message.ToFormat(parameters))
         {
         }
 
-
-        protected StructureMapConfigurationException(SerializationInfo info, StreamingContext context)
-            :
-                base(info, context)
+        public StructureMapConfigurationException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
     }

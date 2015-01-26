@@ -6,7 +6,7 @@ using StructureMap.Util;
 
 namespace StructureMap.Configuration.Xml
 {
-    public class InstanceParser : XmlConstants, IPluginFactory
+    public class InstanceParser : XmlConstants
     {
         private readonly Cache<string, Type> _aliases = new Cache<string, Type>(); 
         private readonly IGraphBuilder _builder;
@@ -16,19 +16,19 @@ namespace StructureMap.Configuration.Xml
             _builder = builder;
         }
 
-        [Obsolete("Think this should just return PluggedType")]
-        public Plugin PluginFor(string name)
-        {
-            if (name == null) throw new ArgumentNullException("name");
-
-            if (name.Contains(","))
-            {
-                var pluggedType = new TypePath(name).FindType();
-                return new Plugin(pluggedType);
-            }
-
-            return _aliases.Has(name) ?  new Plugin(_aliases[name]) : null;
-        }
+//        [Obsolete("Think this should just return PluggedType")]
+//        public Plugin PluginFor(string name)
+//        {
+//            if (name == null) throw new ArgumentNullException("name");
+//
+//            if (name.Contains(","))
+//            {
+//                var pluggedType = new TypePath(name).FindType();
+//                return new Plugin(pluggedType);
+//            }
+//
+//            return _aliases.Has(name) ?  new Plugin(_aliases[name]) : null;
+//        }
 
         public void ParseAlias(XmlElement element)
         {
@@ -48,14 +48,14 @@ namespace StructureMap.Configuration.Xml
             var pluginTypePath = new TypePath(element.GetAttribute(PLUGIN_TYPE));
 
 
-            _builder.ConfigureFamily(pluginTypePath, family => {
-                var scope = findScope(element);
-                family.SetScopeTo(scope);
-
-                var memento = ConfigurationParser.CreateMemento(element);
-                var instance = memento.ToInstance(this, family.PluginType);
-                family.SetDefault(instance);
-            });
+//            _builder.ConfigureFamily(pluginTypePath, family => {
+//                var scope = findScope(element);
+//                family.SetLifecycleTo(scope);
+//
+//                var memento = ConfigurationParser.CreateMemento(element);
+//                var instance = memento.ToInstance(this, family.PluginType);
+//                family.SetDefault(instance);
+//            });
         }
 
         public void ParseInstanceElement(XmlElement element)
@@ -63,10 +63,10 @@ namespace StructureMap.Configuration.Xml
             var pluginTypePath = new TypePath(element.GetAttribute(PLUGIN_TYPE));
 
             _builder.ConfigureFamily(pluginTypePath, family => {
-                InstanceMemento memento = ConfigurationParser.CreateMemento(element);
-                var instance = memento.ToInstance(this, family.PluginType);
-
-                family.AddInstance(instance);
+//                InstanceMemento memento = ConfigurationParser.CreateMemento(element);
+//                var instance = memento.ToInstance(this, family.PluginType);
+//
+//                family.AddInstance(instance);
             });
         }
 

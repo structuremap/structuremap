@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
@@ -10,7 +11,7 @@ namespace StructureMap.Graph
 {
     public class ImplementationMap : ConfigurableRegistrationConvention
     {
-        private readonly Cache<Type, List<Type>> _types = new Cache<Type, List<Type>>(t => new List<Type>());
+        private readonly LightweightCache<Type, List<Type>> _types = new LightweightCache<Type, List<Type>>(t => new List<Type>());
 
         public override void Process(Type type, Registry registry)
         {
@@ -26,14 +27,13 @@ namespace StructureMap.Graph
         {
             if (!type.CanBeCreated()) return;
 
-            type.GetInterfaces().Where(i => i.IsVisible).Each(i => Register(i, type));
+            type.GetInterfaces().Where(i => i.GetTypeInfo().IsVisible).Each(i => Register(i, type));
         }
 
         public void RegisterSingleImplementations(PluginGraph graph)
         {
             var singleImplementationRegistry = new SingleImplementationRegistry();
-            _types.Each((pluginType, types) =>
-            {
+            _types.Each((pluginType, types) => {
                 if (types.Count == 1)
                 {
                     singleImplementationRegistry.AddType(pluginType, types[0]);

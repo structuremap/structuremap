@@ -53,9 +53,8 @@ namespace StructureMap.Testing
         [Test]
         public void TestObjectReturnedAreUnique()
         {
-            ObjectFactory.Initialize(
-                x =>
-                {
+            var container = new Container(
+                x => {
                     x.For<Session>()
                         .AlwaysUnique()
                         .Use<Session>();
@@ -70,7 +69,7 @@ namespace StructureMap.Testing
                         .Use<Shell>();
                 });
 
-            var shell = ObjectFactory.GetInstance<Shell>();
+            var shell = container.GetInstance<Shell>();
 
             shell.Model1.Session.ShouldNotBeTheSameAs(shell.Model2.Session);
         }

@@ -8,7 +8,8 @@ namespace StructureMap.Pipeline
     ///     Expression Builder to help define multiple Instances for an Array dependency
     /// </summary>
     /// <typeparam name="TElementType"></typeparam>
-    public class ArrayDefinitionExpression<TInstance, TElementType> where TInstance : ConstructorInstance
+    /// <typeparam name="TInstance"></typeparam>
+    public class ArrayDefinitionExpression<TInstance, TElementType> where TInstance : IConfiguredInstance
     {
         private readonly TInstance _instance;
         private readonly string _propertyName;
@@ -31,7 +32,7 @@ namespace StructureMap.Pipeline
             var child = new InstanceExpression<TElementType>(list.Add);
             action(child);
 
-            _instance.SetCollection(_propertyName, list);
+            _instance.Dependencies.Add(_propertyName, typeof (IEnumerable<TElementType>), new EnumerableInstance(list));
 
             return _instance;
         }
@@ -43,7 +44,8 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Contains(params Instance[] children)
         {
-            _instance.SetCollection(_propertyName, children);
+            _instance.Dependencies.Add(_propertyName, typeof (IEnumerable<TElementType>),
+                new EnumerableInstance(children));
 
             return _instance;
         }

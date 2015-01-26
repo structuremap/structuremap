@@ -45,7 +45,7 @@ namespace StructureMap.Pipeline
         }
 
         public static T MaybeWrite<T>(this ReaderWriterLockSlim theLock, Func<T> answer, Func<bool> missingTest,
-                                      Action write)
+            Action write)
         {
             try
             {

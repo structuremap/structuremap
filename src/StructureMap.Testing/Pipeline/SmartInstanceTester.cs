@@ -1,32 +1,29 @@
 using System;
+using System.Linq;
+using Castle.DynamicProxy.Contributors;
 using NUnit.Framework;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
     [TestFixture]
     public class SmartInstanceTester
     {
-        private IStructuredInstance structuredInstance;
-        private IConfiguredInstance configuredInstance;
-
-        private SmartInstance<T> For<T>()
+        private SmartInstance<T, T> For<T>()
         {
-            var instance = new SmartInstance<T>();
-
-            structuredInstance = instance;
-            configuredInstance = instance;
+            var instance = new SmartInstance<T, T>();
 
             return instance;
         }
 
-        public T build<T>(Action<SmartInstance<T>> action)
+        public T build<T>(Action<SmartInstance<T, T>> action)
         {
-            SmartInstance<T> instance = For<T>();
+            var instance = For<T>();
             action(instance);
 
-            var container = new Container(r => r.For<T>().Use(instance));
+            var container = new Container(r => r.For<T>().UseInstance(instance));
             return container.GetInstance<T>();
         }
 
@@ -34,7 +31,7 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_constructor_dependency()
         {
             var widget = new ColorWidget("Red");
-            build<ClassWithWidget>(instance => instance.Ctor<IWidget>("widget").Is(x => x.Object(widget))).
+            build<ClassWithWidget>(instance => instance.Ctor<IWidget>("widget").IsSpecial(x => x.Object(widget))).
                 Widget.
                 ShouldBeTheSameAs(widget);
         }
@@ -43,7 +40,7 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_constructor_dependency_by_type()
         {
             var widget = new ColorWidget("Red");
-            build<ClassWithWidget>(i => i.Ctor<IWidget>().Is(x => x.Object(widget))).Widget.ShouldBeTheSameAs(
+            build<ClassWithWidget>(i => i.Ctor<IWidget>().IsSpecial(x => x.Object(widget))).Widget.ShouldBeTheSameAs(
                 widget);
         }
 
@@ -52,8 +49,8 @@ namespace StructureMap.Testing.Pipeline
         {
             var widget = new ColorWidget("Red");
             var container = new Container(x => x.For<ClassWithWidgetProperty>()
-                                                   .Use<ClassWithWidgetProperty>()
-                                                   .Setter(o => o.Widget).Is(widget));
+                .Use<ClassWithWidgetProperty>()
+                .Setter(o => o.Widget).Is(widget));
 
             Assert.AreSame(widget, container.GetInstance<ClassWithWidgetProperty>().Widget);
         }
@@ -62,13 +59,12 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_property_dependency()
         {
             var widget = new ColorWidget("Red");
-            build<ClassWithWidgetProperty>(i => i.Setter(x => x.Widget).Is(x => x.Object(widget))).Widget.
+            build<ClassWithWidgetProperty>(i => i.Setter(x => x.Widget).IsSpecial(x => x.Object(widget))).Widget.
                 ShouldBeTheSameAs(widget);
 
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.ForConcreteType<ClassWithWidgetProperty>().Configure
-                    .Setter(o => o.Widget).Is(o => o.Object(new ColorWidget("Red")));
+                    .Setter(o => o.Widget).IsSpecial(o => o.Object(new ColorWidget("Red")));
             });
         }
 
@@ -79,11 +75,9 @@ namespace StructureMap.Testing.Pipeline
                 "Jeremy");
             build<SimplePropertyTarget>(i => i.SetProperty(x => x.Age = 16)).Age.ShouldEqual(16);
 
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.ForConcreteType<SimplePropertyTarget>().Configure
-                    .SetProperty(target =>
-                    {
+                    .SetProperty(target => {
                         target.Name = "Max";
                         target.Age = 4;
                     });
@@ -100,13 +94,6 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_simple_property_with_equal_to()
         {
             build<SimplePropertyTarget>(i => i.Setter(x => x.Name).Is("Bret")).Name.ShouldEqual("Bret");
-
-            var container = new Container(x =>
-            {
-                x.ForConcreteType<SimplePropertyTarget>().Configure
-                    .Setter(o => o.Name).EqualToAppSetting("name")
-                    .Setter(o => o.Age).EqualToAppSetting("age");
-            });
         }
 
 
@@ -117,8 +104,7 @@ namespace StructureMap.Testing.Pipeline
             IWidget widget2 = new AWidget();
             IWidget widget3 = new AWidget();
 
-            build<ClassWithWidgetArrayCtor>(i => i.EnumerableOf<IWidget>().Contains(x =>
-            {
+            build<ClassWithWidgetArrayCtor>(i => i.EnumerableOf<IWidget>().Contains(x => {
                 x.Object(widget1);
                 x.Object(widget2);
                 x.Object(widget3);
@@ -133,8 +119,7 @@ namespace StructureMap.Testing.Pipeline
             IWidget widget2 = new AWidget();
             IWidget widget3 = new AWidget();
 
-            build<ClassWithWidgetArraySetter>(i => i.EnumerableOf<IWidget>().Contains(x =>
-            {
+            build<ClassWithWidgetArraySetter>(i => i.EnumerableOf<IWidget>().Contains(x => {
                 x.Object(widget1);
                 x.Object(widget2);
                 x.Object(widget3);
@@ -146,8 +131,8 @@ namespace StructureMap.Testing.Pipeline
         {
             var widget = new ColorWidget("Red");
             var container = new Container(x => x.For<ClassWithWidget>()
-                                                   .Use<ClassWithWidget>()
-                                                   .Ctor<IWidget>().Is(widget));
+                .Use<ClassWithWidget>()
+                .Ctor<IWidget>().Is(widget));
 
             Assert.AreSame(widget, container.GetInstance<ClassWithWidget>().Widget);
         }
@@ -161,17 +146,51 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void specify_a_constructor_dependency_by_name()
         {
-            var container = new Container(r =>
-            {
-                //r.For<ClassA>().Use<ClassA>().Ctor<ClassB>().Is(c => c.GetInstance<ClassB>("classB"));
+            var container = new Container(r => {
                 r.For<ClassA>().Use<ClassA>().Ctor<ClassB>().Named("classB");
                 r.For<ClassB>().Use<ClassB>().Named("classB").Ctor<string>("b").Is("named");
                 r.For<ClassB>().Use<ClassB>().Ctor<string>("b").Is("default");
             });
 
-            var classA = container.GetInstance<ClassA>();
+            container.GetInstance<ClassA>()
+                .B.B.ShouldEqual("named");
+        }
 
-            Assert.That(classA.B.B, Is.EqualTo("named"));
+        [Test]
+        public void smart_instance_can_specify_the_constructor()
+        {
+            new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null)).As<IConfiguredInstance>().Constructor.GetParameters().Select(x => x.ParameterType)
+                .ShouldHaveTheSameElementsAs(typeof(IGateway));
+
+            new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null, null)).As<IConfiguredInstance>().Constructor.GetParameters().Select(x => x.ParameterType)
+                .ShouldHaveTheSameElementsAs(typeof(IGateway), typeof(IService));
+        }
+
+        [Test]
+        public void integrated_building_with_distinct_ctor_selection()
+        {
+            var container = new Container(x => {
+                x.For<ClassWithMultipleConstructors>().AddInstances(o => {
+                    o.Type<ClassWithMultipleConstructors>().SelectConstructor(() => new ClassWithMultipleConstructors(null)).Named("One");
+                    o.Type<ClassWithMultipleConstructors>().SelectConstructor(() => new ClassWithMultipleConstructors(null, null)).Named("Two");
+                    o.Type<ClassWithMultipleConstructors>().Named("Default");
+
+
+                });
+
+                x.For<IGateway>().Use<StubbedGateway>();
+                x.For<IService>().Use<WhateverService>();
+                x.For<IWidget>().Use<AWidget>();
+            });
+
+            container.GetInstance<ClassWithMultipleConstructors>("One")
+                .CtorUsed.ShouldEqual("One Arg");
+
+            container.GetInstance<ClassWithMultipleConstructors>("Two")
+                .CtorUsed.ShouldEqual("Two Args");
+
+            container.GetInstance<ClassWithMultipleConstructors>("Default")
+                .CtorUsed.ShouldEqual("Three Args");
         }
 
         private class ClassA
@@ -204,7 +223,10 @@ namespace StructureMap.Testing.Pipeline
             _widgets = widgets;
         }
 
-        public IWidget[] Widgets { get { return _widgets; } }
+        public IWidget[] Widgets
+        {
+            get { return _widgets; }
+        }
     }
 
     public class ClassWithDoubleProperty
@@ -232,11 +254,34 @@ namespace StructureMap.Testing.Pipeline
             _widget = widget;
         }
 
-        public IWidget Widget { get { return _widget; } }
+        public IWidget Widget
+        {
+            get { return _widget; }
+        }
     }
 
     public class ClassWithWidgetProperty
     {
         public IWidget Widget { get; set; }
+    }
+
+    public class ClassWithMultipleConstructors
+    {
+        public string CtorUsed;
+
+        public ClassWithMultipleConstructors(IGateway gateway, IService service, IWidget widget)
+        {
+            CtorUsed = "Three Args";
+        }
+
+        public ClassWithMultipleConstructors(IGateway gateway, IService service)
+        {
+            CtorUsed = "Two Args";
+        }
+
+        public ClassWithMultipleConstructors(IGateway gateway)
+        {
+            CtorUsed = "One Arg";
+        }
     }
 }

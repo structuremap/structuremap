@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 
@@ -97,60 +98,13 @@ namespace StructureMap
         /// <returns></returns>
         T TryGetInstance<T>();
 
+
         /// <summary>
         /// Creates or finds the named instance of type T. Returns the default value of T if the named instance is not known to the container.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         T TryGetInstance<T>(string instanceKey);
-
-        /// <summary>
-        /// Used to add additional configuration to a Container *after* the initialization.
-        /// </summary>
-        /// <param name="configure"></param>
-        void Configure(Action<ConfigurationExpression> configure);
-
-        /// <summary>
-        /// Injects the given object into a Container as the default for the designated
-        /// TPluginType.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
-        /// </summary>
-        /// <typeparam name="TPluginType"></typeparam>
-        /// <param name="instance"></param>
-        void Inject<TPluginType>(TPluginType instance);
-
-        void Inject<TPluginType>(string name, TPluginType value);
-
-
-        /// <summary>
-        /// Injects the given object into a Container as the default for the designated
-        /// pluginType.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="object"></param>
-        void Inject(Type pluginType, object @object);
-
-        /// <summary>
-        /// Gets a new child container for the named profile using that profile's defaults with
-        /// fallback to the original parent
-        /// </summary>
-        /// <param name="profileName"></param>
-        /// <returns></returns>
-        IContainer GetProfile(string profileName);
-        
-
-        /// <summary>
-        /// Returns a report detailing the complete configuration of all PluginTypes and Instances
-        /// </summary>
-        /// <returns></returns>
-        string WhatDoIHave();
-
-        /// <summary>
-        /// Use with caution!  Does a full environment test of the configuration of this container.  Will try to create every configured
-        /// instance and afterward calls any methods marked with the [ValidationMethod] attribute
-        /// </summary>
-        void AssertConfigurationIsValid();
 
 
         /// <summary>
@@ -169,24 +123,16 @@ namespace StructureMap
         /// <returns></returns>
         IEnumerable GetAllInstances(Type type, ExplicitArguments args);
 
-        T GetInstance<T>(ExplicitArguments args);
-
         /// <summary>
-        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
-        /// of type T should be "arg"
+        /// Gets the default instance of T, but built with the overridden
+        /// arguments from args
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="arg"></param>
+        /// <param name="args"></param>
         /// <returns></returns>
-        ExplicitArgsExpression With<T>(T arg);
+        T GetInstance<T>(ExplicitArguments args);
 
-        /// <summary>
-        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency or primitive argument
-        /// with the designated name should be the next value.
-        /// </summary>
-        /// <param name="argName"></param>
-        /// <returns></returns>
-        IExplicitProperty With(string argName);
+
 
         /// <summary>
         /// Gets the default instance of the pluginType using the explicitly configured arguments from the "args"
@@ -195,6 +141,15 @@ namespace StructureMap
         /// <param name="args"></param>
         /// <returns></returns>
         object GetInstance(Type pluginType, ExplicitArguments args);
+
+        /// <summary>
+        /// Gets the named instance of the pluginType using the explicitly configured arguments from the "args"
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="args"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        object GetInstance(Type pluginType, ExplicitArguments args, string name);
 
         /// <summary>
         /// Removes all configured instances of type T from the Container.  Use with caution!
@@ -241,6 +196,31 @@ namespace StructureMap
         ExplicitArgsExpression With(Type pluginType, object arg);
 
         /// <summary>
+        /// Starts a request for an instance or instances with explicitly configured
+        /// arguments
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        ExplicitArgsExpression With(Action<IExplicitArgsExpression> action);
+
+        /// <summary>
+        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
+        /// of type T should be "arg"
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        ExplicitArgsExpression With<T>(T arg);
+
+        /// <summary>
+        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency or primitive argument
+        /// with the designated name should be the next value.
+        /// </summary>
+        /// <param name="argName"></param>
+        /// <returns></returns>
+        IExplicitProperty With(string argName);
+
+        /// <summary>
         /// Shortcut syntax for using an object to find a service that handles
         /// that type of object by using an open generic type
         /// </summary>
@@ -252,6 +232,60 @@ namespace StructureMap
         /// <param name="subject"></param>
         /// <returns></returns>
         CloseGenericTypeExpression ForObject(object subject);
+
+
+
+
+        /// <summary>
+        /// Used to add additional configuration to a Container *after* the initialization.
+        /// </summary>
+        /// <param name="configure"></param>
+        void Configure(Action<ConfigurationExpression> configure);
+
+        /// <summary>
+        /// Injects the given object into a Container as the default for the designated
+        /// TPluginType.  Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios
+        /// </summary>
+        /// <typeparam name="TPluginType"></typeparam>
+        /// <param name="instance"></param>
+        void Inject<TPluginType>(TPluginType instance) where TPluginType : class;
+
+        /// <summary>
+        /// Injects the given object into a Container as the default for the designated
+        /// pluginType.  Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="object"></param>
+        void Inject(Type pluginType, object @object);
+
+        /// <summary>
+        /// Gets a new child container for the named profile using that profile's defaults with
+        /// fallback to the original parent
+        /// </summary>
+        /// <param name="profileName"></param>
+        /// <returns></returns>
+        IContainer GetProfile(string profileName);
+
+
+        /// <summary>
+        /// Returns a report detailing the complete configuration of all PluginTypes and Instances
+        /// </summary>
+        /// <returns></returns>
+        /// <param name="pluginType">Optional parameter to filter the results down to just this plugin type</param>
+        /// <param name="assembly">Optional parameter to filter the results down to only plugin types from this Assembly</param>
+        /// <param name="@namespace">Optional parameter to filter the results down to only plugin types from this namespace</param>
+        /// <param name="typeName">Optional parameter to filter the results down to any plugin type whose name contains this text</param>
+        string WhatDoIHave(Type pluginType = null, Assembly assembly = null, string @namespace = null,
+            string typeName = null);
+
+
+        /// <summary>
+        /// Use with caution!  Does a full environment test of the configuration of this container.  Will try to create every configured
+        /// instance and afterward calls any methods marked with the [ValidationMethod] attribute
+        /// </summary>
+        void AssertConfigurationIsValid();
 
 
         /// <summary>
@@ -274,5 +308,23 @@ namespace StructureMap
         /// as this is not used in any logic.
         /// </summary>
         string Name { get; set; }
+
+        /// <summary>
+        /// Is this container the root, a profile or child, or a nested container?
+        /// </summary>
+        ContainerRole Role { get; }
+
+        /// <summary>
+        /// The profile name of this container
+        /// </summary>
+        string ProfileName { get; }
+
+        /// <summary>
+        /// Creates a new, anonymous child container
+        /// </summary>
+        /// <returns></returns>
+        IContainer CreateChildContainer();
     }
+
+
 }

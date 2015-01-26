@@ -6,7 +6,7 @@ namespace StructureMap.Testing.Diagnostics
     {
         public static void WriteLine(this StringWriter writer, string format, params string[] args)
         {
-            string message = string.Format(format, args);
+            var message = string.Format(format, args);
             writer.WriteLine(message);
         }
 

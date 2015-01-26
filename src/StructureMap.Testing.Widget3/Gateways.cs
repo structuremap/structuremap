@@ -36,6 +36,11 @@ namespace StructureMap.Testing.Widget3
             _innerGateway = innerGateway;
         }
 
+        public IGateway InnerGateway
+        {
+            get { return _innerGateway; }
+        }
+
         #region IGateway Members
 
         public void DoSomething()

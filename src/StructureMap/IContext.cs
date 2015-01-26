@@ -1,26 +1,10 @@
 using System;
 using System.Collections.Generic;
-using StructureMap.Pipeline;
 
 namespace StructureMap
 {
     public interface IContext
     {
-        /// <summary>
-        /// Gets a reference to the <see cref="BuildStack">BuildStack</see> for this build session
-        /// </summary>
-        BuildStack BuildStack { get; }
-
-        /// <summary>
-        /// The concrete type of the immediate parent object in the object graph
-        /// </summary>
-        Type ParentType { get; }
-
-        /// <summary>
-        /// Gets the root "frame" of the object request
-        /// </summary>
-        BuildFrame Root { get; }
-
         /// <summary>
         /// The requested instance name of the object graph
         /// </summary>
@@ -112,5 +96,17 @@ namespace StructureMap
         /// <param name="pluginType"></param>
         /// <returns></returns>
         IEnumerable<object> GetAllInstances(Type pluginType);
+
+        /// <summary>
+        /// The type of the parent object.  Useful for constructing
+        /// contextual logging dependencies
+        /// </summary>
+        Type ParentType { get; }
+
+        /// <summary>
+        /// The type of the requested object at the very top of the 
+        /// object graph
+        /// </summary>
+        Type RootType { get; }
     }
 }

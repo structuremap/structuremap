@@ -1,24 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using StructureMap.Construction;
+using StructureMap.Building;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
-    public interface ILifecycleContext
+    public class BuildSession : IBuildSession, IContext
     {
-        IObjectCache Singletons { get; }
-        IObjectCache Transients { get; }
-    }
+        public static readonly string DEFAULT = "Default";
 
-    public class BuildSession : IContext, IBuildSession
-    {
         private readonly IPipelineGraph _pipelineGraph;
         private readonly ISessionCache _sessionCache;
 
-        [CLSCompliant(false)] protected BuildStack _buildStack = new BuildStack();
+        private readonly Stack<Instance> _instances = new Stack<Instance>();
 
         public BuildSession(IPipelineGraph pipelineGraph, string requestedName = null, ExplicitArguments args = null)
         {
@@ -27,7 +26,7 @@ namespace StructureMap
             _sessionCache = new SessionCache(this, args);
 
 
-            RequestedName = requestedName ?? Plugin.DEFAULT;
+            RequestedName = requestedName ?? DEFAULT;
         }
 
         protected IPipelineGraph pipelineGraph
@@ -37,30 +36,18 @@ namespace StructureMap
 
         public string RequestedName { get; set; }
 
-        public BuildStack BuildStack
-        {
-            get { return _buildStack; }
-        }
-
-        public Type ParentType
-        {
-            get
-            {
-                if (_buildStack.Parent != null) return _buildStack.Parent.ConcreteType;
-                return null;
-            }
-        }
-
         public void BuildUp(object target)
         {
-            var pluggedType = target.GetType();
-            var instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
-                                           ?? new ConfiguredInstance(pluggedType);
+            if (target == null) throw new ArgumentNullException("target");
 
-            // TODO -- do this by pulling SetterRules out of PluginGraph
-            var builder = _pipelineGraph.Outer.BuilderFor(pluggedType);
-            var arguments = new Arguments(instance, this);
-            builder.BuildUp(arguments, target);
+            var pluggedType = target.GetType();
+
+            var plan = _pipelineGraph.Policies.ToBuildUpPlan(pluggedType, () => {
+                return _pipelineGraph.Instances.GetDefault(pluggedType) as IConfiguredInstance
+                       ?? new ConfiguredInstance(pluggedType);
+            });
+
+            plan.BuildUp(this, this, target);
         }
 
         public T GetInstance<T>()
@@ -83,11 +70,6 @@ namespace StructureMap
             return CreateInstance(pluginType, name);
         }
 
-        BuildFrame IContext.Root
-        {
-            get { return _buildStack.Root; }
-        }
-
         public T TryGetInstance<T>() where T : class
         {
             return (T) TryGetInstance(typeof (T));
@@ -105,7 +87,9 @@ namespace StructureMap
 
         public object TryGetInstance(Type pluginType, string name)
         {
-            return _pipelineGraph.HasInstance(pluginType, name) ? ((IContext) this).GetInstance(pluginType, name) : null;
+            return _pipelineGraph.Instances.HasInstance(pluginType, name)
+                ? ((IContext) this).GetInstance(pluginType, name)
+                : null;
         }
 
         public IEnumerable<T> All<T>() where T : class
@@ -115,23 +99,19 @@ namespace StructureMap
 
         public object ResolveFromLifecycle(Type pluginType, Instance instance)
         {
-            var cache = instance.Lifecycle.FindCache(_pipelineGraph);
+            var cache = _pipelineGraph.DetermineLifecycle(pluginType, instance).FindCache(_pipelineGraph);
             return cache.Get(pluginType, instance, this);
         }
 
         public object BuildNewInSession(Type pluginType, Instance instance)
         {
-            object returnValue = instance.Build(pluginType, this);
-            if (returnValue == null) return null;
+            if (pluginType == null) throw new ArgumentNullException("pluginType");
+            if (instance == null) throw new ArgumentNullException("instance");
 
-            try
-            {
-                return _pipelineGraph.FindInterceptor(returnValue.GetType()).Process(returnValue, this);
-            }
-            catch (Exception e)
-            {
-                throw new StructureMapException(308, e, instance.Name, returnValue.GetType());
-            }
+            if (RootType == null) RootType = instance.ReturnedType;
+
+            var plan = instance.ResolveBuildPlan(pluginType, _pipelineGraph.Policies);
+            return plan.Build(this, this);
         }
 
         public object BuildNewInOriginalContext(Type pluginType, Instance instance)
@@ -142,18 +122,23 @@ namespace StructureMap
 
         public IEnumerable<T> GetAllInstances<T>()
         {
-            return _pipelineGraph.GetAllInstances(typeof (T)).Select(x => (T) FindObject(typeof (T), x)).ToArray();
+            return
+                _pipelineGraph.Instances.GetAllInstances(typeof (T))
+                    .Select(x => (T) FindObject(typeof (T), x))
+                    .ToArray();
         }
 
         public IEnumerable<object> GetAllInstances(Type pluginType)
         {
-            IEnumerable<Instance> allInstances = _pipelineGraph.GetAllInstances(pluginType);
+            
+            var allInstances = _pipelineGraph.Instances.GetAllInstances(pluginType);
             return allInstances.Select(x => FindObject(pluginType, x)).ToArray();
         }
 
         public static BuildSession ForPluginGraph(PluginGraph graph, ExplicitArguments args = null)
         {
-            var pipeline = new RootPipelineGraph(graph);
+            var pipeline = PipelineGraph.BuildRoot(graph);
+
             return new BuildSession(pipeline, args: args);
         }
 
@@ -162,33 +147,72 @@ namespace StructureMap
             return ForPluginGraph(new PluginGraph(), args);
         }
 
-        protected void clearBuildStack()
-        {
-            _buildStack = new BuildStack();
-        }
-
         public virtual object CreateInstance(Type pluginType, string name)
         {
-            Instance instance = _pipelineGraph.FindInstance(pluginType, name);
+            var instance = _pipelineGraph.Instances.FindInstance(pluginType, name);
             if (instance == null)
             {
-                throw new StructureMapException(200, name, pluginType.FullName);
+                var ex =
+                    new StructureMapConfigurationException("Could not find an Instance named '{0}' for PluginType {1}",
+                        name, pluginType.GetFullName());
+
+                ex.Context = new WhatDoIHaveWriter(_pipelineGraph).GetText(new ModelQuery {PluginType = pluginType},
+                    "The current configuration for type {0} is:".ToFormat(pluginType.GetFullName()));
+
+                throw ex;
             }
+
+            RootType = instance.ReturnedType;
 
             return FindObject(pluginType, instance);
         }
 
+        public void Push(Instance instance)
+        {
+            if (_instances.Contains(instance))
+            {
+                throw new StructureMapBuildException("Bi-directional dependency relationship detected!" +
+                                                     Environment.NewLine + "Check the StructureMap stacktrace below:");
+            }
+
+
+            _instances.Push(instance);
+        }
+
+        public void Pop()
+        {
+            if (_instances.Any())
+            {
+                _instances.Pop();
+            }
+        }
+
+        public Type ParentType
+        {
+            get
+            {
+                if (_instances.Count > 1)
+                {
+                    return _instances.ToArray().Skip(1).First().ReturnedType;
+                }
+
+                return null;
+            }
+        }
+
+        public Type RootType { get; internal set; }
+
         // This is where all Creation happens
         public virtual object FindObject(Type pluginType, Instance instance)
         {
-            return _sessionCache.GetObject(pluginType, instance);
+            RootType = instance.ReturnedType;
+            var lifecycle = _pipelineGraph.DetermineLifecycle(pluginType, instance);
+            return _sessionCache.GetObject(pluginType, instance, lifecycle);
         }
 
-        // TODO -- really don't like this.  Could be better.
-        public IInstanceBuilder CreateBuilder(Plugin plugin)
+        public Policies Policies
         {
-            _pipelineGraph.Outer.SetterRules.Configure(plugin);
-            return plugin.CreateBuilder();
+            get { return _pipelineGraph.Policies; }
         }
     }
 }

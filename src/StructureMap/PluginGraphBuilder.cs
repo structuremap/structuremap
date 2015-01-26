@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using StructureMap.Configuration;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
+using StructureMap.Pipeline.Lazy;
 
 namespace StructureMap
 {
@@ -44,18 +46,27 @@ namespace StructureMap
 
             addCloseGenericPolicyTo(_graph);
 
-            var funcInstance = new FactoryTemplate(typeof(LazyInstance<>));
-            _graph.Families[typeof(Func<>)].SetDefault(funcInstance);
- 
-            _graph.Log.AssertFailures();
+            setupFuncAndLazyConstruction();
 
             return _graph;
         }
 
+        private void setupFuncAndLazyConstruction()
+        {
+            _graph.Families[typeof (Func<>)].SetDefault(new FuncFactoryTemplate());
+            _graph.Families[typeof(Func<,>)].SetDefault(new FuncWithArgFactoryTemplate());
+            _graph.Families[typeof (Lazy<>)].SetDefault(new LazyFactoryTemplate());
+        }
+
         private void addCloseGenericPolicyTo(PluginGraph graph)
         {
+            
+
             var policy = new CloseGenericFamilyPolicy(graph);
             graph.AddFamilyPolicy(policy);
+
+            graph.AddFamilyPolicy(new FuncBuildByNamePolicy());
+            graph.AddFamilyPolicy(new EnumerableFamilyPolicy());
 
             graph.Profiles.Each(addCloseGenericPolicyTo);
         }
@@ -63,19 +74,30 @@ namespace StructureMap
         public void RunConfigurations()
         {
             _configurations.Each(x => {
-                // Change this to using the FubuCore.Description later
-                _graph.Log.StartSource(x.ToString());
                 x.Register(this);
                 x.Configure(_graph);
             });
 
-            var types = new TypePool(_graph);
+            var types = new TypePool();
             _scanners.Each(x => x.ScanForTypes(types, _graph));
+
+            // Recursive scanning
+            if (_graph.QueuedRegistries.Any())
+            {
+                var builder = new PluginGraphBuilder(_graph);
+                while (_graph.QueuedRegistries.Any())
+                {
+                    var registry = _graph.QueuedRegistries.Dequeue();
+                    builder.Add(registry);
+                }
+
+                builder.Build();
+            }
         }
 
         public void AddScanner(AssemblyScanner scanner)
         {
-            _scanners.Add(scanner);
+            _scanners.Fill(scanner);
         }
     }
 }

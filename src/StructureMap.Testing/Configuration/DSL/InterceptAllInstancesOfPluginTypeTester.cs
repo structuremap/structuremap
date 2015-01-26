@@ -1,7 +1,8 @@
 using System;
 using NUnit.Framework;
+using Rhino.Mocks;
+using StructureMap.Building.Interception;
 using StructureMap.Configuration.DSL;
-using StructureMap.Interceptors;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -17,8 +18,7 @@ namespace StructureMap.Testing.Configuration.DSL
             _lastService = null;
             _manager = null;
 
-            _defaultRegistry = (registry =>
-            {
+            _defaultRegistry = (registry => {
                 //registry.For<IService>()
                 //    .AddInstances(
                 //    Instance<ColorService>().Named("Red").Ctor<string>("color").
@@ -33,8 +33,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 //        EqualTo("Orange")
                 //    );
 
-                registry.For<IService>().AddInstances(x =>
-                {
+                registry.For<IService>().AddInstances(x => {
                     x.Type<ColorService>().Named("Red").Ctor<string>("color").Is("Red");
 
                     x.Object(new ColorService("Yellow")).Named("Yellow");
@@ -56,8 +55,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             if (_manager == null)
             {
-                _manager = new Container(registry =>
-                {
+                _manager = new Container(registry => {
                     _defaultRegistry(registry);
                     action(registry);
                 });
@@ -66,36 +64,11 @@ namespace StructureMap.Testing.Configuration.DSL
             return _manager.GetInstance<IService>(name);
         }
 
-        public class MockInterceptor : InstanceInterceptor
-        {
-            public object Target { get; set; }
-
-            public object Process(object target, IContext context)
-            {
-                Target = target;
-                return target;
-            }
-        }
-
         [Test]
-        public void custom_interceptor_for_all()
+        public void DecorateForAll()
         {
-            var interceptor = new MockInterceptor();
-            IService service = getService("Green", r =>
-            {
-                r.For<IService>().InterceptWith(interceptor)
-                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
-            });
-
-            interceptor.Target.ShouldBeTheSameAs(service);
-        }
-
-        [Test]
-        public void EnrichForAll()
-        {
-            IService green = getService("Green", r =>
-            {
-                r.For<IService>().EnrichAllWith(s => new DecoratorService(s))
+            var green = getService("Green", r => {
+                r.For<IService>().DecorateAllWith(s => new DecoratorService(s))
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             });
 
@@ -106,23 +79,22 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void OnStartupForAll()
         {
-            Action<Registry> action = registry =>
-            {
-                registry.For<IService>().OnCreationForAll(s => _lastService = s)
+            Action<Registry> action = registry => {
+                registry.For<IService>().OnCreationForAll("setting the last service", s => _lastService = s)
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
 
 
-            IService red = getService("Red", action);
+            var red = getService("Red", action);
             Assert.AreSame(red, _lastService);
 
-            IService purple = getService("Purple", action);
+            var purple = getService("Purple", action);
             Assert.AreSame(purple, _lastService);
 
-            IService green = getService("Green", action);
+            var green = getService("Green", action);
             Assert.AreSame(green, _lastService);
 
-            IService yellow = getService("Yellow", action);
+            var yellow = getService("Yellow", action);
             Assert.AreEqual(yellow, _lastService);
         }
     }
@@ -139,18 +111,17 @@ namespace StructureMap.Testing.Configuration.DSL
             _manager = null;
 
             _defaultRegistry = (registry =>
-                                registry.For<IService>().AddInstances(x =>
-                                {
-                                    x.Type<ColorService>().Named("Red")
-                                        .Ctor<string>("color").Is("Red");
+                registry.For<IService>().AddInstances(x => {
+                    x.Type<ColorService>().Named("Red")
+                        .Ctor<string>("color").Is("Red");
 
-                                    x.Object(new ColorService("Yellow")).Named("Yellow");
+                    x.Object(new ColorService("Yellow")).Named("Yellow");
 
-                                    x.ConstructedBy(() => new ColorService("Purple")).Named("Purple");
+                    x.ConstructedBy(() => new ColorService("Purple")).Named("Purple");
 
-                                    x.Type<ColorService>().Named("Decorated").Ctor<string>("color").Is(
-                                        "Orange");
-                                }));
+                    x.Type<ColorService>().Named("Decorated").Ctor<string>("color").Is(
+                        "Orange");
+                }));
         }
 
         #endregion
@@ -163,8 +134,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             if (_manager == null)
             {
-                _manager = new Container(registry =>
-                {
+                _manager = new Container(registry => {
                     _defaultRegistry(registry);
                     action(registry);
                 });
@@ -174,16 +144,15 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
-        public void EnrichForAll()
+        public void DecorateForAll()
         {
-            Action<Registry> action = r =>
-            {
-                r.For<IService>().EnrichAllWith(s => new DecoratorService(s))
+            Action<Registry> action = r => {
+                r.For<IService>().DecorateAllWith(s => new DecoratorService(s))
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
 
 
-            IService green = getService(action, "Green");
+            var green = getService(action, "Green");
 
 
             var decoratorService = (DecoratorService) green;
@@ -194,22 +163,21 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void OnStartupForAll()
         {
-            Action<Registry> action = r =>
-            {
-                r.For<IService>().OnCreationForAll(s => _lastService = s)
+            Action<Registry> action = r => {
+                r.For<IService>().OnCreationForAll("setting the last service", s => _lastService = s)
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
 
-            IService red = getService(action, "Red");
+            var red = getService(action, "Red");
             Assert.AreSame(red, _lastService);
 
-            IService purple = getService(action, "Purple");
+            var purple = getService(action, "Purple");
             Assert.AreSame(purple, _lastService);
 
-            IService green = getService(action, "Green");
+            var green = getService(action, "Green");
             Assert.AreSame(green, _lastService);
 
-            IService yellow = getService(action, "Yellow");
+            var yellow = getService(action, "Yellow");
             Assert.AreEqual(yellow, _lastService);
         }
     }

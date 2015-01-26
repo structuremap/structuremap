@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Pipeline;
-using System.Linq;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
@@ -29,10 +29,16 @@ namespace StructureMap.Testing.Configuration.DSL
             }
 
 
-            public IHandler[] Handlers { get { return _handlers; } }
+            public IHandler[] Handlers
+            {
+                get { return _handlers; }
+            }
 
 
-            public string Name { get { return _name; } }
+            public string Name
+            {
+                get { return _name; }
+            }
         }
 
         public class ProcessorWithList
@@ -47,10 +53,64 @@ namespace StructureMap.Testing.Configuration.DSL
             }
 
 
-            public IList<IHandler> Handlers { get { return _handlers; } }
+            public IList<IHandler> Handlers
+            {
+                get { return _handlers; }
+            }
 
 
-            public string Name { get { return _name; } }
+            public string Name
+            {
+                get { return _name; }
+            }
+        }
+
+        public class ProcessorWithConcreteList
+        {
+            private readonly List<IHandler> _handlers;
+            private readonly string _name;
+
+            public ProcessorWithConcreteList(List<IHandler> handlers, string name)
+            {
+                _handlers = handlers;
+                _name = name;
+            }
+
+
+            public IList<IHandler> Handlers
+            {
+                get { return _handlers; }
+            }
+
+
+            public string Name
+            {
+                get { return _name; }
+            }
+        }
+
+        public class ProcessorWithEnumerable
+        {
+            private readonly IList<IHandler> _handlers;
+            private readonly string _name;
+
+            public ProcessorWithEnumerable(IEnumerable<IHandler> handlers, string name)
+            {
+                _handlers = handlers.ToList();
+                _name = name;
+            }
+
+
+            public IList<IHandler> Handlers
+            {
+                get { return _handlers; }
+            }
+
+
+            public string Name
+            {
+                get { return _name; }
+            }
         }
 
         public class Processor2
@@ -66,9 +126,15 @@ namespace StructureMap.Testing.Configuration.DSL
             }
 
 
-            public IHandler[] First { get { return _first; } }
+            public IHandler[] First
+            {
+                get { return _first; }
+            }
 
-            public IHandler[] Second { get { return _second; } }
+            public IHandler[] Second
+            {
+                get { return _second; }
+            }
         }
 
         public interface IHandler
@@ -90,13 +156,12 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CanStillAddOtherPropertiesAfterTheCallToChildArray()
         {
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.For<Processor>().Use<Processor>()
                     .EnumerableOf<IHandler>().Contains(
-                    new SmartInstance<Handler1>(),
-                    new SmartInstance<Handler2>(),
-                    new SmartInstance<Handler3>()
+                        new SmartInstance<Handler1>(),
+                        new SmartInstance<Handler2>(),
+                        new SmartInstance<Handler3>()
                     )
                     .Ctor<string>("name").Is("Jeremy");
             });
@@ -107,33 +172,70 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void get_a_configured_list()
         {
-            var container = new Container(x =>
-            {
-                x.For<Processor>().Use<Processor>()
+            var container = new Container(x => {
+                x.For<ProcessorWithList>().Use<ProcessorWithList>()
                     .EnumerableOf<IHandler>().Contains(
-                    new SmartInstance<Handler1>(),
-                    new SmartInstance<Handler2>(),
-                    new SmartInstance<Handler3>()
+                        new SmartInstance<Handler1>(),
+                        new SmartInstance<Handler2>(),
+                        new SmartInstance<Handler3>()
                     )
                     .Ctor<string>("name").Is("Jeremy");
             });
 
-            container.GetInstance<Processor>().Handlers.Select(x => x.GetType()).ShouldHaveTheSameElementsAs(typeof(Handler1), typeof(Handler2), typeof(Handler3));
+            container.GetInstance<ProcessorWithList>()
+                .Handlers.Select(x => x.GetType())
+                .ShouldHaveTheSameElementsAs(typeof (Handler1), typeof (Handler2), typeof (Handler3));
+        }
+
+        [Test]
+        public void get_a_configured_concrete_list()
+        {
+            var container = new Container(x =>
+            {
+                x.For<ProcessorWithConcreteList>().Use<ProcessorWithConcreteList>()
+                    .EnumerableOf<IHandler>().Contains(
+                        new SmartInstance<Handler1>(),
+                        new SmartInstance<Handler2>(),
+                        new SmartInstance<Handler3>()
+                    )
+                    .Ctor<string>("name").Is("Jeremy");
+            });
+
+            container.GetInstance<ProcessorWithConcreteList>()
+                .Handlers.Select(x => x.GetType())
+                .ShouldHaveTheSameElementsAs(typeof(Handler1), typeof(Handler2), typeof(Handler3));
+        }
+
+
+        [Test]
+        public void get_a_configured_ienumerable()
+        {
+            var container = new Container(x =>
+            {
+                x.For<ProcessorWithEnumerable>().Use<ProcessorWithEnumerable>()
+                    .EnumerableOf<IHandler>().Contains(
+                        new SmartInstance<Handler1>(),
+                        new SmartInstance<Handler2>(),
+                        new SmartInstance<Handler3>()
+                    )
+                    .Ctor<string>("name").Is("Jeremy");
+            });
+
+            container.GetInstance<ProcessorWithEnumerable>()
+                .Handlers.Select(x => x.GetType())
+                .ShouldHaveTheSameElementsAs(typeof(Handler1), typeof(Handler2), typeof(Handler3));
         }
 
         [Test]
         public void InjectPropertiesByName()
         {
-            var container = new Container(r =>
-            {
+            var container = new Container(r => {
                 r.For<Processor2>().Use<Processor2>()
-                    .EnumerableOf<IHandler>("first").Contains(x =>
-                    {
+                    .EnumerableOf<IHandler>("first").Contains(x => {
                         x.Type<Handler1>();
                         x.Type<Handler2>();
                     })
-                    .EnumerableOf<IHandler>("second").Contains(x =>
-                    {
+                    .EnumerableOf<IHandler>("second").Contains(x => {
                         x.Type<Handler2>();
                         x.Type<Handler3>();
                     });
@@ -152,15 +254,13 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void inline_definition_of_enumerable_child_respects_order_of_registration()
         {
-            IContainer container = new Container(r =>
-            {
+            IContainer container = new Container(r => {
                 r.For<IHandler>().Add<Handler1>().Named("One");
                 r.For<IHandler>().Add<Handler2>().Named("Two");
 
                 r.For<Processor>().Use<Processor>()
                     .Ctor<string>("name").Is("Jeremy")
-                    .EnumerableOf<IHandler>().Contains(x =>
-                    {
+                    .EnumerableOf<IHandler>().Contains(x => {
                         x.TheInstanceNamed("Two");
                         x.TheInstanceNamed("One");
                     });
@@ -175,16 +275,14 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void PlaceMemberInArrayByReference_with_SmartInstance()
         {
-            IContainer manager = new Container(registry =>
-            {
+            IContainer manager = new Container(registry => {
                 registry.For<IHandler>().Add<Handler1>().Named("One");
                 registry.For<IHandler>().Add<Handler2>().Named("Two");
 
 
                 registry.For<Processor>().Use<Processor>()
                     .Ctor<string>("name").Is("Jeremy")
-                    .EnumerableOf<IHandler>().Contains(x =>
-                    {
+                    .EnumerableOf<IHandler>().Contains(x => {
                         x.TheInstanceNamed("Two");
                         x.TheInstanceNamed("One");
                     });
@@ -199,12 +297,10 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void ProgrammaticallyInjectArrayAllInline()
         {
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.For<Processor>().Use<Processor>()
                     .Ctor<string>("name").Is("Jeremy")
-                    .EnumerableOf<IHandler>().Contains(y =>
-                    {
+                    .EnumerableOf<IHandler>().Contains(y => {
                         y.Type<Handler1>();
                         y.Type<Handler2>();
                         y.Type<Handler3>();
@@ -222,12 +318,10 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void ProgrammaticallyInjectArrayAllInline_with_smart_instance()
         {
-            IContainer container = new Container(r =>
-            {
+            IContainer container = new Container(r => {
                 r.For<Processor>().Use<Processor>()
                     .Ctor<string>("name").Is("Jeremy")
-                    .EnumerableOf<IHandler>().Contains(x =>
-                    {
+                    .EnumerableOf<IHandler>().Contains(x => {
                         x.Type<Handler1>();
                         x.Type<Handler2>();
                         x.Type<Handler3>();

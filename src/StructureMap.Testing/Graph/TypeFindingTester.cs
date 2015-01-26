@@ -1,6 +1,6 @@
-using System.Collections.Generic;
-using NUnit.Framework;
 using System.Linq;
+using NUnit.Framework;
+using StructureMap.Graph;
 
 namespace StructureMap.Testing.Graph
 {
@@ -12,11 +12,9 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            container = new Container(registry =>
-            {
+            container = new Container(registry => {
                 registry.For<INormalType>();
-                registry.Scan(x =>
-                {
+                registry.Scan(x => {
                     x.TheCallingAssembly();
                     x.AddAllTypesOf<TypeIWantToFind>();
                     x.AddAllTypesOf<OtherType>();
@@ -33,7 +31,7 @@ namespace StructureMap.Testing.Graph
         public void FoundTheRightNumberOfInstancesForATypeWithNoPlugins()
         {
             container.GetAllInstances<TypeIWantToFind>().Count()
-                     .ShouldEqual(3);
+                .ShouldEqual(3);
         }
 
         [Test]
@@ -48,11 +46,10 @@ namespace StructureMap.Testing.Graph
             [Test]
             public void it_can_find_all_implementations()
             {
-                using (var container = new Container(c => c.Scan(s =>
-                     {
-                         s.AddAllTypesOf(typeof (IOpenGeneric<>));
-                         s.TheCallingAssembly();
-                     })))
+                using (var container = new Container(c => c.Scan(s => {
+                    s.AddAllTypesOf(typeof (IOpenGeneric<>));
+                    s.TheCallingAssembly();
+                })))
                 {
                     var redTypes = container.GetAllInstances<IOpenGeneric<string>>();
 
@@ -63,11 +60,10 @@ namespace StructureMap.Testing.Graph
             [Test]
             public void it_can_override_generic_implementation_with_specific()
             {
-                var container = new Container(c => c.Scan(s =>
-                      {
-                          s.AddAllTypesOf(typeof (IOpenGeneric<>));
-                          s.TheCallingAssembly();
-                      }));
+                var container = new Container(c => c.Scan(s => {
+                    s.AddAllTypesOf(typeof (IOpenGeneric<>));
+                    s.TheCallingAssembly();
+                }));
 
                 using (container)
                 {

@@ -1,4 +1,3 @@
-using System;
 using NUnit.Framework;
 using StructureMap.Testing.GenericWidgets;
 
@@ -13,10 +12,10 @@ namespace StructureMap.Testing
             container = new Container(x => {
                 x.For(typeof (IThing<,>)).Use(typeof (ColorThing<,>)).Ctor<string>("color").Is("Red").Named("Red");
                 x.For(typeof (IThing<,>)).Add(typeof (ComplexThing<,>))
-                 .Ctor<string>("name").Is("Jeremy")
-                 .Ctor<int>("age").Is(32)
-                 .Ctor<bool>("ready").Is(true)
-                 .Named("Complicated");
+                    .Ctor<string>("name").Is("Jeremy")
+                    .Ctor<int>("age").Is(32)
+                    .Ctor<bool>("ready").Is(true)
+                    .Named("Complicated");
 
                 x.For(typeof (ISimpleThing<>)).Use(typeof (SimpleThing<>));
 
@@ -45,19 +44,6 @@ namespace StructureMap.Testing
         {
         }
 
-        [Test]
-        public void Can_use_factory_method_with_open_generics()
-        {
-            var container = new Container();
-            container.Configure(x => x.For(typeof (IGenericType<>)).Use(f => {
-                Type generic = f.BuildStack.Current.RequestedType.GetGenericArguments()[0];
-                Type type = typeof (GenericType<>).MakeGenericType(generic);
-                return Activator.CreateInstance(type);
-            }));
-
-            var instance = container.GetInstance<IGenericType<string>>();
-            instance.ShouldBeOfType<GenericType<string>>();
-        }
 
         [Test]
         public void MultipleGenericTypes()
@@ -118,6 +104,5 @@ namespace StructureMap.Testing
 
             Assert.AreNotSame(object1, object4);
         }
-
     }
 }

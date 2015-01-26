@@ -5,51 +5,33 @@ namespace StructureMap.Diagnostics
 {
     public class Error : IEquatable<Error>
     {
-        private readonly int _code;
         private readonly string _message;
         private string _stackTrace = string.Empty;
         public InstanceToken Instance;
         public string Source;
 
-
-        private Error(int code, string message)
+        public Error(string message)
         {
-            _code = code;
             _message = message;
         }
 
-        public Error(int errorCode, params object[] args)
+        public Error(Exception exception)
         {
-            _code = errorCode;
-            _message = ErrorMessages.GetMessage(errorCode, args);
-        }
-
-        public Error(int errorCode, Exception ex, params object[] args)
-            : this(errorCode, args)
-        {
-            _message += "\n\n" + ex.Message;
-
-            writeStackTrace(ex);
-        }
-
-
-        public Error(StructureMapException exception)
-        {
-            _code = exception.ErrorCode;
             _message = exception.Message;
 
             writeStackTrace(exception);
         }
 
-
-        public int Code { get { return _code; } }
+        public string Message
+        {
+            get { return _message; }
+        }
 
         #region IEquatable<Error> Members
 
         public bool Equals(Error error)
         {
             if (error == null) return false;
-            if (_code != error._code) return false;
             if (!Equals(_message, error._message)) return false;
             if (!Equals(_stackTrace, error._stackTrace)) return false;
             if (!Equals(Instance, error.Instance)) return false;
@@ -61,7 +43,7 @@ namespace StructureMap.Diagnostics
         private void writeStackTrace(Exception exception)
         {
             _stackTrace = string.Empty;
-            Exception ex = exception;
+            var ex = exception;
             while (ex != null)
             {
                 _stackTrace += exception.ToString();
@@ -70,35 +52,15 @@ namespace StructureMap.Diagnostics
             }
         }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj as Error);
-        }
-
-        public override int GetHashCode()
-        {
-            int result = _code;
-            result = 29*result + (_message != null ? _message.GetHashCode() : 0);
-            result = 29*result + (_stackTrace != null ? _stackTrace.GetHashCode() : 0);
-            result = 29*result + (Instance != null ? Instance.GetHashCode() : 0);
-            return result;
-        }
-
 
         public override string ToString()
         {
-            return string.Format("Error {0} -- {1}", _code, _message);
-        }
-
-        public static Error FromMessage(int code, string message)
-        {
-            return new Error(code, message);
+            return string.Format("Error {0}", _message);
         }
 
         public void Write(StringWriter writer)
         {
-            writer.WriteLine("Error:  " + Code);
+            writer.WriteLine("Error:  ");
             if (Instance != null) writer.WriteLine(Instance.ToString());
             writer.WriteLine("Source:  " + Source);
 

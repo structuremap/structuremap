@@ -1,30 +1,25 @@
 using System;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
     public class DefaultInstance : Instance
     {
-        public DefaultInstance()
+        public override Type ReturnedType
         {
-            CopyAsIsWhenClosingInstance = true;
+            get { return null; }
         }
 
-        protected override bool doesRecordOnTheStack { get { return false; } }
-
-        protected override object build(Type pluginType, BuildSession session)
+        public override string Description
         {
-            if (EnumerableInstance.IsEnumerable(pluginType))
-            {
-                var enumerable = new EnumerableInstance(pluginType, null);
-                return enumerable.Build(pluginType, session);
-            }
-
-            return session.GetInstance(pluginType);
+            get { return "Default"; }
         }
 
-        protected override string getDescription()
+        public override IDependencySource ToDependencySource(Type pluginType)
         {
-            return "Default";
+            return EnumerableInstance.IsEnumerable(pluginType)
+                ? (IDependencySource) new AllPossibleValuesDependencySource(pluginType)
+                : new DefaultDependencySource(pluginType);
         }
     }
 }

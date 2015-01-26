@@ -14,9 +14,15 @@ namespace StructureMap.Diagnostics
         }
 
 
-        public string Name { get { return _name; } }
+        public string Name
+        {
+            get { return _name; }
+        }
 
-        public string Description { get { return _description; } }
+        public string Description
+        {
+            get { return _description; }
+        }
 
         #region IEquatable<InstanceToken> Members
 
@@ -43,7 +49,7 @@ namespace StructureMap.Diagnostics
 
         public override int GetHashCode()
         {
-            int result = _name != null ? _name.GetHashCode() : 0;
+            var result = _name != null ? _name.GetHashCode() : 0;
             result = 29*result + (_description != null ? _description.GetHashCode() : 0);
             return result;
         }

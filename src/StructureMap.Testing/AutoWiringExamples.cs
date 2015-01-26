@@ -4,6 +4,44 @@ using NUnit.Framework;
 
 namespace StructureMap.Testing
 {
+    // SAMPLE: auto-wiring-sample
+    public interface Xman{}
+    public class Cyclops : Xman{}
+
+    public interface Avenger{}
+    public class IronMan : Avenger{}
+
+    public class CrossoverEvent
+    {
+        public Xman Xman { get; set; }
+        public Avenger Avenger { get; set; }
+
+        public CrossoverEvent(Xman xman, Avenger avenger)
+        {
+            Xman = xman;
+            Avenger = avenger;
+        }
+    }
+
+    public class UsingCrossover
+    {
+        [Test]
+        public void showing_auto_wiring()
+        {
+            var container = new Container(x => {
+                x.For<Xman>().Use<Cyclops>();
+                x.For<Avenger>().Use<IronMan>();
+            });
+
+            // Notice that at no point did we define how to 
+            // build CrossoverEvent.  
+            var @event = container.GetInstance<CrossoverEvent>();
+            @event.Avenger.ShouldBeOfType<IronMan>();
+            @event.Xman.ShouldBeOfType<Cyclops>();
+        }
+    }
+    // ENDSAMPLE
+
     public interface IValidator
     {
     }
@@ -34,7 +72,7 @@ namespace StructureMap.Testing
 
         public void Write()
         {
-            foreach (IValidator validator in _validators)
+            foreach (var validator in _validators)
             {
                 Debug.WriteLine(validator);
             }
@@ -49,25 +87,21 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x =>
-            {
-                x.For<IValidator>().AddInstances(o =>
-                {
+            container = new Container(x => {
+                x.For<IValidator>().AddInstances(o => {
                     o.Type<Validator>().Ctor<string>("name").Is("Red").Named("Red");
                     o.Type<Validator>().Ctor<string>("name").Is("Blue").Named("Blue");
                     o.Type<Validator>().Ctor<string>("name").Is("Purple").Named("Purple");
                     o.Type<Validator>().Ctor<string>("name").Is("Green").Named("Green");
                 });
 
-                x.For<ClassThatUsesValidators>().AddInstances(o =>
-                {
+                x.For<ClassThatUsesValidators>().AddInstances(o => {
                     // Define an Instance of ClassThatUsesValidators that depends on AutoWiring
                     o.Type<ClassThatUsesValidators>().Named("WithAutoWiring");
 
                     // Define an Instance of ClassThatUsesValidators that overrides AutoWiring
                     o.Type<ClassThatUsesValidators>().Named("ExplicitArray")
-                        .EnumerableOf<IValidator>().Contains(y =>
-                        {
+                        .EnumerableOf<IValidator>().Contains(y => {
                             y.TheInstanceNamed("Red");
                             y.TheInstanceNamed("Green");
                         });
@@ -101,7 +135,7 @@ namespace StructureMap.Testing
 
             public override string ToString()
             {
-                return string.Format("Class1 has Context: {0}", _context);
+                return string.Format("Class1 has session: {0}", _context);
             }
         }
 
@@ -118,7 +152,7 @@ namespace StructureMap.Testing
 
             public override string ToString()
             {
-                return string.Format("Class2 has Context: {0}\n{1}", _context, _class1);
+                return string.Format("Class2 has session: {0}\n{1}", _context, _class1);
             }
         }
 
@@ -135,7 +169,7 @@ namespace StructureMap.Testing
 
             public override string ToString()
             {
-                return string.Format("Class3 has Context: {0}\n{1}", _context, _class2);
+                return string.Format("Class3 has session: {0}\n{1}", _context, _class2);
             }
         }
 

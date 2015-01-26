@@ -120,11 +120,26 @@ namespace StructureMap.Query
 
 
         /// <summary>
+        /// Eject all objects and Instance configuration for this PluginType
+        /// </summary>
+        void EjectAndRemove<TPluginType>();
+
+        /// <summary>
         ///     Get each and every configured instance that could possibly
         ///     be cast to T
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         IEnumerable<T> GetAllPossible<T>() where T : class;
+
+
+        /// <summary>
+        /// Tries to find a named Instance for this PluginType
+        /// May return null
+        /// </summary>
+        /// <typeparam name="TPluginType"></typeparam>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        InstanceRef Find<TPluginType>(string name);
     }
 }

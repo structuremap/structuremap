@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using System.Reflection;
 using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 
@@ -8,7 +8,7 @@ namespace StructureMap.Graph
     public class FindAllTypesFilter : IRegistrationConvention
     {
         private readonly Type _pluginType;
-        private Func<Type, string> _getName = type => Guid.NewGuid().ToString();
+        private Func<Type, string> _getName = type => null;
 
         public FindAllTypesFilter(Type pluginType)
         {
@@ -17,16 +17,16 @@ namespace StructureMap.Graph
 
         public void Process(Type type, Registry registry)
         {
-            if (type.CanBeCastTo(_pluginType) && Constructor.HasConstructors(type))
+            if (type.CanBeCastTo(_pluginType) && type.HasConstructors())
             {
-                string name = _getName(type);
+                var name = _getName(type);
                 registry.AddType(GetLeastSpecificButValidType(_pluginType, type), type, name);
             }
         }
 
         private Type GetLeastSpecificButValidType(Type pluginType, Type type)
         {
-            if (pluginType.IsGenericTypeDefinition && !type.IsOpenGeneric())
+            if (pluginType.GetTypeInfo().IsGenericTypeDefinition && !type.IsOpenGeneric())
                 return type.FindFirstInterfaceThatCloses(pluginType);
 
             return pluginType;

@@ -1,6 +1,7 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
@@ -19,23 +20,22 @@ namespace StructureMap
         /// <returns></returns>
         public static MethodInfo[] GetValidationMethods(Type objectType)
         {
-            var methodList = new ArrayList();
+            var methodList = new List<MethodInfo>();
 
-            MethodInfo[] methods = objectType.GetMethods();
-            foreach (MethodInfo method in methods)
+            var methods = objectType.GetMethods();
+            foreach (var method in methods)
             {
-                var att =
-                    (ValidationMethodAttribute) GetCustomAttribute(method, typeof (ValidationMethodAttribute));
+                var att = method.GetAttribute<ValidationMethodAttribute>();
 
                 if (att != null)
                 {
                     if (method.GetParameters().Length > 0)
                     {
-                        string msg =
+                        var msg =
                             string.Format(
                                 "Method *{0}* in Class *{1}* cannot be a validation method because it has parameters",
                                 method.Name, objectType.AssemblyQualifiedName);
-                        throw new ApplicationException(msg);
+                        throw new ArgumentException(msg);
                     }
 
                     methodList.Add(method);

@@ -33,18 +33,26 @@ namespace StructureMap.Testing
 
     public static class SpecificationExtensions
     {
+        public static void ShouldContain<T>(this IEnumerable<T> actual, Func<T, bool> expected)
+        {
+            actual.Count().ShouldBeGreaterThan(0);
+            T result = actual.FirstOrDefault(expected);
+            Assert.That(result, Is.Not.EqualTo(default(T)), "Expected item was not found in the actual sequence");
+        }
+
+
         public static void ShouldHaveTheSameElementsAs<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
         {
-            IList actualList = (actual is IList) ? (IList) actual : actual.ToList();
-            IList expectedList = (expected is IList) ? (IList) expected : expected.ToList();
+            var actualList = (actual is IList) ? (IList) actual : actual.ToList();
+            var expectedList = (expected is IList) ? (IList) expected : expected.ToList();
 
             ShouldHaveTheSameElementsAs(actualList, expectedList);
         }
 
         public static void ShouldHaveTheSameElementsAs<T>(this IEnumerable<T> actual, params T[] expected)
         {
-            IList actualList = (actual is IList) ? (IList) actual : actual.ToList();
-            IList expectedList = (expected is IList) ? (IList) expected : expected.ToList();
+            var actualList = (actual is IList) ? (IList) actual : actual.ToList();
+            var expectedList = (expected is IList) ? (IList) expected : expected.ToList();
 
             ShouldHaveTheSameElementsAs(actualList, expectedList);
         }
@@ -58,7 +66,7 @@ namespace StructureMap.Testing
             {
                 actual.Count.ShouldEqual(expected.Count);
 
-                for (int i = 0; i < actual.Count; i++)
+                for (var i = 0; i < actual.Count; i++)
                 {
                     actual[i].ShouldEqual(expected[i]);
                 }
@@ -66,7 +74,7 @@ namespace StructureMap.Testing
             catch (Exception)
             {
                 Debug.WriteLine("ACTUAL:");
-                foreach (object o in actual)
+                foreach (var o in actual)
                 {
                     Debug.WriteLine(o);
                 }
@@ -133,6 +141,11 @@ namespace StructureMap.Testing
         {
             Assert.IsInstanceOf(typeof (T), actual);
             return (T) actual;
+        }
+
+        public static void ShouldNotBeOfType<T>(this object actual)
+        {
+            actual.ShouldNotBeOfType(typeof(T));
         }
 
         public static void ShouldNotBeOfType(this object actual, Type expected)
@@ -234,7 +247,7 @@ namespace StructureMap.Testing
 
         public static void ShouldEqualSqlDate(this DateTime actual, DateTime expected)
         {
-            TimeSpan timeSpan = actual - expected;
+            var timeSpan = actual - expected;
             Assert.Less(Math.Abs(timeSpan.TotalMilliseconds), 3);
         }
     }

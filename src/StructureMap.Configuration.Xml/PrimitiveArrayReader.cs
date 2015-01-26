@@ -30,7 +30,8 @@ namespace StructureMap.Configuration.Xml
                 array.SetValue(convertedType, i);
             }
 
-            return new SerializedInstance(array);
+            throw new NotImplementedException();
+            //return new SerializedInstance(array);
         }
 
         #endregion

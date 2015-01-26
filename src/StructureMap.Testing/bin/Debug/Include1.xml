@@ -1,4 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<StructureMap Id="Include1">
-  <Assembly Name="StructureMap.Testing.Widget3" />
-</StructureMap>

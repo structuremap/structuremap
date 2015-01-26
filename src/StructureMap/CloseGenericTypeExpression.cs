@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using StructureMap.TypeRules;
 
@@ -16,7 +15,7 @@ namespace StructureMap
     }
 
     public class CloseGenericTypeExpression : OpenGenericTypeSpecificationExpression,
-                                              OpenGenericTypeListSpecificationExpression
+        OpenGenericTypeListSpecificationExpression
     {
         private readonly IContainer _container;
         private readonly object _subject;
@@ -32,7 +31,7 @@ namespace StructureMap
         {
             var list = _container.With(_subject.GetType(), _subject).GetAllInstances(_pluginType);
             var returnValue = new List<T>();
-            foreach (object o in list)
+            foreach (var o in list)
             {
                 returnValue.Add((T) o);
             }
@@ -65,7 +64,8 @@ namespace StructureMap
         {
             if (!type.IsOpenGeneric())
             {
-                throw new StructureMapException(285);
+                throw new StructureMapConfigurationException(
+                    "Type '{0}' is not an open generic type".ToFormat(type.GetFullName()));
             }
 
             _pluginType = type.MakeGenericType(_subject.GetType());

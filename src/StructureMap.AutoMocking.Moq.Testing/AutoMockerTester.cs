@@ -13,6 +13,11 @@ namespace StructureMap.AutoMocking.Moq.Testing
         protected abstract void setExpectation<T, TResult>(T mock, Expression<Func<T, TResult>> functionCall,
                                                            TResult expectedResult) where T : class;
 
+        public class ConcreteThingWithNoConstructor
+        {
+
+        }
+
         public class ConcreteThing
         {
             private readonly IMockedService _service;
@@ -217,6 +222,16 @@ namespace StructureMap.AutoMocking.Moq.Testing
             ConcreteClass concreteClass = autoMocker.ClassUnderTest;
             setExpectation(concreteClass, x => x.Name, "Max");
             concreteClass.Name.ShouldEqual("Max");
+        }
+
+        [Test]
+        public void GetTheConcreteTypeFromTheMockerWhenTypeHasNoConstructorArguments()
+        {
+            AutoMocker<ConcreteThingWithNoConstructor> autoMocker = createAutoMocker<ConcreteThingWithNoConstructor>();
+
+            var thing = autoMocker.ClassUnderTest;
+
+            thing.GetType().ShouldEqual(typeof(ConcreteThingWithNoConstructor));
         }
     }
 }

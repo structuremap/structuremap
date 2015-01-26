@@ -1,7 +1,6 @@
 using System;
-using StructureMap.Configuration;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
@@ -12,23 +11,6 @@ namespace StructureMap
     {
         public const string EMPTY_STRING = "STRING.EMPTY";
         private string _instanceKey;
-
-
-        public ConstructorInstance ToInstance(IPluginFactory factory, Type pluginType)
-        {
-            var plugin = factory.PluginFor(PluggedType());
-
-            var instance = new ConstructorInstance(plugin);
-            if (InstanceKey.IsNotEmpty())
-            {
-                instance.Name = InstanceKey;
-            }
-
-            var reader = new InstanceMementoPropertyReader(instance, this, factory);
-            plugin.VisitArguments(reader);
-
-            return instance;
-        }
 
         protected abstract string PluggedType();
 
@@ -71,7 +53,10 @@ namespace StructureMap
         /// <summary>
         /// Is the InstanceMemento a reference to the default instance of the Plugin type?
         /// </summary>
-        public bool IsDefault { get { return (IsReference && ReferenceKey == String.Empty); } }
+        public bool IsDefault
+        {
+            get { return (IsReference && ReferenceKey == String.Empty); }
+        }
 
 
         /// <summary>
@@ -81,7 +66,7 @@ namespace StructureMap
         /// <returns></returns>
         public string GetProperty(string Key)
         {
-            string returnValue = "";
+            var returnValue = "";
 
             try
             {
@@ -89,7 +74,8 @@ namespace StructureMap
             }
             catch (Exception ex)
             {
-                throw new StructureMapException(205, ex, Key, InstanceKey);
+                throw new StructureMapConfigurationException(
+                    "Missing requested Instance property '{0}' for InstanceKey '{1}'".ToFormat(Key, InstanceKey), ex);
             }
 
             if (String.IsNullOrEmpty(returnValue)) return null;
@@ -116,14 +102,15 @@ namespace StructureMap
         /// <returns></returns>
         public InstanceMemento GetChildMemento(string key)
         {
-            InstanceMemento returnValue = getChild(key);
+            var returnValue = getChild(key);
             return returnValue;
         }
 
-        public virtual Instance ReadChildInstance(string name, IPluginFactory graph, Type childType)
+        public virtual Instance ReadChildInstance(string name, Type childType)
         {
-            InstanceMemento child = GetChildMemento(name);
-            return child == null ? null : child.ReadInstance(graph, childType);
+            throw new NotImplementedException();
+//            InstanceMemento child = GetChildMemento(name);
+//            return child == null ? null : child.ReadInstance(graph, childType);
         }
 
         /// <summary>
@@ -141,9 +128,7 @@ namespace StructureMap
         public abstract InstanceMemento[] GetChildrenArray(string key);
 
 
-
-
-        public Instance ReadInstance(IPluginFactory pluginFactory, Type pluginType)
+        public Instance ReadInstance(Type pluginType)
         {
             if (pluginType == null)
             {
@@ -152,7 +137,7 @@ namespace StructureMap
 
             try
             {
-                Instance instance = readInstance(pluginFactory, pluginType);
+                var instance = readInstance(pluginType);
                 instance.Name = InstanceKey;
 
                 return instance;
@@ -163,12 +148,13 @@ namespace StructureMap
             }
             catch (Exception e)
             {
-                throw new StructureMapException(260, e, InstanceKey, pluginType.FullName);
+                throw new StructureMapConfigurationException(
+                    "Malformed InstanceMemento {0} of PluginType {1}".ToFormat(InstanceKey, pluginType.GetFullName()), e);
             }
         }
 
         [CLSCompliant(false)]
-        protected virtual Instance readInstance(IPluginFactory pluginFactory, Type pluginType)
+        protected virtual Instance readInstance(Type pluginType)
         {
             if (IsDefault)
             {
@@ -180,7 +166,7 @@ namespace StructureMap
                 return new ReferencedInstance(ReferenceKey);
             }
 
-            return ToInstance(pluginFactory, pluginType);
+            throw new NotImplementedException();
         }
     }
 }

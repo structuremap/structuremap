@@ -1,6 +1,6 @@
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Testing.Widget;
-using System.Linq;
 
 namespace StructureMap.Testing
 {
@@ -28,7 +28,10 @@ namespace StructureMap.Testing
                 _widget = widget;
             }
 
-            public IWidget Widget1 { get { return _widget; } }
+            public IWidget Widget1
+            {
+                get { return _widget; }
+            }
         }
 
         [Test]

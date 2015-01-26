@@ -10,10 +10,10 @@ namespace StructureMap.Query
     {
         private readonly IPipelineGraph _graph;
 
-        internal Model(IPipelineGraph graph)
+        internal Model(IPipelineGraph graph, PluginGraph pluginGraph)
         {
             _graph = graph;
-            PluginGraph = _graph.Outer;
+            PluginGraph = pluginGraph;
         }
 
         public IPipelineGraph Pipeline
@@ -25,11 +25,11 @@ namespace StructureMap.Query
         {
             get
             {
-                foreach (var family in _graph.UniqueFamilies())
+                foreach (var family in _graph.Instances.UniqueFamilies())
                 {
                     if (family.IsGenericTemplate)
                     {
-                        yield return new GenericFamilyConfiguration(family);
+                        yield return new GenericFamilyConfiguration(family, _graph);
                     }
                     else
                     {
@@ -41,7 +41,7 @@ namespace StructureMap.Query
 
         public bool HasDefaultImplementationFor(Type pluginType)
         {
-            return _graph.HasDefaultForPluginType(pluginType);
+            return _graph.Instances.HasDefaultForPluginType(pluginType);
         }
 
         public bool HasDefaultImplementationFor<T>()
@@ -56,11 +56,14 @@ namespace StructureMap.Query
 
         public Type DefaultTypeFor(Type pluginType)
         {
-            return findForFamily(pluginType, f => f.Default == null ? null : f.Default.ConcreteType);
+            return findForFamily(pluginType, f => f.Default == null ? null : f.Default.ReturnedType);
         }
 
-        public IEnumerable<IPluginTypeConfiguration> PluginTypes { get { return pluginTypes; } }
-        
+        public IEnumerable<IPluginTypeConfiguration> PluginTypes
+        {
+            get { return pluginTypes; }
+        }
+
         public PluginGraph PluginGraph { get; private set; }
 
         /// <summary>
@@ -93,9 +96,7 @@ namespace StructureMap.Query
             EjectAndRemovePluginTypes(filter);
 
             // second pass to hit instances
-            pluginTypes.Each(x => {
-                x.EjectAndRemove(i => filter(i.ConcreteType));
-            });
+            pluginTypes.Each(x => { x.EjectAndRemove(i => filter(i.ReturnedType)); });
         }
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace StructureMap.Query
         /// <param name="filter"></param>
         public void EjectAndRemovePluginTypes(Func<Type, bool> filter)
         {
-            new GraphEjector(_graph.Outer).Remove(filter);
+            _graph.Ejector.RemoveCompletely(filter);
         }
 
         /// <summary>
@@ -113,7 +114,12 @@ namespace StructureMap.Query
         /// <param name="pluginType"></param>
         public void EjectAndRemove(Type pluginType)
         {
-            new GraphEjector(_graph.Outer).Remove(pluginType);
+            _graph.Ejector.RemoveCompletely(pluginType);
+        }
+
+        public void EjectAndRemove<TPluginType>()
+        {
+            EjectAndRemove(typeof (TPluginType));
         }
 
         /// <summary>
@@ -124,11 +130,16 @@ namespace StructureMap.Query
         /// <returns></returns>
         public IEnumerable<T> GetAllPossible<T>() where T : class
         {
-            Type targetType = typeof (T);
+            var targetType = typeof (T);
             return AllInstances
-                .Where(x => x.ConcreteType.CanBeCastTo(targetType))
+                .Where(x => x.ReturnedType.CanBeCastTo(targetType))
                 .Select(x => x.Get<T>())
                 .Where(x => x != null);
+        }
+
+        public InstanceRef Find<TPluginType>(string name)
+        {
+            return For<TPluginType>().Find(name);
         }
 
         public IEnumerable<InstanceRef> InstancesOf(Type pluginType)
@@ -151,7 +162,10 @@ namespace StructureMap.Query
             return HasImplementationsFor(typeof (T));
         }
 
-        public IEnumerable<InstanceRef> AllInstances { get { return PluginTypes.SelectMany(x => x.Instances); } }
+        public IEnumerable<InstanceRef> AllInstances
+        {
+            get { return PluginTypes.SelectMany(x => x.Instances); }
+        }
 
         private T findForFamily<T>(Type pluginType, Func<IPluginTypeConfiguration, T> func, T defaultValue)
         {

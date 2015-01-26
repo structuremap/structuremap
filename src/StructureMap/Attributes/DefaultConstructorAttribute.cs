@@ -1,13 +1,10 @@
 using System;
+using System.Linq;
 using System.Reflection;
-using StructureMap.Graph;
-using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
-
-
-
     /// <summary>
     /// Used to override the constructor of a class to be used by StructureMap to create
     /// a Pluggable object
@@ -25,11 +22,11 @@ namespace StructureMap
         {
             ConstructorInfo returnValue = null;
 
-            foreach (ConstructorInfo constructor in ExportedType.GetConstructors())
+            foreach (var constructor in ExportedType.GetConstructors())
             {
-                object[] atts = constructor.GetCustomAttributes(typeof (DefaultConstructorAttribute), true);
+                var atts = constructor.GetCustomAttributes(typeof (DefaultConstructorAttribute), true);
 
-                if (atts.Length > 0)
+                if (atts.Any())
                 {
                     returnValue = constructor;
                     break;

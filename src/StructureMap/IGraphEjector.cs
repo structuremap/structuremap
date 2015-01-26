@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -6,7 +7,9 @@ namespace StructureMap
     {
         void EjectAllInstancesOf<T>();
 
-        void Remove(Func<Type, bool> filter);
-        void Remove(Type pluginType);
+        void RemoveCompletely(Func<Type, bool> filter);
+        void RemoveCompletely(Type pluginType);
+        void RemoveFromLifecycle(Type pluginType, Instance instance);
+        void RemoveCompletely(Type pluginType, Instance instance);
     }
 }

@@ -1,0 +1,69 @@
+<!--Title: Auto-Registration and Conventions-->
+<!--Url: auto-registration-and-conventions-->
+
+<markdown>
+
+StructureMap has rich support for registering types by scanning assemblies.
+Between scanning and default conventions, configurations are often just a few
+lines.
+
+<Section title="Scan the Calling Assembly" id="scan-calling-assembly">
+
+One of the easiest ways to register types is by scanning the assembly your
+registry is placed in. 
+
+**Note** if you have other registries, StructureMap will not automatically
+find them.
+
+</Section>
+
+<Snippet name="scan-calling-assembly" />
+
+<Section title="Scan for Registries" id="scan-for-registries">
+
+StructureMap can automatically include other registries with the`LookForRegistries`
+method.
+
+</Section>
+
+<Snippet name="scan-for-registries" />
+
+<Section title="Scan the File System" id="scan-path">
+
+StructureMap provides facilities for registering types by path.
+
+</Section>
+
+<Snippet name="scan-filesystem" />
+
+<Section title="Excluding Types" id="excluding-types">
+
+StructureMap also makes it easy to exclude types, either individually or by namespace.
+The following examples also show how StructureMap can register an assembly by providing
+a type within that assembly.
+
+Excluding additional types or namespaces is as easy as calling the corresponding method
+again.
+
+<Snippet name="scan-exclusions" />
+
+</Section>
+
+<Section title="Custom Registration Conventions" id="custom">
+
+It's just not possible (or desirable) for StructureMap to include every possible type of auto registration
+convention users might want, but that's okay because StructureMap allows you to create and use your own
+conventions through the `IRegistrationConvention` interface:
+
+<Snippet name="IRegistrationConvention" />
+
+Let's say that you'd like a custom convention that just registers a concrete type against all the interfaces
+that it implements. You could then build a custom `IRegistrationConvention` class like the following example: 
+
+<Snippet name="custom-registration-convention" />
+
+</Section>
+
+
+</markdown>
+

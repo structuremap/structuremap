@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 
@@ -10,8 +11,8 @@ namespace StructureMap.Graph
         {
             if (!type.IsConcrete()) return;
 
-            Type pluginType = FindPluginType(type);
-            if (pluginType != null && Constructor.HasConstructors(type))
+            var pluginType = FindPluginType(type);
+            if (pluginType != null && type.HasConstructors())
             {
                 registry.AddType(pluginType, type);
                 ConfigureFamily(registry.For(pluginType));
@@ -20,9 +21,8 @@ namespace StructureMap.Graph
 
         public virtual Type FindPluginType(Type concreteType)
         {
-            string interfaceName = "I" + concreteType.Name;
-            Type[] interfaces = concreteType.GetInterfaces();
-            return Array.Find(interfaces, t => t.Name == interfaceName);
+            var interfaceName = "I" + concreteType.Name;
+            return concreteType.GetInterfaces().FirstOrDefault(t => t.Name == interfaceName);
         }
     }
 }

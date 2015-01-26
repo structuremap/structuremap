@@ -1,38 +1,94 @@
 using System;
+using System.Linq.Expressions;
+using StructureMap.Building;
+using StructureMap.Diagnostics;
 
 namespace StructureMap.Pipeline
 {
-    public class LambdaInstance<T> : ExpressedInstance<LambdaInstance<T>>
+    public interface LambdaInstance
     {
-        private readonly Func<IContext, T> _builder;
+        Type ReturnedType { get; }
+    }
 
-        public LambdaInstance(Func<IContext, T> builder)
+    public class LambdaInstance<T> : LambdaInstance<T, T>
+    {
+        public LambdaInstance(Expression<Func<IContext, T>> builder) : base(builder)
         {
-            _builder = builder;
         }
 
-        public LambdaInstance(Func<T> func)
+        public LambdaInstance(Expression<Func<T>> func) : base(func)
         {
-            _builder = s => func();
         }
 
-        protected override LambdaInstance<T> thisInstance { get { return this; } }
-
-        protected override object build(Type pluginType, BuildSession session)
+        public LambdaInstance(string description, Func<IContext, T> builder) : base(description, builder)
         {
-            try
-            {
-                return _builder(session);
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(207, ex, Name, pluginType);
-            }
         }
 
-        protected override string getDescription()
+        public LambdaInstance(string description, Func<T> builder) : base(description, builder)
         {
-            return "Instance is created by Func<object> function:  " + _builder;
+        }
+    }
+
+    public class LambdaInstance<T, TPluginType> : ExpressedInstance<LambdaInstance<T, TPluginType>, T, TPluginType>, IDependencySource, LambdaInstance where T : TPluginType
+    {
+        private readonly Expression _builder;
+        private readonly string _description;
+
+        public LambdaInstance(Expression<Func<IContext, T>> builder)
+        {
+            _builder = builder.ReplaceParameter(typeof (IContext), Parameters.Context).Body;
+
+            _description = builder
+                .ReplaceParameter(typeof (IContext), Expression.Parameter(typeof (IContext), "IContext"))
+                .Body.ToString();
+        }
+
+        public LambdaInstance(Expression<Func<T>> func)
+        {
+            _description = func.Body.ToString();
+            _builder = func.Body;
+        }
+
+        public LambdaInstance(string description, Func<IContext, T> builder)
+        {
+            _description = description;
+            _builder = Expression.Invoke(Expression.Constant(builder), Parameters.Context);
+        }
+
+        public LambdaInstance(string description, Func<T> builder)
+        {
+            _description = description;
+            _builder = Expression.Invoke(Expression.Constant(builder));
+        }
+
+        protected override LambdaInstance<T, TPluginType> thisInstance
+        {
+            get { return this; }
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            return this;
+        }
+
+        public Expression ToExpression(ParameterExpression session, ParameterExpression context)
+        {
+            return _builder;
+        }
+
+        public override Type ReturnedType
+        {
+            get { return typeof (T); }
+        }
+
+        void IDependencySource.AcceptVisitor(IDependencyVisitor visitor)
+        {
+            visitor.Dependency(this);
+        }
+
+        public override string Description
+        {
+            get { return "Lambda: " + _description; }
         }
 
         public override Instance CloseType(Type[] types)

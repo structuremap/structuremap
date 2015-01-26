@@ -3,8 +3,7 @@ using StructureMap.Graph;
 namespace StructureMap.Configuration
 {
     /// <summary>
-    /// Interact with the <see cref="PluginGraph"/>.
-    /// <see cref="ConfigurationExpression.ConfigurePluginGraph"/> and <see cref="ConfigurationExpression.RegisterPluginGraphConfiguration"/>
+    /// Interacts with PluginGraph
     /// </summary>
     public interface IPluginGraphConfiguration
     {
@@ -14,9 +13,9 @@ namespace StructureMap.Configuration
         void Configure(PluginGraph graph);
 
         /// <summary>
-        /// Interact with a <see cref="PluginGraphBuilder"/>.
+        /// Registers an PluginGraphBuilder
         /// </summary>
+        /// <param name="builder"></param>
         void Register(PluginGraphBuilder builder);
     }
-
 }

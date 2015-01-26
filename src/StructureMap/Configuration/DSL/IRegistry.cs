@@ -1,23 +1,64 @@
 using System;
-using System.Linq.Expressions;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
 {
-    public interface IRegistry
+    public interface IProfileRegistry
     {
         /// <summary>
-        /// Adds the concreteType as an Instance of the pluginType
+        /// All requests For the "TO" types will be filled by fetching the "FROM"
+        /// type and casting it to "TO"
+        /// GetInstance(typeof(TO)) basically becomes (TO)GetInstance(typeof(FROM))
+        /// </summary>
+        /// <typeparam name="TFrom"></typeparam>
+        /// <typeparam name="TTo"></typeparam>
+        void Forward<TFrom, TTo>() where TFrom : class where TTo : class;
+
+        /// <summary>
+        /// Expression Builder used to define policies for a PluginType including
+        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
+        /// and ForRequestedType() are synonyms
+        /// </summary>
+        /// <typeparam name="TPluginType"></typeparam>
+        /// <param name="lifecycle">Optionally specify the instance scoping for this PluginType</param>
+        /// <returns></returns>
+        CreatePluginFamilyExpression<TPluginType> For<TPluginType>(ILifecycle lifecycle = null);
+
+        /// <summary>
+        /// Expression Builder used to define policies for a PluginType including
+        /// Scoping, the Default Instance, and interception.  This method is specifically
+        /// meant for registering open generic types
+        /// </summary>
+        /// <param name="lifecycle">Optionally specify the instance scoping for this PluginType</param>
+        /// <returns></returns>
+        GenericFamilyExpression For(Type pluginType, ILifecycle lifecycle = null);
+
+        /// <summary>
+        /// Shortcut to make StructureMap return the default object of U casted to T
+        /// whenever T is requested.  I.e.:
+        /// For<T>().TheDefault.Is.ConstructedBy(c => c.GetInstance<U>() as T);
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <returns></returns>
+        LambdaInstance<T, T> Redirect<T, U>() where T : class where U : class;
+    }
+
+    public interface IRegistry : IProfileRegistry
+    {
+        /// <summary>
+        /// Adds the concreteType as an Instance of the pluginType.  Mostly useful
+        /// for conventions
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="concreteType"></param>
         void AddType(Type pluginType, Type concreteType);
 
         /// <summary>
-        /// Adds the concreteType as an Instance of the pluginType with a name
+        /// Adds the concreteType as an Instance of the pluginType with a name.  Mostly
+        /// useful for conventions
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="concreteType"></param>
@@ -47,11 +88,18 @@ namespace StructureMap.Configuration.DSL
         Registry.BuildWithExpression<T> ForConcreteType<T>();
 
         /// <summary>
-        /// Convenience method.  Equivalent of For[PluginType]().AsSingletons()
+        /// Convenience method.  Equivalent of ForRequestedType[PluginType]().Singletons()
         /// </summary>
         /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
         CreatePluginFamilyExpression<TPluginType> ForSingletonOf<TPluginType>();
+
+        /// <summary>
+        /// Shorthand way of saying For(pluginType).Singleton()
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
+        GenericFamilyExpression ForSingletonOf(Type pluginType);
 
         /// <summary>
         /// An alternative way to use CreateProfile that uses ProfileExpression
@@ -60,23 +108,7 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <param name="profileName"></param>
         /// <param name="action"></param>
-        void Profile(string profileName, Action<Registry> action);
-
-        /// <summary>
-        /// Registers a new TypeInterceptor object with the Container
-        /// </summary>
-        /// <param name="interceptor"></param>
-        void RegisterInterceptor(TypeInterceptor interceptor);
-
-        /// <summary>
-        /// Allows you to define a TypeInterceptor inline with Lambdas or anonymous delegates
-        /// </summary>
-        /// <param name="match"></param>
-        /// <returns></returns>
-        /// <example>
-        /// IfTypeMatches( ... ).InterceptWith( o => new ObjectWrapper(o) );
-        /// </example>
-        MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match);
+        void Profile(string profileName, Action<IProfileRegistry> action);
 
         /// <summary>
         /// Designates a policy for scanning assemblies to auto
@@ -85,54 +117,6 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         void Scan(Action<IAssemblyScanner> action);
 
-        /// <summary>
-        /// Directs StructureMap to always inject dependencies into any and all public Setter properties
-        /// of the type TPluginType.
-        /// </summary>
-        /// <typeparam name="TPluginType"></typeparam>
-        /// <returns></returns>
-        CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>();
-
-        /// <summary>
-        /// Creates automatic "policies" for which public setters are considered mandatory
-        /// properties by StructureMap that will be "setter injected" as part of the 
-        /// construction process.
-        /// </summary>
-        /// <param name="action"></param>
-        void SetAllProperties(Action<SetterConvention> action);
-
-        /// <summary>
-        /// All requests For the "TO" types will be filled by fetching the "FROM"
-        /// type and casting it to "TO"
-        /// GetInstance(typeof(TO)) basically becomes (TO)GetInstance(typeof(FROM))
-        /// </summary>
-        /// <typeparam name="FROM"></typeparam>
-        /// <typeparam name="TO"></typeparam>
-        void Forward<FROM, TO>() where FROM : class where TO : class;
-
-        /// <summary>
-        /// Shorthand for ForRequestedType<TPluginType>()
-        /// </summary>
-        /// <typeparam name="TPluginType"></typeparam>
-        /// <returns></returns>
-        CreatePluginFamilyExpression<TPluginType> For<TPluginType>(ILifecycle lifecycle = null);
-
-        /// <summary>
-        /// Shorthand for ForRequestedType(pluginType)
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <returns></returns>
-        GenericFamilyExpression For(Type pluginType, ILifecycle lifecycle = null);
-
-        /// <summary>
-        /// Shortcut to make StructureMap return the default object of U casted to T
-        /// whenever T is requested.  I.e.:
-        /// For<T>().TheDefault.Is.ConstructedBy(c => c.GetInstance<U>() as T);
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="U"></typeparam>
-        /// <returns></returns>
-        LambdaInstance<T> Redirect<T, U>() where T : class where U : class;
 
         /// <summary>
         /// Advanced Usage Only!  Skips the Registry and goes right to the inner
@@ -141,28 +125,6 @@ namespace StructureMap.Configuration.DSL
         /// <param name="configure"></param>
         void Configure(Action<PluginGraph> configure);
 
-        /// <summary>
-        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the current <see cref="PluginGraphBuilder"/>
-        /// via <see cref="IPluginGraphConfiguration.Register"/>.
-        /// </summary>
-        void RegisterPluginGraphConfiguration<T>() where T : IPluginGraphConfiguration, new();
-
-        /// <summary>
-        /// See <see cref="Registry.RegisterPluginGraphConfiguration{T}"/>
-        /// </summary>
-        void RegisterPluginGraphConfiguration(IPluginGraphConfiguration pluginGraphConfig);
-
-        /// <summary>
-        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the resulting <see cref="PluginGraph"/>,
-        /// i.e. as opposed to <see cref="Registry.RegisterPluginGraphConfiguration"/>, the PluginGraph is built, and the provided
-        /// PluginGraph config obtains access to saig graph.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void ConfigurePluginGraph<T>() where T : IPluginGraphConfiguration, new();
-
-        /// <summary>
-        /// <see cref="Registry.ConfigurePluginGraph{T}"/>
-        /// </summary>
-        void ConfigurePluginGraph(IPluginGraphConfiguration pluginGraphConfig);
+        Registry.PoliciesExpression Policies { get; }
     }
 }

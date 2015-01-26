@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using NUnit.Framework;
 
 namespace StructureMap.Testing.Pipeline
@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Pipeline
     {
         public object ToDto(object input)
         {
-            object dto = createDTO((Address) input);
+            var dto = createDTO((Address) input);
             return dto;
         }
 
@@ -57,8 +57,7 @@ namespace StructureMap.Testing.Pipeline
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x =>
-            {
+            container = new Container(x => {
                 // Define the basic open type for IFlattener<>
                 x.For(typeof (IFlattener<>)).Use(typeof (PassthroughFlattener<>));
 
@@ -88,15 +87,12 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void throws_exception_if_passed_a_type_that_is_not_an_open_generic_type()
         {
-            try
-            {
-                container.ForGenericType(typeof (string)).WithParameters().GetInstanceAs<IFlattener>();
+            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                container.ForGenericType(typeof(string)).WithParameters().GetInstanceAs<IFlattener>();
                 Assert.Fail("Should have thrown exception");
-            }
-            catch (StructureMapException ex)
-            {
-                ex.ErrorCode.ShouldEqual(285);
-            }
+            });
+
+            ex.Title.ShouldEqual("Type 'System.String' is not an open generic type");
         }
 
         [Test]
@@ -174,11 +170,12 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void fetch_the_object()
         {
-            ObjectFactory.Initialize(
-                x => { x.For<IHandler<Shipment>>().Use<ShipmentHandler>(); });
+            var container = new Container(
+                x => x.For<IHandler<Shipment>>().Use<ShipmentHandler>());
 
             var shipment = new Shipment();
-            var handler = ObjectFactory.Container.ForObject(shipment).GetClosedTypeOf(typeof (IHandler<>)).As<IHandler>();
+            var handler =
+                container.ForObject(shipment).GetClosedTypeOf(typeof (IHandler<>)).As<IHandler>();
 
             handler.ShouldBeOfType<ShipmentHandler>().Shipment.ShouldBeTheSameAs(shipment);
         }
@@ -190,15 +187,14 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void fetch_the_objects()
         {
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.For<IHandler<Shipment>>().Use<ShipmentHandler>();
                 x.For<IHandler<Shipment>>().Add<ShipmentHandler2>();
             });
 
             var shipment = new Shipment();
 
-            IList<IHandler> handlers = container
+            var handlers = container
                 .ForObject(shipment)
                 .GetAllClosedTypesOf(typeof (IHandler<>))
                 .As<IHandler>();
@@ -229,7 +225,10 @@ namespace StructureMap.Testing.Pipeline
             _shipment = shipment;
         }
 
-        public Shipment Shipment { get { return _shipment; } }
+        public Shipment Shipment
+        {
+            get { return _shipment; }
+        }
     }
 
     public class ShipmentHandler2 : IHandler<Shipment>
@@ -241,6 +240,9 @@ namespace StructureMap.Testing.Pipeline
             _shipment = shipment;
         }
 
-        public Shipment Shipment { get { return _shipment; } }
+        public Shipment Shipment
+        {
+            get { return _shipment; }
+        }
     }
 }

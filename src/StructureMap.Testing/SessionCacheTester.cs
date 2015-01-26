@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Building;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing
@@ -11,60 +13,66 @@ namespace StructureMap.Testing
         private IBuildSession theResolver;
         private SessionCache theCache;
         private IPipelineGraph thePipeline;
+        private IInstanceGraph theInstances;
 
         [SetUp]
         public void SetUp()
         {
             theResolver = MockRepository.GenerateMock<IBuildSession>();
+
             theCache = new SessionCache(theResolver);
 
             thePipeline = MockRepository.GenerateMock<IPipelineGraph>();
+            thePipeline.Stub(x => x.ToModel()).Return(new Container().Model);
+
+            theInstances = MockRepository.GenerateMock<IInstanceGraph>();
+            thePipeline.Stub(x => x.Instances).Return(theInstances);
         }
 
         [Test]
         public void get_instance_if_the_object_does_not_already_exist()
         {
-            var instance = new ConfiguredInstance(typeof(Foo));
+            var instance = new ConfiguredInstance(typeof (Foo));
 
             var foo = new Foo();
 
-            theResolver.Stub(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Return(foo);
+            theResolver.Stub(x => x.ResolveFromLifecycle(typeof (IFoo), instance)).Return(foo);
 
 
-            theCache.GetObject(typeof (IFoo), instance).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof (IFoo), instance, new TransientLifecycle()).ShouldBeTheSameAs(foo);
         }
 
         [Test]
         public void get_instance_if_the_object_is_unique_and_does_not_exist()
         {
-            var instance = new ConfiguredInstance(typeof(Foo));
-            instance.SetScopeTo(Lifecycles.Unique);
+            var instance = new ConfiguredInstance(typeof (Foo));
+            instance.SetLifecycleTo(Lifecycles.Unique);
 
             var foo = new Foo();
             var foo2 = new Foo();
 
-            theResolver.Stub(x => x.BuildNewInSession(typeof(IFoo), instance)).Return(foo).Repeat.Once();
-            theResolver.Stub(x => x.BuildNewInSession(typeof(IFoo), instance)).Return(foo2).Repeat.Once();
+            theResolver.Stub(x => x.BuildNewInSession(typeof (IFoo), instance)).Return(foo).Repeat.Once();
+            theResolver.Stub(x => x.BuildNewInSession(typeof (IFoo), instance)).Return(foo2).Repeat.Once();
 
-            theCache.GetObject(typeof(IFoo), instance).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof(IFoo), instance).ShouldBeTheSameAs(foo2);
+            theCache.GetObject(typeof (IFoo), instance, new UniquePerRequestLifecycle()).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof (IFoo), instance, new UniquePerRequestLifecycle()).ShouldBeTheSameAs(foo2);
         }
 
         [Test]
         public void get_instance_remembers_the_first_object_created()
         {
-            var instance = new ConfiguredInstance(typeof(Foo));
+            var instance = new ConfiguredInstance(typeof (Foo));
 
             var foo = new Foo();
 
-            theResolver.Expect(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Return(foo).Repeat.Once();
+            theResolver.Expect(x => x.ResolveFromLifecycle(typeof (IFoo), instance)).Return(foo).Repeat.Once();
 
-
-            theCache.GetObject(typeof(IFoo), instance).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof(IFoo), instance).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof(IFoo), instance).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof(IFoo), instance).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof(IFoo), instance).ShouldBeTheSameAs(foo);
+           
+            theCache.GetObject(typeof (IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
 
             theResolver.VerifyAllExpectations();
         }
@@ -73,31 +81,31 @@ namespace StructureMap.Testing
         public void get_default_if_it_does_not_already_exist()
         {
             var instance = new ConfiguredInstance(typeof (Foo));
-            thePipeline.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
+            theInstances.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
 
             var foo = new Foo();
 
             theResolver.Stub(x => x.ResolveFromLifecycle(typeof (IFoo), instance)).Return(foo);
 
             theCache.GetDefault(typeof (IFoo), thePipeline)
-                    .ShouldBeTheSameAs(foo);
+                .ShouldBeTheSameAs(foo);
         }
 
         [Test]
         public void get_default_is_cached()
         {
-            var instance = new ConfiguredInstance(typeof(Foo));
-            thePipeline.Stub(x => x.GetDefault(typeof(IFoo))).Return(instance);
+            var instance = new ConfiguredInstance(typeof (Foo));
+            theInstances.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
 
             var foo = new Foo();
 
-            theResolver.Expect(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Return(foo)
+            theResolver.Expect(x => x.ResolveFromLifecycle(typeof (IFoo), instance)).Return(foo)
                 .Repeat.Once();
 
-            theCache.GetDefault(typeof(IFoo), thePipeline).ShouldBeTheSameAs(foo);
-            theCache.GetDefault(typeof(IFoo), thePipeline).ShouldBeTheSameAs(foo);
-            theCache.GetDefault(typeof(IFoo), thePipeline).ShouldBeTheSameAs(foo);
-            theCache.GetDefault(typeof(IFoo), thePipeline).ShouldBeTheSameAs(foo);
+            theCache.GetDefault(typeof (IFoo), thePipeline).ShouldBeTheSameAs(foo);
+            theCache.GetDefault(typeof (IFoo), thePipeline).ShouldBeTheSameAs(foo);
+            theCache.GetDefault(typeof (IFoo), thePipeline).ShouldBeTheSameAs(foo);
+            theCache.GetDefault(typeof (IFoo), thePipeline).ShouldBeTheSameAs(foo);
 
 
             theResolver.VerifyAllExpectations();
@@ -113,16 +121,16 @@ namespace StructureMap.Testing
 
             theCache = new SessionCache(theResolver, args);
 
-            thePipeline.Stub(x => x.GetDefault(typeof (IFoo))).Throw(new NotImplementedException());
+            theInstances.Stub(x => x.GetDefault(typeof (IFoo))).Throw(new NotImplementedException());
 
             theCache.GetDefault(typeof (IFoo), thePipeline)
-                    .ShouldBeTheSameAs(foo1);
+                .ShouldBeTheSameAs(foo1);
         }
 
         [Test]
         public void try_get_default_completely_negative_case()
         {
-            theCache.TryGetDefault(typeof(IFoo), thePipeline).ShouldBeNull();
+            theCache.TryGetDefault(typeof (IFoo), thePipeline).ShouldBeNull();
         }
 
         [Test]
@@ -136,22 +144,22 @@ namespace StructureMap.Testing
             theCache = new SessionCache(theResolver, args);
 
             theCache.GetDefault(typeof (IFoo), thePipeline)
-                    .ShouldBeTheSameAs(foo1);
+                .ShouldBeTheSameAs(foo1);
         }
 
         [Test]
         public void try_get_default_with_a_default()
         {
-            var instance = new ConfiguredInstance(typeof(Foo));
-            thePipeline.Stub(x => x.GetDefault(typeof(IFoo))).Return(instance);
+            var instance = new ConfiguredInstance(typeof (Foo));
+            theInstances.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
 
             var foo = new Foo();
 
-            theResolver.Expect(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Return(foo)
+            theResolver.Expect(x => x.ResolveFromLifecycle(typeof (IFoo), instance)).Return(foo)
                 .Repeat.Once();
 
             theCache.TryGetDefault(typeof (IFoo), thePipeline)
-                    .ShouldBeTheSameAs(foo);
+                .ShouldBeTheSameAs(foo);
         }
 
         [Test]
@@ -164,28 +172,51 @@ namespace StructureMap.Testing
 
             theCache = new SessionCache(theResolver, args);
 
-            var instance = new ConfiguredInstance(typeof(Foo));
-            thePipeline.Stub(x => x.GetDefault(typeof(IFoo))).Return(instance);
+            var instance = new ConfiguredInstance(typeof (Foo));
+            theInstances.Stub(x => x.GetDefault(typeof (IFoo))).Return(instance);
 
             var foo2 = new Foo();
 
-            theResolver.Expect(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Return(foo2)
+            theResolver.Expect(x => x.ResolveFromLifecycle(typeof (IFoo), instance)).Return(foo2)
                 .Repeat.Once();
 
-            theCache.GetDefault(typeof(IFoo), thePipeline)
-                    .ShouldBeTheSameAs(foo1);
+            theCache.GetDefault(typeof (IFoo), thePipeline)
+                .ShouldBeTheSameAs(foo1);
         }
 
         [Test]
-        public void should_throw_202_if_you_try_to_build_the_default_of_something_that_does_not_exist()
+        public void should_throw_configuration_exception_if_you_try_to_build_the_default_of_something_that_does_not_exist()
         {
-            Exception<StructureMapException>.ShouldBeThrownBy(() => {
-                theCache.GetDefault(typeof (IFoo), thePipeline);
-            }).ErrorCode.ShouldEqual(202);
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => theCache.GetDefault(typeof (IFoo), thePipeline));
+
+            ex.Context.ShouldEqual(
+                "There is no configuration specified for StructureMap.Testing.SessionCacheTester+IFoo");
+
+            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.SessionCacheTester+IFoo'");
+        }
+
+        [Test]
+        public void should_throw_configuration_exception_if_you_try_to_build_the_default_when_there_is_configuration_by_no_default()
+        {
+            var container = new Container(x => {
+                x.For<IFoo>().Add<Foo>().Named("one");
+                x.For<IFoo>().Add<Foo>().Named("two");
+            });
+
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
+                container.GetInstance<IFoo>();
+            });
+
+            ex.Context.ShouldContain("No default instance is specified.  The current configuration for type StructureMap.Testing.SessionCacheTester+IFoo is:");
         }
 
 
-        public interface IFoo{}
-        public class Foo : IFoo{}
+        public interface IFoo
+        {
+        }
+
+        public class Foo : IFoo
+        {
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget4;
@@ -10,8 +11,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanFillDependenciesSuccessfully()
         {
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.For<IStrategy>().Use(new Strategy("name", 3, 3, 3, true));
                 x.For<IWidget>().Use(new ColorWidget("Red"));
             });
@@ -23,19 +23,28 @@ namespace StructureMap.Testing.Graph
             Assert.IsNotNull(concreteClass.Strategy);
         }
 
-        [Test, ExpectedException(typeof (StructureMapException))]
+        [Test]
         public void TryToFillDependenciesOnAbstractClassThrowsException()
         {
-            var manager = new Container();
-            manager.GetInstance(typeof(AbstractClass));
+            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                var container = new Container();
+                container.GetInstance(typeof(AbstractClass));
+            });
+
+            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.AbstractClass'");
         }
 
 
-        [Test, ExpectedException(typeof (StructureMapException))]
+        [Test]
         public void TryToFillDependenciesOnClassWithPrimitiveArgumentsThrowsException()
         {
-            var manager = new Container();
-            manager.GetInstance(typeof(CannotBeFilledConcreteClass));
+            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                var container = new Container();
+                container.GetInstance(typeof(CannotBeFilledConcreteClass));
+            });
+
+            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.CannotBeFilledConcreteClass'");
+
         }
     }
 
@@ -50,9 +59,15 @@ namespace StructureMap.Testing.Graph
             _widget = widget;
         }
 
-        public IStrategy Strategy { get { return _strategy; } }
+        public IStrategy Strategy
+        {
+            get { return _strategy; }
+        }
 
-        public IWidget Widget { get { return _widget; } }
+        public IWidget Widget
+        {
+            get { return _widget; }
+        }
     }
 
     public class CannotBeFilledConcreteClass

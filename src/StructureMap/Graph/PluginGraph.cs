@@ -1,40 +1,31 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
-using StructureMap.Construction;
-using StructureMap.Diagnostics;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 using StructureMap.Util;
-using StructureMap;
 
 namespace StructureMap.Graph
 {
-    // TODO -- might eliminate the cache and use a dictionary directly
-    // TODO -- go to reader writer locks
-
     /// <summary>
     ///   Models the runtime configuration of a StructureMap Container
     /// </summary>
-    [Serializable]
     public class PluginGraph : IPluginGraph, IDisposable
     {
         private readonly Cache<Type, PluginFamily> _families;
         private readonly IList<IFamilyPolicy> _policies = new List<IFamilyPolicy>();
 
-        private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
-        
         private readonly List<Registry> _registries = new List<Registry>();
-        private GraphLog _log = new GraphLog();
         private readonly LifecycleObjectCache _singletonCache = new LifecycleObjectCache();
 
         private readonly LightweightCache<string, PluginGraph> _profiles;
-        private readonly SetterRules _setterRules;
 
-        private readonly Cache<Type, IInstanceBuilder> _builders; 
+        /// <summary>
+        /// Specifies interception, construction selection, and setter usage policies
+        /// </summary>
+        public readonly Policies Policies = new Policies();
 
         public PluginGraph()
         {
@@ -42,31 +33,13 @@ namespace StructureMap.Graph
                 new LightweightCache<string, PluginGraph>(name => new PluginGraph {ProfileName = name, Parent = this});
 
             ProfileName = "DEFAULT";
-            _families = new Cache<Type, PluginFamily>(type =>
-            {
-                return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type);
-            });
+            _families =
+                new Cache<Type, PluginFamily>(
+                    type => {
+                        return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type);
+                    });
 
             _families.OnAddition = family => family.Owner = this;
-
-            _setterRules = new SetterRules();
-
-            _builders = new Cache<Type, IInstanceBuilder>(type => {
-                var plugin = new Plugin(type);
-                _setterRules.Configure(plugin);
-
-                return plugin.CreateBuilder();
-            });
-        }
-
-        public IInstanceBuilder BuilderFor(Type pluggedType)
-        {
-            return _builders[pluggedType];
-        }
-
-        public SetterRules SetterRules
-        {
-            get { return _setterRules; }
         }
 
         public PluginGraph Parent { get; set; }
@@ -76,52 +49,72 @@ namespace StructureMap.Graph
             ProfileName = profileName;
         }
 
+        /// <summary>
+        /// The profile name of this PluginGraph or "DEFAULT" if it is the top 
+        /// </summary>
         public string ProfileName { get; private set; }
 
+        /// <summary>
+        /// The cache for all singleton scoped objects
+        /// </summary>
         public LifecycleObjectCache SingletonCache
         {
             get { return _singletonCache; }
         }
 
-        public static PluginGraph Empty()
-        {
-            return new PluginGraphBuilder().Build();
-        }
-
+        /// <summary>
+        /// Fetch the PluginGraph for the named profile.  Will
+        /// create a new one on the fly for unrecognized names.
+        /// Is case sensitive
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public PluginGraph Profile(string name)
         {
             return _profiles[name];
         }
 
+        /// <summary>
+        /// All the currently known profiles
+        /// </summary>
         public IEnumerable<PluginGraph> Profiles
         {
             get { return _profiles; }
-        } 
-
-        public void AddFamilyPolicy(IFamilyPolicy policy)
-        {
-            _policies.Add(policy);
         }
 
+        /// <summary>
+        /// Add a new family policy that can create new PluginFamily's on demand
+        /// when there is no pre-existing family
+        /// </summary>
+        /// <param name="policy"></param>
+        public void AddFamilyPolicy(IFamilyPolicy policy)
+        {
+            _policies.Insert(0, policy);
+        }
+
+        /// <summary>
+        /// The list of Registry objects used to create this container
+        /// </summary>
         public List<Registry> Registries
         {
             get { return _registries; }
         }
 
-        public GraphLog Log
-        {
-            get { return _log; }
-            set { _log = value; }
-        }
-
+        /// <summary>
+        /// Access to all the known PluginFamily members
+        /// </summary>
         public Cache<Type, PluginFamily> Families
         {
             get { return _families; }
         }
 
-        public InterceptorLibrary InterceptorLibrary
+        /// <summary>
+        /// The top most PluginGraph.  If this is the root, will return itself.
+        /// If a Profiled PluginGraph, returns its ultimate parent
+        /// </summary>
+        public PluginGraph Root
         {
-            get { return _interceptorLibrary; }
+            get { return Parent == null ? this : Parent.Root; }
         }
 
         /// <summary>
@@ -145,39 +138,35 @@ namespace StructureMap.Graph
             _families[pluginType].AddType(concreteType, name);
         }
 
+
+        public readonly Queue<Registry> QueuedRegistries = new Queue<Registry>(); 
+
         /// <summary>
-        ///   Add configuration to a PluginGraph with the Registry DSL
+        /// Adds a Registry by type.  Requires that the Registry class have a no argument
+        /// public constructor
         /// </summary>
-        /// <param name = "action"></param>
-        public void Configure(Action<Registry> action)
-        {
-            var registry = new Registry();
-            action(registry);
-
-            registry.As<IPluginGraphConfiguration>().Configure(this);
-        }
-
+        /// <param name="type"></param>
         public void ImportRegistry(Type type)
         {
-            if (Registries.Any(x => x.GetType() == type)) return;
+            if (Registries.Any(x => x.GetType() == type) || QueuedRegistries.Any(x => x.GetType() == type)) return;
 
-            var registry = (Registry) Activator.CreateInstance(type);
-            registry.As<IPluginGraphConfiguration>().Configure(this);
-        }
-
-        public static PluginGraph BuildGraphFromAssembly(Assembly assembly)
-        {
-            var builder = new PluginGraphBuilder();
-            var scanner = new AssemblyScanner();
-            scanner.Assembly(assembly);
-
-            builder.AddScanner(scanner);
-
-            return builder.Build();
+            try
+            {
+                var registry = (Registry) Activator.CreateInstance(type);
+                QueuedRegistries.Enqueue(registry);
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapException("Unable to create an instance for Registry type '{0}'.  Please check the inner exception for details".ToFormat(type.GetFullName()), e);
+            }
+            
+            
+            //registry.As<IPluginGraphConfiguration>().Configure(this);
         }
 
         public void AddFamily(PluginFamily family)
         {
+            family.Owner = this;
             _families[family.PluginType] = family;
         }
 
@@ -196,21 +185,40 @@ namespace StructureMap.Graph
             return _families[pluginType].GetInstance(name) != null;
         }
 
+        public PluginFamily FindExistingOrCreateFamily(Type pluginType)
+        {
+            if (_families.Has(pluginType)) return _families[pluginType];
+
+            var family = new PluginFamily(pluginType);
+            _families[pluginType] = family;
+
+            return family;
+        }
+
+        /// <summary>
+        /// Does a PluginFamily already exist for the pluginType?  Will also test for open generic
+        /// definition of a generic closed type
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
         public bool HasFamily(Type pluginType)
         {
             if (_families.Has(pluginType)) return true;
 
-            // TODO -- this needs better locking mechanics
-            var newFamily = _policies.Where(x => x.AppliesToHasFamilyChecks).FirstValue(x => x.Build(pluginType));
-            if (newFamily != null)
+            if (_policies.Where(x => x.AppliesToHasFamilyChecks).ToArray().Any(x => x.Build(pluginType) != null))
             {
-                _families[pluginType] = newFamily;
                 return true;
             }
 
             return false;
         }
 
+        /// <summary>
+        /// Can this PluginGraph resolve a default instance
+        /// for the pluginType?
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
         public bool HasDefaultForPluginType(Type pluginType)
         {
             if (!HasFamily(pluginType))
@@ -221,25 +229,38 @@ namespace StructureMap.Graph
             return Families[pluginType].GetDefaultInstance() != null;
         }
 
+        /// <summary>
+        /// Removes a PluginFamily from this PluginGraph
+        /// and disposes that family and all of its Instance's
+        /// </summary>
+        /// <param name="pluginType"></param>
         public void EjectFamily(Type pluginType)
         {
             if (_families.Has(pluginType))
             {
                 var family = _families[pluginType];
+
                 family.SafeDispose();
 
                 _families.Remove(pluginType);
             }
         }
 
+        /// <summary>
+        /// Use to iterate through each and every Instance held by this PluginGraph
+        /// </summary>
+        /// <param name="action"></param>
         public void EachInstance(Action<Type, Instance> action)
         {
-            _families.Each(family =>
-            {
-                family.Instances.Each(i => action(family.PluginType, i));
-            });
+            _families.Each(family => family.Instances.Each(i => action(family.PluginType, i)));
         }
 
+        /// <summary>
+        /// Find a named instance for a given PluginType
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public Instance FindInstance(Type pluginType, string name)
         {
             if (!HasFamily(pluginType)) return null;
@@ -247,27 +268,35 @@ namespace StructureMap.Graph
             return _families[pluginType].GetInstance(name) ?? _families[pluginType].MissingInstance;
         }
 
+        /// <summary>
+        /// Returns every instance in the PluginGraph for the pluginType
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
         public IEnumerable<Instance> AllInstances(Type pluginType)
         {
             if (HasFamily(pluginType))
             {
                 return _families[pluginType].Instances;
             }
-            else
-            {
-                return Enumerable.Empty<Instance>();
-            }
+
+            return Enumerable.Empty<Instance>();
         }
 
         void IDisposable.Dispose()
         {
-            _singletonCache.DisposeAndClear();
+            _families.Each(family => {
+                family.Instances.Each(instance => {
+                    _singletonCache.Eject(family.PluginType, instance);
+                });
+            });
+            
 
             _profiles.Each(x => x.SafeDispose());
             _profiles.Clear();
 
             var containerFamily = _families[typeof (IContainer)];
-            _families.Remove(typeof(IContainer));
+            _families.Remove(typeof (IContainer));
             containerFamily.RemoveAll();
 
             _families.Each(x => x.SafeDispose());

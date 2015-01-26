@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Specialized;
-using StructureMap.Configuration;
+using System.Collections.Generic;
 
 namespace StructureMap
 {
@@ -44,8 +42,8 @@ namespace StructureMap
 
         #endregion
 
-        private readonly Hashtable _children = new Hashtable();
-        private readonly NameValueCollection _properties = new NameValueCollection();
+        private readonly IDictionary<string, InstanceMemento[]> _children = new Dictionary<string, InstanceMemento[]>();
+        private readonly IDictionary<string, string> _properties = new Dictionary<string, string>();
         private string _concreteKey;
         private string _instanceKey;
         private bool _isReference;
@@ -58,7 +56,7 @@ namespace StructureMap
         /// <param name="concreteKey">The concrete key of the Plugin type</param>
         /// <param name="instanceKey">The identifying instance key</param>
         public MemoryInstanceMemento(string concreteKey, string instanceKey)
-            : this(concreteKey, instanceKey, new NameValueCollection())
+            : this(concreteKey, instanceKey, new Dictionary<string, string>())
         {
         }
 
@@ -69,7 +67,7 @@ namespace StructureMap
         /// <param name="concreteKey">The concrete key of the Plugin type</param>
         /// <param name="instanceKey">The identifying instance key</param>
         /// <param name="properties">NameValueCollection of instance properties</param>
-        public MemoryInstanceMemento(string concreteKey, string instanceKey, NameValueCollection properties)
+        public MemoryInstanceMemento(string concreteKey, string instanceKey, Dictionary<string, string> properties)
         {
             _properties = properties;
             _concreteKey = concreteKey;
@@ -89,22 +87,34 @@ namespace StructureMap
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        protected override string innerConcreteKey { get { return _concreteKey; } }
+        protected override string innerConcreteKey
+        {
+            get { return _concreteKey; }
+        }
 
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        protected override string innerInstanceKey { get { return _instanceKey; } }
+        protected override string innerInstanceKey
+        {
+            get { return _instanceKey; }
+        }
 
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        public override bool IsReference { get { return _isReference; } }
+        public override bool IsReference
+        {
+            get { return _isReference; }
+        }
 
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        public override string ReferenceKey { get { return _referenceKey; } }
+        public override string ReferenceKey
+        {
+            get { return _referenceKey; }
+        }
 
         public void SetConcreteKey(string concreteKey)
         {
@@ -118,27 +128,24 @@ namespace StructureMap
         /// <param name="value"></param>
         public void SetProperty(string name, string value)
         {
-            string stringValue = value == string.Empty ? EMPTY_STRING : value;
+            var stringValue = value == string.Empty ? EMPTY_STRING : value;
             _properties[name] = stringValue;
         }
 
         /// <summary>
         /// Deletes a named property from the DefaultInstanceMemento
         /// </summary>
-        /// <param name="Name"></param>
-        public void RemoveProperty(string Name)
+        public void RemoveProperty(string name)
         {
-            _properties.Remove(Name);
+            _properties.Remove(name);
         }
 
         /// <summary>
         /// Links a child InstanceMemento as a named property
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="Memento"></param>
-        public void AddChild(string name, InstanceMemento Memento)
+        public void AddChild(string name, InstanceMemento memento)
         {
-            _children.Add(name, Memento);
+            _children.Add(name, new[] {memento});
         }
 
         public void ReferenceChild(string name, string instanceKey)
@@ -171,7 +178,7 @@ namespace StructureMap
 
         protected override InstanceMemento getChild(string key)
         {
-            return (InstanceMemento) _children[key];
+            return _children[key][0];
         }
 
 
@@ -186,12 +193,12 @@ namespace StructureMap
         /// </summary>
         public override InstanceMemento[] GetChildrenArray(string key)
         {
-            return (InstanceMemento[]) _children[key];
+            return _children[key];
         }
 
         public void SetPluggedType<T>()
         {
-            _properties[PluggedTypeKey] = typeof(T).AssemblyQualifiedName;
+            _properties[PluggedTypeKey] = typeof (T).AssemblyQualifiedName;
         }
     }
 }

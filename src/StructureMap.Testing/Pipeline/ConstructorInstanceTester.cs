@@ -1,7 +1,12 @@
 using System;
+using System.Linq;
 using NUnit.Framework;
+using StructureMap.Building;
+using StructureMap.Building.Interception;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -18,66 +23,30 @@ namespace StructureMap.Testing.Pipeline
         #endregion
 
         [Test]
-        public void get_and_set_a_non_primitive_type_that_is_not_enumerable()
+        public void to_dependency_source()
         {
-            ConstructorInstance instance = ConstructorInstance.For<ClassWithNonPrimitive>();
+            var instance = ConstructorInstance.For<StubbedGateway>();
+            var source = instance.ToDependencySource(typeof (IGateway))
+                .ShouldBeOfType<LifecycleDependencySource>();
 
-            var widget = new AWidget();
-
-            instance.As<IConfiguredInstance>().SetValue("widget", widget);
-
-            instance.Get("widget", typeof (IWidget), new StubBuildSession()).ShouldEqual(widget);
-        }
-
-        [Test]
-        public void get_and_set_for_a_date_time()
-        {
-            ConstructorInstance instance = ConstructorInstance.For<ClassWithDate>();
-            instance.As<IConfiguredInstance>().SetValue("date", "12/23/2009");
-
-            instance.Get("date", typeof (DateTime), new StubBuildSession()).ShouldEqual(new DateTime(2009, 12, 23));
-        }
-
-        [Test]
-        public void get_and_set_for_a_guid()
-        {
-            ConstructorInstance instance = ConstructorInstance.For<ClassWithGuid>();
-            Guid guid = Guid.NewGuid();
-
-            instance.As<IConfiguredInstance>().SetValue("guid", guid.ToString());
-
-            instance.Get("guid", typeof (Guid), new StubBuildSession()).ShouldEqual(guid);
-        }
-
-        [Test]
-        public void get_and_set_for_a_nullable_date_time()
-        {
-            ConstructorInstance instance = ConstructorInstance.For<ClassWithNullableDate>();
-            instance.As<IConfiguredInstance>().SetValue("date", "12/23/2009");
-
-            instance.Get("date", typeof (DateTime?), new StubBuildSession()).ShouldEqual(new DateTime(2009, 12, 23));
-
-            instance.As<IConfiguredInstance>().SetValue("date", null);
-
-            instance.Get("date", typeof (DateTime?), new StubBuildSession()).ShouldBeNull();
+            source.Instance.ShouldEqual(instance);
+            source.PluginType.ShouldEqual(typeof (IGateway));
         }
 
         [Test]
         public void set_and_get_a_collection()
         {
-            var children = new Instance[]
-            {
-                new SmartInstance<ColorWidget>().Ctor<string>("color").Is("red"),
-                new SmartInstance<ColorWidget>().Ctor<string>("color").Is("green"),
-                new ObjectInstance(new AWidget())
-            };
+            var container = new Container(x => {
+                x.ForConcreteType<ClassWithArrayOfWidgets>().Configure.EnumerableOf<IWidget>()
+                    .Contains(
+                        new SmartInstance<ColorWidget>().Ctor<string>("color").Is("red"),
+                        new SmartInstance<ColorWidget>().Ctor<string>("color").Is("green"),
+                        new ObjectInstance(new AWidget())
+                    );
+            });
 
-            ConstructorInstance instance = ConstructorInstance.For<ClassWithArrayOfWidgets>();
-            instance.As<IConfiguredInstance>().SetCollection("widgets", children);
-
-
-            var widgets = instance.Get("widgets", typeof (IWidget), new StubBuildSession()).ShouldBeOfType<IWidget[]>();
-
+            var widgets = container.GetInstance<ClassWithArrayOfWidgets>()
+                .Widgets;
 
             widgets.Length.ShouldEqual(3);
 
@@ -86,41 +55,62 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void set_and_get_a_nullable_integer()
+        public void constructor_instance_picks_up_InstanceAttributes()
         {
-            ConstructorInstance instance = ConstructorInstance.For<ClassWithNullableInt>();
-            instance.As<IConfiguredInstance>().SetValue("age", "45");
+            var instance = new ConstructorInstance(typeof (ClassWithInstanceAttributes));
 
-            instance.Get("age", typeof (int?), new StubBuildSession()).ShouldEqual(45);
 
-            instance.As<IConfiguredInstance>().SetValue("age", null);
-            instance.Get("age", typeof (int?), new StubBuildSession()).ShouldBeNull();
+            instance.Name.ShouldEqual("Steve Bono"); // hey, he had a couple good years for awhile
+            instance.Interceptors.Single()
+                .ShouldBeOfType<ActivatorInterceptor<ClassWithInstanceAttributes>>();
+        }
+    }
+
+    [InstanceName("Steve Bono")]
+    [TurnOn]
+    public class ClassWithInstanceAttributes
+    {
+        public void TurnOn()
+        {
+            
+        }
+    }
+
+    public class TurnOnAttribute : InstanceAttribute
+    {
+        public override void Alter(IConfiguredInstance instance)
+        {
+            instance.AddInterceptor(new ActivatorInterceptor<ClassWithInstanceAttributes>(x => x.TurnOn()));
+        }
+    }
+
+    public class InstanceNameAttribute : InstanceAttribute
+    {
+        private readonly string _name;
+
+        public InstanceNameAttribute(string name)
+        {
+            _name = name;
         }
 
-        [Test]
-        public void set_and_get_a_string()
+        public override void Alter(IConfiguredInstance instance)
         {
-            ConstructorInstance instance = ConstructorInstance.For<ColorWidget>();
-            instance.As<IConfiguredInstance>().SetValue("color", "Red");
-
-
-            instance.Get("color", typeof (string), new StubBuildSession()).ShouldEqual("Red");
-        }
-
-        [Test]
-        public void set_and_get_an_integer()
-        {
-            ConstructorInstance instance = ConstructorInstance.For<ClassWithInt>();
-            instance.As<IConfiguredInstance>().SetValue("age", "45");
-
-            instance.Get("age", typeof (int), new StubBuildSession()).ShouldEqual(45);
+            instance.Name = _name;
         }
     }
 
     public class ClassWithArrayOfWidgets
     {
+        private readonly IWidget[] _widgets;
+
         public ClassWithArrayOfWidgets(IWidget[] widgets)
         {
+            _widgets = widgets;
+        }
+
+        public IWidget[] Widgets
+        {
+            get { return _widgets; }
         }
     }
 

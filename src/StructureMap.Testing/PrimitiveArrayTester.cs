@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using StructureMap.Testing.Configuration;
 
 namespace StructureMap.Testing
 {
@@ -9,8 +8,7 @@ namespace StructureMap.Testing
         [Test]
         public void specify_a_string_array()
         {
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.ForConcreteType<ClassWithStringAndIntArray>().Configure
                     .Ctor<string[]>().Is(new[] {"a", "b", "c"})
                     .Ctor<int[]>().Is(new[] {1, 2, 3});
@@ -32,11 +30,15 @@ namespace StructureMap.Testing
                 _strings = strings;
             }
 
-            public int[] Numbers { get { return _numbers; } }
+            public int[] Numbers
+            {
+                get { return _numbers; }
+            }
 
-            public string[] Strings { get { return _strings; } }
+            public string[] Strings
+            {
+                get { return _strings; }
+            }
         }
     }
-
-
 }

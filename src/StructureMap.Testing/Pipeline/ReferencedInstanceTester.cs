@@ -1,8 +1,7 @@
 using NUnit.Framework;
-using Rhino.Mocks;
-using StructureMap.Graph;
+using StructureMap.Building;
 using StructureMap.Pipeline;
-using StructureMap.Testing.Graph;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -26,25 +25,24 @@ namespace StructureMap.Testing.Pipeline
         {
         }
 
-        [Test]
-        public void FindMaster_Instance_happy_path()
-        {
-            var family = new PluginFamily(typeof (ISomething));
-            ObjectInstance redInstance = new ObjectInstance(new SomethingOne()).Named("Red");
-            family.AddInstance(redInstance);
-            family.AddInstance(new ObjectInstance(new SomethingOne()).Named("Blue"));
-
-            var instance = new ReferencedInstance("Red");
-            Assert.AreSame(redInstance, ((IDiagnosticInstance) instance).FindInstanceForProfile(family, null, null));
-        }
 
         [Test]
         public void GetDescription()
         {
-            string theReferenceKey = "theReferenceKey";
+            var theReferenceKey = "theReferenceKey";
             var instance = new ReferencedInstance(theReferenceKey);
 
-            TestUtility.AssertDescriptionIs(instance, "\"theReferenceKey\"");
+            instance.Description.ShouldEqual("\"theReferenceKey\"");
+        }
+
+        [Test]
+        public void to_dependency_source()
+        {
+            var theReferenceKey = "theReferenceKey";
+            var instance = new ReferencedInstance(theReferenceKey);
+
+            instance.ToDependencySource(typeof (IGateway))
+                .ShouldEqual(new ReferencedDependencySource(typeof (IGateway), theReferenceKey));
         }
     }
 }

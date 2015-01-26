@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -22,14 +24,14 @@ namespace StructureMap.Pipeline
         public bool Has(Type pluginType, Instance instance)
         {
             return _lock.Read(() => {
-                int key = instance.InstanceKey(pluginType);
+                var key = instance.InstanceKey(pluginType);
                 return _objects.ContainsKey(key);
             });
         }
 
         public void Eject(Type pluginType, Instance instance)
         {
-            int key = instance.InstanceKey(pluginType);
+            var key = instance.InstanceKey(pluginType);
             _lock.MaybeWrite(() => {
                 if (!_objects.ContainsKey(key)) return;
 
@@ -41,29 +43,45 @@ namespace StructureMap.Pipeline
             });
         }
 
+        private readonly IList<Instance> _instances = new List<Instance>(); 
+
         public object Get(Type pluginType, Instance instance, IBuildSession session)
         {
-            object result = null;
-            int key = instance.InstanceKey(pluginType);
+            object result;
+            var key = instance.InstanceKey(pluginType);
             _lock.EnterUpgradeableReadLock();
-            if (_objects.ContainsKey(key))
+            try
             {
+                if (_instances.Contains(instance))
+                {
+                    throw new StructureMapBuildException("Bi-directional dependency relationship detected!" +
+                                                         Environment.NewLine + "Check the StructureMap stacktrace below:");
+                }
 
-                result = _objects[key];
-                _lock.ExitUpgradeableReadLock();
+                if (_objects.ContainsKey(key))
+                {
+                    result = _objects[key];
+                }
+                else
+                {
+                    _lock.EnterWriteLock();
+                    try
+                    {
+                        _instances.Add(instance);
+                        result = buildWithSession(pluginType, instance, session);
+                        _instances.Remove(instance);
+
+                        _objects.Add(key, result);
+                    }
+                    finally
+                    {
+                        _lock.ExitWriteLock();
+                    }
+                }
             }
-            else
+            finally
             {
-                _lock.EnterWriteLock();
-                try
-                {
-                    result = buildWithSession(pluginType, instance, session);
-                    _objects.Add(key, result);
-                }
-                finally
-                {
-                    _lock.ExitWriteLock();
-                }
+                _lock.ExitUpgradeableReadLock();
             }
 
             return result;
@@ -93,7 +111,7 @@ namespace StructureMap.Pipeline
             if (value == null) return;
 
             _lock.Write(() => {
-                int key = instance.InstanceKey(pluginType);
+                var key = instance.InstanceKey(pluginType);
                 if (_objects.ContainsKey(key))
                 {
                     _objects[key] = value;

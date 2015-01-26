@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using StructureMap.Diagnostics;
 
@@ -31,7 +32,7 @@ namespace StructureMap.Testing.Diagnostics
             writer.AddText("aaaaaaaaaaa", "Joplin adsf asdf asdf asdf");
             writer.AddDivider('=');
 
-            writer.DumpToConsole();
+            Console.WriteLine(writer.Write());
         }
     }
 }

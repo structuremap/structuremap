@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Reflection;
+using StructureMap.Building.Interception;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Configuration.DSL
 {
@@ -30,18 +30,12 @@ namespace StructureMap.Configuration.DSL
 
         internal Action<PluginGraph> alter
         {
-            set
-            {
-                _actions.Add(value);
-            }
+            set { _actions.Add(value); }
         }
 
         private Action<PluginGraphBuilder> register
         {
-            set
-            {
-                _builders.Add(value);
-            }
+            set { _builders.Add(value); }
         }
 
         /// <summary>
@@ -82,9 +76,10 @@ namespace StructureMap.Configuration.DSL
         /// <param name="registry"></param>
         public void IncludeRegistry(Registry registry)
         {
-            alter = graph => {
-                registry.As<IPluginGraphConfiguration>().Configure(graph);
-            };
+            var pluginGraphConfiguration = registry.As<IPluginGraphConfiguration>();
+
+            alter = pluginGraphConfiguration.Configure;
+            register = pluginGraphConfiguration.Register;
         }
 
         /// <summary>
@@ -97,7 +92,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public BuildWithExpression<T> ForConcreteType<T>()
         {
-            SmartInstance<T> instance = For<T>().Use<T>();
+            var instance = For<T>().Use<T>();
             return new BuildWithExpression<T>(instance);
         }
 
@@ -128,37 +123,12 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <param name="profileName"></param>
         /// <param name="action"></param>
-        public void Profile(string profileName, Action<Registry> action)
+        public void Profile(string profileName, Action<IProfileRegistry> action)
         {
             var registry = new Registry();
             action(registry);
 
             alter = x => registry.As<IPluginGraphConfiguration>().Configure(x.Profile(profileName));
-        }
-
-        /// <summary>
-        /// Registers a new TypeInterceptor object with the Container
-        /// </summary>
-        /// <param name="interceptor"></param>
-        public void RegisterInterceptor(TypeInterceptor interceptor)
-        {
-            alter = x => x.InterceptorLibrary.AddInterceptor(interceptor);
-        }
-
-        /// <summary>
-        /// Allows you to define a TypeInterceptor inline with Lambdas or anonymous delegates
-        /// </summary>
-        /// <param name="match"></param>
-        /// <returns></returns>
-        /// <example>
-        /// IfTypeMatches( ... ).InterceptWith( o => new ObjectWrapper(o) );
-        /// </example>
-        public MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match)
-        {
-            var interceptor = new MatchedTypeInterceptor(match);
-            alter = graph => graph.InterceptorLibrary.AddInterceptor(interceptor);
-
-            return interceptor;
         }
 
 
@@ -175,34 +145,6 @@ namespace StructureMap.Configuration.DSL
             register = x => x.AddScanner(scanner);
         }
 
-        /// <summary>
-        /// Directs StructureMap to always inject dependencies into any and all public Setter properties
-        /// of the type TPluginType.
-        /// </summary>
-        /// <typeparam name="TPluginType"></typeparam>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>()
-        {
-            Func<PropertyInfo, bool> predicate = prop => prop.PropertyType == typeof (TPluginType);
-
-            alter = graph => graph.SetterRules.Add(predicate);
-
-            return For<TPluginType>();
-        }
-
-        /// <summary>
-        /// Creates automatic "policies" for which public setters are considered mandatory
-        /// properties by StructureMap that will be "setter injected" as part of the 
-        /// construction process.
-        /// </summary>
-        /// <param name="action"></param>
-        public void SetAllProperties(Action<SetterConvention> action)
-        {
-            var convention = new SetterConvention();
-            action(convention);
-
-            alter = graph => convention.As<SetterConventionRule>().Configure(graph.SetterRules);
-        }
 
         /// <summary>
         /// All requests For the "TO" types will be filled by fetching the "FROM"
@@ -226,10 +168,6 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> For<TPluginType>(ILifecycle lifecycle = null)
         {
-            if (lifecycle == null)
-            {
-                lifecycle = Lifecycles.Transient;
-            }
             return new CreatePluginFamilyExpression<TPluginType>(this, lifecycle);
         }
 
@@ -242,10 +180,6 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public GenericFamilyExpression For(Type pluginType, ILifecycle lifecycle = null)
         {
-            if (lifecycle == null)
-            {
-                lifecycle = Lifecycles.Transient;
-            }
             return new GenericFamilyExpression(pluginType, lifecycle, this);
         }
 
@@ -258,18 +192,22 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="U"></typeparam>
         /// <returns></returns>
-        public LambdaInstance<T> Redirect<T, U>() where T : class where U : class
+        public LambdaInstance<T, T> Redirect<T, U>() where T : class where U : class
         {
-            return For<T>().Use(c =>
-            {
-                var raw = c.GetInstance<U>();
-                var t = raw as T;
-                if (t == null)
-                    throw new ApplicationException(raw.GetType().AssemblyQualifiedName + " could not be cast to " +
-                                                   typeof (T).AssemblyQualifiedName);
+            return
+                For<T>()
+                    .Use(
+                        "Redirect requests for {0} to the configured default of {1} with a cast".ToFormat(
+                            typeof (T).GetFullName(), typeof (U).GetFullName()), c => {
+                                var raw = c.GetInstance<U>();
+                                var t = raw as T;
+                                if (t == null)
+                                    throw new InvalidCastException(raw.GetType().AssemblyQualifiedName +
+                                                                   " could not be cast to " +
+                                                                   typeof (T).AssemblyQualifiedName);
 
-                return t;
-            });
+                                return t;
+                            });
         }
 
         /// <summary>
@@ -291,10 +229,8 @@ namespace StructureMap.Configuration.DSL
         {
             if (graph.Registries.Contains(this)) return;
 
-            graph.Log.StartSource("Registry:  " + GetType().AssemblyQualifiedName);
-
-            _basicActions.ForEach(action => action());
-            _actions.ForEach(action => action(graph));
+            _basicActions.Each(action => action());
+            _actions.Each(action => action(graph));
 
             graph.Registries.Add(this);
         }
@@ -306,17 +242,18 @@ namespace StructureMap.Configuration.DSL
 
         internal static bool IsPublicRegistry(Type type)
         {
-            if (type.Assembly == typeof (Registry).Assembly)
+            var ti = type.GetTypeInfo();
+            if (Equals(ti.Assembly, typeof (Registry).GetTypeInfo().Assembly))
             {
                 return false;
             }
 
-            if (!typeof (Registry).IsAssignableFrom(type))
+            if (!typeof (Registry).GetTypeInfo().IsAssignableFrom(ti))
             {
                 return false;
             }
 
-            if (type.IsInterface || type.IsAbstract || type.IsGenericType)
+            if (ti.IsInterface || ti.IsAbstract || ti.IsGenericType)
             {
                 return false;
             }
@@ -328,10 +265,10 @@ namespace StructureMap.Configuration.DSL
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            if(other.GetType() == typeof(Registry) && GetType() == typeof(Registry)) return false;
-            if (Equals(other.GetType(), GetType()))
+            if (other.GetType() == typeof (Registry) && GetType() == typeof (Registry)) return false;
+            if (other.GetType() == GetType())
             {
-                return !GetType().IsNotPublic;
+                return !GetType().GetTypeInfo().IsNotPublic;
             }
             return false;
         }
@@ -340,7 +277,7 @@ namespace StructureMap.Configuration.DSL
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (!typeof (Registry).IsAssignableFrom(obj.GetType())) return false;
+            if (!typeof(Registry).GetTypeInfo().IsAssignableFrom(obj.GetType().GetTypeInfo())) return false;
             return Equals((Registry) obj);
         }
 
@@ -355,50 +292,143 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="T"></typeparam>
         public class BuildWithExpression<T>
         {
-            private readonly SmartInstance<T> _instance;
+            private readonly SmartInstance<T, T> _instance;
 
-            public BuildWithExpression(SmartInstance<T> instance)
+            public BuildWithExpression(SmartInstance<T, T> instance)
             {
                 _instance = instance;
             }
 
-            public SmartInstance<T> Configure { get { return _instance; } }
+            public SmartInstance<T, T> Configure
+            {
+                get { return _instance; }
+            }
         }
 
         /// <summary>
-        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the current <see cref="PluginGraphBuilder"/>
-        /// via <see cref="IPluginGraphConfiguration.Register"/>.
+        /// Configure Container-wide policies and conventions
         /// </summary>
-        public void RegisterPluginGraphConfiguration<T>() where T : IPluginGraphConfiguration, new()
+        public PoliciesExpression Policies
         {
-            RegisterPluginGraphConfiguration(new T());
+            get { return new PoliciesExpression(this); }
         }
 
-        /// <summary>
-        /// See <see cref="RegisterPluginGraphConfiguration{T}"/>
-        /// </summary>
-        public void RegisterPluginGraphConfiguration(IPluginGraphConfiguration pluginGraphConfig)
+        public class PoliciesExpression
         {
-            register = pluginGraphConfig.Register;
+            private readonly Registry _parent;
+
+            private Action<PluginGraph> alter
+            {
+                set
+                {
+                    _parent.PoliciesChanged = true;
+                    _parent.alter = value;
+                }
+            }
+
+            public PoliciesExpression(Registry parent)
+            {
+                _parent = parent;
+            }
+
+            /// <summary>
+            /// Register an interception policy
+            /// </summary>
+            /// <param name="policy"></param>
+            public void Interceptors(IInterceptorPolicy policy)
+            {
+                alter = graph => graph.Policies.Interceptors.Add(policy);
+            }
+
+            /// <summary>
+            /// Register a strategy for automatically resolving "missing" families
+            /// when an unknown PluginType is first encountered
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            public void OnMissingFamily<T>() where T : IFamilyPolicy, new()
+            {
+                alter = graph => graph.AddFamilyPolicy(new T());
+            }
+
+            /// <summary>
+            /// Register a strategy for automatically resolving "missing" families
+            /// when an unknown PluginType is first encountered
+            /// </summary>
+            /// <param name="policy"></param>
+            public void OnMissingFamily(IFamilyPolicy policy)
+            {
+                alter = graph => graph.AddFamilyPolicy(policy);
+            }
+
+            /// <summary>
+            /// Registers a new IPluginGraphConfiguration policy
+            /// </summary>
+            public void Configure(IPluginGraphConfiguration pluginGraphConfig)
+            {
+                alter = pluginGraphConfig.Configure;
+                _parent.register = pluginGraphConfig.Register;
+            }
+
+            /// <summary>
+            /// Register a custom constructor selection policy
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            public void ConstructorSelector<T>() where T : IConstructorSelector, new()
+            {
+                ConstructorSelector(new T());
+            }
+
+            /// <summary>
+            /// Register a custom constructor selection policy
+            /// </summary>
+            /// <param name="constructorSelector"></param>
+            public void ConstructorSelector(IConstructorSelector constructorSelector)
+            {
+                alter = x => x.Policies.ConstructorSelector.Add(constructorSelector);
+            }
+
+            /// <summary>
+            /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the resulting <see cref="PluginGraph"/>,
+            /// i.e. as opposed to Register(), the PluginGraph is built, and the provided
+            /// PluginGraph config obtains access to said graph.
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            public void Configure<T>() where T : IPluginGraphConfiguration, new()
+            {
+                Configure(new T());
+            }
+
+
+            /// <summary>
+            /// Creates automatic "policies" for which public setters are considered mandatory
+            /// properties by StructureMap that will be "setter injected" as part of the 
+            /// construction process.
+            /// </summary>
+            /// <param name="action"></param>
+            public void SetAllProperties(Action<SetterConvention> action)
+            {
+                var convention = new SetterConvention();
+                action(convention);
+
+                alter = graph => convention.As<SetterConventionRule>().Configure(graph.Policies.SetterRules);
+            }
+
+            /// <summary>
+            /// Directs StructureMap to always inject dependencies into any and all public Setter properties
+            /// of the type TPluginType.
+            /// </summary>
+            /// <typeparam name="TPluginType"></typeparam>
+            /// <returns></returns>
+            public CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>()
+            {
+                Func<PropertyInfo, bool> predicate = prop => prop.PropertyType == typeof (TPluginType);
+
+                alter = graph => graph.Policies.SetterRules.Add(predicate);
+
+                return _parent.For<TPluginType>();
+            }
         }
 
-        /// <summary>
-        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the resulting <see cref="PluginGraph"/>,
-        /// i.e. as opposed to <see cref="RegisterPluginGraphConfiguration"/>, the PluginGraph is built, and the provided
-        /// PluginGraph config obtains access to saig graph.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public void ConfigurePluginGraph<T>() where T : IPluginGraphConfiguration, new()
-        {
-            ConfigurePluginGraph(new T());
-        }
-
-        /// <summary>
-        /// <see cref="ConfigurePluginGraph{T}"/>
-        /// </summary>
-        public void ConfigurePluginGraph(IPluginGraphConfiguration pluginGraphConfig)
-        {
-            alter = pluginGraphConfig.Configure;
-        }
+        internal bool PoliciesChanged { get; set; }
     }
 }

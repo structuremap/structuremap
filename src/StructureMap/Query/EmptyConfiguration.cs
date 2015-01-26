@@ -18,24 +18,36 @@ namespace StructureMap.Query
             get { return "DEFAULT"; }
         }
 
-        public Type PluginType { get { return _pluginType; } }
+        public Type PluginType
+        {
+            get { return _pluginType; }
+        }
 
         /// <summary>
         /// The "instance" that will be used when Container.GetInstance(PluginType) is called.
         /// See <see cref="InstanceRef">InstanceRef</see> for more information
         /// </summary>
-        public InstanceRef Default { get { return null; } }
+        public InstanceRef Default
+        {
+            get { return null; }
+        }
 
         /// <summary>
         /// The build "policy" for this PluginType.  Used by the WhatDoIHave() diagnostics methods
         /// </summary>
-        public ILifecycle Lifecycle { get { return Lifecycles.Transient; } }
+        public ILifecycle Lifecycle
+        {
+            get { return Lifecycles.Transient; }
+        }
 
         /// <summary>
         /// All of the <see cref="InstanceRef">InstanceRef</see>'s registered
         /// for this PluginType
         /// </summary>
-        public IEnumerable<InstanceRef> Instances { get { return new InstanceRef[0]; } }
+        public IEnumerable<InstanceRef> Instances
+        {
+            get { return new InstanceRef[0]; }
+        }
 
         /// <summary>
         /// Simply query to see if there are any implementations registered
@@ -52,6 +64,16 @@ namespace StructureMap.Query
 
         public void EjectAndRemoveAll()
         {
+        }
+
+        public InstanceRef Fallback { get { return null; } }
+
+        public InstanceRef MissingNamedInstance
+        {
+            get
+            {
+                return null;
+            }
         }
     }
 }

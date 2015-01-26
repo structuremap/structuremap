@@ -4,10 +4,12 @@ using StructureMap.Configuration.DSL.Expressions;
 
 namespace StructureMap.Graph
 {
+    // SAMPLE: IRegistrationConvention
     public interface IRegistrationConvention
     {
         void Process(Type type, Registry registry);
     }
+    // ENDSAMPLE
 
     /// <summary>
     /// Allows built-in registration conventions to be configurable through the assembly scanning DSL
@@ -20,7 +22,7 @@ namespace StructureMap.Graph
     public abstract class ConfigurableRegistrationConvention : IRegistrationConvention
     {
         protected Action<GenericFamilyExpression> ConfigureFamily = x => { };
-        
+
         public void SetFamilyConfigurationAction(Action<GenericFamilyExpression> configureFamily)
         {
             ConfigureFamily = configureFamily;

@@ -1,7 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using System.Linq;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Graph
@@ -9,48 +9,47 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class FindAllTypesFilterTester
     {
-
         [Test]
         public void it_registers_types_that_can_be_cast()
         {
-            var filter = new FindAllTypesFilter(typeof(IGeneric<>));
+            var filter = new FindAllTypesFilter(typeof (IGeneric<>));
             var registry = new Registry();
 
-            filter.Process(typeof(Generic<>), registry);
+            filter.Process(typeof (Generic<>), registry);
 
             var graph = registry.Build();
 
             graph.Families[typeof (IGeneric<>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
-                                              .PluggedType.ShouldEqual(typeof (Generic<>));
+                .PluggedType.ShouldEqual(typeof (Generic<>));
         }
 
 
         [Test]
         public void it_registers_types_implementing_the_closed_generic_version()
         {
-            var filter = new FindAllTypesFilter(typeof(IGeneric<>));
+            var filter = new FindAllTypesFilter(typeof (IGeneric<>));
             var registry = new Registry();
 
-            filter.Process(typeof(StringGeneric), registry);
+            filter.Process(typeof (StringGeneric), registry);
 
             var graph = registry.Build();
 
-            graph.Families[typeof(IGeneric<string>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
-                                              .PluggedType.ShouldEqual(typeof(StringGeneric));
+            graph.Families[typeof (IGeneric<string>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
+                .PluggedType.ShouldEqual(typeof (StringGeneric));
         }
 
         [Test]
         public void it_registers_open_types_which_can_be_cast()
         {
-            var filter = new FindAllTypesFilter(typeof(IGeneric<>));
+            var filter = new FindAllTypesFilter(typeof (IGeneric<>));
             var registry = new Registry();
 
-            filter.Process(typeof(ConcreteGeneric<>), registry);
+            filter.Process(typeof (ConcreteGeneric<>), registry);
 
             var graph = registry.Build();
 
-            graph.Families[typeof(IGeneric<>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
-                                              .PluggedType.ShouldEqual(typeof(ConcreteGeneric<>));
+            graph.Families[typeof (IGeneric<>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
+                .PluggedType.ShouldEqual(typeof (ConcreteGeneric<>));
         }
 
 
@@ -73,6 +72,5 @@ namespace StructureMap.Testing.Graph
         public class ConcreteGeneric<T> : Generic<T>
         {
         }
-
     }
 }

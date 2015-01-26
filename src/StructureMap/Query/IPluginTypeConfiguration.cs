@@ -15,6 +15,13 @@ namespace StructureMap.Query
         void Eject(Instance instance);
 
         /// <summary>
+        /// Ejects any existing object for this Instance from its lifecycle
+        /// and permanently removes the configured Instance from the container
+        /// </summary>
+        /// <param name="instance"></param>
+        void EjectAndRemove(Instance instance);
+
+        /// <summary>
         /// Builds the object
         /// </summary>
         /// <param name="instance"></param>
@@ -28,11 +35,25 @@ namespace StructureMap.Query
         /// <returns></returns>
         bool HasBeenCreated(Instance instance);
 
+        /// <summary>
+        /// The default lifecycle for this PluginType/Family
+        /// </summary>
+        ILifecycle Lifecycle { get; }
+
         Type PluginType { get; }
+
+        /// <summary>
+        /// A reference to the underlying container runtime model.  Doing any direct manipulation
+        /// against this service will void the warranty on StructureMap.
+        /// </summary>
+        IPipelineGraph Pipeline { get; }
     }
 
     public interface IPluginTypeConfiguration
     {
+        /// <summary>
+        /// The active Profile or 'DEFAULT'. 
+        /// </summary>
         string ProfileName { get; }
 
         Type PluginType { get; }
@@ -72,6 +93,17 @@ namespace StructureMap.Query
         /// but leaves the lifecycle behavior
         /// </summary>
         void EjectAndRemoveAll();
+
+        /// <summary>
+        /// Optional "fallback" default if no other default is
+        /// specified
+        /// </summary>
+        InstanceRef Fallback { get; }
+
+        /// <summary>
+        /// Optional instance to use for a request for named instances that do not exist
+        /// </summary>
+        InstanceRef MissingNamedInstance { get; }
     }
 
     public static class PluginTypeConfigurationExtensions

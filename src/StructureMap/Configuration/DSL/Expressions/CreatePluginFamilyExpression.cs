@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using StructureMap.Building.Interception;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
@@ -20,9 +21,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _pluginType = typeof (TPluginType);
 
-            registry.alter = graph =>
-            {
-                PluginFamily family = graph.Families[_pluginType];
+            registry.alter = graph => {
+                var family = graph.Families[_pluginType];
 
                 _children.Each(action => action(graph));
                 _alterations.Each(action => action(family));
@@ -30,17 +30,25 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             if (scope != null)
             {
-                _alterations.Add(family => family.SetScopeTo(scope));
+                lifecycleIs(scope);
             }
         }
 
-        public InstanceExpression<TPluginType> MissingNamedInstanceIs { get { return new InstanceExpression<TPluginType>(i => _alterations.Add(family => family.MissingInstance = i)); } }
+        /// <summary>
+        /// Specify the "on missing named instance" configuration for this
+        /// PluginType
+        /// </summary>
+        public InstanceExpression<TPluginType> MissingNamedInstanceIs
+        {
+            get
+            {
+                return new InstanceExpression<TPluginType>(i => _alterations.Add(family => family.MissingInstance = i));
+            }
+        }
 
         /// <summary>
-        /// Add multiple Instance's to this PluginType
+        /// Add multiple Instances to this PluginType
         /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> AddInstances(Action<IInstanceExpression<TPluginType>> action)
         {
             var list = new List<Instance>();
@@ -48,23 +56,17 @@ namespace StructureMap.Configuration.DSL.Expressions
             var child = new InstanceExpression<TPluginType>(list.Add);
             action(child);
 
-            return alterAndContinue(family =>
-            {
-                foreach (Instance instance in list)
-                {
-                    family.AddInstance(instance);
-                }
-            });
+            alter = family => list.Each(family.AddInstance);
+            return this;
         }
+
 
         /// <summary>
         /// Access to all of the uncommon Instance types
         /// </summary>
-        /// <param name="configure"></param>
-        /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> UseSpecial(Action<IInstanceExpression<TPluginType>> configure)
         {
-            var expression = new InstanceExpression<TPluginType>(Use);
+            var expression = new InstanceExpression<TPluginType>(UseInstance);
             configure(expression);
 
             return this;
@@ -74,33 +76,21 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Access to all of the uncommon Instance types
         /// </summary>
-        /// <param name="configure"></param>
-        /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> AddSpecial(Action<IInstanceExpression<TPluginType>> configure)
         {
-            var expression = new InstanceExpression<TPluginType>(Add);
+            var expression = new InstanceExpression<TPluginType>(AddInstance);
             configure(expression);
 
             return this;
         }
 
 
-        private CreatePluginFamilyExpression<TPluginType> alterAndContinue(Action<PluginFamily> action)
-        {
-            _alterations.Add(action);
-            return this;
-        }
-
         /// <summary>
-        /// Shorthand way of saying Use<>
+        /// Specify the default Instance of this PluginType by a concrete type
         /// </summary>
-        /// <typeparam name="TConcreteType"></typeparam>
-        /// <returns></returns>
-        public SmartInstance<TConcreteType> Use<TConcreteType>() where TConcreteType : TPluginType
+        public SmartInstance<TConcreteType, TPluginType> Use<TConcreteType>() where TConcreteType : TPluginType
         {
-            // This is *my* team's naming convention for generic parameters
-            // I know you may not like it, but it's my article so there
-            var instance = new SmartInstance<TConcreteType>();
+            var instance = new SmartInstance<TConcreteType, TPluginType>();
 
             registerDefault(instance);
 
@@ -111,11 +101,24 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Use a lambda using the IContext to construct the default instance of the Plugin type
         /// 
         /// </summary>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        public LambdaInstance<TPluginType> Use(Func<IContext, TPluginType> func)
+        public LambdaInstance<T, TPluginType> Use<T>(Expression<Func<IContext, T>> expression) where T : TPluginType
         {
-            var instance = new LambdaInstance<TPluginType>(func);
+            var instance = new LambdaInstance<T, TPluginType>(expression);
+
+            registerDefault(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Use a lambda using the IContext to construct the default instance of the Plugin type
+        /// Use this signature if your Func is too complicated to be an Expression
+        /// </summary>
+        /// <param name="description">Diagnostic description of the func</param>
+        /// <param name="func"></param>
+        public LambdaInstance<T, TPluginType> Use<T>(string description, Func<IContext, T> func) where T : TPluginType
+        {
+            var instance = new LambdaInstance<T, TPluginType>(description, func);
 
             registerDefault(instance);
 
@@ -125,11 +128,24 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Use a lambda to construct the default instance of the Plugin type
         /// </summary>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        public LambdaInstance<TPluginType> Use(Func<TPluginType> func)
+        public LambdaInstance<T, TPluginType> Use<T>(Expression<Func<T>> expression) where T : TPluginType
         {
-            var instance = new LambdaInstance<TPluginType>(func);
+            var instance = new LambdaInstance<T, TPluginType>(expression);
+
+            registerDefault(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Use a lambda to construct the default instance of the Plugin type
+        /// Use this overload if your func is too complicated to be an expression
+        /// </summary>
+        /// <param name="description">Diagnostic description of the func</param>
+        /// <param name="func"></param>
+        public LambdaInstance<T, TPluginType> Use<T>(string description, Func<T> func) where T : TPluginType
+        {
+            var instance = new LambdaInstance<T, TPluginType>(description, func);
 
             registerDefault(instance);
 
@@ -140,8 +156,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Makes the supplied instance the default Instance for 
         /// TPluginType
         /// </summary>
-        /// <param name="instance"></param>
-        public void Use(Instance instance)
+        public void UseInstance(Instance instance)
         {
             registerDefault(instance);
         }
@@ -149,11 +164,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Shorthand to say TheDefault.IsThis(@object)
         /// </summary>
-        /// <param name="object"></param>
-        /// <returns></returns>
-        public ObjectInstance Use(TPluginType @object)
+        public ObjectInstance<TReturned, TPluginType> Use<TReturned>(TReturned @object) where TReturned : class, TPluginType
         {
-            var instance = new ObjectInstance(@object);
+            var instance = new ObjectInstance<TReturned, TPluginType>(@object);
             registerDefault(instance);
 
             return instance;
@@ -163,20 +176,85 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Makes the default instance of TPluginType the named
         /// instance
         /// </summary>
-        /// <param name="instanceName"></param>
-        /// <returns></returns>
         public ReferencedInstance Use(string instanceName)
         {
             var instance = new ReferencedInstance(instanceName);
-            Use(instance);
+            UseInstance(instance);
 
+            return instance;
+        }
+
+        /// <summary>
+        /// Defines a fallback instance in case no default was defined for TPluginType
+        /// </summary>
+        public SmartInstance<TConcreteType, TPluginType> UseIfNone<TConcreteType>() where TConcreteType : TPluginType
+        {
+            var instance = new SmartInstance<TConcreteType, TPluginType>();
+            registerFallBack(instance);
+            return instance;
+        }
+
+        /// <summary>
+        /// Applies a "Use" on this type that will only apply if no other declaration
+        /// is made.  Used for "default" registrations
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public LambdaInstance<T, TPluginType> UseIfNone<T>(Expression<Func<IContext, T>> func) where T : TPluginType
+        {
+            var instance = new LambdaInstance<T, TPluginType>(func);
+            registerFallBack(instance);
+            return instance;
+        }
+
+        /// <summary>
+        /// Applies a "Use" on this type that will only apply if no other declaration
+        /// is made.  Used for "default" registrations
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="description"></param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public LambdaInstance<T, TPluginType> UseIfNone<T>(string description, Func<IContext, T> func) where T : TPluginType
+        {
+            var instance = new LambdaInstance<T, TPluginType>(description, func);
+            registerFallBack(instance);
+            return instance;
+        }
+
+        /// <summary>
+        /// Applies a "Use" on this type that will only apply if no other declaration
+        /// is made.  Used for "default" registrations
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public LambdaInstance<T, TPluginType> UseIfNone<T>(Expression<Func<T>> func) where T : TPluginType
+        {
+            var instance = new LambdaInstance<T, TPluginType>(func);
+            registerFallBack(instance);
+            return instance;
+        }
+
+        /// <summary>
+        /// Applies a "Use" on this type that will only apply if no other declaration
+        /// is made.  Used for "default" registrations
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="description"></param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public LambdaInstance<T, TPluginType> UseIfNone<T>(string description, Func<T> func) where T : TPluginType
+        {
+            var instance = new LambdaInstance<T, TPluginType>(description, func);
+            registerFallBack(instance);
             return instance;
         }
 
         /// <summary>
         /// Convenience method to mark a PluginFamily as a Singleton
         /// </summary>
-        /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> Singleton()
         {
             return lifecycleIs(Lifecycles.Singleton);
@@ -185,146 +263,159 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Convenience method to mark a PluginFamily as a Transient
         /// </summary>
-        /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> Transient()
         {
             return lifecycleIs(Lifecycles.Transient);
         }
 
-        private CreatePluginFamilyExpression<TPluginType> lifecycleIs(ILifecycle lifecycle)
-        {
-            _alterations.Add(family => family.SetScopeTo(lifecycle));
-            return this;
-        }
-        
         /// <summary>
         /// Register an Action to run against any object of this PluginType immediately after
         /// it is created, but before the new object is passed back to the caller
         /// </summary>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Action<TPluginType> handler)
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Expression<Action<TPluginType>> handler,
+            Func<Instance, bool> filter = null)
         {
-            _children.Add(
-                graph =>
-                {
-                    var interceptor = new PluginTypeInterceptor(typeof(TPluginType), (c, o) =>
-                    {
-                        handler((TPluginType)o);
-                        return o;
-                    });
+            return InterceptWith(new ActivatorInterceptor<TPluginType>(handler), filter);
+        }
 
-                    graph.InterceptorLibrary.AddInterceptor(interceptor);
-                });
+        /// <summary>
+        ///  Register an Action to run against any object of this PluginType immediately after
+        ///  it is created, but before the new object is passed back to the caller
+        ///  </summary>
+        ///  <param name="description">Descriptive text for diagnostics</param>
+        /// <param name="handler"></param>
+        /// <param name="filter">If specified, limits the applicability of this activation interception</param>
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(string description,
+            Action<TPluginType> handler, Func<Instance, bool> filter = null)
+        {
+            return InterceptWith(InterceptorFactory.ForAction(description, handler), filter);
+        }
 
-            return this;
+
+        /// <summary>
+        /// Register an Action to run against any object of this PluginType immediately after
+        /// it is created, but before the new object is passed back to the caller
+        /// </summary>
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(
+            Expression<Action<IContext, TPluginType>> handler, Func<Instance, bool> filter = null)
+        {
+            return InterceptWith(new ActivatorInterceptor<TPluginType>(handler), filter);
+        }
+
+        /// <summary>
+        /// Register an Action to run against any object of this PluginType immediately after
+        /// it is created, but before the new object is passed back to the caller
+        /// </summary>
+        /// <param name="description">Descriptive text for diagnostics</param>
+        /// <param name="handler"></param>
+        /// <param name="filter"></param>
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(string description,
+            Action<IContext, TPluginType> handler, Func<Instance, bool> filter = null)
+        {
+            return InterceptWith(InterceptorFactory.ForAction(description, handler), filter);
         }
 
         /// <summary>
         /// Adds an Interceptor to only this PluginType
         /// </summary>
-        /// <param name="interceptor"></param>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> InterceptWith(InstanceInterceptor interceptor)
+        public CreatePluginFamilyExpression<TPluginType> InterceptWith(IInterceptor interceptor,
+            Func<Instance, bool> filter = null)
         {
             _children.Add(
-                graph =>
-                {
-                    var typeInterceptor = new PluginTypeInterceptor(typeof (TPluginType),
-                                                                    (c, o) => interceptor.Process(o, c));
-                    graph.InterceptorLibrary.AddInterceptor(typeInterceptor);
-                });
+                graph => { graph.Policies.Interceptors.Add<TPluginType>(interceptor, filter); });
 
             return this;
         }
 
-
         /// <summary>
-        /// Register an Action to run against any object of this PluginType immediately after
-        /// it is created, but before the new object is passed back to the caller
+        /// Decorates all instances of TPluginType with the concrete type TDecoratorType
         /// </summary>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Action<IContext, TPluginType> handler)
+        public SmartInstance<TDecoratorType, TPluginType> DecorateAllWith<TDecoratorType>(Func<Instance, bool> filter = null)
+            where TDecoratorType : TPluginType
         {
-            _children.Add(
-                graph =>
-                {
-                    Func<IContext, object, object> function = (c, o) =>
-                    {
-                        handler(c, (TPluginType)o);
-                        return o;
-                    };
+            var instance = new SmartInstance<TDecoratorType, TPluginType>();
+            var interceptor = new DecoratorInterceptor(typeof (TPluginType), instance);
+            var policy = new InterceptorPolicy<TPluginType>(interceptor, filter);
 
-                    var interceptor = new PluginTypeInterceptor(typeof(TPluginType), function);
+            alter = graph => graph.Policies.Interceptors.Add(policy);
 
-                    graph.InterceptorLibrary.AddInterceptor(interceptor);
-                });
-
-            return this;
+            return instance;
         }
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{TPluginType})">OnCreationForAll()</see>,
-        /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
+        /// DecorateAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(EnrichmentHandler<TPluginType> handler)
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(
+            Expression<Func<TPluginType, TPluginType>> handler, Func<Instance, bool> filter = null)
         {
-            _children.Add(
-                graph =>
-                {
-                    Func<IContext, object, object> function = (context, target) => handler((TPluginType)target);
-
-                    var interceptor = new PluginTypeInterceptor(typeof(TPluginType), function);
-                    graph.InterceptorLibrary.AddInterceptor(interceptor);
-                });
-
-            return this;
+            return InterceptWith(new FuncInterceptor<TPluginType>(handler), filter);
         }
-
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,TPluginType})">OnCreationForAll()</see>,
-        /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
+        /// DecorateAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
+        /// <param name="description">Descriptive text for diagnostics</param>
         /// <param name="handler"></param>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(ContextEnrichmentHandler<TPluginType> handler)
+        /// <param name="filter"></param>
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(string description,
+            Func<TPluginType, TPluginType> handler, Func<Instance, bool> filter = null)
         {
-            _children.Add(
-                graph =>
-                {
-                    var interceptor = new PluginTypeInterceptor(typeof(TPluginType),
-                                                                (c, o) => handler(c, (TPluginType)o));
-                    graph.InterceptorLibrary.AddInterceptor(interceptor);
-                });
-
-            return this;
+            return InterceptWith(InterceptorFactory.ForFunc(description, handler), filter);
         }
 
+        /// <summary>
+        /// Register a Func to run against any object of this PluginType immediately after it is created,
+        /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
+        /// DecorateAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// scenarios or to return a decorator.
+        /// </summary>
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(
+            Expression<Func<IContext, TPluginType, TPluginType>> handler, Func<Instance, bool> filter = null)
+        {
+            return InterceptWith(new FuncInterceptor<TPluginType>(handler), filter);
+        }
+
+        /// <summary>
+        /// Register a Func to run against any object of this PluginType immediately after it is created,
+        /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
+        /// DecorateAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// scenarios or to return a decorator.
+        /// </summary>
+        /// <param name="description">Descriptive text for diagnostics</param>
+        /// <param name="handler">Function that will create a decorator for the plugin type</param>
+        /// <param name="filter"></param>
+        public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(string description,
+            Func<IContext, TPluginType, TPluginType> handler, Func<Instance, bool> filter = null)
+        {
+            return InterceptWith(InterceptorFactory.ForFunc(description, handler), filter);
+        }
 
         /// <summary>
         /// Registers an ILifecycle for this Plugin Type that executes before
         /// any object of this PluginType is created.  ILifecycle's can be
         /// used to create a custom scope
         /// </summary>
-        /// <param name="lifecycle"></param>
-        /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> LifecycleIs(ILifecycle lifecycle)
         {
-            _alterations.Add(family => family.SetScopeTo(lifecycle));
+            lifecycleIs(lifecycle);
             return this;
         }
 
-        private void registerDefault(Instance instance)
+        /// <summary>
+        /// Registers an ILifecycle for this Plugin Type that executes before
+        /// any object of this PluginType is created.  ILifecycle's can be
+        /// used to create a custom scope
+        /// </summary>
+        public CreatePluginFamilyExpression<TPluginType> LifecycleIs<T>() where T : ILifecycle, new()
         {
-            _alterations.Add(family => family.SetDefault(instance));
+            lifecycleIs(new T());
+            return this;
         }
 
         /// <summary>
@@ -340,20 +431,23 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Adds the object to to the TPluginType
         /// </summary>
-        /// <param name="object"></param>
-        /// <returns></returns>
-        public ObjectInstance Add(TPluginType @object)
+        public ObjectInstance<TReturned, TPluginType> Add<TReturned>(TReturned @object) where TReturned : class, TPluginType
         {
-            var instance = new ObjectInstance(@object);
-            Add(instance);
+            var instance = new ObjectInstance<TReturned, TPluginType>(@object);
+            AddInstance(instance);
 
             return instance;
         }
 
-        public SmartInstance<TPluggedType> Add<TPluggedType>()
+        /// <summary>
+        /// Add a new Instance to this PluginType by concrete type
+        /// </summary>
+        /// <typeparam name="TPluggedType"></typeparam>
+        /// <returns></returns>
+        public SmartInstance<TPluggedType, TPluginType> Add<TPluggedType>() where TPluggedType : TPluginType
         {
-            var instance = new SmartInstance<TPluggedType>();
-            Add(instance);
+            var instance = new SmartInstance<TPluggedType, TPluginType>();
+            AddInstance(instance);
 
             return instance;
         }
@@ -361,20 +455,75 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Add an Instance to this type created by a Lambda
         /// </summary>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        public LambdaInstance<TPluginType> Add(Func<IContext, TPluginType> func)
+        public LambdaInstance<T, TPluginType> Add<T>(Expression<Func<T>> func) where T : TPluginType
         {
-            var instance = new LambdaInstance<TPluginType>(func);
-            Add(instance);
+            var instance = new LambdaInstance<T, TPluginType>(func);
+            AddInstance(instance);
 
             return instance;
         }
 
-
-        public void Add(Instance instance)
+        /// <summary>
+        /// Add an Instance to this type created by a Lambda
+        /// </summary>
+        public LambdaInstance<T, TPluginType> Add<T>(string description, Func<T> func) where T : TPluginType
         {
-            _alterations.Add(f => f.AddInstance(instance));
+            var instance = new LambdaInstance<T, TPluginType>(description, func);
+            AddInstance(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Add an Instance to this type created by a Lambda
+        /// </summary>
+        public LambdaInstance<T, TPluginType> Add<T>(Expression<Func<IContext, T>> func) where T : TPluginType
+        {
+            var instance = new LambdaInstance<T, TPluginType>(func);
+            AddInstance(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Add an Instance to this type created by a Lambda
+        /// </summary>
+        public LambdaInstance<T, TPluginType> Add<T>(string description, Func<IContext, T> func) where T : TPluginType
+        {
+            var instance = new LambdaInstance<T, TPluginType>(description, func);
+            AddInstance(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Add a new Instance to this type
+        /// </summary>
+        /// <param name="instance"></param>
+        public void AddInstance(Instance instance)
+        {
+            alter = f => f.AddInstance(instance);
+        }
+
+        private CreatePluginFamilyExpression<TPluginType> lifecycleIs(ILifecycle lifecycle)
+        {
+            alter = family => family.SetLifecycleTo(lifecycle);
+            return this;
+        }
+
+        private void registerDefault(Instance instance)
+        {
+            alter = family => family.SetDefault(instance);
+        }
+
+        private void registerFallBack(Instance instance)
+        {
+            alter = family => family.Fallback = instance;
+        }
+
+        private Action<PluginFamily> alter
+        {
+            set { _alterations.Add(value); }
         }
     }
 }

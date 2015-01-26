@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing
@@ -10,7 +8,7 @@ namespace StructureMap.Testing
     {
         public static string ToName(this ILifecycle lifecycle)
         {
-            return lifecycle == null ? Lifecycles.Transient.Scope : lifecycle.Scope;
+            return lifecycle == null ? Lifecycles.Transient.Description : lifecycle.Description;
         }
 
         public static void Fill<T>(this IList<T> list, T value)
@@ -33,7 +31,8 @@ namespace StructureMap.Testing
             }
         }
 
-        public static void TryGet<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Action<TValue> action)
+        public static void TryGet<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
+            Action<TValue> action)
         {
             TValue value;
             if (dictionary.TryGetValue(key, out value))
@@ -52,5 +51,4 @@ namespace StructureMap.Testing
             return list.Contains(target);
         }
     }
-
 }

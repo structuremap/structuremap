@@ -1,5 +1,4 @@
 using System;
-using System.Xml;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration
