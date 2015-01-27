@@ -51,7 +51,10 @@ namespace StructureMap.Graph
                 _concretions.Where(x => x.CanBeCastTo(@interface)).Each(type => expression.Add(type));
             });
 
+            _concretions.Each(t => graph.ConnectedConcretions.Fill(t));
             registry.As<IPluginGraphConfiguration>().Configure(graph);
+
+
         }
     }
 }

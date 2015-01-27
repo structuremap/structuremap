@@ -27,6 +27,12 @@ namespace StructureMap.Graph
         /// </summary>
         public readonly Policies Policies = new Policies();
 
+        /// <summary>
+        /// Holds a cache of concrete types that can be considered for closing generic interface
+        /// types
+        /// </summary>
+        public readonly IList<Type> ConnectedConcretions = new List<Type>(); 
+
         public PluginGraph()
         {
             _profiles =
@@ -303,4 +309,6 @@ namespace StructureMap.Graph
             _families.ClearAll();
         }
     }
+
+
 }
