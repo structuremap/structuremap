@@ -134,7 +134,7 @@ namespace StructureMap.Query
             return AllInstances
                 .Where(x => x.ReturnedType.CanBeCastTo(targetType))
                 .Select(x => x.Get<T>())
-                .Where(x => x != null);
+                .Where(x => x != null).ToArray();
         }
 
         public InstanceRef Find<TPluginType>(string name)
