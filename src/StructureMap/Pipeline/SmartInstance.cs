@@ -35,7 +35,7 @@ namespace StructureMap.Pipeline
 
         public SmartInstance<T, TPluginType> SelectConstructor(Expression<Func<T>> constructor)
         {
-            var finder = new ConstructorFinderVisitor();
+            var finder = new ConstructorFinderVisitor(typeof(T));
             finder.Visit(constructor);
 
             _inner.Constructor = finder.Constructor;

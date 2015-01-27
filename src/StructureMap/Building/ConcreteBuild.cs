@@ -149,7 +149,7 @@ namespace StructureMap.Building
     {
         public static ConcreteBuild<T> For(Expression<Func<T>> expression)
         {
-            var finder = new ConstructorFinderVisitor();
+            var finder = new ConstructorFinderVisitor(typeof(T));
             finder.Visit(expression);
 
             var ctor = finder.Constructor;
