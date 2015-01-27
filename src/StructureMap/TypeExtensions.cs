@@ -181,10 +181,6 @@ namespace StructureMap.TypeRules
 
             if (pluggedType == pluginType) return true;
 
-            if (pluggedType.IsInterfaceOrAbstract())
-            {
-                return false;
-            }
 
             if (pluginType.IsOpenGeneric())
             {

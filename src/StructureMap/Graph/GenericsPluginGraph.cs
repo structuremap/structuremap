@@ -24,6 +24,8 @@ namespace StructureMap.Graph
 
         private static bool checkGenericType(Type pluggedType, Type pluginType)
         {
+            if (pluggedType == null || pluginType == null) return false;
+
             if (pluginType.GetTypeInfo().IsAssignableFrom(pluggedType.GetTypeInfo())) return true;
 
 
@@ -41,17 +43,18 @@ namespace StructureMap.Graph
                 }
             }
 
-            if (pluggedType.GetTypeInfo().BaseType.GetTypeInfo().IsGenericType)
+            var baseType = pluggedType.GetTypeInfo().BaseType;
+            if (baseType != null && baseType.GetTypeInfo().IsGenericType)
             {
-                var baseType = pluggedType.GetTypeInfo().BaseType.GetGenericTypeDefinition();
+                var baseTypeGenericDefinition = baseType.GetGenericTypeDefinition();
 
-                if (baseType == pluginType)
+                if (baseTypeGenericDefinition == pluginType)
                 {
                     return true;
                 }
                 else
                 {
-                    return CanBeCast(pluginType, baseType);
+                    return CanBeCast(pluginType, baseTypeGenericDefinition);
                 }
             }
 

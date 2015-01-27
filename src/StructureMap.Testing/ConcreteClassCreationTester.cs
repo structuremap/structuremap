@@ -12,7 +12,10 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x => { x.For<IWidget>().Use(new ColorWidget("red")); });
+            container = new Container(_ =>
+            {
+                _.For<IWidget>().Use(new ColorWidget("red"));
+            });
         }
 
         #endregion
@@ -37,7 +40,8 @@ namespace StructureMap.Testing
         [Test]
         public void can_create_a_concrete_class_by_default()
         {
-            container.GetInstance<ConcreteClass>().Widget1.ShouldBeOfType<ColorWidget>();
+            container.GetInstance<ConcreteClass>()
+                .Widget1.ShouldBeOfType<ColorWidget>();
         }
 
         [Test]
