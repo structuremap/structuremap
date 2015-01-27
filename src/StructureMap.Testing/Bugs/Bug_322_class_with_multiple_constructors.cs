@@ -26,6 +26,8 @@ namespace StructureMap.Testing.Bugs
                 x.ForConcreteType<ClassWithTwoConstructors>()
                     .Configure.SelectConstructor(() => new ClassWithTwoConstructors(new AnotherDependency()))
                     .Ctor<AnotherDependency>().Is(anotherDependency);
+
+                    // You don't need to specify the argument name if there is only 1 for that type
                     //.Ctor<AnotherDependency>("anotherDependency").Is(anotherDependency);
 
             });
