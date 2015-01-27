@@ -21,17 +21,19 @@ namespace StructureMap.Testing.Bugs
             container.GetInstance<IAmOpenGeneric<int>>().ShouldBeOfType<TheClosedGeneric<int>>();
             container.GetInstance<IAmOpenGeneric<string>>().ShouldBeOfType<SpecificClosedGeneric>();
         }
+
+        public interface IAmOpenGeneric<T>
+        {
+        }
+
+        public class TheClosedGeneric<T> : IAmOpenGeneric<T>
+        {
+        }
+
+        public class SpecificClosedGeneric : TheClosedGeneric<string>
+        {
+        }
     }
 
-    public interface IAmOpenGeneric<T>
-    {
-    }
 
-    public class TheClosedGeneric<T> : IAmOpenGeneric<T>
-    {
-    }
-
-    public class SpecificClosedGeneric : TheClosedGeneric<string>
-    {
-    }
 }
