@@ -1,11 +1,10 @@
-using System;
+using System.Threading;
 
 namespace StructureMap.Pipeline
 {
     public class ThreadLocalStorageLifecycle : LifecycleBase
     {
-        [ThreadStatic] private static LifecycleObjectCache _cache;
-        private readonly object _locker = new object();
+        private static readonly ThreadLocal<IObjectCache> Cache = new ThreadLocal<IObjectCache>(() => new LifecycleObjectCache());
 
         public override void EjectAll(ILifecycleContext context)
         {
@@ -14,22 +13,12 @@ namespace StructureMap.Pipeline
 
         public override IObjectCache FindCache(ILifecycleContext context)
         {
-            guaranteeHashExists();
-            return _cache;
+            return Cache.Value;
         }
 
-        private void guaranteeHashExists()
+        public static void RefreshCache()
         {
-            if (_cache == null)
-            {
-                lock (_locker)
-                {
-                    if (_cache == null)
-                    {
-                        _cache = new LifecycleObjectCache();
-                    }
-                }
-            }
+            Cache.Value.DisposeAndClear();
         }
     }
 }
