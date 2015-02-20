@@ -20,5 +20,20 @@ namespace StructureMap.Testing.Bugs
                 .ShouldBeOfType<AWidget>()
                 .Activated.ShouldBeTrue();
         }
+
+        [Test]
+        public void policies_should_apply_to_nested_containers()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IWidget>().Use<AWidget>();
+                x.For<Activateable>()
+                    .OnCreationForAll("Mark the object as activated", o => o.Activated = true);
+            });
+
+            container.GetNestedContainer().GetInstance<IWidget>()
+                .ShouldBeOfType<AWidget>()
+                .Activated.ShouldBeTrue();
+        }
     }
 }
