@@ -8,6 +8,7 @@ StructureMap is attempting to follow a strict [SemVer](http://semver.org) versio
 
 Click on any release version to see the list of closed GitHub issues related to any of the 3.1 releases.
 
+* [3.1.5](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A3.1.5+is%3Aclosed) -- Fixes for open generics convention resolution, child containers and policies, naming conflicts between setters and ctor arguments
 * [3.1.4](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A3.1.4+is%3Aclosed) -- performance optimization for resolving objects that are registered directly to a Container
 * [3.1.3](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A3.1.3+is%3Aclosed) -- named instances registered to child or nested containers
 * [3.1.2](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A3.1.2+is%3Aclosed) -- reduces thread contention issues on Container.Configure() calls at runtime
