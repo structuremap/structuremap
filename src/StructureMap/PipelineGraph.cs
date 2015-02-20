@@ -109,7 +109,10 @@ namespace StructureMap
 
         public Policies Policies
         {
-            get { return _pluginGraph.Root.Policies; }
+            get
+            {
+                return _pluginGraph.Root.Policies;
+            }
         }
 
         public void Dispose()

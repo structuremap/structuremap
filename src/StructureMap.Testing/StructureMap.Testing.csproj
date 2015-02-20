@@ -223,6 +223,7 @@
     <Compile Include="Bugs\FillAllProperties_Bug_327.cs" />
     <Compile Include="Bugs\GenericVarianceResolution.cs" />
     <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
+    <Compile Include="Bugs\InterceptionPolicies_with_child_containers.cs" />
     <Compile Include="Bugs\Jimmys_silly_open_generics_bug.cs" />
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
     <Compile Include="Bugs\MemoryLeak_bug_289.cs" />

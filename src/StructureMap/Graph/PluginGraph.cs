@@ -22,6 +22,8 @@ namespace StructureMap.Graph
 
         private readonly LightweightCache<string, PluginGraph> _profiles;
 
+        public string Name { get; set; }
+
         /// <summary>
         /// Specifies interception, construction selection, and setter usage policies
         /// </summary>
@@ -52,6 +54,7 @@ namespace StructureMap.Graph
 
         public PluginGraph(string profileName) : this()
         {
+            Name = profileName;
             ProfileName = profileName;
         }
 

@@ -322,7 +322,10 @@ namespace StructureMap.Configuration.DSL.Expressions
             Func<Instance, bool> filter = null)
         {
             _children.Add(
-                graph => { graph.Policies.Interceptors.Add<TPluginType>(interceptor, filter); });
+                graph =>
+                {
+                    graph.Policies.Interceptors.Add<TPluginType>(interceptor, filter);
+                });
 
             return this;
         }

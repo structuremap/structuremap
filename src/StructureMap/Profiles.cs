@@ -20,9 +20,12 @@ namespace StructureMap
             });
         }
 
-        public IPipelineGraph NewChild()
+        public IPipelineGraph NewChild(PluginGraph parent)
         {
-            var childGraph = new PluginGraph();
+            var childGraph = new PluginGraph
+            {
+                Parent = parent
+            };
             var instances = new ComplexInstanceGraph(_root, childGraph, ContainerRole.ProfileOrChild);
         
             // RIGHT HERE, WE NEED TO USE A DIFFERENT SINGLETON CACHE

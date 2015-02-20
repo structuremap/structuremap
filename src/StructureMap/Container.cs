@@ -412,7 +412,7 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer CreateChildContainer()
         {
-            var pipeline = _pipelineGraph.Profiles.NewChild();
+            var pipeline = _pipelineGraph.Profiles.NewChild(_pipelineGraph.Instances.ImmediatePluginGraph);
             return new Container(pipeline);
         }
 
