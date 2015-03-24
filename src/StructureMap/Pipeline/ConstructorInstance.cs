@@ -39,6 +39,11 @@ namespace StructureMap.Pipeline
 
         public ConstructorInstance(Type concreteType)
         {
+            if (!concreteType.IsConcrete())
+            {
+                throw new ArgumentOutOfRangeException("concreteType","Only concrete types can be built by ConstructorInstance");
+            }
+
             if (!concreteType.GetConstructors().Any())
             {
                 throw new ArgumentOutOfRangeException(
@@ -142,7 +147,7 @@ namespace StructureMap.Pipeline
 
             var closedInstance = new ConstructorInstance(closedType);
 
-            _dependencies.Each(arg => { closedInstance._dependencies.Add(arg.CloseType(types)); });
+            _dependencies.Each(arg => closedInstance._dependencies.Add(arg.CloseType(types)));
 
             return closedInstance;
         }

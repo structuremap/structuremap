@@ -22,10 +22,18 @@ namespace StructureMap.Graph
 
         private readonly LightweightCache<string, PluginGraph> _profiles;
 
+        public string Name { get; set; }
+
         /// <summary>
         /// Specifies interception, construction selection, and setter usage policies
         /// </summary>
         public readonly Policies Policies = new Policies();
+
+        /// <summary>
+        /// Holds a cache of concrete types that can be considered for closing generic interface
+        /// types
+        /// </summary>
+        public readonly IList<Type> ConnectedConcretions = new List<Type>(); 
 
         public PluginGraph()
         {
@@ -46,6 +54,7 @@ namespace StructureMap.Graph
 
         public PluginGraph(string profileName) : this()
         {
+            Name = profileName;
             ProfileName = profileName;
         }
 
@@ -303,4 +312,6 @@ namespace StructureMap.Graph
             _families.ClearAll();
         }
     }
+
+
 }

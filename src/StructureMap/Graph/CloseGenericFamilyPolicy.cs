@@ -23,6 +23,15 @@ namespace StructureMap.Graph
 
             if (!_graph.Families.Has(basicType))
             {
+                // RIGHT HERE: do the connections thing HERE!
+                var connectingTypes = _graph.ConnectedConcretions.Where(x => x.CanBeCastTo(type)).ToArray();
+                if (connectingTypes.Any())
+                {
+                    var family = new PluginFamily(type);
+                    connectingTypes.Each(family.AddType);
+
+                    return family;
+                }
 
                 return _graph.Families.ToArray().FirstOrDefault(x => type.GetTypeInfo().IsAssignableFrom(x.PluginType.GetTypeInfo()));
             }

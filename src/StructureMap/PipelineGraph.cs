@@ -116,7 +116,10 @@ namespace StructureMap
 
         public Policies Policies
         {
-            get { return _pluginGraph.Root.Policies; }
+            get
+            {
+                return _pluginGraph.Root.Policies;
+            }
         }
 
         public void Dispose()
@@ -139,8 +142,7 @@ namespace StructureMap
 
         public IPipelineGraph ToNestedGraph()
         {
-            var nestedPluginGraph = new PluginGraph(Profile + " - Nested");
-            nestedPluginGraph.Parent = _pluginGraph;
+            var nestedPluginGraph = new PluginGraph(Profile + " - Nested") {Parent = _pluginGraph};
 
             var instances = new ComplexInstanceGraph(this, nestedPluginGraph, ContainerRole.Nested);
             return new PipelineGraph(nestedPluginGraph, instances, this, _singletons,

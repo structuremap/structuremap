@@ -5,6 +5,7 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
@@ -20,8 +21,44 @@ namespace StructureMap.Testing.Configuration.DSL
 
         #endregion
 
+        public interface SomethingElseEntirely : Something, SomethingElse
+        {
+        }
+
+        public interface SomethingElse
+        {
+        }
+
         public interface Something
         {
+        }
+
+        public class OrangeSomething : SomethingElseEntirely
+        {
+            public readonly Guid Id = Guid.NewGuid();
+
+            public override string ToString()
+            {
+                return string.Format("OrangeSomething: {0}", Id);
+            }
+
+            protected bool Equals(OrangeSomething other)
+            {
+                return Id.Equals(other.Id);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((OrangeSomething) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return Id.GetHashCode();
+            }
         }
 
         public class RedSomething : Something
@@ -169,6 +206,42 @@ namespace StructureMap.Testing.Configuration.DSL
             });
 
             container.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Red");
+        }
+
+        [Test]
+        public void weird_generics_casting()
+        {
+            typeof(SomethingElseEntirely).CanBeCastTo<SomethingElse>()
+                .ShouldBeTrue();
+        }
+
+        [Test]
+        public void CreatePluginFamilyWithReferenceToAnotherFamily()
+        {
+
+
+            var container = new Container(r =>
+            {
+                // Had to be a singleton for this to work
+                r.ForSingletonOf<SomethingElseEntirely>().Use<OrangeSomething>();
+                r.For<SomethingElse>().Use(context =>
+                    // If the return is cast to OrangeSomething, this works.
+                    context.GetInstance<SomethingElseEntirely>());
+                r.For<Something>().Use(context => 
+                    // If the return is cast to OrangeSomething, this works.
+                    context.GetInstance<SomethingElseEntirely>());
+            });
+
+            var orangeSomething = container.GetInstance<SomethingElseEntirely>();
+            orangeSomething.ShouldBeOfType<OrangeSomething>();
+
+            container.GetInstance<SomethingElse>()
+                .ShouldBeOfType<OrangeSomething>()
+                .ShouldEqual(orangeSomething);
+            
+            container.GetInstance<Something>()
+                .ShouldBeOfType<OrangeSomething>()
+                .ShouldEqual(orangeSomething);
         }
 
         [Test]

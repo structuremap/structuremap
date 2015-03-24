@@ -8,7 +8,7 @@ on GitHub. Please log any suspected bugs or feature requests on [StructureMap's 
 
 <Section title="Future Plans" id="future">
 
-Nothing has been planned at this point, but these are some of the things that the StructureMap team is considering for the future:
+Nothing definite has been planned at this point, but these are some of the things that the StructureMap team is considering for the future:
 
 1. We would be interested in supporting the Xamarin runtimes for Android and iPhone devices, but we need help from someone who is actually
    developing on these platforms. StructureMap 3.* targets PCL compliance, so this should be easy, right? Right?

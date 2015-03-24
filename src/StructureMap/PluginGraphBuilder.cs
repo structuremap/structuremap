@@ -19,7 +19,7 @@ namespace StructureMap
         private readonly IList<AssemblyScanner> _scanners = new List<AssemblyScanner>();
 
         public PluginGraphBuilder()
-            : this(new PluginGraph())
+            : this(new PluginGraph{Name = "Root"})
         {
         }
 

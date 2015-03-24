@@ -13,7 +13,7 @@ namespace StructureMap.Building.Interception
         public static LambdaExpression ReplaceParameter(Type acceptsType, LambdaExpression expression,
             ParameterExpression newParam)
         {
-            var before = expression.Parameters.FirstOrDefault(x => { return x.Type.CanBeCastTo(acceptsType); });
+            var before = expression.Parameters.FirstOrDefault(x => x.Type == acceptsType) ?? expression.Parameters.FirstOrDefault(x => x.Type.CanBeCastTo(acceptsType));
 
             if (before == null) return expression;
 
@@ -34,7 +34,16 @@ namespace StructureMap.Building.Interception
 
             if (_after.Type == _before.Type) return _after;
 
-            return Expression.Convert(_after, _before.Type);
+            try
+            {
+                return Expression.Convert(_after, _before.Type);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
+
+
     }
 }

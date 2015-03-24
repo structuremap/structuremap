@@ -180,6 +180,7 @@
     <Compile Include="Acceptance\enumerable_instances.cs" />
     <Compile Include="Acceptance\explicit_arguments.cs" />
     <Compile Include="Acceptance\full_stack_container_usage.cs" />
+    <Compile Include="Acceptance\inline_dependencies.cs" />
     <Compile Include="Acceptance\interception_acceptance_tests.cs" />
     <Compile Include="Acceptance\lifecycle_creation.cs" />
     <Compile Include="Acceptance\nested_containers.cs" />
@@ -204,6 +205,12 @@
     <Compile Include="Bugs\Bug_251_do_not_add_null_values_to_plugin_family_instance_cache.cs" />
     <Compile Include="Bugs\Bug_255_InstanceAttribute_Implementation.cs" />
     <Compile Include="Bugs\Bug_295_named_registrations_to_nested_container.cs" />
+    <Compile Include="Bugs\Bug_300_naive_can_be_plugged_into_tests.cs" />
+    <Compile Include="Bugs\Bug_313.cs" />
+    <Compile Include="Bugs\Bug_318.cs" />
+    <Compile Include="Bugs\Bug_320_generic_parent_child_relationship.cs" />
+    <Compile Include="Bugs\Bug_321_Singleton_exception_messages.cs" />
+    <Compile Include="Bugs\Bug_322_class_with_multiple_constructors.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
     <Compile Include="Bugs\closed_type_generic_is_in_get_all.cs" />
     <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
@@ -213,7 +220,10 @@
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
     <Compile Include="Bugs\Exception_Within_Exception_Bug.cs" />
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
+    <Compile Include="Bugs\FillAllProperties_Bug_327.cs" />
+    <Compile Include="Bugs\GenericVarianceResolution.cs" />
     <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
+    <Compile Include="Bugs\InterceptionPolicies_with_child_containers.cs" />
     <Compile Include="Bugs\Jimmys_silly_open_generics_bug.cs" />
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
     <Compile Include="Bugs\MemoryLeak_bug_289.cs" />

@@ -6,27 +6,7 @@ using StructureMap.Graph;
 
 namespace StructureMap.Testing.Bugs
 {
-    public class ClosedGenericForStruct<T> : IAmOpenGeneric<T>
-        where T : struct
-    {
-    }
 
-    public class ClosedGenericForEnumerable<T> : IAmOpenGeneric<T>
-        where T : IEnumerable
-    {
-    }
-
-    public struct EnumerableStruct : IEnumerable
-    {
-        #region IEnumerable Members
-
-        public IEnumerator GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-    }
 
     [TestFixture]
     public class OpenGenericWithConstraints
@@ -49,6 +29,40 @@ namespace StructureMap.Testing.Bugs
             amOpenGenerics.Single(x => x.GetType() == typeof (ClosedGenericForEnumerable<EnumerableStruct>));
 
             amOpenGenerics.Count().ShouldEqual(2);
+        }
+
+        public interface IAmOpenGeneric<T>
+        {
+        }
+
+        public class TheClosedGeneric<T> : IAmOpenGeneric<T>
+        {
+        }
+
+        public class SpecificClosedGeneric : TheClosedGeneric<string>
+        {
+        }
+
+        public class ClosedGenericForStruct<T> : IAmOpenGeneric<T>
+            where T : struct
+        {
+        }
+
+        public class ClosedGenericForEnumerable<T> : IAmOpenGeneric<T>
+            where T : IEnumerable
+        {
+        }
+
+        public struct EnumerableStruct : IEnumerable
+        {
+            #region IEnumerable Members
+
+            public IEnumerator GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            #endregion
         }
     }
 }

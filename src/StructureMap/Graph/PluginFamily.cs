@@ -104,6 +104,8 @@ namespace StructureMap.Graph
         {
             if (instance.ReturnedType == typeof (object)) return;
 
+            
+
             if (instance.ReturnedType != null &&
                 !instance.ReturnedType.CanBeCastTo(_pluginType))
             {
@@ -112,6 +114,8 @@ namespace StructureMap.Graph
                         instance.ReturnedType.GetFullName(), _pluginType.GetFullName()));
             }
         }
+
+        
 
         public void SetDefault(Func<Instance> defaultInstance)
         {

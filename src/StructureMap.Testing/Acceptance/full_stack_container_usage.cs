@@ -38,6 +38,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldHaveTheSameElementsAs(typeof (AFoo), typeof (BFoo), typeof (CFoo));
         }
 
+        // SAMPLE: container-configure
         [Test]
         public void change_default_in_an_existing_container()
         {
@@ -45,10 +46,21 @@ namespace StructureMap.Testing.Acceptance
 
             container.GetInstance<IFoo>().ShouldBeOfType<AFoo>();
 
+            // Now, change the container configuration
             container.Configure(x => x.For<IFoo>().Use<BFoo>());
 
+            // The default of IFoo is now different
             container.GetInstance<IFoo>().ShouldBeOfType<BFoo>();
+
+            // or use the Inject method that's just syntactical
+            // sugar for replacing the default of one type at a time
+
+            container.Inject<IFoo>(new CFoo());
+
+            container.GetInstance<IFoo>().ShouldBeOfType<CFoo>();
         }
+        // ENDSAMPLE
+
 
         public interface IOpen<T>
         {

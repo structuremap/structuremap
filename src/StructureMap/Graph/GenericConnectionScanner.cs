@@ -1,18 +1,18 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
+using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
     public class GenericConnectionScanner : ConfigurableRegistrationConvention
     {
-        private readonly Type _openType;
+        private readonly IList<Type> _concretions = new List<Type>();
         private readonly IList<Type> _interfaces = new List<Type>();
-        private readonly IList<Type> _concretions = new List<Type>(); 
+        private readonly Type _openType;
 
         public GenericConnectionScanner(Type openType)
         {
@@ -26,7 +26,7 @@ namespace StructureMap.Graph
 
         public override void Process(Type type, Registry registry)
         {
-            var interfaceTypes = type.FindInterfacesThatClose(_openType);
+            IEnumerable<Type> interfaceTypes = type.FindInterfacesThatClose(_openType);
             if (!interfaceTypes.Any()) return;
 
             if (type.IsConcrete())
@@ -34,7 +34,7 @@ namespace StructureMap.Graph
                 _concretions.Add(type);
             }
 
-            foreach (var interfaceType in interfaceTypes)
+            foreach (Type interfaceType in interfaceTypes)
             {
                 _interfaces.Fill(interfaceType);
             }
@@ -44,14 +44,49 @@ namespace StructureMap.Graph
         {
             var registry = new Registry();
 
-            _interfaces.Each(@interface => {
+            _interfaces.Each(@interface =>
+            {
                 var expression = registry.For(@interface);
                 ConfigureFamily(expression);
-                
-                _concretions.Where(x => x.CanBeCastTo(@interface)).Each(type => expression.Add(type));
+
+                var exactMatches = _concretions.Where(x => x.CanBeCastTo(@interface)).ToArray();
+                if (exactMatches.Length == 1)
+                {
+                    expression.Use(exactMatches.Single());
+                }
+                else
+                {
+                    exactMatches.Each(type => expression.Add(type));
+                }
+
+
+                if (!@interface.IsOpenGeneric())
+                {
+                    addConcretionsThatCouldBeClosed(@interface, expression);
+                }
             });
 
+            _concretions.Each(t => graph.ConnectedConcretions.Fill(t));
             registry.As<IPluginGraphConfiguration>().Configure(graph);
+        }
+
+        private void addConcretionsThatCouldBeClosed(Type @interface, GenericFamilyExpression expression)
+        {
+            _concretions.Where(x => x.IsOpenGeneric())
+                .Where(x => x.CouldCloseTo(@interface))
+                .Each(type =>
+                {
+                    try
+                    {
+                        expression.Add(
+                            type.MakeGenericType(@interface.GetGenericArguments()));
+                    }
+                    catch (Exception)
+                    {
+                        // Because I'm too lazy to fight with the fucking type constraints to "know"
+                        // if it's possible to make the generic type and this is just easier.
+                    }
+                });
         }
     }
 }

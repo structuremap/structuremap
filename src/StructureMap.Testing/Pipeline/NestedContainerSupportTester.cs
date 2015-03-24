@@ -252,6 +252,30 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void nested_container_name_should_contain_parent_container_name()
+        {
+            var parent = new Container
+            {
+                Name = "Parent"
+            };
+
+            var child = parent.GetNestedContainer();
+            child.Name.ShouldEqual("Nested-Parent");
+        }
+
+        [Test]
+        public void nested_container_name_with_profile_should_contain_parent_container_name()
+        {
+            var parent = new Container
+            {
+                Name = "Parent"
+            };
+
+            var child = parent.GetNestedContainer("Default");
+            child.Name.ShouldEqual("Nested-Parent");
+        }
+
+        [Test]
         public void resolving_from_disposed_container_throws_ObjectDisposedException()
         {
             var parent = new Container(x =>
