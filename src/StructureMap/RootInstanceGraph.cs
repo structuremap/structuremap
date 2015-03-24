@@ -13,6 +13,8 @@ namespace StructureMap
 
         public RootInstanceGraph(PluginGraph pluginGraph)
         {
+            if (pluginGraph == null) throw new ArgumentNullException("pluginGraph");
+
             _pluginGraph = pluginGraph;
         }
 

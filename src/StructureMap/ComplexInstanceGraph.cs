@@ -13,6 +13,9 @@ namespace StructureMap
 
         public ComplexInstanceGraph(IPipelineGraph parent, PluginGraph pluginGraph, ContainerRole role)
         {
+            if (parent == null) throw new ArgumentNullException("parent");
+            if (pluginGraph == null) throw new ArgumentNullException("pluginGraph");
+
             _parent = parent;
             _pluginGraph = pluginGraph;
             Role = role;

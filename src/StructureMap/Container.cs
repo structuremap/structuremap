@@ -49,6 +49,8 @@ namespace StructureMap
 
         internal Container(IPipelineGraph pipelineGraph)
         {
+            if (pipelineGraph == null) throw new ArgumentNullException("pipelineGraph");
+
             Name = Guid.NewGuid().ToString();
 
             _pipelineGraph = pipelineGraph;
@@ -115,6 +117,9 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, ExplicitArguments args)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 var defaultInstance = _pipelineGraph.Instances.GetDefault(pluginType);
@@ -138,6 +143,9 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, ExplicitArguments args, string name)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 var namedInstance = _pipelineGraph.Instances.FindInstance(pluginType, name);
@@ -158,6 +166,9 @@ namespace StructureMap
         /// <returns></returns>
         public IEnumerable GetAllInstances(Type type, ExplicitArguments args)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
@@ -178,6 +189,9 @@ namespace StructureMap
         /// <returns></returns>
         public IEnumerable<T> GetAllInstances<T>(ExplicitArguments args)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
@@ -208,6 +222,9 @@ namespace StructureMap
         /// <returns></returns>
         public IEnumerable<T> GetAllInstances<T>()
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 var session = new BuildSession(_pipelineGraph);
@@ -228,6 +245,9 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, string instanceKey)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 return new BuildSession(_pipelineGraph, instanceKey).CreateInstance(pluginType, instanceKey);
@@ -247,6 +267,9 @@ namespace StructureMap
         /// <returns></returns>
         public object TryGetInstance(Type pluginType, string instanceKey)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
@@ -298,6 +321,9 @@ namespace StructureMap
         /// <param name="target"></param>
         public void BuildUp(object target)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 new BuildSession(_pipelineGraph).BuildUp(target);
@@ -326,6 +352,9 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 return new BuildSession(_pipelineGraph).GetInstance(pluginType);
@@ -346,6 +375,9 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, Instance instance)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             try
             {
                 var session = new BuildSession(_pipelineGraph, instance.Name) {RootType = instance.ReturnedType};
@@ -402,6 +434,9 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetProfile(string profileName)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             var pipeline = _pipelineGraph.Profiles.For(profileName);
             return new Container(pipeline);
         }
@@ -412,6 +447,9 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer CreateChildContainer()
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             var pipeline = _pipelineGraph.Profiles.NewChild(_pipelineGraph.Instances.ImmediatePluginGraph);
             return new Container(pipeline);
         }
@@ -421,7 +459,13 @@ namespace StructureMap
         /// </summary>
         public string ProfileName
         {
-            get { return _pipelineGraph.Profile; }
+            get
+            {
+                if (_disposedLatch)
+                    throw new ObjectDisposedException(Name);
+
+                return _pipelineGraph.Profile;
+            }
         }
 
         /// <summary>
@@ -434,6 +478,9 @@ namespace StructureMap
         public string WhatDoIHave(Type pluginType = null, Assembly assembly = null, string @namespace = null,
             string typeName = null)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             var writer = new WhatDoIHaveWriter(_pipelineGraph);
             return writer.GetText(new ModelQuery
             {
@@ -453,6 +500,9 @@ namespace StructureMap
         /// <returns></returns>
         public ExplicitArgsExpression With<T>(T arg)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             return new ExplicitArgsExpression(this).With(arg);
         }
 
@@ -465,6 +515,9 @@ namespace StructureMap
         /// <returns></returns>
         public ExplicitArgsExpression With(Type pluginType, object arg)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             return new ExplicitArgsExpression(this).With(pluginType, arg);
         }
 
@@ -476,6 +529,9 @@ namespace StructureMap
         /// <returns></returns>
         public IExplicitProperty With(string argName)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             return new ExplicitArgsExpression(this).With(argName);
         }
 
@@ -486,6 +542,9 @@ namespace StructureMap
         /// </summary>
         public void AssertConfigurationIsValid()
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             PipelineGraphValidator.AssertNoErrors(_pipelineGraph);
         }
 
@@ -495,6 +554,9 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         public void EjectAllInstancesOf<T>()
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             _pipelineGraph.Ejector.EjectAllInstancesOf<T>();
         }
 
@@ -510,6 +572,9 @@ namespace StructureMap
         /// </example>
         public OpenGenericTypeExpression ForGenericType(Type templateType)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             return new OpenGenericTypeExpression(templateType, this);
         }
 
@@ -526,6 +591,9 @@ namespace StructureMap
         /// <returns></returns>
         public CloseGenericTypeExpression ForObject(object subject)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             return new CloseGenericTypeExpression(subject, this);
         }
 
@@ -535,6 +603,9 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer()
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             var pipeline = _pipelineGraph.ToNestedGraph();
             return GetNestedContainer(pipeline);
         }
@@ -588,6 +659,9 @@ namespace StructureMap
         /// <param name="instance"></param>
         public void Inject<TPluginType>(TPluginType instance) where TPluginType : class
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             Configure(x => x.For<TPluginType>().Use(instance));
         }
 
@@ -599,6 +673,9 @@ namespace StructureMap
         /// </summary>
         public void Inject(Type pluginType, object @object)
         {
+            if (_disposedLatch)
+                throw new ObjectDisposedException(Name);
+
             Configure(x => x.For(pluginType).Use(@object));
         }
 

@@ -19,12 +19,14 @@ namespace StructureMap
         private readonly IList<AssemblyScanner> _scanners = new List<AssemblyScanner>();
 
         public PluginGraphBuilder()
+            : this(new PluginGraph{Name = "Root"})
         {
-            _graph = new PluginGraph{Name = "Root"};
         }
 
         public PluginGraphBuilder(PluginGraph graph)
         {
+            if (graph == null) throw new ArgumentNullException("graph");
+
             _graph = graph;
         }
 
