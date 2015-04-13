@@ -69,12 +69,12 @@ namespace StructureMap.Pipeline
                     {
                         _instances.Add(instance);
                         result = buildWithSession(pluginType, instance, session);
-                        _instances.Remove(instance);
 
                         _objects.Add(key, result);
                     }
                     finally
                     {
+                        _instances.Remove(instance);
                         _lock.ExitWriteLock();
                     }
                 }

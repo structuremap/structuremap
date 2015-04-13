@@ -196,6 +196,7 @@
     <Compile Include="BidirectionalDependencies.cs" />
     <Compile Include="Bugs\AddValueDirectlyWithGenericUsage.cs" />
     <Compile Include="Bugs\Andreas_forwarding_issue.cs" />
+    <Compile Include="Bugs\Bug329_bidirectional_dependencies.cs" />
     <Compile Include="Bugs\Bug_101.cs" />
     <Compile Include="Bugs\Bug_235_for_look_for_registries_through_assemblies.cs" />
     <Compile Include="Bugs\Bug_244_using_Func_of_string_as_a_dependency.cs" />
