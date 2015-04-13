@@ -51,16 +51,21 @@ namespace StructureMap
             {
                 _root = this;
                 _profiles = new Profiles(_pluginGraph, this);
+                ContainerCache = singletons;
             }
             else
             {
                 _root = root.Root();
                 _profiles = root.Profiles;
+                ContainerCache = new ContainerSpecificObjectCache();
             }
 
             _singletons = singletons;
             _transients = transients;
         }
+
+
+        public IObjectCache ContainerCache { get; private set; }
 
         public IPipelineGraph Root()
         {
@@ -139,7 +144,7 @@ namespace StructureMap
 
             var instances = new ComplexInstanceGraph(this, nestedPluginGraph, ContainerRole.Nested);
             return new PipelineGraph(nestedPluginGraph, instances, this, _singletons,
-                new NestedContainerTransientObjectCache());
+                new ContainerSpecificObjectCache());
         }
 
         public void Configure(Action<ConfigurationExpression> configure)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
@@ -385,6 +386,19 @@ namespace StructureMap
             lock (_syncLock)
             {
                 _pipelineGraph.Configure(configure);
+
+                // Correct the Singleton lifecycle for child containers
+                if (Role == ContainerRole.ProfileOrChild)
+                {
+                    var singletons = _pipelineGraph.Instances.ImmediateInstances()
+                        .Where(x => x.Lifecycle is SingletonLifecycle);
+
+                    singletons
+                        .Each(x => x.SetLifecycleTo<ContainerLifecycle>());
+
+                    _pipelineGraph.Instances.ImmediatePluginGraph.Families.Where(x => x.Lifecycle is SingletonLifecycle)
+                        .Each(x => x.SetLifecycleTo<ContainerLifecycle>());
+                }
 
 
                 if (Role == ContainerRole.Nested)

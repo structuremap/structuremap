@@ -197,6 +197,7 @@
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
     <Compile Include="Pipeline\ConstructorInstance.cs" />
     <Compile Include="Pipeline\ConstructorSelector.cs" />
+    <Compile Include="Pipeline\ContainerLifecycle.cs" />
     <Compile Include="Pipeline\DefaultInstance.cs" />
     <Compile Include="Pipeline\DependencyCollection.cs" />
     <Compile Include="Pipeline\DependencyExpression.cs" />
@@ -204,6 +205,7 @@
     <Compile Include="Pipeline\ExplicitArguments.cs" />
     <Compile Include="Pipeline\ExpressedInstance.cs" />
     <Compile Include="Pipeline\GreediestConstructorSelector.cs" />
+    <Compile Include="Pipeline\IAppropriateForNestedContainer.cs" />
     <Compile Include="Pipeline\IConfiguredInstance.cs" />
     <Compile Include="Pipeline\IConstructorSelector.cs" />
     <Compile Include="Pipeline\IEnumerableCoercion.cs" />
@@ -219,10 +221,11 @@
     <Compile Include="Pipeline\Lazy\FuncInstance.cs" />
     <Compile Include="Pipeline\Lazy\LazyFactoryTemplate.cs" />
     <Compile Include="Pipeline\Lazy\LazyInstance.cs" />
+    <Compile Include="Pipeline\LifecycleBase.cs" />
     <Compile Include="Pipeline\LifecycleObjectCache.cs" />
     <Compile Include="Pipeline\Lifecycles.cs" />
     <Compile Include="Pipeline\ListCoercion.cs" />
-    <Compile Include="Pipeline\NestedContainerTransientObjectCache.cs" />
+    <Compile Include="Pipeline\ContainerSpecificObjectCache.cs" />
     <Compile Include="Pipeline\NullInstance.cs" />
     <Compile Include="Pipeline\NulloTransientCache.cs" />
     <Compile Include="Pipeline\ObjectInstance.cs" />
@@ -232,6 +235,7 @@
     <Compile Include="Pipeline\SingletonLifecycle.cs" />
     <Compile Include="Pipeline\SmartInstance.cs" />
     <Compile Include="Pipeline\ThreadLocalStorageLifecycle.cs" />
+    <Compile Include="Pipeline\TransientLifecycle.cs" />
     <Compile Include="Pipeline\UniquePerRequestLifecycle.cs" />
     <Compile Include="PluginGraphBuilder.cs" />
     <Compile Include="Policies.cs" />

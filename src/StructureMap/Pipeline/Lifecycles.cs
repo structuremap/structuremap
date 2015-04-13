@@ -14,6 +14,7 @@ namespace StructureMap.Pipeline
         public static readonly ILifecycle Unique = Register<UniquePerRequestLifecycle>();
 
         public static readonly ILifecycle ThreadLocal = Register<ThreadLocalStorageLifecycle>();
+        public static readonly ILifecycle Container = Register<ContainerLifecycle>();
 
 
         public static ILifecycle Register<T>() where T : ILifecycle, new()

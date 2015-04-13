@@ -7,6 +7,7 @@ namespace StructureMap
     {
         IObjectCache Singletons { get; }
         IObjectCache Transients { get; }
+        IObjectCache ContainerCache { get; }
 
         ILifecycle DetermineLifecycle(Type pluginType, Instance instance);
     }

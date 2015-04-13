@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Util;
 
 namespace StructureMap
@@ -26,9 +27,8 @@ namespace StructureMap
             {
                 Parent = parent
             };
+
             var instances = new ComplexInstanceGraph(_root, childGraph, ContainerRole.ProfileOrChild);
-        
-            // RIGHT HERE, WE NEED TO USE A DIFFERENT SINGLETON CACHE
 
             return new PipelineGraph(childGraph, instances, _root, _root.Singletons, _root.Transients);
         }
