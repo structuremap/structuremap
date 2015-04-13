@@ -12,7 +12,7 @@
     <summary>StructureMap is a Dependency Injection / Inversion of Control tool for .Net</summary>
     <language>en-US</language>
     <dependencies>
-      <dependency id="StructureMap" version="3.0.0" />
+      <dependency id="StructureMap" version="3.1.5" />
     </dependencies>
   </metadata>
   <files>
