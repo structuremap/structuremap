@@ -3,6 +3,8 @@ Welcome to StructureMap, the oldest [Inversion of Control][1] container for .Net
 Getting StructureMap
 --------------------
 
+[![Join the chat at https://gitter.im/structuremap/structuremap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/structuremap/structuremap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 StructureMap is available via NuGet:
 
 ```PowerShell
