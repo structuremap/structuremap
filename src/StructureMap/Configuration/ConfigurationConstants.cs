@@ -20,7 +20,7 @@ namespace StructureMap.Configuration
         public const string INVALID_PLUGIN_FAMILY = "The PluginFamily is not configured in StructureMap";
 
         public const string INVALID_PROPERTY_CAST =
-            "Property value in the configured InstanceMemento could not be casted to the target type";
+            "Property value in the configured InstanceMemento could not be cast to the target type";
 
         public const string INVALID_SETTER = "Requested Setter property does not exist";
         public const string MEMENTO_PROPERTY_IS_MISSING = "Property is missing from the InstanceMemento configuration";
@@ -42,7 +42,7 @@ namespace StructureMap.Configuration
 
         public const string PLUGIN_IS_MISSING_CONCRETE_KEY = "Plugin definition is missing a value for ConcreteKey";
 
-        public const string UNKNOWN_PLUGIN_PROBLEM = "Exception occured while attaching a Plugin to a PluginFamily";
+        public const string UNKNOWN_PLUGIN_PROBLEM = "Exception occurred while attaching a Plugin to a PluginFamily";
         public const string VALIDATION_METHOD_FAILURE = "A Validation Method Failed";
     }
 }
