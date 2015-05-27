@@ -105,7 +105,7 @@ namespace StructureMap.Testing.Acceptance
         }
 
         [Test]
-        public void use_a_custom_constructor_rule()
+        public void select_constructor_by_attribute()
         {
             var container = new Container(_ => {
                 _.For<IWidget>().Use<AWidget>();

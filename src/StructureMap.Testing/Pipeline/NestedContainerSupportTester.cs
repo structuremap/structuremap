@@ -141,7 +141,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void inject_into_the_child_does_not_affect_the_parent_container()
         {
-            var parent = new Container(x => { x.For<IWidget>().Use<AWidget>(); });
+            var parent = new Container(x => x.For<IWidget>().Use<AWidget>());
 
             var child = parent.GetNestedContainer();
             var childWidget = new ColorWidget("blue");
@@ -160,7 +160,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void singleton_service_from_open_type_in_the_parent_is_found_by_the_child()
         {
-            var parent = new Container(x => { x.ForSingletonOf(typeof (IService<>)).Use(typeof (Service<>)); });
+            var parent = new Container(x => x.ForSingletonOf(typeof (IService<>)).Use(typeof (Service<>)));
 
             var child = parent.GetNestedContainer();
 
@@ -178,7 +178,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void singleton_service_in_the_parent_is_found_by_the_child()
         {
-            var parent = new Container(x => { x.ForSingletonOf<IWidget>().Use<AWidget>(); });
+            var parent = new Container(x => x.ForSingletonOf<IWidget>().Use<AWidget>());
 
             var parentWidget = parent.GetInstance<IWidget>();
 
@@ -194,7 +194,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void the_nested_container_delivers_itself_as_the_IContainer()
         {
-            var parent = new Container(x => { x.For<IWidget>().Use<AWidget>(); });
+            var parent = new Container(x => x.For<IWidget>().Use<AWidget>());
 
             var child = parent.GetNestedContainer();
 
@@ -204,7 +204,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void the_nested_container_will_deliver_itself_into_a_constructor_of_something_else()
         {
-            var parent = new Container(x => { x.For<IWidget>().Use<AWidget>(); });
+            var parent = new Container(x => x.For<IWidget>().Use<AWidget>());
 
             var child = parent.GetNestedContainer();
             child.GetInstance<ContainerHolder>().Container.ShouldBeTheSameAs(child);
@@ -214,7 +214,7 @@ namespace StructureMap.Testing.Pipeline
         public void
             transient_open_generics_service_in_the_parent_container_is_effectively_a_singleton_for_the_nested_container()
         {
-            var parent = new Container(x => { x.For(typeof (IService<>)).Use(typeof (Service<>)); });
+            var parent = new Container(x => x.For(typeof (IService<>)).Use(typeof (Service<>)));
 
             var child = parent.GetNestedContainer();
 

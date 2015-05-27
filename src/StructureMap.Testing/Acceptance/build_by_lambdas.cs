@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Acceptance
                 x.For<Rule>().Add(() => new ColorRule("Red")).Named("Red");
 
                 // Build by a simple Expression<Func<IBuildSession, T>>
-                x.For<Rule>().Add("Blue", () => { return new ColorRule("Blue"); })
+                x.For<Rule>().Add("Blue", () => new ColorRule("Blue"))
                     .Named("Blue");
 
                 // Build by Func<T> with a user supplied description
@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Acceptance
 
                 // Build by Func<IBuildSession, T> with a user description
                 x.For<Rule>()
-                    .Add("Purple", s => { return s.GetInstance<RuleBuilder>().ForColor("Purple"); })
+                    .Add("Purple", s => s.GetInstance<RuleBuilder>().ForColor("Purple"))
                     .Named("Purple");
             });
 
