@@ -11,7 +11,7 @@ FubuRake::Solution.new do |sln|
 		:copyright => 'Copyright 2004-2014 Jeremy D. Miller, Joshua Flanagan, Frank Quednau, Tim Kellogg, et al. All rights reserved.'
 	}
 	
-	#sln.compile_targets = ['Debug', 'Release', 'NET45WP8']
+	#sln.compile_targets = ['Debug', 'Release', 'NET45WP8', 'ReleaseSign']
 	
 	sln.ripple_enabled = true
 	sln.fubudocs_enabled = true
