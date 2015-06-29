@@ -1,1 +1,0 @@
-<?php header("Location: Default.htm"); exit; ?>

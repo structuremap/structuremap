@@ -1,0 +1,9 @@
+structuremap-assumptions
+auto-wiring
+working-with-the-icontext-at-build-time
+forwarding-requests-for-a-type-to-another-type
+profiles-and-child-containers
+nested-containers
+working-with-generic-types
+working-with-enumerable-types
+handling-missing-named-instances

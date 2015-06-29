@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <Role>module</Role>
-  <Name>StructureMap.Docs</Name>
-  <assembly>StructureMap.Docs</assembly>
-  <ContentFileSet Include="*.*" Exclude="Properties/*;bin/*;obj/*;*.csproj*;packages.config;repositories.config;pak-*.zip;*.sln">
-    <DeepSearch>true</DeepSearch>
-  </ContentFileSet>
-</package>

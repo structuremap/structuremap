@@ -1,30 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{93877CE0-BA48-4F28-B372-B8E802CEE085}"
-	ProjectSection(SolutionItems) = preProject
-		..\Docs\Attributes.htm = ..\Docs\Attributes.htm
-		..\Docs\Basic Architecture.htm = ..\Docs\Basic Architecture.htm
-		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
-		..\Docs\Concepts.htm = ..\Docs\Concepts.htm
-		..\Docs\Configuration.htm = ..\Docs\Configuration.htm
-		..\Docs\ConfigurationManagement.htm = ..\Docs\ConfigurationManagement.htm
-		..\cruise.build = ..\cruise.build
-		..\Docs\Default.htm = ..\Docs\Default.htm
-		..\Deploy.build = ..\Deploy.build
-		..\Docs\FAQ.htm = ..\Docs\FAQ.htm
-		..\rakefile.rb = ..\rakefile.rb
-		..\Docs\Scoping.htm = ..\Docs\Scoping.htm
-		..\Docs\SingletonInjection.htm = ..\Docs\SingletonInjection.htm
-		..\Docs\structuremap.deployment.htm = ..\Docs\structuremap.deployment.htm
-		StructureMap.ndoc = StructureMap.ndoc
-		structuremap.snk = structuremap.snk
-		..\Docs\structuremap.verification.htm = ..\Docs\structuremap.verification.htm
-		..\Docs\StructureMap.vsd = ..\Docs\StructureMap.vsd
-		..\Docs\StructureMapDoctor.htm = ..\Docs\StructureMapDoctor.htm
-		..\Docs\style.css = ..\Docs\style.css
-		..\Docs\Troubleshooting.htm = ..\Docs\Troubleshooting.htm
-		..\Docs\ValidationAttribute.htm = ..\Docs\ValidationAttribute.htm
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Widgets", "Widgets", "{E1C10209-160D-4054-ACB7-478A9FDCF84C}"
 EndProject
@@ -57,8 +35,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.AutoMocking.Moq", "StructureMap.AutoMocking.Moq\StructureMap.AutoMocking.Moq.csproj", "{49D5FB89-A091-47C3-9C08-2058E9C346DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.AutoMocking.Moq.Testing", "StructureMap.AutoMocking.Moq.Testing\StructureMap.AutoMocking.Moq.Testing.csproj", "{18C87ACA-776F-42C0-A868-7EB65FA30C03}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Docs", "StructureMap.Docs\StructureMap.Docs.csproj", "{01815D16-9767-472E-9C3F-B45E8F3C300F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuMVC.StructureMap3", "FubuMVC.StructureMap3\FubuMVC.StructureMap3.csproj", "{DBD5C763-0A1A-49F3-8BE1-E197FF721B43}"
 EndProject
@@ -372,25 +348,6 @@ Global
 		{18C87ACA-776F-42C0-A868-7EB65FA30C03}.Release|Any CPU.Build.0 = Release|Any CPU
 		{18C87ACA-776F-42C0-A868-7EB65FA30C03}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{18C87ACA-776F-42C0-A868-7EB65FA30C03}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Build|.NET.ActiveCfg = Release|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Build|Any CPU.ActiveCfg = Release|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Build|Any CPU.Build.0 = Release|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Build|Mixed Platforms.Build.0 = Release|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.NET45WP8|.NET.ActiveCfg = Debug|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.NET45WP8|Any CPU.ActiveCfg = Debug|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.NET45WP8|Any CPU.Build.0 = Debug|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.NET45WP8|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Release|.NET.ActiveCfg = Release|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{01815D16-9767-472E-9C3F-B45E8F3C300F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{DBD5C763-0A1A-49F3-8BE1-E197FF721B43}.Build|.NET.ActiveCfg = Release|Any CPU
 		{DBD5C763-0A1A-49F3-8BE1-E197FF721B43}.Build|Any CPU.ActiveCfg = Release|Any CPU
 		{DBD5C763-0A1A-49F3-8BE1-E197FF721B43}.Build|Any CPU.Build.0 = Release|Any CPU

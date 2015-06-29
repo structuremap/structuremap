@@ -1,0 +1,7 @@
+get-a-service-by-plugintype
+get-a-service-by-plugin-type-and-name
+get-all-services-by-plugin-type
+try-getting-an-optional-service-by-plugin-type
+try-geting-an-optional-service-by-plugin-type-and-name
+passing-arguments-at-runtime
+requesting-a-concrete-type
