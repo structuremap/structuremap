@@ -1,0 +1,21 @@
+NUGET
+  remote: http://build.fubu-project.org/guestAuth/app/nuget/v1/FeedService.svc
+  specs:
+    Bottles (2.0.0.576)
+      FubuCore (>= 1.0.0.210)
+    FubuCore (1.2.0.275)
+    FubuLocalization (1.0.0.179)
+      FubuCore (>= 0.9.9.139)
+    FubuMVC.Core (1.2.0.1686)
+      Bottles (>= 2.0.0.563)
+      FubuCore (>= 1.2.0.259)
+      FubuLocalization (>= 0.9.5.48)
+      HtmlTags (>= 1.1.0.114)
+    HtmlTags (2.0.0.181)
+  remote: http://nuget.org/api/v2
+  specs:
+    Castle.Core (3.1.0)
+    Moq (4.0.10827)
+    NUnit (2.6.3.0)
+    NUnit.Runners (2.6.3)
+    RhinoMocks (3.6.1)
