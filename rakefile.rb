@@ -13,10 +13,10 @@ FubuRake::Solution.new do |sln|
 	
 	#sln.compile_targets = ['Debug', 'Release', 'NET45WP8']
 	
-	sln.ripple_enabled = true
-	sln.fubudocs_enabled = true
+	sln.ripple_enabled = false
+	sln.fubudocs_enabled = false
 	
 	#sln.ci_steps = ['compile:net45wp8']
-	
-	sln.export_docs({:repository => 'git@github.com:structuremap/structuremap.github.com.git', :branch => 'master'})
+
 end
+
