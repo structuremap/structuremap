@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Pipeline
         {
             new EnumerableInstance(new Instance[0])
                 .ToDependencySource(typeof (IList<IGateway>))
-                .ShouldEqual(new AllPossibleValuesDependencySource(typeof (IList<IGateway>)));
+                .ShouldBe(new AllPossibleValuesDependencySource(typeof (IList<IGateway>)));
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Pipeline
                 .ToDependencySource(enumerableType)
                 .ShouldBeOfType<ArrayDependencySource>();
 
-            source.ItemType.ShouldEqual(typeof (IGateway));
+            source.ItemType.ShouldBe(typeof (IGateway));
             source.Items.ShouldHaveTheSameElementsAs(i1.DependencySource, i2.DependencySource, i3.DependencySource);
         }
 
@@ -54,7 +54,7 @@ namespace StructureMap.Testing.Pipeline
                 .ToDependencySource(enumerableType)
                 .ShouldBeOfType<ArrayDependencySource>();
 
-            source.ItemType.ShouldEqual(typeof (IGateway));
+            source.ItemType.ShouldBe(typeof (IGateway));
             source.Items.ShouldHaveTheSameElementsAs(i1.DependencySource, i2.DependencySource, i3.DependencySource);
         }
 
@@ -69,7 +69,7 @@ namespace StructureMap.Testing.Pipeline
                 .ToDependencySource(enumerableType)
                 .ShouldBeOfType<ArrayDependencySource>();
 
-            source.ItemType.ShouldEqual(typeof (IGateway));
+            source.ItemType.ShouldBe(typeof (IGateway));
             source.Items.ShouldHaveTheSameElementsAs(i1.DependencySource, i2.DependencySource, i3.DependencySource);
         }
 
@@ -84,7 +84,7 @@ namespace StructureMap.Testing.Pipeline
                 .ToDependencySource(enumerableType)
                 .ShouldBeOfType<ListDependencySource>();
 
-            source.ItemType.ShouldEqual(typeof (IGateway));
+            source.ItemType.ShouldBe(typeof (IGateway));
             source.Items.ShouldHaveTheSameElementsAs(i1.DependencySource, i2.DependencySource, i3.DependencySource);
         }
 
@@ -102,9 +102,9 @@ namespace StructureMap.Testing.Pipeline
             var list =
                 theInstance.Build<IList<IWidget>>(new StubBuildSession()).As<IList<IWidget>>();
 
-            list.Count.ShouldEqual(3);
+            list.Count.ShouldBe(3);
 
-            list[0].ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
+            list[0].ShouldBeOfType<ColorWidget>().Color.ShouldBe("red");
             list[2].ShouldBeOfType<AWidget>();
         }
 
@@ -122,9 +122,9 @@ namespace StructureMap.Testing.Pipeline
 
             var list = theInstance.Build<IWidget[]>(new StubBuildSession()).ShouldBeOfType<IWidget[]>();
 
-            list.Length.ShouldEqual(3);
+            list.Length.ShouldBe(3);
 
-            list[0].ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
+            list[0].ShouldBeOfType<ColorWidget>().Color.ShouldBe("red");
             list[2].ShouldBeOfType<AWidget>();
         }
 

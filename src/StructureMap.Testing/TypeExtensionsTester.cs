@@ -38,7 +38,7 @@ namespace StructureMap.Testing
         public void find_first_interface_that_closes_open_interface()
         {
             typeof (Service1).FindFirstInterfaceThatCloses(typeof (IService<>))
-                .ShouldEqual(typeof (IService<string>));
+                .ShouldBe(typeof (IService<string>));
 
             typeof (Service2).FindFirstInterfaceThatCloses(typeof (IService<>))
                 .ShouldBeNull();
@@ -55,7 +55,7 @@ namespace StructureMap.Testing
         public void find_all_interfaces_that_close_an_open_interface_should_not_return_the_same_type_twice()
         {
             var types = typeof (SpecificService).FindInterfacesThatClose(typeof (IService<>));
-            types.Count().ShouldEqual(1);
+            types.Count().ShouldBe(1);
             types.ShouldHaveTheSameElementsAs(typeof (IService<string>));
         }
 

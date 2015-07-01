@@ -16,8 +16,8 @@ namespace StructureMap.Testing.Building
 
             var target = step.Build<SetterTarget>(new FakeBuildSession());
 
-            target.Color.ShouldEqual("Red");
-            target.Direction.ShouldEqual("North");
+            target.Color.ShouldBe("Red");
+            target.Direction.ShouldBe("North");
         }
 
         [Test]
@@ -29,8 +29,8 @@ namespace StructureMap.Testing.Building
 
             var target = step.Build<FieldTarget>(new FakeBuildSession());
 
-            target.Color.ShouldEqual("Red");
-            target.Direction.ShouldEqual("North");
+            target.Color.ShouldBe("Red");
+            target.Direction.ShouldBe("North");
         }
     }
 

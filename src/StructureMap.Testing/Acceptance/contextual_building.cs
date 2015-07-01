@@ -14,9 +14,9 @@ namespace StructureMap.Testing.Acceptance
             });
 
             var top = container.GetInstance<LoggedClass1>();
-            top.Logger.ParentType.ShouldEqual(typeof (LoggedClass1));
-            top.Child.Logger.ParentType.ShouldEqual(typeof (LoggedClass2));
-            top.Child.Child.Logger.ParentType.ShouldEqual(typeof (LoggedClass3));
+            top.Logger.ParentType.ShouldBe(typeof (LoggedClass1));
+            top.Child.Logger.ParentType.ShouldBe(typeof (LoggedClass2));
+            top.Child.Child.Logger.ParentType.ShouldBe(typeof (LoggedClass3));
 
         }
     }

@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Building.Interception
             var policy1 = new InterceptorPolicy<ITarget>(theActivator);
             var policy2 = new InterceptorPolicy<ITarget>(theActivator);
 
-            policy1.ShouldEqual(policy2);
+            policy1.ShouldBe(policy2);
 
             var policies = new InterceptorPolicies();
             policies.Add(policy1);

@@ -110,7 +110,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 c.GetInstance<IService>();
             });
 
-            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Widget3.IService'");
+            ex.Title.ShouldBe("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Widget3.IService'");
         }
 
         private static IContainer GetContainerWithRegistries<TReg1, TReg2>() where TReg1 : Registry, new()

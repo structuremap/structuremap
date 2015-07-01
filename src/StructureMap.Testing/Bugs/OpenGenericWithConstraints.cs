@@ -28,7 +28,7 @@ namespace StructureMap.Testing.Bugs
             amOpenGenerics.Single(x => x.GetType() == typeof (ClosedGenericForStruct<EnumerableStruct>));
             amOpenGenerics.Single(x => x.GetType() == typeof (ClosedGenericForEnumerable<EnumerableStruct>));
 
-            amOpenGenerics.Count().ShouldEqual(2);
+            amOpenGenerics.Count().ShouldBe(2);
         }
 
         public interface IAmOpenGeneric<T>

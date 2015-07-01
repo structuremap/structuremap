@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Bugs
             });
 
             container.GetInstance<Rule>()
-                .ShouldBeOfType<ColorRule>().Color.ShouldEqual("blue");
+                .ShouldBeOfType<ColorRule>().Color.ShouldBe("blue");
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace StructureMap.Testing.Bugs
                     .Is(c => c.GetInstance<ColorRule>().Color);
             });
 
-            container.GetInstance<StringHolder>().Name.ShouldEqual("fuschia");
+            container.GetInstance<StringHolder>().Name.ShouldBe("fuschia");
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Bugs
             });
 
             container.GetInstance<IntHolder>()
-                .Number.ShouldEqual(5);
+                .Number.ShouldBe(5);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace StructureMap.Testing.Bugs
             // hell to pay if he caught me using Angus as
             // test data
             container.GetInstance<EnumHolder>()
-                .Breed.ShouldEqual(BreedEnum.Beefmaster);
+                .Breed.ShouldBe(BreedEnum.Beefmaster);
         }
     }
 

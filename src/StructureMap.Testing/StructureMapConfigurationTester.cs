@@ -22,7 +22,7 @@ namespace StructureMap.Testing
         public void TheDefaultInstanceIsALambdaForGuidNewGuid()
         {
             var container = new Container(x => x.For<Guid>().Use(() => Guid.NewGuid()));
-            container.GetInstance<Guid>().ShouldNotEqual(Guid.Empty);
+            container.GetInstance<Guid>().ShouldNotBe(Guid.Empty);
         }
 
         [Test(
@@ -36,7 +36,7 @@ namespace StructureMap.Testing
                 x.For<IFoo>().Use<Foo>();
             });
 
-            container.GetInstance<IFoo>().SomeGuid.ShouldNotEqual(Guid.Empty);
+            container.GetInstance<IFoo>().SomeGuid.ShouldNotBe(Guid.Empty);
 
 
         }

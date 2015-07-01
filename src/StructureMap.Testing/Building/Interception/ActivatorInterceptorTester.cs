@@ -52,18 +52,18 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void the_role_is_activates()
         {
-            theActivator.Role.ShouldEqual(InterceptorRole.Activates);
+            theActivator.Role.ShouldBe(InterceptorRole.Activates);
         }
 
         [Test]
         public void the_accepts_type()
         {
-            theActivator.Accepts.ShouldEqual(typeof (ITarget));
+            theActivator.Accepts.ShouldBe(typeof (ITarget));
         }
         [Test]
         public void the_return_type()
         {
-            theActivator.Returns.ShouldEqual(typeof (ITarget));
+            theActivator.Returns.ShouldBe(typeof (ITarget));
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace StructureMap.Testing.Building.Interception
 
             var expression = theActivator.ToExpression(new Policies(), Parameters.Session, variable);
 
-            expression.ToString().ShouldEqual("target.Activate()");
+            expression.ToString().ShouldBe("target.Activate()");
         }
 
         [Test]

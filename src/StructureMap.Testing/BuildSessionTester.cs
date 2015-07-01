@@ -47,7 +47,7 @@ namespace StructureMap.Testing
                     (c, top) => { top.Widgets = c.All<IWidget>().ToArray(); });
             });
 
-            container.GetInstance<TopClass>().Widgets.Count().ShouldEqual(4);
+            container.GetInstance<TopClass>().Widgets.Count().ShouldBe(4);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace StructureMap.Testing
 
             ex.Context.ShouldContain("The current configuration for type StructureMap.Testing.Widget.IWidget is:");
 
-            ex.Title.ShouldEqual(
+            ex.Title.ShouldBe(
                 "Could not find an Instance named 'purple' for PluginType StructureMap.Testing.Widget.IWidget");
         }
 
@@ -92,7 +92,7 @@ namespace StructureMap.Testing
                     (c, top) => { top.Widgets = c.All<IWidget>().ToArray(); });
             });
 
-            container.GetInstance<TopClass>().Widgets.Count().ShouldEqual(4);
+            container.GetInstance<TopClass>().Widgets.Count().ShouldBe(4);
         }
 
 
@@ -111,7 +111,7 @@ namespace StructureMap.Testing
                     (c, top) => { top.Widgets = c.GetAllInstances<IWidget>().ToArray(); });
             });
 
-            container.GetInstance<TopClass>().Widgets.Count().ShouldEqual(4);
+            container.GetInstance<TopClass>().Widgets.Count().ShouldBe(4);
         }
 
         [Test]
@@ -214,7 +214,7 @@ namespace StructureMap.Testing
                 session.CreateInstance(typeof(IGateway), "Gateway that is not configured");
             });
 
-            ex.Title.ShouldEqual("Could not find an Instance named 'Gateway that is not configured' for PluginType StructureMap.Testing.Widget3.IGateway");
+            ex.Title.ShouldBe("Could not find an Instance named 'Gateway that is not configured' for PluginType StructureMap.Testing.Widget3.IGateway");
         }
 
 
@@ -231,7 +231,7 @@ namespace StructureMap.Testing
 
             ex.Context.ShouldContain("There is no configuration specified for StructureMap.Testing.Widget3.IGateway");
 
-            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Widget3.IGateway'");
+            ex.Title.ShouldBe("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Widget3.IGateway'");
         }
 
         [Test]
@@ -375,11 +375,11 @@ namespace StructureMap.Testing
             session.ParentType.ShouldBeNull();
             session.Push(new SmartInstance<ARule>());
 
-            session.ParentType.ShouldEqual(typeof (StubbedGateway));
+            session.ParentType.ShouldBe(typeof (StubbedGateway));
 
             session.Push(new SmartInstance<AWidget>());
 
-            session.ParentType.ShouldEqual(typeof (ARule));
+            session.ParentType.ShouldBe(typeof (ARule));
         }
 
         [Test]
@@ -394,7 +394,7 @@ namespace StructureMap.Testing
 
             session.Pop();
 
-            session.ParentType.ShouldEqual(typeof(AWidget));
+            session.ParentType.ShouldBe(typeof(AWidget));
 
         }
 

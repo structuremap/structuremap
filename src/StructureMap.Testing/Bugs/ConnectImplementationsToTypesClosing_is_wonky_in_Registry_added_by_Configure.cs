@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Bugs
         public void has_the_correct_number_by_initialize()
         {
             var container = Container.For<BookRegistry>();
-            container.GetAllInstances<IBook<SciFi>>().Count().ShouldEqual(1);
+            container.GetAllInstances<IBook<SciFi>>().Count().ShouldBe(1);
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Bugs
         {
             var container = new Container();
             container.Configure(x => x.AddRegistry<BookRegistry>());
-            container.GetAllInstances<IBook<SciFi>>().Count().ShouldEqual(1);
+            container.GetAllInstances<IBook<SciFi>>().Count().ShouldBe(1);
         }
     }
 

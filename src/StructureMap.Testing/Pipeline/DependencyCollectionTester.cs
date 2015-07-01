@@ -56,10 +56,10 @@ namespace StructureMap.Testing.Pipeline
             collection.Add(typeof (IGateway), gateway3);
 
             collection.FindByTypeOrName(typeof (IGateway), "foo")
-                .ShouldEqual(gateway3);
+                .ShouldBe(gateway3);
 
             collection.FindByTypeOrName(typeof (IService), "anything")
-                .ShouldEqual(service1);
+                .ShouldBe(service1);
         }
 
         [Test]

@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Bugs
                 });
             });
 
-            container.GetInstance<ClassWithEnumerable>().Widgets.Count().ShouldEqual(3);
+            container.GetInstance<ClassWithEnumerable>().Widgets.Count().ShouldBe(3);
         }
 
         public class ClassWithEnumerable

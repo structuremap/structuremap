@@ -22,7 +22,7 @@ namespace StructureMap.Testing
         {
             ObjectFactory.Initialize(x => { x.AddRegistry<InitializeRegistry>(); });
 
-            ObjectFactory.GetNamedInstance<IWidget>("Green").ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Green");
+            ObjectFactory.GetNamedInstance<IWidget>("Green").ShouldBeOfType<ColorWidget>().Color.ShouldBe("Green");
         }
 
 

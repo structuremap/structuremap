@@ -10,14 +10,14 @@ namespace StructureMap.Testing.Building.Interception
         public void accepts_type_is_the_plugin_type()
         {
             var interceptor = new DecoratorInterceptor(typeof (IWidget), typeof (WidgetDecorator));
-            interceptor.Accepts.ShouldEqual(typeof (IWidget));
+            interceptor.Accepts.ShouldBe(typeof (IWidget));
         }
 
         [Test]
         public void role_is_decorator()
         {
             var interceptor = new DecoratorInterceptor(typeof(IWidget), typeof(WidgetDecorator));
-            interceptor.Role.ShouldEqual(InterceptorRole.Decorates);
+            interceptor.Role.ShouldBe(InterceptorRole.Decorates);
         }
 
         [Test]

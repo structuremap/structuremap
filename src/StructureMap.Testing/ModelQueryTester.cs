@@ -94,41 +94,41 @@ namespace StructureMap.Testing
         [Test]
         public void iterate_over_instances_of_a_type()
         {
-            _model.InstancesOf(typeof (IServiceProvider)).Count().ShouldEqual(2);
-            _model.InstancesOf(typeof (IService<>)).Count().ShouldEqual(2);
-            _model.InstancesOf<IServiceProvider>().Count().ShouldEqual(2);
+            _model.InstancesOf(typeof (IServiceProvider)).Count().ShouldBe(2);
+            _model.InstancesOf(typeof (IService<>)).Count().ShouldBe(2);
+            _model.InstancesOf<IServiceProvider>().Count().ShouldBe(2);
         }
 
         [Test]
         public void iterate_over_instances_of_a_type_w_container()
         {
-            _container.Model.InstancesOf(typeof (IServiceProvider)).Count().ShouldEqual(2);
-            _container.Model.InstancesOf(typeof (IService<>)).Count().ShouldEqual(2);
-            _container.Model.InstancesOf<IServiceProvider>().Count().ShouldEqual(2);
+            _container.Model.InstancesOf(typeof (IServiceProvider)).Count().ShouldBe(2);
+            _container.Model.InstancesOf(typeof (IService<>)).Count().ShouldBe(2);
+            _container.Model.InstancesOf<IServiceProvider>().Count().ShouldBe(2);
         }
 
         [Test]
         public void Iterate_over_pluginTypes()
         {
             // 3 registered plus the 4th is the IContainer itself + Func + Func w/ Arg + Lazy
-            _model.PluginTypes.Count().ShouldEqual(7);
+            _model.PluginTypes.Count().ShouldBe(7);
         }
 
         [Test]
         public void Iterate_over_pluginTypes_w_container()
         {
             // IContainer is always added to the Container + Func<> + Func<,> + Lazy<>
-            _container.Model.PluginTypes.Count().ShouldEqual(7);
+            _container.Model.PluginTypes.Count().ShouldBe(7);
         }
 
         [Test]
         public void the_default_type_for()
         {
-            _model.DefaultTypeFor<ISomething>().ShouldEqual(typeof (SomethingOne));
+            _model.DefaultTypeFor<ISomething>().ShouldBe(typeof (SomethingOne));
             _model.DefaultTypeFor<IWidget>().ShouldBeNull();
 
             _model.DefaultTypeFor(typeof (IService<>)).ShouldBeNull();
-            _model.DefaultTypeFor(typeof (ISomething)).ShouldEqual(typeof (SomethingOne));
+            _model.DefaultTypeFor(typeof (ISomething)).ShouldBe(typeof (SomethingOne));
         }
     }
 }

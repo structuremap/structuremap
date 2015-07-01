@@ -33,13 +33,13 @@ namespace StructureMap.Testing.Pipeline
             });
 
             container.GetInstance<Rule>("red")
-                .ShouldBeOfType<ColorRule>().Color.ShouldEqual("red");
+                .ShouldBeOfType<ColorRule>().Color.ShouldBe("red");
 
             container.GetInstance<Rule>("green")
-                .ShouldBeOfType<ColorRule>().Color.ShouldEqual("green");
+                .ShouldBeOfType<ColorRule>().Color.ShouldBe("green");
 
             container.GetInstance<Rule>("blue")
-                .ShouldBeOfType<ColorRule>().Color.ShouldEqual("blue");
+                .ShouldBeOfType<ColorRule>().Color.ShouldBe("blue");
         }
         // ENDSAMPLE
 
@@ -56,7 +56,7 @@ namespace StructureMap.Testing.Pipeline
 
             container.GetInstance<Rule>("red")
                 .ShouldBeOfType<ColorRule>()
-                .Color.ShouldEqual("DarkRed");
+                .Color.ShouldBe("DarkRed");
         }
         // ENDSAMPLE
 
@@ -71,9 +71,9 @@ namespace StructureMap.Testing.Pipeline
                     .MissingNamedInstanceIs(instance);
             });
 
-            container.GetInstance<Rule>("red").ShouldBeOfType<ColorRule>().Color.ShouldEqual("red");
-            container.GetInstance<Rule>("green").ShouldBeOfType<ColorRule>().Color.ShouldEqual("green");
-            container.GetInstance<Rule>("blue").ShouldBeOfType<ColorRule>().Color.ShouldEqual("blue");
+            container.GetInstance<Rule>("red").ShouldBeOfType<ColorRule>().Color.ShouldBe("red");
+            container.GetInstance<Rule>("green").ShouldBeOfType<ColorRule>().Color.ShouldBe("green");
+            container.GetInstance<Rule>("blue").ShouldBeOfType<ColorRule>().Color.ShouldBe("blue");
         }
         // ENDSAMPLE
 

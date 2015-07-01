@@ -134,8 +134,8 @@ namespace StructureMap.Testing.Pipeline
             childWidget1.ShouldBeTheSameAs(childWidget3);
             childWidget1.ShouldNotBeTheSameAs(parentWidget);
 
-            parentWidget.ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
-            childWidget1.ShouldBeOfType<ColorWidget>().Color.ShouldEqual("green");
+            parentWidget.ShouldBeOfType<ColorWidget>().Color.ShouldBe("red");
+            childWidget1.ShouldBeOfType<ColorWidget>().Color.ShouldBe("green");
         }
 
         [Test]
@@ -259,7 +259,7 @@ namespace StructureMap.Testing.Pipeline
             };
 
             var child = parent.GetNestedContainer();
-            child.Name.ShouldEqual("Nested-Parent");
+            child.Name.ShouldBe("Nested-Parent");
         }
 
         [Test]
@@ -271,7 +271,7 @@ namespace StructureMap.Testing.Pipeline
             };
 
             var child = parent.GetNestedContainer("Default");
-            child.Name.ShouldEqual("Nested-Parent");
+            child.Name.ShouldBe("Nested-Parent");
         }
     }
 }

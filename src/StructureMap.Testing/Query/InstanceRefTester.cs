@@ -64,7 +64,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void name_just_relays()
         {
-            instanceRef.Name.ShouldEqual(instance.Name);
+            instanceRef.Name.ShouldBe(instance.Name);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace StructureMap.Testing.Query
         {
             family.Stub(x => x.PluginType).Return(typeof (IWidget));
 
-            instanceRef.PluginType.ShouldEqual(typeof (IWidget));
+            instanceRef.PluginType.ShouldBe(typeof (IWidget));
         }
     }
 }

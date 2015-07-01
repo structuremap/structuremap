@@ -25,8 +25,8 @@ namespace StructureMap.Testing.Building
 
             plan.BuildUp(session, session, target);
 
-            target.Color.ShouldEqual("Red");
-            target.Direction.ShouldEqual("Green");
+            target.Color.ShouldBe("Red");
+            target.Direction.ShouldBe("Green");
             target.Gateway.ShouldBeTheSameAs(gateway);
         }
     }
@@ -87,7 +87,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void set_a_mandatory_primitive_property()
         {
-            TheTarget.Age.ShouldEqual(34);
+            TheTarget.Age.ShouldBe(34);
         }
 
         [Test]
@@ -96,8 +96,8 @@ namespace StructureMap.Testing.Building
             theDependencies.Add("FirstName", "Jeremy");
             theDependencies.Add("LastName", "Miller");
 
-            TheTarget.FirstName.ShouldEqual("Jeremy");
-            TheTarget.LastName.ShouldEqual("Miller");
+            TheTarget.FirstName.ShouldBe("Jeremy");
+            TheTarget.LastName.ShouldBe("Miller");
         }
 
         [Test]

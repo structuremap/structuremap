@@ -17,8 +17,8 @@ namespace StructureMap.Testing.Building
 
             var target = step.Build<CtorTarget>(context);
 
-            target.Name.ShouldEqual("Jeremy");
-            target.Age.ShouldEqual(39);
+            target.Name.ShouldBe("Jeremy");
+            target.Age.ShouldBe(39);
         }
     }
 

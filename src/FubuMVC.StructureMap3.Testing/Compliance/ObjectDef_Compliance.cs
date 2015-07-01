@@ -219,7 +219,7 @@ namespace FubuMVC.StructureMap3.Testing.Compliance
             });
 
             container.Get<GuyWithPrimitive>()
-                .Name.ShouldEqual("Jeremy");
+                .Name.ShouldBe("Jeremy");
         }
     }
 

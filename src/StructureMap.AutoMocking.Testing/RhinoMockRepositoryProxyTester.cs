@@ -24,11 +24,11 @@ namespace StructureMap.AutoMocking.Testing
 
             testPartials.ShouldNotBeNull();
             mockRepository.Replay(testPartials);
-            testPartials.Concrete().ShouldEqual("Concrete");
-            testPartials.Virtual().ShouldEqual("Virtual");
+            testPartials.Concrete().ShouldBe("Concrete");
+            testPartials.Virtual().ShouldBe("Virtual");
 
             testPartials.Stub(t => t.Virtual()).Return("MOCKED!");
-            testPartials.Virtual().ShouldEqual("MOCKED!");
+            testPartials.Virtual().ShouldBe("MOCKED!");
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace StructureMap.AutoMocking.Testing
 
             test.Stub(t => t.Answer()).Return("YES");
             test.ShouldNotBeNull();
-            test.Answer().ShouldEqual("YES");
+            test.Answer().ShouldBe("YES");
         }
     }
 

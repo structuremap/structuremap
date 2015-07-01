@@ -52,7 +52,7 @@ namespace StructureMap.Testing.Query
         public void can_iterate_through_families_including_both_generics_and_normal()
         {
             // +1 for "IContainer" itself + Func + Lazy + FuncWithArg
-            container.Model.PluginTypes.Count().ShouldEqual(11); 
+            container.Model.PluginTypes.Count().ShouldBe(11); 
 
             container.Model.PluginTypes.Each(x => Debug.WriteLine(x.PluginType.FullName));
         }
@@ -60,38 +60,38 @@ namespace StructureMap.Testing.Query
         [Test]
         public void can_iterate_through_instances_of_pipeline_graph_for_closed_type_from_model()
         {
-            container.Model.InstancesOf<Rule>().Count().ShouldEqual(3);
+            container.Model.InstancesOf<Rule>().Count().ShouldBe(3);
         }
 
         [Test]
         public void can_iterate_through_instances_of_pipeline_graph_for_closed_type_that_is_not_registered()
         {
-            container.Model.InstancesOf<IServiceProvider>().Count().ShouldEqual(0);
+            container.Model.InstancesOf<IServiceProvider>().Count().ShouldBe(0);
         }
 
         [Test]
         public void can_iterate_through_instances_of_pipeline_graph_for_generics()
         {
-            container.Model.For(typeof (IService<>)).Instances.Count().ShouldEqual(2);
+            container.Model.For(typeof (IService<>)).Instances.Count().ShouldBe(2);
         }
 
         [Test]
         public void can_iterate_through_instances_of_pipeline_graph_for_generics_from_model()
         {
-            container.Model.InstancesOf(typeof (IService<>)).Count().ShouldEqual(2);
+            container.Model.InstancesOf(typeof (IService<>)).Count().ShouldBe(2);
         }
 
         [Test]
         public void default_type_for_from_the_top()
         {
-            container.Model.DefaultTypeFor<IWidget>().ShouldEqual(typeof (AWidget));
+            container.Model.DefaultTypeFor<IWidget>().ShouldBe(typeof (AWidget));
             container.Model.DefaultTypeFor<Rule>().ShouldBeNull();
         }
 
         [Test]
         public void get_all_instances_from_the_top()
         {
-            container.Model.AllInstances.Count().ShouldEqual(14); // Func/Func+Arg/Lazy are built in
+            container.Model.AllInstances.Count().ShouldBe(14); // Func/Func+Arg/Lazy are built in
         }
 
         [Test]
@@ -134,12 +134,12 @@ namespace StructureMap.Testing.Query
         [Test]
         public void remove_an_entire_closed_type()
         {
-            container.GetAllInstances<Rule>().Count().ShouldEqual(3);
+            container.GetAllInstances<Rule>().Count().ShouldBe(3);
             container.Model.EjectAndRemove(typeof (Rule));
             container.Model.HasImplementationsFor<Rule>().ShouldBeFalse();
 
             container.TryGetInstance<Rule>().ShouldBeNull();
-            container.GetAllInstances<Rule>().Count().ShouldEqual(0);
+            container.GetAllInstances<Rule>().Count().ShouldBe(0);
         }
 
         [Test]

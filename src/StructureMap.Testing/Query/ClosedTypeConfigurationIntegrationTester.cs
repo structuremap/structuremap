@@ -71,7 +71,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void can_iterate_over_the_children_instances()
         {
-            container.Model.InstancesOf<Rule>().Count().ShouldEqual(3);
+            container.Model.InstancesOf<Rule>().Count().ShouldBe(3);
         }
 
         [Test]
@@ -165,7 +165,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void get_default_when_it_exists()
         {
-            container.Model.For<IWidget>().Default.ReturnedType.ShouldEqual(typeof (AWidget));
+            container.Model.For<IWidget>().Default.ReturnedType.ShouldBe(typeof (AWidget));
         }
 
         [Test]

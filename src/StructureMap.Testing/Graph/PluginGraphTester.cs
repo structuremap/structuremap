@@ -29,11 +29,11 @@ namespace StructureMap.Testing.Graph
             family.Instances
                 .Single()
                 .ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldEqual(typeof (BigThingy));
+                .PluggedType.ShouldBe(typeof (BigThingy));
 
             graph.AddType(typeof (IThingy), typeof (BigThingy));
 
-            family.Instances.Count().ShouldEqual(1);
+            family.Instances.Count().ShouldBe(1);
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace StructureMap.Testing.Graph
             graph.Families[typeof (IOpen<>)].SetDefault(new ConfiguredInstance(typeof (Open<>)));
 
             graph.Families[typeof (IOpen<string>)].GetDefaultInstance().ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldEqual(typeof (Open<string>));
+                .PluggedType.ShouldBe(typeof (Open<string>));
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace StructureMap.Testing.Graph
             var graph = Empty();
             graph.Families[typeof (BigThingy)].GetDefaultInstance()
                 .ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldEqual(typeof (BigThingy));
+                .PluggedType.ShouldBe(typeof (BigThingy));
         }
 
         [Test]

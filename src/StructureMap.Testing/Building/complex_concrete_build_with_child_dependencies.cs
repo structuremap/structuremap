@@ -29,22 +29,22 @@ namespace StructureMap.Testing.Building
         [Test]
         public void with_child_constructors()
         {
-            game.Home.City.ShouldEqual("San Diego");
-            game.Home.Mascot.ShouldEqual("Chargers");
-            game.Visitor.City.ShouldEqual("Kansas City");
-            game.Visitor.Mascot.ShouldEqual("Chiefs");
+            game.Home.City.ShouldBe("San Diego");
+            game.Home.Mascot.ShouldBe("Chargers");
+            game.Visitor.City.ShouldBe("Kansas City");
+            game.Visitor.Mascot.ShouldBe("Chiefs");
         }
 
         [Test]
         public void with_child_setter_value()
         {
-            game.Stadium.ShouldEqual("Qualcomm Stadium");
+            game.Stadium.ShouldBe("Qualcomm Stadium");
         }
 
         [Test]
         public void with_child_setter_built_by_constructor()
         {
-            game.Referee.ShouldEqual(new Referee("John", "Smith"));
+            game.Referee.ShouldBe(new Referee("John", "Smith"));
         }
     }
 

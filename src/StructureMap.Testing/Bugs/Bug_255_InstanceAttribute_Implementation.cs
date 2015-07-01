@@ -11,13 +11,13 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void smart_instance_respects_the_name_of_the_inner()
         {
-            new SmartInstance<ClassWithInstanceAttributes>().Name.ShouldEqual("SteveBono");
+            new SmartInstance<ClassWithInstanceAttributes>().Name.ShouldBe("SteveBono");
         }
 
         [Test]
         public void attribute_should_alter_the_concrete_instance_in_explicit_config()
         {
-            new SmartInstance<ClassWithInstanceAttributes>().Name.ShouldEqual("SteveBono");
+            new SmartInstance<ClassWithInstanceAttributes>().Name.ShouldBe("SteveBono");
             
             var container = new Container(x => {
                 x.For<IBase>().Use<ClassWithInstanceAttributes>();

@@ -27,7 +27,7 @@ namespace StructureMap.Testing
             });
 
             container.GetInstance<ILoggerHolder>()
-                .Logger.RootType.ShouldEqual(typeof (LoggerHolder));
+                .Logger.RootType.ShouldBe(typeof (LoggerHolder));
         }
 
         [Test]
@@ -44,18 +44,18 @@ namespace StructureMap.Testing
             });
 
             container.GetInstance<ILoggerHolder>("Red")
-                .Logger.RootType.ShouldEqual(typeof (BuildSessionTarget));
+                .Logger.RootType.ShouldBe(typeof (BuildSessionTarget));
 
             container.GetInstance<ILoggerHolder>("Blue")
-                .Logger.RootType.ShouldEqual(typeof(LoggerHolder));
+                .Logger.RootType.ShouldBe(typeof(LoggerHolder));
 
             container.GetInstance(typeof(ILoggerHolder),"Red")
                 .As<ILoggerHolder>()
-                .Logger.RootType.ShouldEqual(typeof(BuildSessionTarget));
+                .Logger.RootType.ShouldBe(typeof(BuildSessionTarget));
 
             container.GetInstance(typeof(ILoggerHolder), "Blue")
                 .As<ILoggerHolder>()
-                .Logger.RootType.ShouldEqual(typeof(LoggerHolder));
+                .Logger.RootType.ShouldBe(typeof(LoggerHolder));
 
 
 
@@ -76,8 +76,8 @@ namespace StructureMap.Testing
             });
 
             var holders = container.GetAllInstances<ILoggerHolder>().ToArray();
-            holders[0].Logger.RootType.ShouldEqual(typeof (BuildSessionTarget));
-            holders[1].Logger.RootType.ShouldEqual(typeof (LoggerHolder));
+            holders[0].Logger.RootType.ShouldBe(typeof (BuildSessionTarget));
+            holders[1].Logger.RootType.ShouldBe(typeof (LoggerHolder));
 
         }
 
@@ -90,7 +90,7 @@ namespace StructureMap.Testing
 
             container.GetInstance<ILoggerHolder>(new SmartInstance<LoggerHolder>())
                 .Logger.RootType
-                .ShouldEqual(typeof (LoggerHolder));
+                .ShouldBe(typeof (LoggerHolder));
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace StructureMap.Testing
             var explicitArguments = new ExplicitArguments();
             explicitArguments.Set<IWidget>(new AWidget());
             container.GetInstance<ILoggerHolder>(explicitArguments)
-                .Logger.RootType.ShouldEqual(typeof(WidgetLoggerHolder));
+                .Logger.RootType.ShouldBe(typeof(WidgetLoggerHolder));
         }
 
 
@@ -122,7 +122,7 @@ namespace StructureMap.Testing
             var explicitArguments = new ExplicitArguments();
             explicitArguments.Set<IWidget>(new AWidget());
             container.GetInstance<ILoggerHolder>(explicitArguments, "Foo")
-                .Logger.RootType.ShouldEqual(typeof(WidgetLoggerHolder));
+                .Logger.RootType.ShouldBe(typeof(WidgetLoggerHolder));
         }
 
         [Test]
@@ -134,7 +134,7 @@ namespace StructureMap.Testing
             });
 
             container.GetInstance<LazyLoggerHolderHolder>()
-                .Logger.RootType.ShouldEqual(typeof (LoggerHolder));
+                .Logger.RootType.ShouldBe(typeof (LoggerHolder));
         }
     }
 

@@ -189,10 +189,10 @@ namespace StructureMap.Testing
         {
             var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => theCache.GetDefault(typeof (IFoo), thePipeline));
 
-            ex.Context.ShouldEqual(
+            ex.Context.ShouldBe(
                 "There is no configuration specified for StructureMap.Testing.SessionCacheTester+IFoo");
 
-            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.SessionCacheTester+IFoo'");
+            ex.Title.ShouldBe("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.SessionCacheTester+IFoo'");
         }
 
         [Test]

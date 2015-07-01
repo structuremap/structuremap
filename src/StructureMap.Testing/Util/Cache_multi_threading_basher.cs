@@ -65,7 +65,7 @@ namespace StructureMap.Testing.Util
 
             var byKey = requesters.SelectMany(x => x.Holders).GroupBy(x => x.Key);
             byKey.Each(group => {
-                group.GroupBy(x => x.Value).Count().ShouldEqual(1);
+                group.GroupBy(x => x.Value).Count().ShouldBe(1);
             });
 
         }

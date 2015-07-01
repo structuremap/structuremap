@@ -131,7 +131,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void the_count_should_be_zero()
         {
-            lifecycle.FindCache(pipeline).Count.ShouldEqual(0);
+            lifecycle.FindCache(pipeline).Count.ShouldBe(0);
         }
     }
 

@@ -29,8 +29,8 @@ namespace StructureMap.Testing.Pipeline
             var source = instance.ToDependencySource(typeof (IGateway))
                 .ShouldBeOfType<LifecycleDependencySource>();
 
-            source.Instance.ShouldEqual(instance);
-            source.PluginType.ShouldEqual(typeof (IGateway));
+            source.Instance.ShouldBe(instance);
+            source.PluginType.ShouldBe(typeof (IGateway));
         }
 
         [Test]
@@ -48,9 +48,9 @@ namespace StructureMap.Testing.Pipeline
             var widgets = container.GetInstance<ClassWithArrayOfWidgets>()
                 .Widgets;
 
-            widgets.Length.ShouldEqual(3);
+            widgets.Length.ShouldBe(3);
 
-            widgets[0].ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
+            widgets[0].ShouldBeOfType<ColorWidget>().Color.ShouldBe("red");
             widgets[2].ShouldBeOfType<AWidget>();
         }
 
@@ -60,7 +60,7 @@ namespace StructureMap.Testing.Pipeline
             var instance = new ConstructorInstance(typeof (ClassWithInstanceAttributes));
 
 
-            instance.Name.ShouldEqual("Steve Bono"); // hey, he had a couple good years for awhile
+            instance.Name.ShouldBe("Steve Bono"); // hey, he had a couple good years for awhile
             instance.Interceptors.Single()
                 .ShouldBeOfType<ActivatorInterceptor<ClassWithInstanceAttributes>>();
         }

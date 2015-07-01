@@ -11,21 +11,21 @@ namespace StructureMap.Testing.Diagnostics
         public void create_deep()
         {
             new BuildPlanVisualizer(PipelineGraph.BuildEmpty(), deep: true)
-                .MaxLevels.ShouldEqual(int.MaxValue);
+                .MaxLevels.ShouldBe(int.MaxValue);
         }
 
         [Test]
         public void create_default_is_0_levels()
         {
             new BuildPlanVisualizer(PipelineGraph.BuildEmpty())
-                .MaxLevels.ShouldEqual(0);
+                .MaxLevels.ShouldBe(0);
         }
 
         [Test]
         public void create_with_explicit_levels()
         {
             new BuildPlanVisualizer(PipelineGraph.BuildEmpty(), levels:2)
-                .MaxLevels.ShouldEqual(2);
+                .MaxLevels.ShouldBe(2);
         }
     }
 }

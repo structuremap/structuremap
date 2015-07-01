@@ -234,7 +234,7 @@ namespace StructureMap.Testing.Graph
                 registry.For(typeof (IService<>)).Add(typeof (Service2<>));
             });
 
-            container.GetAllInstances<IService<string>>().Count().ShouldEqual(2);
+            container.GetAllInstances<IService<string>>().Count().ShouldBe(2);
         }
 
 

@@ -29,7 +29,7 @@ namespace StructureMap.Testing.Pipeline
                     .EnumerableOf<Rule>().Contains(arr => { arr.IsThis(new ColorRule("Red")); });
             });
 
-            container.GetInstance<ClassWithDependency>().Rules.Length.ShouldEqual(1);
+            container.GetInstance<ClassWithDependency>().Rules.Length.ShouldBe(1);
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace StructureMap.Testing.Pipeline
                     .Setter(x => x.Color).Is(ColorEnum.Red);
             });
 
-            container.GetInstance<ClassWithOneEnum>().Color.ShouldEqual(ColorEnum.Red);
+            container.GetInstance<ClassWithOneEnum>().Color.ShouldBe(ColorEnum.Red);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace StructureMap.Testing.Pipeline
             });
 
             var instance = container.GetInstance<ClassWithOneLongAndOneBool>();
-            instance.Age.ShouldEqual(34);
+            instance.Age.ShouldBe(34);
             instance.Active.ShouldBeTrue();
         }
 
@@ -96,7 +96,7 @@ namespace StructureMap.Testing.Pipeline
                     .Setter(x => x.Name).Is("Jeremy");
             });
 
-            container.GetInstance<ClassWithOneSetter>().Name.ShouldEqual("Jeremy");
+            container.GetInstance<ClassWithOneSetter>().Name.ShouldBe("Jeremy");
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace StructureMap.Testing.Pipeline
                     .Setter(x => x.Name).Is("Jeremy");
             });
 
-            container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");
+            container.GetInstance<OptionalSetterTarget>().Name.ShouldBe("Jeremy");
             container.GetInstance<OptionalSetterTarget>("NoName").Name.ShouldBeNull();
         }
 
@@ -127,7 +127,7 @@ namespace StructureMap.Testing.Pipeline
                     .Setter(x => x.Name).Is("Jeremy");
             });
 
-            container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");
+            container.GetInstance<OptionalSetterTarget>().Name.ShouldBe("Jeremy");
             container.GetInstance<OptionalSetterTarget>("NoName").Name.ShouldBeNull();
         }
 

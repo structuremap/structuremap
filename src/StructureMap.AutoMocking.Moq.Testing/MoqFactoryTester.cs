@@ -23,12 +23,12 @@ namespace StructureMap.AutoMocking.Moq.Testing
             var testPartials = (TestPartials) moqFactory.CreateMockThatCallsBase(typeof (TestPartials), new object[0]);
 
             testPartials.ShouldNotBeNull();
-            testPartials.Concrete().ShouldEqual("Concrete");
-            testPartials.Virtual().ShouldEqual("Virtual");
+            testPartials.Concrete().ShouldBe("Concrete");
+            testPartials.Virtual().ShouldBe("Virtual");
 
             var mock = Mock.Get(testPartials);
             mock.Setup(t => t.Virtual()).Returns("MOQed!");
-            testPartials.Virtual().ShouldEqual("MOQed!");
+            testPartials.Virtual().ShouldBe("MOQed!");
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace StructureMap.AutoMocking.Moq.Testing
         {
             var mock = new Mock<ITestMocks>();
             mock.Setup(t => t.Answer()).Returns("Moq");
-            mock.Object.Answer().ShouldEqual("Moq");
+            mock.Object.Answer().ShouldBe("Moq");
         }
     }
 

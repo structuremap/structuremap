@@ -20,10 +20,10 @@ namespace StructureMap.Testing.Pipeline
 
             var closed = argument.CloseType(typeof (int));
 
-            closed.Type.ShouldEqual(typeof (IService<int>));
+            closed.Type.ShouldBe(typeof (IService<int>));
             closed.Dependency.ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldEqual(typeof (Service<int>));
-            closed.Name.ShouldEqual("foo");
+                .PluggedType.ShouldBe(typeof (Service<int>));
+            closed.Name.ShouldBe("foo");
         }
 
         [Test]
@@ -39,9 +39,9 @@ namespace StructureMap.Testing.Pipeline
             var closed = argument.CloseType(typeof (int));
             closed.ShouldNotBeTheSameAs(argument);
 
-            closed.Type.ShouldEqual(argument.Type);
-            closed.Dependency.ShouldEqual(argument.Dependency);
-            closed.Name.ShouldEqual(argument.Name);
+            closed.Type.ShouldBe(argument.Type);
+            closed.Dependency.ShouldBe(argument.Dependency);
+            closed.Name.ShouldBe(argument.Name);
         }
 
         [Test]
@@ -57,9 +57,9 @@ namespace StructureMap.Testing.Pipeline
             var closed = argument.CloseType(typeof (int));
             closed.ShouldNotBeTheSameAs(argument);
 
-            closed.Type.ShouldEqual(argument.Type);
-            closed.Dependency.ShouldEqual(argument.Dependency);
-            closed.Name.ShouldEqual(argument.Name);
+            closed.Type.ShouldBe(argument.Type);
+            closed.Dependency.ShouldBe(argument.Dependency);
+            closed.Name.ShouldBe(argument.Name);
         }
     }
 }

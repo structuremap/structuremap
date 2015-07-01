@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Building.Interception
                 .ShouldBeOfType<DecoratorInterceptor>()
                 .Instance
                 .PluggedType
-                .ShouldEqual(typeof (WidgetDecorator));
+                .ShouldBe(typeof (WidgetDecorator));
 
         }
 
@@ -53,7 +53,7 @@ namespace StructureMap.Testing.Building.Interception
                 .Single()
                 .ShouldBeOfType<DecoratorInterceptor>()
                 .Instance.PluggedType
-                .ShouldEqual(typeof(DecoratedFoo<string, int>));
+                .ShouldBe(typeof(DecoratedFoo<string, int>));
         }
     }
 

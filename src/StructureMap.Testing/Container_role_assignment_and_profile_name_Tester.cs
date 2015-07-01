@@ -8,39 +8,39 @@ namespace StructureMap.Testing
         [Test]
         public void root_is_root()
         {
-            new Container().Role.ShouldEqual(ContainerRole.Root);
+            new Container().Role.ShouldBe(ContainerRole.Root);
         }
 
         [Test]
         public void profile_container_is_profile()
         {
             new Container().GetProfile("Blue")
-                .Role.ShouldEqual(ContainerRole.ProfileOrChild);
+                .Role.ShouldBe(ContainerRole.ProfileOrChild);
         }
 
         [Test]
         public void profile_name()
         {
             var container = new Container();
-            container.ProfileName.ShouldEqual("DEFAULT");
+            container.ProfileName.ShouldBe("DEFAULT");
 
-            container.GetProfile("Blue").ProfileName.ShouldEqual("Blue");
+            container.GetProfile("Blue").ProfileName.ShouldBe("Blue");
 
-            container.GetProfile("Blue").GetNestedContainer().ProfileName.ShouldEqual("Blue - Nested");
+            container.GetProfile("Blue").GetNestedContainer().ProfileName.ShouldBe("Blue - Nested");
         }
 
         [Test]
         public void nested_container_from_the_root_is_nested()
         {
             new Container().GetNestedContainer()
-                .Role.ShouldEqual(ContainerRole.Nested);
+                .Role.ShouldBe(ContainerRole.Nested);
         }
 
         [Test]
         public void nested_container_from_profile_is_nested()
         {
             new Container().GetProfile("Blue")
-                .GetNestedContainer().Role.ShouldEqual(ContainerRole.Nested);
+                .GetNestedContainer().Role.ShouldBe(ContainerRole.Nested);
         }
     }
 }

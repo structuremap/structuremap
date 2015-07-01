@@ -64,11 +64,11 @@ namespace StructureMap.Testing
 
             try
             {
-                actual.Count.ShouldEqual(expected.Count);
+                actual.Count.ShouldBe(expected.Count);
 
                 for (var i = 0; i < actual.Count; i++)
                 {
-                    actual[i].ShouldEqual(expected[i]);
+                    actual[i].ShouldBe(expected[i]);
                 }
             }
             catch (Exception)
@@ -84,21 +84,21 @@ namespace StructureMap.Testing
 
         public static void ShouldBeFalse(this bool condition)
         {
-            Assert.IsFalse(condition);
+            condition.ShouldBe(false);
         }
 
         public static void ShouldBeTrue(this bool condition)
         {
-            Assert.IsTrue(condition);
+            condition.ShouldBe(true);
         }
 
-        public static object ShouldEqual(this object actual, object expected)
+        public static object ShouldBe(this object actual, object expected)
         {
             Assert.AreEqual(expected, actual);
             return expected;
         }
 
-        public static object ShouldNotEqual(this object actual, object expected)
+        public static object ShouldNotBe(this object actual, object expected)
         {
             Assert.AreNotEqual(expected, actual);
             return expected;
@@ -106,12 +106,12 @@ namespace StructureMap.Testing
 
         public static void ShouldBeNull(this object anObject)
         {
-            Assert.IsNull(anObject);
+            anObject.ShouldBe(null);
         }
 
         public static void ShouldNotBeNull(this object anObject)
         {
-            Assert.IsNotNull(anObject);
+            anObject.ShouldNotBe(null);
         }
 
         public static object ShouldBeTheSameAs(this object actual, object expected)

@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Bugs
             graph
                 .AllInstances(typeof(ISomeServiceOf<string>))
                 .Count()
-                .ShouldEqual(2);
+                .ShouldBe(2);
         }
 
         public interface ISomeServiceOf<T> { }

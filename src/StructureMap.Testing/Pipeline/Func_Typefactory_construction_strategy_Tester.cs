@@ -41,7 +41,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var c4 = new Container().GetInstance<Func<double, ConcreteClass4>>()(123.4);
             c4.ShouldNotBeNull();
-            c4.S.ShouldEqual(123.4);
+            c4.S.ShouldBe(123.4);
         }
 
         public class ConcreteClass1 : IFoo

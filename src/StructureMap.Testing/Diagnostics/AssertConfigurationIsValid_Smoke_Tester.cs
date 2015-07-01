@@ -29,7 +29,7 @@ namespace StructureMap.Testing.Diagnostics
                 container.AssertConfigurationIsValid();
             });
 
-            ex.Title.ShouldEqual("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
+            ex.Title.ShouldBe("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
             ex.Context.ShouldContain("Unable to create a build plan for concrete type StructureMap.Testing.Diagnostics.NamedWidget");
 
         }
@@ -56,7 +56,7 @@ namespace StructureMap.Testing.Diagnostics
                 container.AssertConfigurationIsValid();
             });
 
-            ex.Title.ShouldEqual("StructureMap Failures:  0 Build/Configuration Failures and 1 Validation Errors");
+            ex.Title.ShouldBe("StructureMap Failures:  0 Build/Configuration Failures and 1 Validation Errors");
             ex.Context.ShouldContain("Validation Error in Method Validate");
         }
 
@@ -72,7 +72,7 @@ namespace StructureMap.Testing.Diagnostics
                 container.AssertConfigurationIsValid();
             });
 
-            ex.Title.ShouldEqual("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
+            ex.Title.ShouldBe("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
 
             Debug.WriteLine(ex.Title);
             Debug.WriteLine(ex.Context);
@@ -93,7 +93,7 @@ namespace StructureMap.Testing.Diagnostics
                 container.AssertConfigurationIsValid();
             });
 
-            ex.Title.ShouldEqual("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
+            ex.Title.ShouldBe("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
 
             Debug.WriteLine(ex.Title);
             Debug.WriteLine(ex.Context);
@@ -119,7 +119,7 @@ namespace StructureMap.Testing.Diagnostics
                 container.AssertConfigurationIsValid();
             });
 
-            ex.Title.ShouldEqual("StructureMap Failures:  0 Build/Configuration Failures and 1 Validation Errors");
+            ex.Title.ShouldBe("StructureMap Failures:  0 Build/Configuration Failures and 1 Validation Errors");
             ex.Context.ShouldContain("Validation Error in Method Validate");
         }
 
@@ -137,7 +137,7 @@ namespace StructureMap.Testing.Diagnostics
                 container.AssertConfigurationIsValid();
             });
 
-            ex.Title.ShouldEqual("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
+            ex.Title.ShouldBe("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
 
             Debug.WriteLine(ex.Title);
             Debug.WriteLine(ex.Context);

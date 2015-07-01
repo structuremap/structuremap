@@ -50,7 +50,7 @@ namespace StructureMap.Testing.Bugs
 
                         var guy = nested.GetInstance<GuyWithContainer>();
                         guy.Container.ShouldBeTheSameAs(nested);
-                        container.Model.Pipeline.Singletons.Count.ShouldEqual(0);
+                        container.Model.Pipeline.Singletons.Count.ShouldBe(0);
                     }
                 });
 
@@ -66,7 +66,7 @@ namespace StructureMap.Testing.Bugs
 
                         var guy = nested.GetInstance<GuyWithContainer>();
                         guy.Container.ShouldBeTheSameAs(nested);
-                        container.Model.Pipeline.Singletons.Count.ShouldEqual(0);
+                        container.Model.Pipeline.Singletons.Count.ShouldBe(0);
                     }
                 });
 
@@ -81,7 +81,7 @@ namespace StructureMap.Testing.Bugs
                         var guy = nested.GetInstance<GuyWithContainer>();
                         guy.Container.ShouldBeTheSameAs(nested);
 
-                        container.Model.Pipeline.Singletons.Count.ShouldEqual(0);
+                        container.Model.Pipeline.Singletons.Count.ShouldBe(0);
                     }
                 });
 
@@ -95,7 +95,7 @@ namespace StructureMap.Testing.Bugs
 
                         var guy = nested.GetInstance<GuyWithContainer>();
                         guy.Container.ShouldBeTheSameAs(nested);
-                        container.Model.Pipeline.Singletons.Count.ShouldEqual(0);
+                        container.Model.Pipeline.Singletons.Count.ShouldBe(0);
                     }
                 });
             }

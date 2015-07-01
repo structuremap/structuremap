@@ -73,7 +73,7 @@ namespace StructureMap.Testing.Configuration.DSL
             });
 
             green.ShouldBeOfType<DecoratorService>()
-                .Inner.ShouldBeOfType<ColorService>().Color.ShouldEqual("Green");
+                .Inner.ShouldBeOfType<ColorService>().Color.ShouldBe("Green");
         }
 
         [Test]

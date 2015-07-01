@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container();
             container.With("name").EqualTo("Jeremy").GetInstance<ConcreteThatNeedsString>()
-                .Name.ShouldEqual("Jeremy");
+                .Name.ShouldBe("Jeremy");
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace StructureMap.Testing.Graph
             var container = new Container();
 
             container.With(x => { x.With("name").EqualTo("Jeremy"); }).GetInstance<ConcreteThatNeedsString>().Name.
-                ShouldEqual("Jeremy");
+                ShouldBe("Jeremy");
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace StructureMap.Testing.Graph
 
             var colorLump = container.With(lump).GetInstance<ColorWithLump>("red");
             colorLump.Lump.ShouldBeTheSameAs(lump);
-            colorLump.Color.ShouldEqual("red");
+            colorLump.Color.ShouldBe("red");
         }
 
         [Test]
@@ -254,11 +254,11 @@ namespace StructureMap.Testing.Graph
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
             container.GetInstance<ExplicitTarget>()
-                .Name.ShouldEqual("Jeremy");
+                .Name.ShouldBe("Jeremy");
 
             // Now, set the explicit arg for IProvider
             container.With("name").EqualTo("Lindsey").GetInstance<ExplicitTarget>()
-                .Name.ShouldEqual("Lindsey");
+                .Name.ShouldBe("Lindsey");
         }
 
         [Test]

@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Graph
             var genericAssemblyQualifiedName = sampleGenericType.AssemblyQualifiedName;
 
             var path = new TypePath(genericAssemblyQualifiedName);
-            path.FindType().ShouldEqual(sampleGenericType);
+            path.FindType().ShouldBe(sampleGenericType);
         }
 
         [Test]

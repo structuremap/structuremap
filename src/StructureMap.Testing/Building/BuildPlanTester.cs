@@ -80,27 +80,27 @@ namespace StructureMap.Testing.Building
         {
             theInstance.Name = "Red";
 
-            thePlan.Description.ShouldEqual("Instance of StructureMap.Testing.Building.IBuildTarget ('Red')");
+            thePlan.Description.ShouldBe("Instance of StructureMap.Testing.Building.IBuildTarget ('Red')");
         }
 
         [Test]
         public void description_when_the_instance_type_does_not_match_the_concrete_type()
         {
-            thePlan.Description.ShouldEqual("Instance of StructureMap.Testing.Building.IBuildTarget (StructureMap.Testing.Building.BuildTarget)");
+            thePlan.Description.ShouldBe("Instance of StructureMap.Testing.Building.IBuildTarget (StructureMap.Testing.Building.BuildTarget)");
         }
 
         [Test]
         public void description_when_the_instance_concrete_type_is_indeterminate()
         {
             theInstance = new RiggedInstance(null);
-            thePlan.Description.ShouldEqual("Instance of StructureMap.Testing.Building.IBuildTarget");
+            thePlan.Description.ShouldBe("Instance of StructureMap.Testing.Building.IBuildTarget");
         }
 
         [Test]
         public void description_when_the_instance_concrete_type_is_the_plugin_type()
         {
             theInstance = new RiggedInstance(typeof(IBuildTarget));
-            thePlan.Description.ShouldEqual("Instance of StructureMap.Testing.Building.IBuildTarget");
+            thePlan.Description.ShouldBe("Instance of StructureMap.Testing.Building.IBuildTarget");
         }
     }
 

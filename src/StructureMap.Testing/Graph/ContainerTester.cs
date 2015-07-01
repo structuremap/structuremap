@@ -69,7 +69,7 @@ namespace StructureMap.Testing.Graph
 
         private void assertColorIs(IContainer container, string color)
         {
-            container.GetInstance<IService>().ShouldBeOfType<ColorService>().Color.ShouldEqual(color);
+            container.GetInstance<IService>().ShouldBeOfType<ColorService>().Color.ShouldBe(color);
         }
 
         [Test]
@@ -149,7 +149,7 @@ namespace StructureMap.Testing.Graph
 
             _container.Configure(x => x.For<Rule>().Use("Blue"));
 
-            _container.GetInstance<Rule>().ShouldBeOfType<ColorRule>().Color.ShouldEqual("Blue");
+            _container.GetInstance<Rule>().ShouldBeOfType<ColorRule>().Color.ShouldBe("Blue");
         }
 
         [Test]

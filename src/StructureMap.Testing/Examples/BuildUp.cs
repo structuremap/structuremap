@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Examples
             var @class = new ClassThatHasConnection();
             container.BuildUp(@class);
 
-            @class.ConnectionString.ShouldEqual("connect1");
+            @class.ConnectionString.ShouldBe("connect1");
         }
     }
 }

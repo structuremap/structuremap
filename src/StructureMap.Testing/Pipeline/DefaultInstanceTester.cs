@@ -46,7 +46,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Get_description()
         {
-            new DefaultInstance().Description.ShouldEqual("Default");
+            new DefaultInstance().Description.ShouldBe("Default");
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace StructureMap.Testing.Pipeline
         {
             new DefaultInstance().ToDependencySource(typeof (IGateway))
                 .ShouldBeOfType<DefaultDependencySource>()
-                .DependencyType.ShouldEqual(typeof (IGateway));
+                .DependencyType.ShouldBe(typeof (IGateway));
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var enumerationType = typeof (IGateway[]);
             new DefaultInstance().ToDependencySource(enumerationType)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType));
+                .ShouldBe(new AllPossibleValuesDependencySource(enumerationType));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var enumerationType = typeof (IEnumerable<IGateway>);
             new DefaultInstance().ToDependencySource(enumerationType)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType));
+                .ShouldBe(new AllPossibleValuesDependencySource(enumerationType));
         }
 
 
@@ -97,7 +97,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var enumerationType = typeof (IList<IGateway>);
             new DefaultInstance().ToDependencySource(enumerationType)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType));
+                .ShouldBe(new AllPossibleValuesDependencySource(enumerationType));
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var enumerationType = typeof (IList<IGateway>);
             new DefaultInstance().ToDependencySource(enumerationType)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType));
+                .ShouldBe(new AllPossibleValuesDependencySource(enumerationType));
         }
     }
 }

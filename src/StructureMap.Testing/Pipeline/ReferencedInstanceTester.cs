@@ -32,7 +32,7 @@ namespace StructureMap.Testing.Pipeline
             var theReferenceKey = "theReferenceKey";
             var instance = new ReferencedInstance(theReferenceKey);
 
-            instance.Description.ShouldEqual("\"theReferenceKey\"");
+            instance.Description.ShouldBe("\"theReferenceKey\"");
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace StructureMap.Testing.Pipeline
             var instance = new ReferencedInstance(theReferenceKey);
 
             instance.ToDependencySource(typeof (IGateway))
-                .ShouldEqual(new ReferencedDependencySource(typeof (IGateway), theReferenceKey));
+                .ShouldBe(new ReferencedDependencySource(typeof (IGateway), theReferenceKey));
         }
     }
 }

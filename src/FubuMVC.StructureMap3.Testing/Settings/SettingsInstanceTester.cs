@@ -21,7 +21,7 @@ namespace FubuMVC.StructureMap3.Testing.Settings
             });
 
             container.GetInstance<FooSettings>()
-                .Name.ShouldEqual("Max");
+                .Name.ShouldBe("Max");
         }
     }
 

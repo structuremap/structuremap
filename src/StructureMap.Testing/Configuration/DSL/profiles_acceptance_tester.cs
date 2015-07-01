@@ -155,7 +155,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var container = new Container(registry);
             container.GetProfile(theProfileName).GetInstance<IWidget>().ShouldBeOfType<NamedWidget>()
-                .Name.ShouldEqual(theDefaultName);
+                .Name.ShouldBe(theDefaultName);
         }
 
         [Test]

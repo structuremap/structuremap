@@ -144,7 +144,7 @@ namespace StructureMap.Testing.Graph
 
             family.Instances.Single()
                 .ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldEqual(typeof (DataTableProvider));
+                .PluggedType.ShouldBe(typeof (DataTableProvider));
         }
 
         [Test]
@@ -164,11 +164,11 @@ namespace StructureMap.Testing.Graph
             family.AddType(typeof (DataTableProvider));
             family.Instances.Single()
                 .ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldEqual(typeof (DataTableProvider));
+                .PluggedType.ShouldBe(typeof (DataTableProvider));
 
 
             family.AddType(typeof (DataTable));
-            family.Instances.Count().ShouldEqual(1);
+            family.Instances.Count().ShouldBe(1);
         }
 
         [Test]
@@ -187,7 +187,7 @@ namespace StructureMap.Testing.Graph
 
             family.GetDefaultInstance().ShouldBeNull();
 
-            family.Instances.Count().ShouldEqual(0);
+            family.Instances.Count().ShouldBe(0);
         }
 
         public class FakeServiceProvider : IServiceProvider

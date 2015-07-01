@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Graph
                 container.GetInstance(typeof(AbstractClass));
             });
 
-            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.AbstractClass'");
+            ex.Title.ShouldBe("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.AbstractClass'");
         }
 
 
@@ -43,7 +43,7 @@ namespace StructureMap.Testing.Graph
                 container.GetInstance(typeof(CannotBeFilledConcreteClass));
             });
 
-            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.CannotBeFilledConcreteClass'");
+            ex.Title.ShouldBe("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.CannotBeFilledConcreteClass'");
 
         }
     }

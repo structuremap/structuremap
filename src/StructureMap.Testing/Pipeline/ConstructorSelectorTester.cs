@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Pipeline
             var constructor = selector.Select(typeof (ComplexRule));
 
             constructor.GetParameters().Length
-                .ShouldEqual(7);
+                .ShouldBe(7);
         }
 
         // SAMPLE: select-the-greediest-ctor
@@ -49,8 +49,8 @@ namespace StructureMap.Testing.Pipeline
             });
 
             var rule = container.GetInstance<GreaterThanRule>();
-            rule.Attribute.ShouldEqual("foo");
-            rule.Value.ShouldEqual(42);
+            rule.Attribute.ShouldBe("foo");
+            rule.Value.ShouldBe(42);
         }
 
         // ENDSAMPLE
@@ -90,7 +90,7 @@ namespace StructureMap.Testing.Pipeline
             });
 
             container.GetInstance<ClassWithMultipleConstructors>()
-                .CtorUsed.ShouldEqual("One Arg");
+                .CtorUsed.ShouldBe("One Arg");
         }
 
 

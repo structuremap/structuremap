@@ -101,7 +101,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(r => { r.For<Something>().Add<RedSomething>().Named("Red"); });
 
-            container.GetAllInstances<Something>().Count().ShouldEqual(1);
+            container.GetAllInstances<Something>().Count().ShouldBe(1);
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(x => { x.For<Something>().Add<RedSomething>().Named("Red"); });
 
             container.GetAllInstances<Something>()
-                .Count().ShouldEqual(1);
+                .Count().ShouldBe(1);
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     .Ctor<string>("color").Is("Red");
             });
 
-            container.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Red");
+            container.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldBe("Red");
         }
 
         [Test]
@@ -237,11 +237,11 @@ namespace StructureMap.Testing.Configuration.DSL
 
             container.GetInstance<SomethingElse>()
                 .ShouldBeOfType<OrangeSomething>()
-                .ShouldEqual(orangeSomething);
+                .ShouldBe(orangeSomething);
             
             container.GetInstance<Something>()
                 .ShouldBeOfType<OrangeSomething>()
-                .ShouldEqual(orangeSomething);
+                .ShouldBe(orangeSomething);
         }
 
         [Test]

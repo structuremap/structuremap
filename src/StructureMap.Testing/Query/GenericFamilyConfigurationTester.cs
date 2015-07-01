@@ -29,7 +29,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void profile_name_is_taken_from_PluginGraph()
         {
-            configuration.ProfileName.ShouldEqual("something");
+            configuration.ProfileName.ShouldBe("something");
         }
 
         [Test]
@@ -49,8 +49,8 @@ namespace StructureMap.Testing.Query
 
             configuration.EjectAndRemove(iRef);
 
-            family.Instances.Count().ShouldEqual(1);
-            configuration.Instances.Count().ShouldEqual(1);
+            family.Instances.Count().ShouldBe(1);
+            configuration.Instances.Count().ShouldBe(1);
 
             configuration.Instances.Any(x => x.Name == instance.Name).ShouldBeFalse();
         }
@@ -98,7 +98,7 @@ namespace StructureMap.Testing.Query
             var instance = new ConfiguredInstance(typeof (Service<>));
             family.SetDefault(instance);
 
-            configuration.Default.ReturnedType.ShouldEqual(typeof (Service<>));
+            configuration.Default.ReturnedType.ShouldBe(typeof (Service<>));
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void PluginType_pulls_from_the_inner_family()
         {
-            configuration.PluginType.ShouldEqual(family.PluginType);
+            configuration.PluginType.ShouldBe(family.PluginType);
         }
     }
 }

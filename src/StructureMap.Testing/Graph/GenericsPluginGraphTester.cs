@@ -38,13 +38,13 @@ namespace StructureMap.Testing.Graph
 
 
             var intService = container.GetInstance<IGenericService<int>>().ShouldBeOfType<GenericService<int>>();
-            intService.GetT().ShouldEqual(typeof (int));
+            intService.GetT().ShouldBe(typeof (int));
 
             container.GetInstance<IGenericService<int>>("Second").ShouldBeOfType<SecondGenericService<int>>();
 
             var stringService =
                 (GenericService<string>) container.GetInstance<IGenericService<string>>();
-            stringService.GetT().ShouldEqual(typeof (string));
+            stringService.GetT().ShouldBe(typeof (string));
         }
 
         [Test]

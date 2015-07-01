@@ -84,7 +84,7 @@ namespace StructureMap.Testing.Building
 
             var func = Expression.Lambda<Func<string>>(wrapped).Compile();
 
-            func().ShouldEqual("I am good");
+            func().ShouldBe("I am good");
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace StructureMap.Testing.Building
 
             var ex = Exception<FakeStructureMapException>.ShouldBeThrownBy(() => func());
 
-            ex.Title.ShouldEqual("bad!");
+            ex.Title.ShouldBe("bad!");
             ex.Message.ShouldContain("my description");
             ex.InnerException.ShouldBeTheSameAs(genericEx);
         }
@@ -128,7 +128,7 @@ namespace StructureMap.Testing.Building
 
             var func = Expression.Lambda<Func<string>>(wrapped).Compile();
 
-            func().ShouldEqual("I am good");
+            func().ShouldBe("I am good");
         }
 
         [Test]
@@ -142,7 +142,7 @@ namespace StructureMap.Testing.Building
 
             var ex = Exception<FakeStructureMapException>.ShouldBeThrownBy(() => func());
 
-            ex.Title.ShouldEqual("bad!");
+            ex.Title.ShouldBe("bad!");
             ex.Message.ShouldContain("some description");
             ex.InnerException.ShouldBeTheSameAs(genericEx);
         }
@@ -171,7 +171,7 @@ namespace StructureMap.Testing.Building
 
             var func = Expression.Lambda<Func<string>>(wrapped).Compile();
 
-            func().ShouldEqual("I am good");
+            func().ShouldBe("I am good");
         }
 
         [Test]
@@ -185,7 +185,7 @@ namespace StructureMap.Testing.Building
 
             var ex = Exception<FakeStructureMapException>.ShouldBeThrownBy(() => func());
 
-            ex.Title.ShouldEqual("bad!");
+            ex.Title.ShouldBe("bad!");
             ex.Message.ShouldContain("some description");
             ex.InnerException.ShouldBeTheSameAs(genericEx);
         }

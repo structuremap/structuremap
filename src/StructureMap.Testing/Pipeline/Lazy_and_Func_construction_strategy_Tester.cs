@@ -43,7 +43,7 @@ namespace StructureMap.Testing.Pipeline
             var w2 = func();
             var w3 = func();
 
-            w1.ShouldBeOfType<ColorWidget>().Color.ShouldEqual("green");
+            w1.ShouldBeOfType<ColorWidget>().Color.ShouldBe("green");
 
             w1.ShouldNotBeTheSameAs(w2);
             w1.ShouldNotBeTheSameAs(w3);
@@ -61,7 +61,7 @@ namespace StructureMap.Testing.Pipeline
             var w2 = func();
             var w3 = func();
 
-            w1.ShouldBeOfType<ColorWidget>().Color.ShouldEqual("green");
+            w1.ShouldBeOfType<ColorWidget>().Color.ShouldBe("green");
 
             w1.ShouldBeTheSameAs(w2);
             w1.ShouldBeTheSameAs(w3);
@@ -78,7 +78,7 @@ namespace StructureMap.Testing.Pipeline
             });
 
             var func = container.GetInstance<Func<string, IWidget>>();
-            func("green").ShouldBeOfType<ColorWidget>().Color.ShouldEqual("green");
+            func("green").ShouldBeOfType<ColorWidget>().Color.ShouldBe("green");
         }
 
         public class ConcreteClass

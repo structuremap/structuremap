@@ -71,9 +71,9 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void specify_a_simple_property()
         {
-            build<SimplePropertyTarget>(instance => instance.SetProperty(x => x.Name = "Jeremy")).Name.ShouldEqual(
+            build<SimplePropertyTarget>(instance => instance.SetProperty(x => x.Name = "Jeremy")).Name.ShouldBe(
                 "Jeremy");
-            build<SimplePropertyTarget>(i => i.SetProperty(x => x.Age = 16)).Age.ShouldEqual(16);
+            build<SimplePropertyTarget>(i => i.SetProperty(x => x.Age = 16)).Age.ShouldBe(16);
 
             var container = new Container(x => {
                 x.ForConcreteType<SimplePropertyTarget>().Configure
@@ -87,13 +87,13 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void specify_a_simple_property_name_with_equal_to()
         {
-            build<SimplePropertyTarget>(i => i.Setter(x => x.Name).Is("Scott")).Name.ShouldEqual("Scott");
+            build<SimplePropertyTarget>(i => i.Setter(x => x.Name).Is("Scott")).Name.ShouldBe("Scott");
         }
 
         [Test]
         public void specify_a_simple_property_with_equal_to()
         {
-            build<SimplePropertyTarget>(i => i.Setter(x => x.Name).Is("Bret")).Name.ShouldEqual("Bret");
+            build<SimplePropertyTarget>(i => i.Setter(x => x.Name).Is("Bret")).Name.ShouldBe("Bret");
         }
 
 
@@ -108,7 +108,7 @@ namespace StructureMap.Testing.Pipeline
                 x.Object(widget1);
                 x.Object(widget2);
                 x.Object(widget3);
-            })).Widgets.ShouldEqual(new[] {widget1, widget2, widget3});
+            })).Widgets.ShouldBe(new[] {widget1, widget2, widget3});
         }
 
 
@@ -123,7 +123,7 @@ namespace StructureMap.Testing.Pipeline
                 x.Object(widget1);
                 x.Object(widget2);
                 x.Object(widget3);
-            })).Widgets.ShouldEqual(new[] {widget1, widget2, widget3});
+            })).Widgets.ShouldBe(new[] {widget1, widget2, widget3});
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void successfully_specify_the_constructor_argument_of_a_string()
         {
-            build<ColorRule>(i => i.Ctor<string>("color").Is("Red")).Color.ShouldEqual("Red");
+            build<ColorRule>(i => i.Ctor<string>("color").Is("Red")).Color.ShouldBe("Red");
         }
 
         [Test]
@@ -153,7 +153,7 @@ namespace StructureMap.Testing.Pipeline
             });
 
             container.GetInstance<ClassA>()
-                .B.B.ShouldEqual("named");
+                .B.B.ShouldBe("named");
         }
 
         [Test]
@@ -184,13 +184,13 @@ namespace StructureMap.Testing.Pipeline
             });
 
             container.GetInstance<ClassWithMultipleConstructors>("One")
-                .CtorUsed.ShouldEqual("One Arg");
+                .CtorUsed.ShouldBe("One Arg");
 
             container.GetInstance<ClassWithMultipleConstructors>("Two")
-                .CtorUsed.ShouldEqual("Two Args");
+                .CtorUsed.ShouldBe("Two Args");
 
             container.GetInstance<ClassWithMultipleConstructors>("Default")
-                .CtorUsed.ShouldEqual("Three Args");
+                .CtorUsed.ShouldBe("Three Args");
         }
 
         private class ClassA

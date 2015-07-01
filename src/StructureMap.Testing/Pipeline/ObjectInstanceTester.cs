@@ -36,7 +36,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var gateway = new StubbedGateway();
             new ObjectInstance(gateway).ToDependencySource(typeof (IGateway))
-                .ShouldEqual(Constant.For<IGateway>(gateway));
+                .ShouldBe(Constant.For<IGateway>(gateway));
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace StructureMap.Testing.Pipeline
         public void Create_description_should_return_the_ToString_of_the_inner_instance()
         {
             new ObjectInstance(this)
-                .Description.ShouldEqual("Object:  " + ToString());
+                .Description.ShouldBe("Object:  " + ToString());
         }
 
         [Test]

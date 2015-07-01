@@ -89,7 +89,7 @@ namespace FubuMVC.StructureMap3.Testing.Internals
             var def = new ObjectDef(typeof (FakeJsonBehavior));
             var instance = new ObjectDefInstance(def);
 
-            instance.Name.ShouldEqual(def.Name);
+            instance.Name.ShouldBe(def.Name);
         }
 
         [Test]

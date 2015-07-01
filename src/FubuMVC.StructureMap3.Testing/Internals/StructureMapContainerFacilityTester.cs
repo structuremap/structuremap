@@ -103,7 +103,7 @@ namespace FubuMVC.StructureMap3.Testing.Internals
         [Test]
         public void can_return_all_the_registered_activators_smoke_test()
         {
-            facility.GetAll<IActivator>().Count().ShouldEqual(3);
+            facility.GetAll<IActivator>().Count().ShouldBe(3);
         }
 
         [Test]
@@ -148,7 +148,7 @@ namespace FubuMVC.StructureMap3.Testing.Internals
         [Test]
         public void should_be_able_to_pull_all_of_the_route_behaviors_out_of_the_container()
         {
-            container.GetAllInstances<IActionBehavior>().Count().ShouldEqual(3);
+            container.GetAllInstances<IActionBehavior>().Count().ShouldBe(3);
         }
 
         [Test]

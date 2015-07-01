@@ -20,19 +20,19 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void role_is_decorator()
         {
-            theInterceptor.Role.ShouldEqual(InterceptorRole.Decorates);
+            theInterceptor.Role.ShouldBe(InterceptorRole.Decorates);
         }
 
         [Test]
         public void accepts_type()
         {
-            theInterceptor.Accepts.ShouldEqual(typeof (ITarget));
+            theInterceptor.Accepts.ShouldBe(typeof (ITarget));
         }
 
         [Test]
         public void return_type()
         {
-            theInterceptor.Returns.ShouldEqual(typeof (ITarget));
+            theInterceptor.Returns.ShouldBe(typeof (ITarget));
         }
 
         [Test]

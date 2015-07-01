@@ -108,7 +108,7 @@ namespace StructureMap.Testing.Building.Interception
                 .ShouldBeTheSameAs(target);
 
             target.HasBeenActivated.ShouldBeTrue();
-            target.Color.ShouldEqual("Green");
+            target.Color.ShouldBe("Green");
         }
 
         [Test]
@@ -131,7 +131,7 @@ namespace StructureMap.Testing.Building.Interception
                         plan.ToBuilder<ITarget>()(session, session);
                     });
 
-            ex.Title.ShouldEqual("Activator interceptor failed during object creation.  See the inner exception for details.");
+            ex.Title.ShouldBe("Activator interceptor failed during object creation.  See the inner exception for details.");
             ex.Message.ShouldContain(interceptor.Description);
         }
 
@@ -189,7 +189,7 @@ namespace StructureMap.Testing.Building.Interception
                 .Inner.ShouldBeOfType<DecoratedTarget>()
                 .Inner.ShouldBeTheSameAs(target);
 
-            target.Color.ShouldEqual("Green");
+            target.Color.ShouldBe("Green");
             target.HasBeenActivated.ShouldBeTrue();
         }
 

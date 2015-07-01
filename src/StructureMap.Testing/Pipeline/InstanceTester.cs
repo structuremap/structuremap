@@ -78,10 +78,10 @@ namespace StructureMap.Testing.Pipeline
             var i1 = new ConfiguredInstance(GetType()).Named("foo");
             var i2 = new ConfiguredInstance(GetType()).Named("bar");
 
-            i1.InstanceKey(GetType()).ShouldEqual(i1.InstanceKey(GetType()));
-            i2.InstanceKey(GetType()).ShouldEqual(i2.InstanceKey(GetType()));
-            i1.InstanceKey(GetType()).ShouldNotEqual(i2.InstanceKey(GetType()));
-            i1.InstanceKey(typeof (InstanceUnderTest)).ShouldNotEqual(i1.InstanceKey(GetType()));
+            i1.InstanceKey(GetType()).ShouldBe(i1.InstanceKey(GetType()));
+            i2.InstanceKey(GetType()).ShouldBe(i2.InstanceKey(GetType()));
+            i1.InstanceKey(GetType()).ShouldNotBe(i2.InstanceKey(GetType()));
+            i1.InstanceKey(typeof (InstanceUnderTest)).ShouldNotBe(i1.InstanceKey(GetType()));
         }
 
         [Test]

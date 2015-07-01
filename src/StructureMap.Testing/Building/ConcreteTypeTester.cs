@@ -28,7 +28,7 @@ namespace StructureMap.Testing.Building
         {
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IGateway), null)
                 .ShouldBeOfType<DefaultDependencySource>()
-                .DependencyType.ShouldEqual(typeof (IGateway));
+                .DependencyType.ShouldBe(typeof (IGateway));
         }
 
         [Test]
@@ -45,20 +45,20 @@ namespace StructureMap.Testing.Building
         public void if_value_exists_and_it_is_the_right_type_return_constant()
         {
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (string), "foo")
-                .ShouldEqual(Constant.For("foo"));
+                .ShouldBe(Constant.For("foo"));
 
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (int), 42)
-                .ShouldEqual(Constant.For<int>(42));
+                .ShouldBe(Constant.For<int>(42));
 
             // My dad raises registered Beefmasters and he'd be disappointed
             // if the default here was anything else
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (BreedEnum),
                 BreedEnum.Beefmaster)
-                .ShouldEqual(Constant.For(BreedEnum.Beefmaster));
+                .ShouldBe(Constant.For(BreedEnum.Beefmaster));
 
             var gateway = new StubbedGateway();
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IGateway), gateway)
-                .ShouldEqual(Constant.For<IGateway>(gateway));
+                .ShouldBe(Constant.For<IGateway>(gateway));
         }
 
         [Test]
@@ -66,24 +66,24 @@ namespace StructureMap.Testing.Building
         {
             var list = new List<IGateway> {new StubbedGateway(), new StubbedGateway()};
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), list)
-                .ShouldEqual(Constant.For(list));
+                .ShouldBe(Constant.For(list));
 
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IList<IGateway>), list)
-                .ShouldEqual(Constant.For<IList<IGateway>>(list));
+                .ShouldBe(Constant.For<IList<IGateway>>(list));
         }
 
         [Test]
         public void coerce_simple_numbers()
         {
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (int), "42")
-                .ShouldEqual(Constant.For(42));
+                .ShouldBe(Constant.For(42));
         }
 
         [Test]
         public void coerce_enum()
         {
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (BreedEnum), "Angus")
-                .ShouldEqual(Constant.For(BreedEnum.Angus));
+                .ShouldBe(Constant.For(BreedEnum.Angus));
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace StructureMap.Testing.Building
                 ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), array)
                     .ShouldBeOfType<Constant>();
 
-            constant.ReturnedType.ShouldEqual(typeof (List<IGateway>));
+            constant.ReturnedType.ShouldBe(typeof (List<IGateway>));
             constant.Value.As<List<IGateway>>()
                 .ShouldHaveTheSameElementsAs(array);
         }
@@ -107,7 +107,7 @@ namespace StructureMap.Testing.Building
                 ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IList<IGateway>), array)
                     .ShouldBeOfType<Constant>();
 
-            constant.ReturnedType.ShouldEqual(typeof (IList<IGateway>));
+            constant.ReturnedType.ShouldBe(typeof (IList<IGateway>));
             constant.Value.As<IList<IGateway>>()
                 .ShouldHaveTheSameElementsAs(array);
         }
@@ -120,7 +120,7 @@ namespace StructureMap.Testing.Building
                 ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), list)
                     .ShouldBeOfType<Constant>();
 
-            constant.ReturnedType.ShouldEqual(typeof (List<IGateway>));
+            constant.ReturnedType.ShouldBe(typeof (List<IGateway>));
             constant.Value.As<List<IGateway>>()
                 .ShouldHaveTheSameElementsAs(list);
         }
@@ -133,7 +133,7 @@ namespace StructureMap.Testing.Building
                 ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IGateway[]), list)
                     .ShouldBeOfType<Constant>();
 
-            constant.ReturnedType.ShouldEqual(typeof (IGateway[]));
+            constant.ReturnedType.ShouldBe(typeof (IGateway[]));
             constant.Value.As<IGateway[]>()
                 .ShouldHaveTheSameElementsAs(list.ToArray());
         }
@@ -143,7 +143,7 @@ namespace StructureMap.Testing.Building
         {
             var enumerableType = typeof (IGateway[]);
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType));
+                .ShouldBe(new AllPossibleValuesDependencySource(enumerableType));
         }
 
         [Test]
@@ -151,7 +151,7 @@ namespace StructureMap.Testing.Building
         {
             var enumerableType = typeof (IEnumerable<IGateway>);
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType));
+                .ShouldBe(new AllPossibleValuesDependencySource(enumerableType));
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace StructureMap.Testing.Building
         {
             var enumerableType = typeof (IList<IGateway>);
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType));
+                .ShouldBe(new AllPossibleValuesDependencySource(enumerableType));
         }
 
         [Test]
@@ -167,7 +167,7 @@ namespace StructureMap.Testing.Building
         {
             var enumerableType = typeof (List<IGateway>);
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType));
+                .ShouldBe(new AllPossibleValuesDependencySource(enumerableType));
         }
 
         [Test]
@@ -176,10 +176,10 @@ namespace StructureMap.Testing.Building
             var source = ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (string), null)
                 .ShouldBeOfType<DependencyProblem>();
 
-            source.Name.ShouldEqual("SomeProp");
-            source.Type.ShouldEqual(ConcreteType.ConstructorArgument);
-            source.Message.ShouldEqual("Required primitive dependency is not explicitly defined");
-            source.ReturnedType.ShouldEqual(typeof (string));
+            source.Name.ShouldBe("SomeProp");
+            source.Type.ShouldBe(ConcreteType.ConstructorArgument);
+            source.Message.ShouldBe("Required primitive dependency is not explicitly defined");
+            source.ReturnedType.ShouldBe(typeof (string));
         }
 
         [Test]
@@ -188,10 +188,10 @@ namespace StructureMap.Testing.Building
             var source = ConcreteType.SourceFor(ConcreteType.SetterProperty, "SomeProp", typeof (string), null)
                 .ShouldBeOfType<DependencyProblem>();
 
-            source.Name.ShouldEqual("SomeProp");
-            source.Type.ShouldEqual(ConcreteType.SetterProperty);
-            source.Message.ShouldEqual("Required primitive dependency is not explicitly defined");
-            source.ReturnedType.ShouldEqual(typeof (string));
+            source.Name.ShouldBe("SomeProp");
+            source.Type.ShouldBe(ConcreteType.SetterProperty);
+            source.Message.ShouldBe("Required primitive dependency is not explicitly defined");
+            source.ReturnedType.ShouldBe(typeof (string));
         }
 
         [Test]
@@ -205,10 +205,10 @@ namespace StructureMap.Testing.Building
                 colorRule)
                 .ShouldBeOfType<DependencyProblem>();
 
-            source.Name.ShouldEqual("SomeProp");
-            source.Type.ShouldEqual(ConcreteType.SetterProperty);
-            source.ReturnedType.ShouldEqual(typeof (IGateway));
-            source.Message.ShouldEqual(ConcreteType.UnableToDetermineDependency.ToFormat(
+            source.Name.ShouldBe("SomeProp");
+            source.Type.ShouldBe(ConcreteType.SetterProperty);
+            source.ReturnedType.ShouldBe(typeof (IGateway));
+            source.Message.ShouldBe(ConcreteType.UnableToDetermineDependency.ToFormat(
                 typeof (IGateway).GetFullName(), colorRule));
         }
 
@@ -218,10 +218,10 @@ namespace StructureMap.Testing.Building
             var source = ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeArg", typeof (int), "foo")
                 .ShouldBeOfType<DependencyProblem>();
 
-            source.Name.ShouldEqual("SomeArg");
-            source.Type.ShouldEqual(ConcreteType.ConstructorArgument);
-            source.ReturnedType.ShouldEqual(typeof (int));
-            source.Message.ShouldEqual(ConcreteType.CastingError.ToFormat("foo", typeof (string).GetFullName(),
+            source.Name.ShouldBe("SomeArg");
+            source.Type.ShouldBe(ConcreteType.ConstructorArgument);
+            source.ReturnedType.ShouldBe(typeof (int));
+            source.Message.ShouldBe(ConcreteType.CastingError.ToFormat("foo", typeof (string).GetFullName(),
                 typeof (int).GetFullName()));
         }
 

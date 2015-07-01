@@ -17,9 +17,9 @@ namespace StructureMap.Testing
 
 			var instances = container.GetAllInstances<INeedAnEntity<Entity>>().ToArray();
 
-			instances.Length.ShouldEqual(2);
-			instances[0].GetType().Name.ShouldEqual("OpenEntityType`1");
-			instances[1].GetType().Name.ShouldEqual("AnotherOpenEntityType`1");
+			instances.Length.ShouldBe(2);
+			instances[0].GetType().Name.ShouldBe("OpenEntityType`1");
+			instances[1].GetType().Name.ShouldBe("AnotherOpenEntityType`1");
 		}
 
 		[Test]
@@ -34,9 +34,9 @@ namespace StructureMap.Testing
 
 			var instances = container.GetAllInstances<INeedAnEntity<Entity>>().ToArray();
 
-			instances.Length.ShouldEqual(2);
-			instances[0].GetType().Name.ShouldEqual("ClosedEntityType");
-			instances[1].GetType().Name.ShouldEqual("AnotherClosedEntityType");
+			instances.Length.ShouldBe(2);
+			instances[0].GetType().Name.ShouldBe("ClosedEntityType");
+			instances[1].GetType().Name.ShouldBe("AnotherClosedEntityType");
 		}
 	}
 

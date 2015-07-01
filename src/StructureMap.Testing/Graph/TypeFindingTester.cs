@@ -31,13 +31,13 @@ namespace StructureMap.Testing.Graph
         public void FoundTheRightNumberOfInstancesForATypeWithNoPlugins()
         {
             container.GetAllInstances<TypeIWantToFind>().Count()
-                .ShouldEqual(3);
+                .ShouldBe(3);
         }
 
         [Test]
         public void FoundTheRightNumberOfInstancesForATypeWithNoPlugins2()
         {
-            container.GetAllInstances<OtherType>().Count().ShouldEqual(2);
+            container.GetAllInstances<OtherType>().Count().ShouldBe(2);
         }
 
         [TestFixture]
@@ -53,7 +53,7 @@ namespace StructureMap.Testing.Graph
                 {
                     var redTypes = container.GetAllInstances<IOpenGeneric<string>>();
 
-                    redTypes.Count().ShouldEqual(1);
+                    redTypes.Count().ShouldBe(1);
                 }
             }
 

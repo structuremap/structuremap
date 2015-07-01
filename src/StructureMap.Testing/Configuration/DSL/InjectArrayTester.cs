@@ -166,7 +166,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     .Ctor<string>("name").Is("Jeremy");
             });
 
-            container.GetInstance<Processor>().Name.ShouldEqual("Jeremy");
+            container.GetInstance<Processor>().Name.ShouldBe("Jeremy");
         }
 
         [Test]

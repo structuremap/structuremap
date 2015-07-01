@@ -99,12 +99,12 @@ namespace StructureMap.Testing.Acceptance
 
             container.GetInstance<IWidget>()
                 .ShouldBeOfType<ColorWidget>()
-                .Color.ShouldEqual("Red");
+                .Color.ShouldBe("Red");
 
             container.With("color").EqualTo("Blue")
                 .GetInstance<IWidget>()
                 .ShouldBeOfType<ColorWidget>()
-                .Color.ShouldEqual("Blue");
+                .Color.ShouldBe("Blue");
         }
         // ENDSAMPLE
     }

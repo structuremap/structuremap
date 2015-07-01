@@ -173,13 +173,13 @@ namespace StructureMap.Testing.Acceptance
             });
 
             var guyA = container.GetInstance<DisposedGuy>("A");
-            CustomLifecycle.Cache.Count.ShouldEqual(1);
+            CustomLifecycle.Cache.Count.ShouldBe(1);
 
             container.Model.For<DisposedGuy>().EjectAndRemove("A");
 
             guyA.WasDisposed.ShouldBeTrue();
 
-            CustomLifecycle.Cache.Count.ShouldEqual(0);
+            CustomLifecycle.Cache.Count.ShouldBe(0);
         }
     }
 

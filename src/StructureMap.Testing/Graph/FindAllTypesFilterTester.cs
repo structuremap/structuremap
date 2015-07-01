@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Graph
             var graph = registry.Build();
 
             graph.Families[typeof (IGeneric<>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldEqual(typeof (Generic<>));
+                .PluggedType.ShouldBe(typeof (Generic<>));
         }
 
 
@@ -35,7 +35,7 @@ namespace StructureMap.Testing.Graph
             var graph = registry.Build();
 
             graph.Families[typeof (IGeneric<string>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldEqual(typeof (StringGeneric));
+                .PluggedType.ShouldBe(typeof (StringGeneric));
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace StructureMap.Testing.Graph
             var graph = registry.Build();
 
             graph.Families[typeof (IGeneric<>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldEqual(typeof (ConcreteGeneric<>));
+                .PluggedType.ShouldBe(typeof (ConcreteGeneric<>));
         }
 
 

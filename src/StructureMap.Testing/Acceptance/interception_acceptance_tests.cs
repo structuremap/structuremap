@@ -105,7 +105,7 @@ namespace StructureMap.Testing.Acceptance
             var holder = container.GetInstance<IWidget>()
                 .ShouldBeOfType<NamedWidgetHolder>();
 
-            holder.Name.ShouldEqual("Frank Sinatra");
+            holder.Name.ShouldBe("Frank Sinatra");
             holder.Inner.ShouldBeOfType<AWidget>();
         }
 

@@ -206,9 +206,9 @@ namespace StructureMap.Testing.Acceptance
             var parent = container.GetInstance<IParent>()
                 .ShouldBeOfType<Parent>();
 
-            parent.Name.ShouldEqual("Jerry");
-            parent.Child.Name.ShouldEqual("Monte");
-            parent.Child.GrandChild.Name.ShouldEqual("Jeremy");
+            parent.Name.ShouldBe("Jerry");
+            parent.Child.Name.ShouldBe("Monte");
+            parent.Child.GrandChild.Name.ShouldBe("Jeremy");
         }
 
 

@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Building
                 Constant.For(gateway2),
                 Constant.For(gateway3));
 
-            array.ReturnedType.ShouldEqual(typeof (IGateway[]));
+            array.ReturnedType.ShouldBe(typeof (IGateway[]));
         }
 
         [Test]

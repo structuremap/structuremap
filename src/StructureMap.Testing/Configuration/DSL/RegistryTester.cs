@@ -121,7 +121,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(registry);
             // verify the default implementation and total registered implementations
             container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
-            container.GetAllInstances<IWidget>().Count().ShouldEqual(5);
+            container.GetAllInstances<IWidget>().Count().ShouldBe(5);
         }
         // ENDSAMPLE
 
@@ -171,13 +171,13 @@ namespace StructureMap.Testing.Configuration.DSL
             var registry2 = new TestRegistry2();
             var graph = new PluginGraph();
 
-            graph.Registries.Count.ShouldEqual(0);
+            graph.Registries.Count.ShouldBe(0);
             registry2.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
 
             graph.Registries.Contains(registry2).ShouldBeTrue();
 
             registry2.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
-            registry2.ExecutedCount.ShouldEqual(1);
+            registry2.ExecutedCount.ShouldBe(1);
         }
 
         [Test]

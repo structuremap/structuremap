@@ -22,7 +22,7 @@ namespace StructureMap.Testing.Bugs
 
             container.BuildUp(webPage);
 
-            webPage.DbRepository.ConnectionString.ShouldEqual("some connection string");
+            webPage.DbRepository.ConnectionString.ShouldBe("some connection string");
         }
     }
 

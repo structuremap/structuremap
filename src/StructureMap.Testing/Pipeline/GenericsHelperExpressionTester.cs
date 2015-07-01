@@ -92,7 +92,7 @@ namespace StructureMap.Testing.Pipeline
                 Assert.Fail("Should have thrown exception");
             });
 
-            ex.Title.ShouldEqual("Type 'System.String' is not an open generic type");
+            ex.Title.ShouldBe("Type 'System.String' is not an open generic type");
         }
 
         [Test]

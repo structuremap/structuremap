@@ -56,7 +56,7 @@ namespace StructureMap.Testing.Configuration.DSL
             });
 
 
-            container.GetAllInstances<IAddTypes>().Count().ShouldEqual(4);
+            container.GetAllInstances<IAddTypes>().Count().ShouldBe(4);
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 });
             });
 
-            container.GetAllInstances<IAddTypes>().Count().ShouldEqual(4);
+            container.GetAllInstances<IAddTypes>().Count().ShouldBe(4);
         }
     }
 }

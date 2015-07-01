@@ -63,7 +63,7 @@ namespace StructureMap.Web.Testing
 
             int after = lifecycle.FindCache(null).Count;
 
-            after.ShouldEqual(initial);
+            after.ShouldBe(initial);
         }
     }
 }

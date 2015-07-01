@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void can_get_closing_type_if_starting_from_a_base_type()
         {
-            typeof (ClosedClass<string>).FindFirstInterfaceThatCloses(typeof (IOpenClass<>)).ShouldEqual(
+            typeof (ClosedClass<string>).FindFirstInterfaceThatCloses(typeof (IOpenClass<>)).ShouldBe(
                 typeof (IOpenClass<string>));
         }
 

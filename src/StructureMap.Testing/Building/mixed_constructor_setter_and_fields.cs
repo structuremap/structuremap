@@ -18,10 +18,10 @@ namespace StructureMap.Testing.Building
 
             var target = build.Build<MixedTarget>(new FakeBuildSession());
 
-            target.Name.ShouldEqual("Jeremy");
-            target.Color.ShouldEqual("Red");
-            target.Direction.ShouldEqual("South");
-            target.Description.ShouldEqual("Something");
+            target.Name.ShouldBe("Jeremy");
+            target.Color.ShouldBe("Red");
+            target.Direction.ShouldBe("South");
+            target.Description.ShouldBe("Something");
         }
     }
 
