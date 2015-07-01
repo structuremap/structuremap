@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Testing;
 
 namespace StructureMap.AutoMocking.Testing
@@ -123,7 +124,7 @@ namespace StructureMap.AutoMocking.Testing
         public void the_auto_mocked_class_under_test_is_the_concrete_type()
         {
             AutoMocker<ClassWithArray> mocker = createAutoMocker<ClassWithArray>();
-            mocker.ClassUnderTest.GetType().ShouldEqual(typeof (ClassWithArray));
+            mocker.ClassUnderTest.GetType().ShouldBe(typeof (ClassWithArray));
         }
 
         [Test]
@@ -134,7 +135,7 @@ namespace StructureMap.AutoMocking.Testing
             IMockedService[] services = mocker.CreateMockArrayFor<IMockedService>(3);
             ClassWithArray theClass = mocker.ClassUnderTest;
 
-            theClass.Services.Length.ShouldEqual(3);
+            theClass.Services.Length.ShouldBe(3);
         }
 
         [Test]
@@ -147,7 +148,7 @@ namespace StructureMap.AutoMocking.Testing
             mocker.PartialMockTheClassUnderTest();
             ClassWithArray theClass = mocker.ClassUnderTest;
 
-            theClass.Services.Length.ShouldEqual(3);
+            theClass.Services.Length.ShouldBe(3);
         }
 
 
@@ -216,7 +217,7 @@ namespace StructureMap.AutoMocking.Testing
         {
             AutoMocker<ConcreteClass> autoMocker = createAutoMocker<ConcreteClass>();
             setExpectation(autoMocker.Get<IMockedService>(), x => x.Name, "Jeremy");
-            autoMocker.ClassUnderTest.Name.ShouldEqual("Jeremy");
+            autoMocker.ClassUnderTest.Name.ShouldBe("Jeremy");
         }
 
         [Test]
@@ -227,7 +228,7 @@ namespace StructureMap.AutoMocking.Testing
             autoMocker.PartialMockTheClassUnderTest();
             ConcreteClass concreteClass = autoMocker.ClassUnderTest;
             setExpectation(concreteClass, x => x.Name, "Max");
-            concreteClass.Name.ShouldEqual("Max");
+            concreteClass.Name.ShouldBe("Max");
         }
 
         [Test]

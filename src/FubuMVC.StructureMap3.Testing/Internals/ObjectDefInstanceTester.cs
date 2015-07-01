@@ -9,6 +9,7 @@ using FubuMVC.Core.Http;
 using FubuMVC.Core.Registration.ObjectGraph;
 using FubuMVC.Core.Runtime;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap;
 using StructureMap.Testing;
 

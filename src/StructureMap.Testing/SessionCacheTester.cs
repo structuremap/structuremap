@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Shouldly;
 using StructureMap.Building;
 using StructureMap.Pipeline;
 

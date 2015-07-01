@@ -1,5 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing

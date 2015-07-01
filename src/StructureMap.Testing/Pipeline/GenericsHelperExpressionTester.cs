@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using NUnit.Framework;
+using Shouldly;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -87,7 +88,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void throws_exception_if_passed_a_type_that_is_not_an_open_generic_type()
         {
-            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
                 container.ForGenericType(typeof(string)).WithParameters().GetInstanceAs<IFlattener>();
                 Assert.Fail("Should have thrown exception");
             });

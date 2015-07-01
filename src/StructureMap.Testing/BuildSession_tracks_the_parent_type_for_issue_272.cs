@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Acceptance;
 

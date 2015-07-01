@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -172,11 +173,11 @@ namespace StructureMap.Testing.Configuration.DSL
             var graph = new PluginGraph();
 
             graph.Registries.Count.ShouldBe(0);
-            registry2.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
+            registry2.As<IPluginGraphConfiguration>().Configure(graph);
 
             graph.Registries.Contains(registry2).ShouldBeTrue();
 
-            registry2.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
+            registry2.As<IPluginGraphConfiguration>().Configure(graph);
             registry2.ExecutedCount.ShouldBe(1);
         }
 

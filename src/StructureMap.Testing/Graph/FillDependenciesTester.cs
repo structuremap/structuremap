@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget4;
 
@@ -26,7 +27,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void TryToFillDependenciesOnAbstractClassThrowsException()
         {
-            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
                 var container = new Container();
                 container.GetInstance(typeof(AbstractClass));
             });
@@ -38,7 +39,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void TryToFillDependenciesOnClassWithPrimitiveArgumentsThrowsException()
         {
-            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
                 var container = new Container();
                 container.GetInstance(typeof(CannotBeFilledConcreteClass));
             });

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Graph;
 
 namespace StructureMap.Testing.Bugs

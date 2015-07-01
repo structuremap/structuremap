@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -64,7 +65,7 @@ namespace StructureMap.Testing
 
             });
 
-            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
                 container.GetInstance<IWidget>("purple");
             });
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Shouldly;
 using StructureMap.Attributes;
 using StructureMap.Building;
 using StructureMap.Pipeline;

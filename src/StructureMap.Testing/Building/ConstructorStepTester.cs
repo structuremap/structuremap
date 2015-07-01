@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Building;
 using StructureMap.Testing.Acceptance;
 

@@ -19,3 +19,4 @@ NUGET
     NUnit (2.6.3.0)
     NUnit.Runners (2.6.3)
     RhinoMocks (3.6.1)
+    Shouldly (2.5.0)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;

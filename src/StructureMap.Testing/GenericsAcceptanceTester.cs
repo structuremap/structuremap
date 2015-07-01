@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.TypeRules;

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Building;
 using StructureMap.Pipeline;
 

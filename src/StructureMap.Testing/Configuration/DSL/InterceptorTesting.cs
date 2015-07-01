@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget3;

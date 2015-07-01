@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Samples;

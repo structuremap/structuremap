@@ -3,6 +3,7 @@ using FubuCore.Binding;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Registration.Nodes;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Testing;
 
 namespace FubuMVC.StructureMap3.Testing.Compliance

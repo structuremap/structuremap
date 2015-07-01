@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;

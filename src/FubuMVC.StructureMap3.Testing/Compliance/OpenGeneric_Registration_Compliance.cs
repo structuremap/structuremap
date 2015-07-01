@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using FubuMVC.Core.Registration.ObjectGraph;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap;
 using StructureMap.Testing;
 

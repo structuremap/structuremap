@@ -1,5 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.Testing.Configuration.DSL;

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Testing.Acceptance;
 using AWidget = StructureMap.Testing.Widget.AWidget;
 using IWidget = StructureMap.Testing.Widget.IWidget;

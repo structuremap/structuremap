@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Win32;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using Registry = StructureMap.Configuration.DSL.Registry;

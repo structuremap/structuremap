@@ -125,6 +125,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="..\..\.paket\paket.targets" />
   <ItemGroup>
     <Reference Include="Bottles">
       <HintPath>..\..\packages\Bottles\lib\Bottles.dll</HintPath>
@@ -168,5 +169,4 @@
       </ItemGroup>
     </When>
   </Choose>
-  <Import Project="..\..\.paket\paket.targets" />
 </Project>

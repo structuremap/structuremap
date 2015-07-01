@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Building;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;

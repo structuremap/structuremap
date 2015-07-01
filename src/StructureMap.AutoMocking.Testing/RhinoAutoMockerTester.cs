@@ -3,8 +3,10 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
+using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Testing;
+using StructureMap.TypeRules;
 
 namespace StructureMap.AutoMocking.Testing
 {
@@ -55,7 +57,7 @@ namespace StructureMap.AutoMocking.Testing
         public void GetAFullMockForAServiceThatHasNotPreviouslyBeenRequested()
         {
             var service = _container.GetInstance<IMockedService>();
-            service.ShouldBeOfType<IMockedObject>();
+            service.GetType().CanBeCastTo<IMockedObject>().ShouldBeTrue();
         }
 
         [Test]

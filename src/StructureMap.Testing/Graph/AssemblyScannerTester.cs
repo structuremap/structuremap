@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.DocumentationExamples;

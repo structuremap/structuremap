@@ -1,5 +1,6 @@
 using Moq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Testing;
 
 namespace StructureMap.AutoMocking.Moq.Testing

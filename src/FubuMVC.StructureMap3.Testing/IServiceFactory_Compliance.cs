@@ -1,5 +1,6 @@
 ﻿using FubuMVC.Core.Runtime;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Testing;
 
 namespace FubuMVC.StructureMap3.Testing

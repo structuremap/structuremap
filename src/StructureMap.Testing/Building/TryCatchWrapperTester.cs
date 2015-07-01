@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Building;
 using StructureMap.Testing.Widget3;
 

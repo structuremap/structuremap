@@ -5,6 +5,7 @@ using FubuCore.Configuration;
 using FubuMVC.Core;
 using FubuMVC.StructureMap3.Settings;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap;
 using StructureMap.Testing;
 
@@ -52,8 +53,8 @@ namespace FubuMVC.StructureMap3.Testing.Settings
                 x.Include<FooSettings>();
             });
 
-            TheResultingSettings.Name.ShouldEqual("Max");
-            TheResultingSettings.Age.ShouldEqual(9);
+            TheResultingSettings.Name.ShouldBe("Max");
+            TheResultingSettings.Age.ShouldBe(9);
         }
 
         [Test]
@@ -63,9 +64,9 @@ namespace FubuMVC.StructureMap3.Testing.Settings
                 x.IncludeAllClassesSuffixedBySetting().FromTheApplicationAssembly();
             });
 
-            container.Value.GetInstance<BarSettings>().Direction.ShouldEqual("North");
-            TheResultingSettings.Name.ShouldEqual("Max");
-            TheResultingSettings.Age.ShouldEqual(9);
+            container.Value.GetInstance<BarSettings>().Direction.ShouldBe("North");
+            TheResultingSettings.Name.ShouldBe("Max");
+            TheResultingSettings.Age.ShouldBe(9);
         }
 
         [Test]
@@ -75,9 +76,9 @@ namespace FubuMVC.StructureMap3.Testing.Settings
                 x.IncludeAllClassesSuffixedBySetting().FromAssembly(Assembly.GetExecutingAssembly());
             });
 
-            container.Value.GetInstance<BarSettings>().Direction.ShouldEqual("North");
-            TheResultingSettings.Name.ShouldEqual("Max");
-            TheResultingSettings.Age.ShouldEqual(9);
+            container.Value.GetInstance<BarSettings>().Direction.ShouldBe("North");
+            TheResultingSettings.Name.ShouldBe("Max");
+            TheResultingSettings.Age.ShouldBe(9);
         }
 
         [Test]
@@ -89,7 +90,7 @@ namespace FubuMVC.StructureMap3.Testing.Settings
                 x.IncludeAllClassesSuffixedBySetting().FromTheApplicationAssembly();
             });
 
-            container.Value.GetInstance<BarSettings>().Direction.ShouldEqual("West");
+            container.Value.GetInstance<BarSettings>().Direction.ShouldBe("West");
         }
     }
 

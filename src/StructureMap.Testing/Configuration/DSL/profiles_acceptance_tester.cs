@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Acceptance;
@@ -55,7 +56,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var profile = container.GetProfile(theProfileName);
 
             profile.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
-            profile.GetInstance<Rule>().ShouldBeOfType<Rule>();
+            profile.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
         }
 
 

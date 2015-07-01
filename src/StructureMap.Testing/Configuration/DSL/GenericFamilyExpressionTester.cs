@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 

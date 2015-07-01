@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Testing;
 
 namespace StructureMap.AutoMocking.Moq.Testing
@@ -129,7 +130,7 @@ namespace StructureMap.AutoMocking.Moq.Testing
             IMockedService[] services = mocker.CreateMockArrayFor<IMockedService>(3);
             ClassWithArray theClass = mocker.ClassUnderTest;
 
-            theClass.Services.Length.ShouldEqual(3);
+            theClass.Services.Length.ShouldBe(3);
         }
 
         [Test]
@@ -142,7 +143,7 @@ namespace StructureMap.AutoMocking.Moq.Testing
             mocker.PartialMockTheClassUnderTest();
             ClassWithArray theClass = mocker.ClassUnderTest;
 
-            theClass.Services.Length.ShouldEqual(3);
+            theClass.Services.Length.ShouldBe(3);
         }
 
 
@@ -210,7 +211,7 @@ namespace StructureMap.AutoMocking.Moq.Testing
         {
             AutoMocker<ConcreteClass> autoMocker = createAutoMocker<ConcreteClass>();
             setExpectation(autoMocker.Get<IMockedService>(), x => x.Name, "Jeremy");
-            autoMocker.ClassUnderTest.Name.ShouldEqual("Jeremy");
+            autoMocker.ClassUnderTest.Name.ShouldBe("Jeremy");
         }
 
         [Test]
@@ -221,7 +222,7 @@ namespace StructureMap.AutoMocking.Moq.Testing
             autoMocker.PartialMockTheClassUnderTest();
             ConcreteClass concreteClass = autoMocker.ClassUnderTest;
             setExpectation(concreteClass, x => x.Name, "Max");
-            concreteClass.Name.ShouldEqual("Max");
+            concreteClass.Name.ShouldBe("Max");
         }
 
         [Test]
@@ -231,7 +232,7 @@ namespace StructureMap.AutoMocking.Moq.Testing
 
             var thing = autoMocker.ClassUnderTest;
 
-            thing.GetType().ShouldEqual(typeof(ConcreteThingWithNoConstructor));
+            thing.GetType().ShouldBe(typeof(ConcreteThingWithNoConstructor));
         }
     }
 }

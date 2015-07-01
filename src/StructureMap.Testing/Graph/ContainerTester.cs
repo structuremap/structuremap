@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -175,7 +176,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GetMissingType()
         {
-            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
                 _container.GetInstance(typeof(string));
             });
 

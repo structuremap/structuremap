@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 

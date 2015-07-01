@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Diagnostics;
 
 namespace StructureMap.Testing.Diagnostics

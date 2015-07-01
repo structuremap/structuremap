@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;

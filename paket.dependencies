@@ -8,3 +8,4 @@ nuget Moq 4.0.10827
 nuget NUnit 2.6.3.0
 nuget NUnit.Runners ~> 2.6.3.0
 nuget RhinoMocks 3.6.1
+nuget Shouldly

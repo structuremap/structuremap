@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Shouldly;
 using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;

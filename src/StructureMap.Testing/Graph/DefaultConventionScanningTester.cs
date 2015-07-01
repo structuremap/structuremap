@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -55,7 +56,7 @@ namespace StructureMap.Testing.Graph
 
             scanner.Process(typeof (Convention), registry);
 
-            registry.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
+            registry.As<IPluginGraphConfiguration>().Configure(graph);
 
             Assert.IsFalse(graph.Families.Has(typeof (IServer)));
             Assert.IsTrue(graph.Families.Has(typeof (IConvention)));

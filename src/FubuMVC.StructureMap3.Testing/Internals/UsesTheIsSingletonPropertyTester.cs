@@ -1,6 +1,7 @@
 using FubuCore.Dates;
 using FubuMVC.Core;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap;
 using StructureMap.Pipeline;
 using StructureMap.Testing;

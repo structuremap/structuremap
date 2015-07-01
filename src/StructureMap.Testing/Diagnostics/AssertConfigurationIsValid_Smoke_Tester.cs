@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using NUnit.Framework;
+using Shouldly;
 
 namespace StructureMap.Testing.Diagnostics
 {

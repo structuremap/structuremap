@@ -2,6 +2,7 @@
 using System.Windows.Forms.VisualStyles;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;

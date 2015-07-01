@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Shouldly;
 using StructureMap.Building.Interception;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget3;

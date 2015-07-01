@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Bugs

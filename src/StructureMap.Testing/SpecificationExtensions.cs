@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 
 namespace StructureMap.Testing
 {
@@ -92,18 +93,6 @@ namespace StructureMap.Testing
             condition.ShouldBe(true);
         }
 
-        public static object ShouldBe(this object actual, object expected)
-        {
-            Assert.AreEqual(expected, actual);
-            return expected;
-        }
-
-        public static object ShouldNotBe(this object actual, object expected)
-        {
-            Assert.AreNotEqual(expected, actual);
-            return expected;
-        }
-
         public static void ShouldBeNull(this object anObject)
         {
             anObject.ShouldBe(null);
@@ -130,17 +119,6 @@ namespace StructureMap.Testing
         {
             Assert.AreNotSame(expected, actual);
             return expected;
-        }
-
-        public static void ShouldBeOfType(this object actual, Type expected)
-        {
-            Assert.IsInstanceOf(expected, actual);
-        }
-
-        public static T ShouldBeOfType<T>(this object actual)
-        {
-            Assert.IsInstanceOf(typeof (T), actual);
-            return (T) actual;
         }
 
         public static void ShouldNotBeOfType<T>(this object actual)

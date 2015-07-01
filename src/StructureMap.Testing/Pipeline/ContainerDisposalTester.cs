@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using Shouldly;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -97,10 +98,10 @@ namespace StructureMap.Testing.Pipeline
 
             var disposables = new[]
             {
-                child.GetInstance<I1>().ShouldBeOfType<Disposable>(),
-                child.GetInstance<I2>().ShouldBeOfType<Disposable>(),
-                child.GetInstance<I3>("1").ShouldBeOfType<Disposable>(),
-                child.GetInstance<I3>("2").ShouldBeOfType<Disposable>(),
+                child.GetInstance<I1>().As<Disposable>(),
+                child.GetInstance<I2>().As<Disposable>(),
+                child.GetInstance<I3>("1").As<Disposable>(),
+                child.GetInstance<I3>("2").As<Disposable>(),
             };
 
             child.Dispose();

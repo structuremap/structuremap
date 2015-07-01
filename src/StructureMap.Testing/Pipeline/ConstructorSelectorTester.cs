@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;

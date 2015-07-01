@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Building;
 
 namespace StructureMap.Testing.Bugs

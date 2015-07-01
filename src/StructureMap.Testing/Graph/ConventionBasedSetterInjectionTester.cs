@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Graph

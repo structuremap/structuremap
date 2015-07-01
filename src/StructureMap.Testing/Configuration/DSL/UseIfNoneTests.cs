@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.DocumentationExamples;
@@ -49,14 +50,14 @@ namespace StructureMap.Testing.Configuration.DSL
                 var c = GetContainerWithRegistries<Reg1, Reg2>();
                 c.EjectAllInstancesOf<IService>();
 
-                Exception<StructureMapException>.ShouldBeThrownBy(() => c.GetInstance<IService>())
+                Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => c.GetInstance<IService>())
                     .Title.ShouldContain("No default");
             }
 
             [Test]
             public void no_default_throws()
             {
-                Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
                     new Container().GetInstance<IService>();
                 }).Title.ShouldContain("No default");
 

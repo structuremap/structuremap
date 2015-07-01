@@ -1,6 +1,7 @@
 ﻿using FubuCore.Binding;
 using FubuCore.Configuration;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap;
 using StructureMap.Testing;
 

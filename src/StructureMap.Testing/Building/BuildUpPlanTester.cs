@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Shouldly;
 using StructureMap.Attributes;
 using StructureMap.Building;
 using StructureMap.Pipeline;

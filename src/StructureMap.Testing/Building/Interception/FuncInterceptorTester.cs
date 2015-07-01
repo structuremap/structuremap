@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 

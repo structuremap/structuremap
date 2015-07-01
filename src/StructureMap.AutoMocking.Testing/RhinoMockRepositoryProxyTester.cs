@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Rhino.Mocks;
+using Shouldly;
 using StructureMap.Testing;
 
 namespace StructureMap.AutoMocking.Testing

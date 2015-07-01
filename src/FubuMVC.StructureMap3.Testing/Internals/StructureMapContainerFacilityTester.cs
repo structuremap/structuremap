@@ -12,6 +12,7 @@ using FubuMVC.Core.Registration.ObjectGraph;
 using FubuMVC.Core.Runtime;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Shouldly;
 using StructureMap;
 using StructureMap.Testing;
 
@@ -141,8 +142,8 @@ namespace FubuMVC.StructureMap3.Testing.Internals
         {
             var converterFamilies =
                 container.GetInstance<BindingRegistry>().AllConverterFamilies();
-            converterFamilies.ShouldContain(f => f.GetType() == typeof (ExampleConverter));
-            converterFamilies.ShouldContain(f => f.GetType() == typeof (ExampleConverter2));
+            converterFamilies.Any(f => f.GetType() == typeof (ExampleConverter)).ShouldBeTrue();
+            converterFamilies.Any(f => f.GetType() == typeof (ExampleConverter2)).ShouldBeTrue();
         }
 
         [Test]

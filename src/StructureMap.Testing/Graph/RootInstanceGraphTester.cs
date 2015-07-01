@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
@@ -63,7 +64,7 @@ namespace StructureMap.Testing.Graph
             var plugins = new PluginGraph();
 
             var pipeline = PipelineGraph.BuildRoot(plugins);
-            pipeline.ToNestedGraph().Transients.ShouldBeOfType<LifecycleObjectCache>();
+            pipeline.ToNestedGraph().Transients.ShouldBeOfType<ContainerSpecificObjectCache>();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Shouldly;
 using StructureMap.Building.Interception;
 
 namespace StructureMap.Testing.Building.Interception

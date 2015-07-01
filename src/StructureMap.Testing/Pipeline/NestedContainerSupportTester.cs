@@ -1,5 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;

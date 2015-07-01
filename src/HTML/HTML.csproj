@@ -138,6 +138,7 @@
     <None Include="ripple.dependencies.config" />
     <None Include="StructureMap.chm" />
   </ItemGroup>
+  <Import Project="..\..\.paket\paket.targets" />
   <ItemGroup>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit\lib\nunit.framework.dll</HintPath>
@@ -156,5 +157,4 @@
       </ItemGroup>
     </When>
   </Choose>
-  <Import Project="..\..\.paket\paket.targets" />
 </Project>
