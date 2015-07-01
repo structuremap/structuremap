@@ -153,36 +153,11 @@ namespace StructureMap.Testing
             Assert.IsNotInstanceOf(expected, actual);
         }
 
-        public static void ShouldContain(this IList actual, object expected)
-        {
-            Assert.Contains(expected, actual);
-        }
 
         public static IComparable ShouldBeGreaterThan(this IComparable arg1, IComparable arg2)
         {
             Assert.Greater(arg1, arg2);
             return arg2;
-        }
-
-        public static IComparable ShouldBeLessThan(this IComparable arg1, IComparable arg2)
-        {
-            Assert.Less(arg1, arg2);
-            return arg2;
-        }
-
-        public static void ShouldBeEmpty(this ICollection collection)
-        {
-            Assert.IsEmpty(collection);
-        }
-
-        public static void ShouldBeEmpty(this string aString)
-        {
-            Assert.IsEmpty(aString);
-        }
-
-        public static void ShouldNotBeEmpty(this ICollection collection)
-        {
-            Assert.IsNotEmpty(collection);
         }
 
         public static string ShouldNotBeEmpty(this string aString)
@@ -202,25 +177,10 @@ namespace StructureMap.Testing
             return actual;
         }
 
-        public static string ShouldBeEqualIgnoringCase(this string actual, string expected)
-        {
-            StringAssert.AreEqualIgnoringCase(expected, actual);
-            return expected;
-        }
-
-        public static void ShouldEndWith(this string actual, string expected)
-        {
-            StringAssert.EndsWith(expected, actual);
-        }
 
         public static void ShouldStartWith(this string actual, string expected)
         {
             StringAssert.StartsWith(expected, actual);
-        }
-
-        public static void ShouldContainErrorMessage(this Exception exception, string expected)
-        {
-            StringAssert.Contains(expected, exception.Message);
         }
 
         public static Exception ShouldBeThrownBy(this Type exceptionType, MethodThatThrows method)
@@ -245,10 +205,6 @@ namespace StructureMap.Testing
             return exception;
         }
 
-        public static void ShouldEqualSqlDate(this DateTime actual, DateTime expected)
-        {
-            var timeSpan = actual - expected;
-            Assert.Less(Math.Abs(timeSpan.TotalMilliseconds), 3);
-        }
+
     }
 }
