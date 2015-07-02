@@ -1,4 +1,4 @@
-Welcome to StructureMap, the oldest [Inversion of Control][1] container for .Net. 
+Welcome to StructureMap, the oldest Inversion of Control container for .Net. 
 
 Getting StructureMap
 --------------------
