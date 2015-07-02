@@ -1,22 +1,21 @@
-require 'fuburake'
+COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
+RESULTS_DIR = "results"
 
+task :default => [:test]
 
-FubuRake::Solution.new do |sln|
-	sln.compile = {
-		:solutionfile => 'src/StructureMap.sln'
-	}
-				 
-	sln.assembly_info = {
-		:product_name => "StructureMap",
-		:copyright => 'Copyright 2004-2014 Jeremy D. Miller, Joshua Flanagan, Frank Quednau, Tim Kellogg, et al. All rights reserved.'
-	}
-	
-	#sln.compile_targets = ['Debug', 'Release', 'NET45WP8']
-	
-	sln.ripple_enabled = false
-	sln.fubudocs_enabled = false
-	
-	#sln.ci_steps = ['compile:net45wp8']
+desc "Prepares the working directory for a new build"
+task :clean do
+	#TODO: do any other tasks required to clean/prepare the working directory
+	FileUtils.rm_rf RESULTS_DIR
 
 end
 
+task :compile => [:clean] do
+	sh "C:/Windows/Microsoft.NET/Framework/v4.0.30319/msbuild.exe src/StructureMap.sln   /property:Configuration=#{COMPILE_TARGET} /v:m /t:rebuild /nr:False /maxcpucount:2"
+end
+
+task :test => [:compile] do
+	Dir.mkdir RESULTS_DIR
+
+	sh "packages/Fixie/lib/net45/Fixie.Console.exe src/StructureMap.Testing/bin/#{COMPILE_TARGET}/StructureMap.Testing.dll --NUnitXml results/TestResult.xml"
+end
