@@ -7,5 +7,7 @@ files
     bin/Release/StructureMap.* ==> lib/net40
     bin/Release/StructureMap.* ==> lib/wp80
     bin/Release/StructureMap.* ==> lib/wp81
+    bin/Release/StructureMap.* ==> lib/portable-win+net40+wp8
+    bin/Release/StructureMap.* ==> lib/portable-net45+win+wp81
 licenseUrl https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT
 projectUrl http://structuremap.github.io
