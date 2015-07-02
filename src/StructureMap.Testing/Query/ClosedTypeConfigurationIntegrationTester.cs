@@ -29,9 +29,11 @@ namespace StructureMap.Testing.Query
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x => {
+            container = new Container(x =>
+            {
                 x.For<IWidget>().Singleton().Use<AWidget>();
-                x.For<Rule>().AddInstances(o => {
+                x.For<Rule>().AddInstances(o =>
+                {
                     o.Type<DefaultRule>();
                     o.Type<ARule>();
                     o.Type<ColorRule>().Ctor<string>("color").Is("red");

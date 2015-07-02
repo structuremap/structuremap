@@ -9,10 +9,10 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class DependencyCollectionTester
     {
-        private IGateway gateway1 = new StubbedGateway();
-        private IGateway gateway2 = new StubbedGateway();
-        private IGateway gateway3 = new StubbedGateway();
-        private IService service1 = new ColorService("red");
+        private readonly IGateway gateway1 = new StubbedGateway();
+        private readonly IGateway gateway2 = new StubbedGateway();
+        private readonly IGateway gateway3 = new StubbedGateway();
+        private readonly IService service1 = new ColorService("red");
 
         [Test]
         public void if_an_enumerable_type_and_there_is_no_exact_match_by_type_try_ienumerable_of_the_element_type()

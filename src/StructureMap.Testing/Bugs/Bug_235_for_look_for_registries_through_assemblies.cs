@@ -10,8 +10,10 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void look_for_registries_fires_assembly_scanning_in_child()
         {
-            var container = new Container(x => {
-                x.Scan(s => {
+            var container = new Container(x =>
+            {
+                x.Scan(s =>
+                {
                     s.AssemblyContainingType<ITeam>();
                     s.LookForRegistries();
                 });
@@ -19,8 +21,7 @@ namespace StructureMap.Testing.Bugs
 
             container.Model.For<ITeam>().Instances.Select(x => x.ReturnedType.Name)
                 .OrderBy(x => x)
-                .ShouldHaveTheSameElementsAs("Broncos","Chargers","Chiefs", "Raiders");
-                
+                .ShouldHaveTheSameElementsAs("Broncos", "Chargers", "Chiefs", "Raiders");
         }
     }
 }

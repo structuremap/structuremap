@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
-using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Acceptance
 {
@@ -16,7 +14,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void activate_by_action()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IWidget>().Use<AWidget>();
                 x.For<Activateable>()
                     .OnCreationForAll("Mark the object as activated", o => o.Activated = true);
@@ -49,7 +48,7 @@ namespace StructureMap.Testing.Acceptance
             {
                 x.For<IWidget>().Use<AWidget>();
                 x.For<IWidget>()
-                    .OnCreationForAll("just keeping them", (c, w) => c.GetInstance<WidgetKeeper>().Kept.Add(w));    
+                    .OnCreationForAll("just keeping them", (c, w) => c.GetInstance<WidgetKeeper>().Kept.Add(w));
 
                 x.ForSingletonOf<WidgetKeeper>();
             });
@@ -81,7 +80,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void decorate_with_type()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IWidget>().DecorateAllWith<WidgetHolder>();
                 x.For<IWidget>().Use<AWidget>();
             });
@@ -118,7 +118,8 @@ namespace StructureMap.Testing.Acceptance
                 x.For<IWidget>()
                     .DecorateAllWith<WidgetHolder>(i => i.ReturnedType.Name.StartsWith("B"));
 
-                x.For<IWidget>().AddInstances(widgets => {
+                x.For<IWidget>().AddInstances(widgets =>
+                {
                     widgets.Type<AWidget>().Named("A");
                     widgets.Type<BWidget>().Named("B");
                     widgets.Type<CWidget>().Named("C");
@@ -160,7 +161,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void decorate_by_func()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IWidget>().DecorateAllWith("Hold on to it", w => new WidgetHolder(w));
                 x.For<IWidget>().Use<AWidget>();
             });
@@ -191,7 +193,7 @@ namespace StructureMap.Testing.Acceptance
         {
             var container = new Container(x =>
             {
-                x.For<IWidget>().DecorateAllWith((c,w) => c.GetInstance<WidgetWrapper>().Wrap(w));
+                x.For<IWidget>().DecorateAllWith((c, w) => c.GetInstance<WidgetWrapper>().Wrap(w));
                 x.For<IWidget>().Use<AWidget>();
             });
 
@@ -206,9 +208,8 @@ namespace StructureMap.Testing.Acceptance
         {
             var container = new Container(x =>
             {
-                x.For<IWidget>().DecorateAllWith("Using WidgetWrapper",(c, w) => {
-                    return c.GetInstance<WidgetWrapper>().Wrap(w);
-                });
+                x.For<IWidget>()
+                    .DecorateAllWith("Using WidgetWrapper", (c, w) => { return c.GetInstance<WidgetWrapper>().Wrap(w); });
 
                 x.For<IWidget>().Use<AWidget>();
             });
@@ -222,7 +223,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void decorate_with_open_generics()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IWidget>().Use<AWidget>();
                 x.For<IService>().Use<AService>();
 
@@ -241,7 +243,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void use_a_custom_interception_policy()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.Policies.Interceptors(new CustomInterception());
 
                 x.For<IWidget>().Use<AWidget>();
@@ -293,21 +296,20 @@ namespace StructureMap.Testing.Acceptance
     {
     }
 
-    public class DefaultWidget : IWidget{}
-
-    public class AWidget : Activateable, IWidget 
+    public class DefaultWidget : IWidget
     {
-
     }
 
-    public class BWidget : Activateable, IWidget 
+    public class AWidget : Activateable, IWidget
     {
-
     }
 
-    public class CWidget : Activateable, IWidget 
+    public class BWidget : Activateable, IWidget
     {
-        
+    }
+
+    public class CWidget : Activateable, IWidget
+    {
     }
 
     public class WidgetHolder : IWidget
@@ -402,39 +404,39 @@ namespace StructureMap.Testing.Acceptance
 
         public T1 One
         {
-            get
-            {
-                return _inner.One;
-            }
+            get { return _inner.One; }
         }
 
         public T2 Two
         {
-            get
-            {
-                return _inner.Two;
-            }
+            get { return _inner.Two; }
         }
     }
 
-    public interface IService{}
-    public class AService : IService{}
-    public class BService : IService{}
+    public interface IService
+    {
+    }
+
+    public class AService : IService
+    {
+    }
+
+    public class BService : IService
+    {
+    }
 
     public class CustomInterception : IInterceptorPolicy
     {
         public string Description
         {
-            get
-            {
-                return "good interception policy";
-            }
+            get { return "good interception policy"; }
         }
+
         public IEnumerable<IInterceptor> DetermineInterceptors(Type pluginType, Instance instance)
         {
             if (pluginType == typeof (IWidget))
             {
-                yield return new DecoratorInterceptor(typeof(IWidget), typeof(WidgetHolder));
+                yield return new DecoratorInterceptor(typeof (IWidget), typeof (WidgetHolder));
             }
         }
     }

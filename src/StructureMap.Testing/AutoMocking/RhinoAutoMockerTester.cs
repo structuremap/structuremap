@@ -31,7 +31,7 @@ namespace StructureMap.Testing.AutoMocking
         }
 
         protected override void setExpectation<T, TResult>(T mock, Expression<Func<T, TResult>> functionCall,
-                                                           TResult expectedResult)
+            TResult expectedResult)
         {
             mock.Expect(x => functionCall.Compile()(mock)).Return(expectedResult);
         }
@@ -45,9 +45,9 @@ namespace StructureMap.Testing.AutoMocking
 
             var concreteClass = _container.GetInstance<ConcreteClass>();
 
-            Assert.AreSame(service, concreteClass.Service);
-            Assert.AreSame(service2, concreteClass.Service2);
-            Assert.AreSame(service3, concreteClass.Service3);
+            service.AreSame(concreteClass.Service);
+            service2.AreSame(concreteClass.Service2);
+            service3.AreSame(concreteClass.Service3);
         }
 
 
@@ -64,19 +64,19 @@ namespace StructureMap.Testing.AutoMocking
             var stub = new StubService();
             _container.Inject<IMockedService>(stub);
 
-            Assert.AreSame(stub, _container.GetInstance<IMockedService>());
-            Assert.AreSame(stub, _container.GetInstance<IMockedService>());
-            Assert.AreSame(stub, _container.GetInstance<IMockedService>());
+            stub.AreSame(_container.GetInstance<IMockedService>());
+            stub.AreSame(_container.GetInstance<IMockedService>());
+            stub.AreSame(_container.GetInstance<IMockedService>());
         }
 
         [Test]
         public void RequestTheServiceTwiceAndGetTheExactSameMockObject()
         {
             var service = _container.GetInstance<IMockedService>();
-            Assert.AreSame(service, _container.GetInstance<IMockedService>());
-            Assert.AreSame(service, _container.GetInstance<IMockedService>());
-            Assert.AreSame(service, _container.GetInstance<IMockedService>());
-            Assert.AreSame(service, _container.GetInstance<IMockedService>());
+            service.AreSame(_container.GetInstance<IMockedService>());
+            service.AreSame(_container.GetInstance<IMockedService>());
+            service.AreSame(_container.GetInstance<IMockedService>());
+            service.AreSame(_container.GetInstance<IMockedService>());
         }
 
 
@@ -87,7 +87,7 @@ namespace StructureMap.Testing.AutoMocking
             var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
 
             // Act in the test
-            ConcreteClass @class = autoMocker.ClassUnderTest;
+            var @class = autoMocker.ClassUnderTest;
             @class.CallService();
 
             // This retrieves the mock object for IMockedService
@@ -99,7 +99,7 @@ namespace StructureMap.Testing.AutoMocking
         {
             var autoMocker = new RhinoAutoMocker<ClassThatUsesConcreteDependency>();
             autoMocker.UseMockForType<ConcreteDependency>();
-            
+
 
             autoMocker.ClassUnderTest.Dependency.Go();
 
@@ -124,6 +124,8 @@ namespace StructureMap.Testing.AutoMocking
 
     public class ConcreteDependency
     {
-        public virtual void Go(){}
+        public virtual void Go()
+        {
+        }
     }
 }

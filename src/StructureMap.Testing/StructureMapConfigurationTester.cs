@@ -27,14 +27,13 @@ namespace StructureMap.Testing
         [Test]
         public void TheDefaultInstance_has_a_dependency_upon_a_Guid_NewGuid_lambda_generated_instance()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<Guid>().Use(() => Guid.NewGuid());
                 x.For<IFoo>().Use<Foo>();
             });
 
             container.GetInstance<IFoo>().SomeGuid.ShouldNotBe(Guid.Empty);
-
-
         }
     }
 

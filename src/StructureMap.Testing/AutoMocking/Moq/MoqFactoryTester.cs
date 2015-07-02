@@ -12,7 +12,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
         public void can_make_dynamic_mocks()
         {
             var moqFactory = new MoqFactory();
-            object fooMock = moqFactory.CreateMock(typeof (ITestMocks));
+            var fooMock = moqFactory.CreateMock(typeof (ITestMocks));
 
             fooMock.ShouldNotBeNull();
         }

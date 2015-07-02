@@ -7,7 +7,6 @@ namespace StructureMap.Testing.Acceptance
     [TestFixture]
     public class nested_containers
     {
-
         // SAMPLE: nested-creation
         public interface IWorker
         {
@@ -31,9 +30,7 @@ namespace StructureMap.Testing.Acceptance
         public void creating_a_nested_container()
         {
             // From an IContainer object
-            var container = new Container(_ => {
-                _.For<IWorker>().Use<Worker>();
-            });
+            var container = new Container(_ => { _.For<IWorker>().Use<Worker>(); });
 
             using (var nested = container.GetNestedContainer())
             {
@@ -43,15 +40,14 @@ namespace StructureMap.Testing.Acceptance
                 worker.DoWork();
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: nested-singletons
         [Test]
         public void nested_container_usage_of_singletons()
         {
-            var container = new Container(_ => {
-                _.ForSingletonOf<IColorCache>().Use<ColorCache>();
-            });
+            var container = new Container(_ => { _.ForSingletonOf<IColorCache>().Use<ColorCache>(); });
 
             var singleton = container.GetInstance<IColorCache>();
 
@@ -62,6 +58,7 @@ namespace StructureMap.Testing.Acceptance
                     .ShouldBeTheSameAs(singleton);
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: nested-transients
@@ -70,9 +67,7 @@ namespace StructureMap.Testing.Acceptance
         {
             // "Transient" is the default lifecycle
             // in StructureMap
-            var container = new Container(_ => {
-                _.For<IColor>().Use<Green>();
-            });
+            var container = new Container(_ => { _.For<IColor>().Use<Green>(); });
 
             // In a normal Container, a "transient" lifecycle
             // Instance will be built up once in every request
@@ -92,13 +87,15 @@ namespace StructureMap.Testing.Acceptance
                     .ShouldBeTheSameAs(nested.GetInstance<IColor>());
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: nested-profiles
         [Test]
         public void nested_container_from_profile_container()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IColor>().Use<Red>();
 
                 x.Profile("Blue", _ => _.For<IColor>().Use<Blue>());
@@ -115,13 +112,15 @@ namespace StructureMap.Testing.Acceptance
                 nested.GetInstance<IColor>().ShouldBeOfType<Green>();
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: nested-disposal
         [Test]
         public void nested_container_disposal()
         {
-            var container = new Container(_ => {
+            var container = new Container(_ =>
+            {
                 // A singleton scoped service
                 _.ForSingletonOf<IColorCache>().Use<ColorCache>();
 
@@ -142,7 +141,7 @@ namespace StructureMap.Testing.Acceptance
                 nestedGreen = nested.GetInstance<IColor>()
                     .ShouldBeOfType<Green>();
 
-                
+
                 nestedBlue = nested.GetInstance<Blue>();
             }
 
@@ -151,18 +150,20 @@ namespace StructureMap.Testing.Acceptance
             // disposed
             nestedGreen.WasDisposed.ShouldBeTrue();
             nestedBlue.WasDisposed.ShouldBeTrue();
-        
+
             // NOT disposed because it's owned by
             // the parent container
             singleton.WasDisposed.ShouldBeFalse();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: nested-overriding
         [Test]
         public void overriding_services_in_a_nested_container()
         {
-            var container = new Container(_ => {
+            var container = new Container(_ =>
+            {
                 _.For<IHttpRequest>().Use<StandInHttpRequest>();
                 _.For<IHttpResponse>().Use<StandInHttpResponse>();
             });
@@ -174,7 +175,8 @@ namespace StructureMap.Testing.Acceptance
             {
                 // Override the HTTP request and response for this
                 // nested container
-                nested.Configure(_ => {
+                nested.Configure(_ =>
+                {
                     _.For<IHttpRequest>().Use(request);
                     _.For<IHttpResponse>().Use(response);
                 });
@@ -192,10 +194,13 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<IHttpResponse>()
                 .ShouldBeOfType<StandInHttpResponse>();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: nested-func-lazy-and-container-resolution
-        public class Foo{}
+        public class Foo
+        {
+        }
 
         public class FooHolder
         {
@@ -232,12 +237,18 @@ namespace StructureMap.Testing.Acceptance
                 holder.Lazy.Value.ShouldBeTheSameAs(nestedFoo);
             }
         }
+
         // ENDSAMPLE
     }
 
     // SAMPLE: nested-colors
-    public interface IColor{}
-    public class Red : IColor{}
+    public interface IColor
+    {
+    }
+
+    public class Red : IColor
+    {
+    }
 
     public class Blue : IColor, IDisposable
     {
@@ -257,9 +268,11 @@ namespace StructureMap.Testing.Acceptance
         {
             WasDisposed = true;
         }
-    } 
+    }
 
-    public interface IColorCache{}
+    public interface IColorCache
+    {
+    }
 
     public class ColorCache : IColorCache, IDisposable
     {
@@ -270,17 +283,33 @@ namespace StructureMap.Testing.Acceptance
             WasDisposed = true;
         }
     }
+
     // ENDSAMPLE
 
     // SAMPLE: nested-http
-    public interface IHttpRequest{}
-    public interface IHttpResponse{}
+    public interface IHttpRequest
+    {
+    }
 
-    public class HttpRequest : IHttpRequest{}
-    public class HttpResponse : IHttpResponse{}
+    public interface IHttpResponse
+    {
+    }
 
-    public class StandInHttpRequest : IHttpRequest{}
-    public class StandInHttpResponse : IHttpResponse{}
+    public class HttpRequest : IHttpRequest
+    {
+    }
+
+    public class HttpResponse : IHttpResponse
+    {
+    }
+
+    public class StandInHttpRequest : IHttpRequest
+    {
+    }
+
+    public class StandInHttpResponse : IHttpResponse
+    {
+    }
 
     public class HttpRequestHandler
     {
@@ -303,12 +332,17 @@ namespace StructureMap.Testing.Acceptance
             get { return _response; }
         }
     }
+
     // ENDSAMPLE
 
 
+    public interface IUnitOfWork
+    {
+    }
 
-    public interface IUnitOfWork{}
-    public class UnitOfWork : IUnitOfWork{}
+    public class UnitOfWork : IUnitOfWork
+    {
+    }
 
     public class HandlerA
     {
@@ -328,8 +362,6 @@ namespace StructureMap.Testing.Acceptance
     {
         public HandlerC(IUnitOfWork uow)
         {
-            
         }
     }
-
 }

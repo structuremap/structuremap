@@ -13,10 +13,7 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            container = new Container(_ =>
-            {
-                _.For<IWidget>().Use(new ColorWidget("red"));
-            });
+            container = new Container(_ => { _.For<IWidget>().Use(new ColorWidget("red")); });
         }
 
         #endregion

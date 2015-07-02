@@ -26,8 +26,10 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void builds_all_instances_from_get_all()
         {
-            var container = new Container(x => {
-                x.For<IFoo>().AddInstances(o => {
+            var container = new Container(x =>
+            {
+                x.For<IFoo>().AddInstances(o =>
+                {
                     o.Type<AFoo>();
                     o.Type<BFoo>();
                     o.Type<CFoo>();
@@ -60,6 +62,7 @@ namespace StructureMap.Testing.Acceptance
 
             container.GetInstance<IFoo>().ShouldBeOfType<CFoo>();
         }
+
         // ENDSAMPLE
 
 
@@ -102,7 +105,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void auto_resolve_a_concrete_type_with_defaults()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IFoo>().Use<CFoo>();
                 x.For(typeof (IOpen<>)).Use(typeof (BOpen<>));
             });
@@ -115,7 +119,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void auto_resolve_a_concrete_type_with_defaults_with_the_type()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IFoo>().Use<CFoo>();
                 x.For(typeof (IOpen<>)).Use(typeof (BOpen<>));
             });
@@ -195,10 +200,12 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void deep_graph()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IParent>().Use<Parent>()
                     .Ctor<string>("name").Is("Jerry")
-                    .Ctor<Child>().Is<Child>(child => {
+                    .Ctor<Child>().Is<Child>(child =>
+                    {
                         child.Ctor<string>("name").Is("Monte")
                             .Ctor<GrandChild>().Is<GrandChild>(grand => { grand.Ctor<string>("name").Is("Jeremy"); });
                     });
@@ -227,7 +234,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void get_by_name()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IFoo>().Add<AFoo>().Named("A");
                 x.For<IFoo>().Add<BFoo>().Named("B");
                 x.For<IFoo>().Add<CFoo>().Named("C");

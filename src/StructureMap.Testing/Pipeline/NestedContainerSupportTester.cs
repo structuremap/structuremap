@@ -90,8 +90,10 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void disposing_the_child_container_does_not_affect_the_parent_container()
         {
-            var container = new Container(x => {
-                x.Scan(o => {
+            var container = new Container(x =>
+            {
+                x.Scan(o =>
+                {
                     o.TheCallingAssembly();
                     o.AddAllTypesOf<IBar>();
                 });
@@ -113,11 +115,13 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void get_a_nested_container_for_a_profile()
         {
-            var parent = new Container(x => {
+            var parent = new Container(x =>
+            {
                 x.For<IWidget>().Use<ColorWidget>()
                     .Ctor<string>("color").Is("red");
 
-                x.Profile("green", o => {
+                x.Profile("green", o =>
+                {
                     o.For<IWidget>().Use<ColorWidget>()
                         .Ctor<string>("color").Is("green");
                 });
@@ -233,7 +237,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void transient_service_in_the_parent_container_is_effectively_a_singleton_for_the_nested_container()
         {
-            var parent = new Container(x => {
+            var parent = new Container(x =>
+            {
                 // IWidget is a "transient"
                 x.For<IWidget>().Use<AWidget>();
             });

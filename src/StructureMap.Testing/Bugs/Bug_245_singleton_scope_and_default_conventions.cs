@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Shouldly;
 using StructureMap.Pipeline;
 
@@ -17,7 +16,7 @@ namespace StructureMap.Testing.Bugs
                 o.Scan(x =>
                 {
                     x.AssemblyContainingType<IMyFactory>();
-                    x.Include(t => t == typeof(MyFactory));
+                    x.Include(t => t == typeof (MyFactory));
                     x.WithDefaultConventions(); // Remove this to get Singleton() to work.
                 });
 
@@ -28,7 +27,12 @@ namespace StructureMap.Testing.Bugs
             container.Model.For<IMyFactory>().Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
-        public interface IMyFactory{}
-        public class MyFactory : IMyFactory{}
+        public interface IMyFactory
+        {
+        }
+
+        public class MyFactory : IMyFactory
+        {
+        }
     }
 }

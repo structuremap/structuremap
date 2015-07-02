@@ -66,7 +66,8 @@ namespace StructureMap.Testing.Graph
 
         public class SpecialInstance : LambdaInstance<ClassWithNoArgs>
         {
-            public SpecialInstance() : base("builds ClassWithNoArgs", session => {
+            public SpecialInstance() : base("builds ClassWithNoArgs", session =>
+            {
                 return new ClassWithNoArgs
                 {
                     TheAddress = (Address) session.GetInstance(typeof (Address))
@@ -101,8 +102,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void can_build_a_concrete_type_from_explicit_args_passed_into_a_named_instance()
         {
-            var container = new Container(x => {
-                x.For<ColorWithLump>().AddInstances(o => {
+            var container = new Container(x =>
+            {
+                x.For<ColorWithLump>().AddInstances(o =>
+                {
                     o.Type<ColorWithLump>().Ctor<string>("color").Is("red").Named("red");
                     o.Type<ColorWithLump>().Ctor<string>("color").Is("green").Named("green");
                     o.Type<ColorWithLump>().Ctor<string>("color").Is("blue").Named("blue");
@@ -133,7 +136,8 @@ namespace StructureMap.Testing.Graph
         {
             var theTrade = new Trade();
 
-            IContainer container = new Container(r => {
+            IContainer container = new Container(r =>
+            {
                 r.For<IView>().Use<TradeView>();
                 r.For<Node>().Use<TradeNode>();
             });
@@ -210,7 +214,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void NowDoItWithObjectFactoryItself()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForConcreteType<ExplicitTarget>().Configure
                     .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").Is("Jeremy");
@@ -223,13 +228,14 @@ namespace StructureMap.Testing.Graph
             // Now, set the explicit arg for IProvider
             var theBlueProvider = new BlueProvider();
             var secondTarget = container.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>();
-            Assert.AreSame(theBlueProvider, secondTarget.Provider);
+            theBlueProvider.AreSame(secondTarget.Provider);
         }
 
         [Test]
         public void NowDoItWith_Container_Itself_with_new_API()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<ExplicitTarget>().Use<ExplicitTarget>()
                     .Ctor<IProvider>().IsSpecial(child => child.Type<RedProvider>())
                     .Ctor<string>("name").Is("Jeremy");
@@ -247,7 +253,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void override_a_primitive()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForConcreteType<ExplicitTarget>().Configure
                     .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").Is("Jeremy");
@@ -267,7 +274,8 @@ namespace StructureMap.Testing.Graph
         {
             // The Container is constructed with 2 instances
             // of TradeView
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 r.For<TradeView>().Use<TradeView>();
                 r.For<TradeView>().Add<SecuredTradeView>();
             });
@@ -284,7 +292,8 @@ namespace StructureMap.Testing.Graph
         {
             // The Container is constructed with 2 instances
             // of TradeView
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 r.For<TradeView>().Use<TradeView>();
                 r.For<TradeView>().Add<SecuredTradeView>();
             });
@@ -331,7 +340,7 @@ namespace StructureMap.Testing.Graph
             args.Set(theLump);
 
             var instance = (LumpProvider) manager.GetInstance<IProvider>(args);
-            Assert.AreSame(theLump, instance.Lump);
+            theLump.AreSame(instance.Lump);
         }
 
         [Test]
@@ -343,7 +352,7 @@ namespace StructureMap.Testing.Graph
             var theLump = new Lump();
 
             var provider = (LumpProvider) container.With(theLump).GetInstance<IProvider>();
-            Assert.AreSame(theLump, provider.Lump);
+            theLump.AreSame(provider.Lump);
         }
 
         [Test]
@@ -353,13 +362,14 @@ namespace StructureMap.Testing.Graph
 
             var theLump = new Lump();
             var provider = container.With(theLump).GetInstance<LumpProvider>();
-            Assert.AreSame(theLump, provider.Lump);
+            theLump.AreSame(provider.Lump);
         }
 
         [Test]
         public void PassExplicitArgsIntoInstanceManager()
         {
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 r.ForConcreteType<ExplicitTarget>().Configure
                     .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").Is("Jeremy");

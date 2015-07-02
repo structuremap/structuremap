@@ -1,12 +1,10 @@
+using System;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
-using StructureMap.Testing.Acceptance;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
-using AWidget = StructureMap.Testing.Widget.AWidget;
-using IWidget = StructureMap.Testing.Widget.IWidget;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
@@ -27,8 +25,10 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var theProfileName = "something";
 
-            IContainer container = new Container(r => {
-                r.Profile(theProfileName, x => {
+            IContainer container = new Container(r =>
+            {
+                r.Profile(theProfileName, x =>
+                {
                     x.For<IWidget>().Use(() => new AWidget());
                     x.For<Rule>().Use(() => new DefaultRule());
                 });
@@ -46,8 +46,10 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var theProfileName = "something";
 
-            IContainer container = new Container(registry => {
-                registry.Profile(theProfileName, x => {
+            IContainer container = new Container(registry =>
+            {
+                registry.Profile(theProfileName, x =>
+                {
                     x.For<IWidget>().Use(() => new AWidget());
                     x.For<Rule>().Use(() => new DefaultRule());
                 });
@@ -65,8 +67,10 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var theProfileName = "something";
 
-            IContainer container = new Container(registry => {
-                registry.Profile(theProfileName, p => {
+            IContainer container = new Container(registry =>
+            {
+                registry.Profile(theProfileName, p =>
+                {
                     p.For<IWidget>().Use<AWidget>();
                     p.For<Rule>().Use<DefaultRule>();
                 });
@@ -83,7 +87,8 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var theProfileName = "something";
 
-            IContainer container = new Container(registry => {
+            IContainer container = new Container(registry =>
+            {
                 registry.For<IWidget>().Use<MoneyWidget>();
 
                 registry.Profile(theProfileName, p =>
@@ -124,7 +129,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             public void DoSomething()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public NamedWidget(string name)
@@ -149,7 +154,8 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For<IWidget>().Add(new NamedWidget(theDefaultName)).Named(theDefaultName);
             registry.For<IWidget>().Use<AWidget>();
 
-            registry.Profile(theProfileName, p => {
+            registry.Profile(theProfileName, p =>
+            {
                 p.For<IWidget>().Use(theDefaultName);
                 p.For<Rule>().Use("DefaultRule");
             });
@@ -164,7 +170,8 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var theProfileName = "TheProfile";
 
-            var container = new Container(registry => {
+            var container = new Container(registry =>
+            {
                 registry.For<IWidget>().Use(new NamedWidget("default"));
 
                 registry.Profile(theProfileName, x => { x.For<IWidget>().Use<AWidget>(); });
@@ -189,7 +196,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void respects_open_generics_in_the_profile()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For(typeof (IFoo<>)).Use(typeof (DefaultFoo<>));
 
                 x.Profile("Azure", cfg => { cfg.For(typeof (IFoo<>)).Use(typeof (AzureFoo<>)); });

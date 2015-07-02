@@ -13,47 +13,35 @@ namespace StructureMap.Testing.Bugs
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x => {
-                x.For<IWidget>().Use<AWidget>();
-            });
+            container = new Container(x => { x.For<IWidget>().Use<AWidget>(); });
         }
 
         [Test]
         public void okay_to_register_default()
         {
-            container.GetNestedContainer().Configure(x => {
-                x.For<IWidget>().Use<MoneyWidget>();
-            });
+            container.GetNestedContainer().Configure(x => { x.For<IWidget>().Use<MoneyWidget>(); });
         }
 
         [Test]
         public void okay_to_register_unique()
         {
-            container.GetNestedContainer().Configure(x =>
-            {
-                x.For<IWidget>().Use<MoneyWidget>().AlwaysUnique();
-            });
+            container.GetNestedContainer().Configure(x => { x.For<IWidget>().Use<MoneyWidget>().AlwaysUnique(); });
         }
 
         [Test]
         public void okay_to_register_a_pre_built_object()
         {
-            container.GetNestedContainer().Configure(x => {
-                x.For<IWidget>().Use(new MoneyWidget());
-            });
+            container.GetNestedContainer().Configure(x => { x.For<IWidget>().Use(new MoneyWidget()); });
         }
 
         [Test]
         public void not_okay_to_register_a_singleton()
         {
-            IContainer nestedContainer = container.GetNestedContainer();
+            var nestedContainer = container.GetNestedContainer();
 
-            var ex = Exception<InvalidOperationException>.ShouldBeThrownBy(() => {
-                nestedContainer.Configure(x =>
-                {
-                    x.For<IWidget>().Use<MoneyWidget>().Singleton();
-                });
-            });
+            var ex =
+                Exception<InvalidOperationException>.ShouldBeThrownBy(
+                    () => { nestedContainer.Configure(x => { x.For<IWidget>().Use<MoneyWidget>().Singleton(); }); });
 
             Debug.WriteLine(ex);
         }

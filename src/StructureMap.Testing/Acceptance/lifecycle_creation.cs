@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using Shouldly;
 
 namespace StructureMap.Testing.Acceptance
 {
-
-
-
-
     [TestFixture]
     public class lifecycle_creation
     {
@@ -26,9 +21,7 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void singletons_are_disposed_when_the_container_is_disposed()
         {
-            var container = new Container(_ => {
-                _.ForSingletonOf<DisposableSingleton>();
-            });
+            var container = new Container(_ => { _.ForSingletonOf<DisposableSingleton>(); });
 
             var singleton = container.GetInstance<DisposableSingleton>();
             singleton.WasDisposed.ShouldBeFalse();
@@ -39,12 +32,14 @@ namespace StructureMap.Testing.Acceptance
             // the singleton scoped object should be disposed
             singleton.WasDisposed.ShouldBeTrue();
         }
+
         // ENDSAMPLE
 
         [Test]
         public void singletons_are_created_in_a_completely_separate_context_in_the_parent_container()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForSingletonOf<ISingleton>().Use<Singleton>();
                 x.For<ITransient>().Use<Transient>();
             });
@@ -69,8 +64,13 @@ namespace StructureMap.Testing.Acceptance
         }
 
         // SAMPLE: transient-are-shared-within-a-graph
-        public interface IUnitOfWork{}
-        public class DefaultUnitOfWork : IUnitOfWork{}
+        public interface IUnitOfWork
+        {
+        }
+
+        public class DefaultUnitOfWork : IUnitOfWork
+        {
+        }
 
         public class Worker1
         {
@@ -109,9 +109,7 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void transient_scoped_Instance_is_built_once_per_resolution_to_the_Container()
         {
-            var container = new Container(_ => {
-                _.For<IUnitOfWork>().Use<DefaultUnitOfWork>();
-            });
+            var container = new Container(_ => { _.For<IUnitOfWork>().Use<DefaultUnitOfWork>(); });
 
             var cooridinator = container.GetInstance<WorkerCoordinator>();
 
@@ -126,9 +124,8 @@ namespace StructureMap.Testing.Acceptance
 
             cooridinator.Worker1.Uow
                 .ShouldBeTheSameAs(cooridinator.Worker2.Uow);
-
-
         }
+
         // ENDSAMPLE
     }
 

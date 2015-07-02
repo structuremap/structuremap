@@ -9,15 +9,10 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void make_it_happen()
         {
-            var container = new Container(_ =>
-            {
-                _.ForSingletonOf<SingleGuy>().Use<SingleGuy>();
-            });
+            var container = new Container(_ => { _.ForSingletonOf<SingleGuy>().Use<SingleGuy>(); });
 
-            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() =>
-            {
-                container.GetInstance<SingleGuy>();
-            });
+            var ex =
+                Exception<StructureMapBuildException>.ShouldBeThrownBy(() => { container.GetInstance<SingleGuy>(); });
 
             ex.Message.ShouldContain("new SingleGuyDependency(*Default of SingleGuy*)");
             ex.Message.ShouldContain("new SingleGuy(*Default of SingleGuyDependency*)");

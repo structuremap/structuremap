@@ -8,7 +8,6 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Configuration.DSL;
-using StructureMap.Testing.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 
@@ -17,7 +16,6 @@ namespace StructureMap.Testing
     [TestFixture]
     public class BuildSessionTester
     {
-
         public class WidgetHolder
         {
             private readonly IWidget[] _widgets;
@@ -36,8 +34,10 @@ namespace StructureMap.Testing
         [Test]
         public void can_get_all_of_a_type_during_object_creation()
         {
-            var container = new Container(x => {
-                x.For<IWidget>().AddInstances(o => {
+            var container = new Container(x =>
+            {
+                x.For<IWidget>().AddInstances(o =>
+                {
                     o.Type<AWidget>();
                     o.ConstructedBy(() => new ColorWidget("red"));
                     o.ConstructedBy(() => new ColorWidget("blue"));
@@ -54,7 +54,8 @@ namespace StructureMap.Testing
         [Test]
         public void descriptive_exception_when_a_named_instance_cannot_be_found()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IWidget>().AddInstances(o =>
                 {
                     o.Type<AWidget>();
@@ -62,12 +63,11 @@ namespace StructureMap.Testing
                     o.ConstructedBy(() => new ColorWidget("blue")).Named("blue");
                     o.ConstructedBy(() => new ColorWidget("green")).Named("green");
                 });
-
             });
 
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
-                container.GetInstance<IWidget>("purple");
-            });
+            var ex =
+                Exception<StructureMapConfigurationException>.ShouldBeThrownBy(
+                    () => { container.GetInstance<IWidget>("purple"); });
 
             Debug.WriteLine(ex.ToString());
 
@@ -81,8 +81,10 @@ namespace StructureMap.Testing
         [Test]
         public void can_get_all_of_a_type_during_object_creation_as_generic_type()
         {
-            var container = new Container(x => {
-                x.For<IWidget>().AddInstances(o => {
+            var container = new Container(x =>
+            {
+                x.For<IWidget>().AddInstances(o =>
+                {
                     o.Type<AWidget>();
                     o.ConstructedBy(() => new ColorWidget("red"));
                     o.ConstructedBy(() => new ColorWidget("blue"));
@@ -100,8 +102,10 @@ namespace StructureMap.Testing
         [Test]
         public void can_get_all_of_a_type_by_GetAllInstances_during_object_creation_as_generic_type()
         {
-            var container = new Container(x => {
-                x.For<IWidget>().AddInstances(o => {
+            var container = new Container(x =>
+            {
+                x.For<IWidget>().AddInstances(o =>
+                {
                     o.Type<AWidget>();
                     o.ConstructedBy(() => new ColorWidget("red"));
                     o.ConstructedBy(() => new ColorWidget("blue"));
@@ -122,7 +126,8 @@ namespace StructureMap.Testing
 
             var session = BuildSession.Empty();
             var session2 = BuildSession.Empty();
-            var instance = new LambdaInstance<ColorRule>("counting",() => {
+            var instance = new LambdaInstance<ColorRule>("counting", () =>
+            {
                 count++;
                 return new ColorRule("Red");
             });
@@ -142,8 +147,10 @@ namespace StructureMap.Testing
         [Test]
         public void If_no_child_array_is_explicitly_defined_return_all_instances()
         {
-            IContainer manager = new Container(r => {
-                r.For<IWidget>().AddInstances(x => {
+            IContainer manager = new Container(r =>
+            {
+                r.For<IWidget>().AddInstances(x =>
+                {
                     x.Object(new ColorWidget("Red"));
                     x.Object(new ColorWidget("Blue"));
                     x.Object(new ColorWidget("Green"));
@@ -160,7 +167,8 @@ namespace StructureMap.Testing
             var count = 0;
 
             var session = BuildSession.Empty();
-            var instance = new LambdaInstance<ColorRule>("counting", () => {
+            var instance = new LambdaInstance<ColorRule>("counting", () =>
+            {
                 count++;
                 return new ColorRule("Red");
             });
@@ -182,7 +190,8 @@ namespace StructureMap.Testing
         {
             var count = 0;
 
-            var instance = new LambdaInstance<ColorRule>("counting", () => {
+            var instance = new LambdaInstance<ColorRule>("counting", () =>
+            {
                 count++;
                 return new ColorRule("Red");
             });
@@ -210,12 +219,14 @@ namespace StructureMap.Testing
         {
             var graph = PipelineGraph.BuildEmpty();
 
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
+            {
                 var session = new BuildSession(graph);
-                session.CreateInstance(typeof(IGateway), "Gateway that is not configured");
+                session.CreateInstance(typeof (IGateway), "Gateway that is not configured");
             });
 
-            ex.Title.ShouldBe("Could not find an Instance named 'Gateway that is not configured' for PluginType StructureMap.Testing.Widget3.IGateway");
+            ex.Title.ShouldBe(
+                "Could not find an Instance named 'Gateway that is not configured' for PluginType StructureMap.Testing.Widget3.IGateway");
         }
 
 
@@ -225,14 +236,16 @@ namespace StructureMap.Testing
             var graph = PipelineGraph.BuildEmpty();
 
 
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
+            {
                 var session = new BuildSession(graph);
-                session.GetInstance(typeof(IGateway));
+                session.GetInstance(typeof (IGateway));
             });
 
             ex.Context.ShouldContain("There is no configuration specified for StructureMap.Testing.Widget3.IGateway");
 
-            ex.Title.ShouldBe("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Widget3.IGateway'");
+            ex.Title.ShouldBe(
+                "No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Widget3.IGateway'");
         }
 
         [Test]
@@ -395,8 +408,7 @@ namespace StructureMap.Testing
 
             session.Pop();
 
-            session.ParentType.ShouldBe(typeof(AWidget));
-
+            session.ParentType.ShouldBe(typeof (AWidget));
         }
 
         [Test]
@@ -412,9 +424,7 @@ namespace StructureMap.Testing
             session.Push(instance2);
             session.Push(instance3);
 
-            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
-                session.Push(instance1);
-            });
+            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => { session.Push(instance1); });
 
             ex.Message.ShouldContain("Bi-directional dependency relationship detected!");
         }

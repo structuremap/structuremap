@@ -69,11 +69,11 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void compile_and_use_by_itself_not_using_IBuildSession()
         {
-            var variable = Expression.Variable(typeof(ITarget), "target");
+            var variable = Expression.Variable(typeof (ITarget), "target");
 
             var expression = theInterceptor.ToExpression(new Policies(), Parameters.Session, variable);
 
-            var lambdaType = typeof(Func<ITarget, ITarget>);
+            var lambdaType = typeof (Func<ITarget, ITarget>);
             var lambda = Expression.Lambda(lambdaType, expression, variable);
 
             var func = lambda.Compile().As<Func<ITarget, ITarget>>();
@@ -83,7 +83,6 @@ namespace StructureMap.Testing.Building.Interception
 
             decorated.ShouldBeOfType<DecoratedTarget>()
                 .Inner.ShouldBeTheSameAs(target);
-
         }
 
 
@@ -92,11 +91,11 @@ namespace StructureMap.Testing.Building.Interception
         {
             theInterceptor = new FuncInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t));
 
-            var variable = Expression.Variable(typeof(ITarget), "target");
+            var variable = Expression.Variable(typeof (ITarget), "target");
 
             var expression = theInterceptor.ToExpression(new Policies(), Parameters.Context, variable);
 
-            var lambdaType = typeof(Func<IContext, ITarget, ITarget>);
+            var lambdaType = typeof (Func<IContext, ITarget, ITarget>);
             var lambda = Expression.Lambda(lambdaType, expression, Parameters.Context, variable);
 
             var func = lambda.Compile().As<Func<IContext, ITarget, ITarget>>();
@@ -109,10 +108,7 @@ namespace StructureMap.Testing.Building.Interception
                 .Inner.ShouldBeTheSameAs(target);
 
             decorated.Session.ShouldBeTheSameAs(session);
-
         }
-
-
     }
 
     public class DecoratedTarget : ITarget
@@ -131,7 +127,6 @@ namespace StructureMap.Testing.Building.Interception
 
         public void Activate()
         {
-            
         }
 
         public void Debug()
@@ -155,10 +150,8 @@ namespace StructureMap.Testing.Building.Interception
         }
 
 
-
         public void Activate()
         {
-
         }
 
         public void Debug()

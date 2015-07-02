@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rhino.Mocks;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
@@ -30,7 +28,7 @@ namespace StructureMap.Testing.Building.Interception
         public void description_is_set_explicitly()
         {
             theActivator = new ActivatorInterceptor<ITarget>(x => x.Activate(), "gonna start it up");
-            
+
             theActivator.Description.ShouldContain("gonna start it up");
         }
 
@@ -61,6 +59,7 @@ namespace StructureMap.Testing.Building.Interception
         {
             theActivator.Accepts.ShouldBe(typeof (ITarget));
         }
+
         [Test]
         public void the_return_type()
         {
@@ -80,7 +79,7 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void compile_and_use_by_itself()
         {
-            var variable = Expression.Variable(typeof(ITarget), "target");
+            var variable = Expression.Variable(typeof (ITarget), "target");
 
             var expression = theActivator.ToExpression(new Policies(), Parameters.Context, variable);
 
@@ -99,13 +98,12 @@ namespace StructureMap.Testing.Building.Interception
         public void compile_and_use_by_itself_with_session()
         {
             var activator = new ActivatorInterceptor<Target>((s, t) => t.UseSession(s));
-            var variable = Expression.Variable(typeof(Target), "target");
-
+            var variable = Expression.Variable(typeof (Target), "target");
 
 
             var expression = activator.ToExpression(new Policies(), Parameters.Context, variable);
 
-            var lambdaType = typeof(Action<IContext, Target>);
+            var lambdaType = typeof (Action<IContext, Target>);
             var lambda = Expression.Lambda(lambdaType, expression, Parameters.Context, variable);
 
             var action = lambda.Compile().As<Action<IContext, Target>>();
@@ -116,7 +114,6 @@ namespace StructureMap.Testing.Building.Interception
 
             target.Session.ShouldBeTheSameAs(session);
         }
-
     }
 
     public interface ITarget

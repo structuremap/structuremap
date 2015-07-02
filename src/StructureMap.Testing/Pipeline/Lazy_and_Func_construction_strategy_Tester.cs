@@ -72,7 +72,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void build_a_func_by_string()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("green").Named("green");
                 x.For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("blue").Named("blue");
                 x.For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("red").Named("red");

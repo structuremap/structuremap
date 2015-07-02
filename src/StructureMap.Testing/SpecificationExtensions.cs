@@ -122,7 +122,7 @@ namespace StructureMap.Testing
 
         public static void ShouldNotBeOfType<T>(this object actual)
         {
-            actual.ShouldNotBeOfType(typeof(T));
+            actual.ShouldNotBeOfType(typeof (T));
         }
 
         public static void ShouldNotBeOfType(this object actual, Type expected)
@@ -148,7 +148,6 @@ namespace StructureMap.Testing
         public static void ShouldContain(this string actual, string expected)
         {
             actual.Contains(expected).ShouldBeTrue();
-
         }
 
         public static string ShouldNotContain(this string actual, string expected)
@@ -184,7 +183,5 @@ namespace StructureMap.Testing
 
             return exception;
         }
-
-
     }
 }

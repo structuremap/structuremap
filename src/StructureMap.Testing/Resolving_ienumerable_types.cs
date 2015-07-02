@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Testing.Acceptance;
-using StructureMap.Testing.Widget;
-using AWidget = StructureMap.Testing.Acceptance.AWidget;
-using IWidget = StructureMap.Testing.Acceptance.IWidget;
 
 namespace StructureMap.Testing
 {
@@ -17,7 +14,8 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x => {
+            container = new Container(x =>
+            {
                 x.For<IWidget>().Add<AWidget>();
                 x.For<IWidget>().Add<BWidget>();
                 x.For<IWidget>().Add<CWidget>();
@@ -29,7 +27,7 @@ namespace StructureMap.Testing
         {
             container.GetInstance<IList<IWidget>>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
+                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
         }
 
         [Test]
@@ -37,7 +35,7 @@ namespace StructureMap.Testing
         {
             container.GetInstance<IEnumerable<IWidget>>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
+                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
         }
 
         [Test]
@@ -45,7 +43,7 @@ namespace StructureMap.Testing
         {
             container.GetInstance<IWidget[]>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
+                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
         }
 
         [Test]
@@ -86,7 +84,7 @@ namespace StructureMap.Testing
             container.GetInstance<GuyWithLazyList>()
                 .Widgets.Value
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
+                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
         }
 
         [Test]
@@ -95,7 +93,7 @@ namespace StructureMap.Testing
             container.GetInstance<GuyWithFuncList>()
                 .Widgets()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
+                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
         }
     }
 

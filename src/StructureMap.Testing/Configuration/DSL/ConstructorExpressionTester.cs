@@ -22,13 +22,14 @@ namespace StructureMap.Testing.Configuration.DSL
             var concretion2 = new Concretion();
 
             IContainer container = new Container(r =>
-                r.For<Abstraction>().AddInstances(x => {
+                r.For<Abstraction>().AddInstances(x =>
+                {
                     x.ConstructedBy(() => concretion1).Named("One");
                     x.ConstructedBy(() => concretion2).Named("Two");
                 }));
 
-            Assert.AreSame(concretion1, container.GetInstance<Abstraction>("One"));
-            Assert.AreSame(concretion2, container.GetInstance<Abstraction>("Two"));
+            concretion1.AreSame(container.GetInstance<Abstraction>("One"));
+            concretion2.AreSame(container.GetInstance<Abstraction>("Two"));
         }
 
         [Test]
@@ -48,8 +49,10 @@ namespace StructureMap.Testing.Configuration.DSL
             var concretion1 = new Concretion();
             var concretion2 = new Concretion();
 
-            IContainer manager = new Container(registry => {
-                registry.For<Abstraction>().AddInstances(x => {
+            IContainer manager = new Container(registry =>
+            {
+                registry.For<Abstraction>().AddInstances(x =>
+                {
                     x.ConstructedBy(() => concretion1).Named("One");
                     x.ConstructedBy(() => concretion2).Named("Two");
                 });

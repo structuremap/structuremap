@@ -18,14 +18,11 @@ namespace StructureMap.Testing.Web
 
             container =
                 new Container(
-                    x =>
-                    {
-                        x.For<Rule>().HybridHttpOrThreadLocalScoped().Use(() => new ColorRule("Red"));
-                    });
+                    x => { x.For<Rule>().HybridHttpOrThreadLocalScoped().Use(() => new ColorRule("Red")); });
 
             nestedContainer = container.GetNestedContainer();
 
-            int count = 0;
+            var count = 0;
             nestedContainer.Configure(x =>
             {
                 x.For<Rule>().Transient().Use("counting", () =>
@@ -54,11 +51,11 @@ namespace StructureMap.Testing.Web
         [Test]
         public void Does_not_cache_item()
         {
-            int initial = lifecycle.FindCache(null).Count;
+            var initial = lifecycle.FindCache(null).Count;
 
             nestedContainer.GetInstance<Rule>();
 
-            int after = lifecycle.FindCache(null).Count;
+            var after = lifecycle.FindCache(null).Count;
 
             after.ShouldBe(initial);
         }

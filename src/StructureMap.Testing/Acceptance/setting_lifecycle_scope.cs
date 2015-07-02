@@ -10,13 +10,10 @@ namespace StructureMap.Testing.Acceptance
     [TestFixture]
     public class setting_lifecycle_scope
     {
-
         [Test]
         public void can_specify_at_family_level()
         {
-            var container = new Container(x => {
-                x.For<Rule>().Singleton().Use<ARule>();
-            });
+            var container = new Container(x => { x.For<Rule>().Singleton().Use<ARule>(); });
 
             container.GetInstance<Rule>()
                 .ShouldBeTheSameAs(container.GetInstance<Rule>())
@@ -28,7 +25,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void lifecycle_precedence()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IWidget>().Use<AWidget>();
 
                 // Configure the default lifecycle for
@@ -39,7 +37,6 @@ namespace StructureMap.Testing.Acceptance
                 // Configure the lifecycle for a single Instance
                 x.For<Rule>().Add<ARule>().Named("A").Transient();
                 x.For<Rule>().Add<ARule>().Named("B").AlwaysUnique();
-                
             });
 
             // The default lifecycle is Transient
@@ -65,6 +62,7 @@ namespace StructureMap.Testing.Acceptance
                     .ShouldNotBeTheSameAs(nested.GetInstance<Rule>("B"));
             }
         }
+
         // ENDSAMPLE
     }
 }

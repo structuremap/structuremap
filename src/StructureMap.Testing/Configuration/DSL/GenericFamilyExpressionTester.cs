@@ -91,7 +91,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_concrete_type_with_name()
         {
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 r.For(typeof (ITarget)).Add(typeof (Target1)).Named("1");
                 r.For(typeof (ITarget)).Add(typeof (Target2)).Named("2");
                 r.For(typeof (ITarget)).Add(typeof (Target3)).Named("3");

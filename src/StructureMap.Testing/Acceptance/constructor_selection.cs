@@ -6,9 +6,6 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Acceptance
 {
-
-
-
     // SAMPLE: custom-ctor-scenario
     public abstract class BaseThing
     {
@@ -46,6 +43,7 @@ namespace StructureMap.Testing.Acceptance
         {
         }
     }
+
     // ENDSAMPLE
 
     // SAMPLE: custom-ctor-rule
@@ -57,9 +55,10 @@ namespace StructureMap.Testing.Acceptance
             // just return null to denote "not applicable"
             if (!pluggedType.CanBeCastTo<BaseThing>()) return null;
 
-            return pluggedType.GetConstructor(new Type[] {typeof (IWidget)});
+            return pluggedType.GetConstructor(new[] {typeof (IWidget)});
         }
     }
+
     // ENDSAMPLE
 
     [TestFixture]
@@ -69,7 +68,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void use_a_custom_constructor_selector()
         {
-            var container = new Container(_ => {
+            var container = new Container(_ =>
+            {
                 _.For<IWidget>().Use<AWidget>();
 
                 _.Policies.ConstructorSelector<ThingCtorRule>();
@@ -79,8 +79,9 @@ namespace StructureMap.Testing.Acceptance
                 .CorrectCtorWasUsed.ShouldBeTrue();
 
             container.GetInstance<Thing2>()
-                    .CorrectCtorWasUsed.ShouldBeTrue();
+                .CorrectCtorWasUsed.ShouldBeTrue();
         }
+
         // ENDSAMPLE
 
 
@@ -90,7 +91,7 @@ namespace StructureMap.Testing.Acceptance
             // Normally the greediest ctor would be
             // selected, but using this attribute
             // will overrid that behavior
-            [StructureMap.DefaultConstructor]
+            [DefaultConstructor]
             public AttributedThing(IWidget widget)
             {
                 CorrectCtorWasUsed = true;
@@ -107,15 +108,13 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void select_constructor_by_attribute()
         {
-            var container = new Container(_ => {
-                _.For<IWidget>().Use<AWidget>();
-            });
+            var container = new Container(_ => { _.For<IWidget>().Use<AWidget>(); });
 
             container.GetInstance<AttributedThing>()
                 .CorrectCtorWasUsed
                 .ShouldBeTrue();
-
         }
+
         // ENDSAMPLE
 
         // SAMPLE: explicit-ctor-selection
@@ -137,7 +136,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void override_the_constructor_selection()
         {
-            var container = new Container(_ => {
+            var container = new Container(_ =>
+            {
                 _.For<IWidget>().Use<AWidget>();
 
                 _.ForConcreteType<Thingie>().Configure
@@ -152,7 +152,7 @@ namespace StructureMap.Testing.Acceptance
                 .CorrectCtorWasUsed
                 .ShouldBeTrue();
         }
-        // ENDSAMPLE
 
+        // ENDSAMPLE
     }
 }

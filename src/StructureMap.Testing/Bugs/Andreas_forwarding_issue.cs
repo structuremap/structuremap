@@ -8,7 +8,8 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void can_do_the_forwarding()
         {
-            var container = new Container(_ => {
+            var container = new Container(_ =>
+            {
                 _.ForSingletonOf<ConcreteGuy>().Use<ConcreteGuy>();
                 _.For<IGuy<string>>().Use(c => c.GetInstance<ConcreteGuy>());
             });
@@ -18,6 +19,11 @@ namespace StructureMap.Testing.Bugs
         }
     }
 
-    public interface IGuy<T>{}
-    public class ConcreteGuy : IGuy<string>{}
+    public interface IGuy<T>
+    {
+    }
+
+    public class ConcreteGuy : IGuy<string>
+    {
+    }
 }

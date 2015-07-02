@@ -14,7 +14,8 @@ namespace StructureMap.Testing.Bugs
         {
             container =
                 new Container(
-                    x => {
+                    x =>
+                    {
                         x.For<IWidget>()
                             .MissingNamedInstanceIs.ConstructedBy(c => new ColorWidget(c.RequestedName));
                     });

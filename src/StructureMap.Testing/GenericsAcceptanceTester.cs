@@ -65,7 +65,8 @@ namespace StructureMap.Testing
         [Test]
         public void CanBuildAGenericObjectThatHasAnotherGenericObjectAsAChild()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For(typeof (IService<>)).Use(typeof (Service<>));
                 x.For(typeof (IHelper<>)).Use(typeof (Helper<>));
             });
@@ -110,7 +111,8 @@ namespace StructureMap.Testing
         [Test]
         public void CanGetTheSameInstanceOfGenericInterfaceWithSingletonLifecycle()
         {
-            var con = new Container(x => {
+            var con = new Container(x =>
+            {
                 x.ForSingletonOf(typeof (IService<>)).Use(typeof (Service<>));
                 x.For(typeof (IHelper<>)).Use(typeof (Helper<>));
             });
@@ -139,7 +141,8 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_and_concrete_type()
         {
-            var container = new Container(registry => {
+            var container = new Container(registry =>
+            {
                 registry.For(typeof (IHelper<>)).Use(typeof (Helper<>));
 
                 registry.Profile("1", x => x.For(typeof (IService<>)).Use(typeof (Service<>)));
@@ -154,7 +157,8 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_with_named_instance()
         {
-            IContainer container = new Container(r => {
+            IContainer container = new Container(r =>
+            {
                 r.For(typeof (IService<>)).Add(typeof (Service<>)).Named("Service1");
                 r.For(typeof (IService<>)).Add(typeof (Service2<>)).Named("Service2");
 
@@ -174,7 +178,8 @@ namespace StructureMap.Testing
         [Test]
         public void GenericsTypeAndProfileOrMachine()
         {
-            var container = new Container(registry => {
+            var container = new Container(registry =>
+            {
                 registry.For(typeof (IHelper<>)).Use(typeof (Helper<>));
                 registry.For(typeof (IService<>)).Use(typeof (Service<>)).Named("Default");
                 registry.For(typeof (IService<>)).Add(typeof (ServiceWithPlug<>)).Named("Plugged");
@@ -201,7 +206,7 @@ namespace StructureMap.Testing
             var type = assem.GetType("StructureMap.Testing.ITarget`2");
 
             type.GetGenericTypeDefinition()
-                .ShouldBe(typeof(ITarget<,>));
+                .ShouldBe(typeof (ITarget<,>));
         }
 
 

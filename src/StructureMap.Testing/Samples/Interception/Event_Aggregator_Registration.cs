@@ -16,7 +16,8 @@ namespace StructureMap.Testing.Samples.Interception
         [Test]
         public void use_the_event_listener_registration()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.Policies.Interceptors(new EventListenerRegistration());
                 x.For<IEventAggregator>().Use<EventAggregator>().Singleton();
             });
@@ -34,12 +35,11 @@ namespace StructureMap.Testing.Samples.Interception
 
     public class BooMessage
     {
-        
     }
 
     public class BooMessageListener : IListener<BooMessage>
     {
-        public readonly IList<BooMessage> Messages = new List<BooMessage>(); 
+        public readonly IList<BooMessage> Messages = new List<BooMessage>();
 
         public void Handle(BooMessage message)
         {
@@ -51,17 +51,15 @@ namespace StructureMap.Testing.Samples.Interception
     {
         public string Description
         {
-            get
-            {
-                return "Adds the constructed object to the EventAggregator";
-            }
+            get { return "Adds the constructed object to the EventAggregator"; }
         }
 
         public IEnumerable<IInterceptor> DetermineInterceptors(Type pluginType, Instance instance)
         {
-            if (instance.ReturnedType.FindInterfacesThatClose(typeof(IListener<>)).Any())
+            if (instance.ReturnedType.FindInterfacesThatClose(typeof (IListener<>)).Any())
             {
-                Expression<Action<IContext, object>> register = (c, o) => c.GetInstance<IEventAggregator>().AddListener(o);
+                Expression<Action<IContext, object>> register =
+                    (c, o) => c.GetInstance<IEventAggregator>().AddListener(o);
                 yield return new ActivatorInterceptor<object>(register);
             }
         }
@@ -107,7 +105,6 @@ namespace StructureMap.Testing.Samples.Interception
         }
 
         #region IEventAggregator Members
-
 
         public void SendMessage<T>(T message)
         {

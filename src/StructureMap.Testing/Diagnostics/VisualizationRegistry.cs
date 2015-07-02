@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Acceptance;
@@ -57,7 +56,8 @@ namespace StructureMap.Testing.Diagnostics
                 .Ctor<IDevice>().Is<ADevice>(x => x.Singleton());
 
             For<DeviceDecorator>().Add<DeviceDecorator>().Named("DeepInlineDevice")
-                .Ctor<IDevice>().Is<DeviceWithArgs>(x => {
+                .Ctor<IDevice>().Is<DeviceWithArgs>(x =>
+                {
                     x.Singleton();
                     x.Ctor<string>("color").Is("Blue");
                     x.Ctor<string>("direction").Is("North");
@@ -70,7 +70,8 @@ namespace StructureMap.Testing.Diagnostics
             For<CompositeDevice>().Add<CompositeDevice>().Named("AllPossible");
 
             For<CompositeDevice>().Add<CompositeDevice>().Named("InlineEnumerable")
-                .EnumerableOf<IDevice>().Contains(x => {
+                .EnumerableOf<IDevice>().Contains(x =>
+                {
                     x.Type<ADevice>();
                     x.Type<BDevice>();
                     x.Type<CDevice>();
@@ -93,7 +94,9 @@ namespace StructureMap.Testing.Diagnostics
         }
     }
 
-    public interface IDevice{}
+    public interface IDevice
+    {
+    }
 
     public class CrazyDecorator : IDevice
     {
@@ -102,21 +105,20 @@ namespace StructureMap.Testing.Diagnostics
         }
     }
 
-    public class DefaultDevice : IDevice { }
+    public class DefaultDevice : IDevice
+    {
+    }
 
     public class ADevice : Activateable, IDevice
     {
-
     }
 
     public class BDevice : Activateable, IDevice
     {
-
     }
 
     public class CDevice : Activateable, IDevice
     {
-
     }
 
     public class CompositeDevice
@@ -140,12 +142,11 @@ namespace StructureMap.Testing.Diagnostics
         }
 
         [SetterProperty]
-        public long Age { get;set; }
-    
+        public long Age { get; set; }
+
         [SetterProperty]
         public int Order { get; set; }
     }
-
 
 
     public class DeviceWrapper
@@ -178,7 +179,9 @@ namespace StructureMap.Testing.Diagnostics
         }
     }
 
-    public interface INotRegistered{}
+    public interface INotRegistered
+    {
+    }
 
     public class ClassThatHoldsINotRegistered
     {

@@ -11,9 +11,7 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void use_a_simple_func_for_string_dependency()
         {
-            var container = new Container(x => {
-                x.For<Rule>().Use<ColorRule>().Ctor<string>().Is(() => "blue");
-            });
+            var container = new Container(x => { x.For<Rule>().Use<ColorRule>().Ctor<string>().Is(() => "blue"); });
 
             container.GetInstance<Rule>()
                 .ShouldBeOfType<ColorRule>().Color.ShouldBe("blue");
@@ -22,7 +20,8 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void use_a_func_of_context_for_string_dependency()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForConcreteType<ColorRule>().Configure.Ctor<string>().Is("fuschia");
                 x.ForConcreteType<StringHolder>().Configure.Ctor<string>()
                     .Is(c => c.GetInstance<ColorRule>().Color);
@@ -34,9 +33,7 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void use_a_func_for_a_simple_type()
         {
-            var container = new Container(x => {
-                x.For<IntHolder>().Use<IntHolder>().Ctor<int>().Is(() => 5);
-            });
+            var container = new Container(x => { x.For<IntHolder>().Use<IntHolder>().Ctor<int>().Is(() => 5); });
 
             container.GetInstance<IntHolder>()
                 .Number.ShouldBe(5);
@@ -45,10 +42,9 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void use_a_func_for_enums()
         {
-            var container = new Container(x =>
-            {
-                x.For<EnumHolder>().Use<EnumHolder>().Ctor<BreedEnum>().Is(() => BreedEnum.Beefmaster);
-            });
+            var container =
+                new Container(
+                    x => { x.For<EnumHolder>().Use<EnumHolder>().Ctor<BreedEnum>().Is(() => BreedEnum.Beefmaster); });
 
             // My father raises Beefmasters and there'd be
             // hell to pay if he caught me using Angus as
@@ -102,4 +98,4 @@ namespace StructureMap.Testing.Bugs
             get { return _name; }
         }
     }
-}   
+}

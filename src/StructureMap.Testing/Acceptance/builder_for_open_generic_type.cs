@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
@@ -14,9 +12,7 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void show_the_workaround_for_generic_builders()
         {
-            var container = new Container(_ => {
-                _.For(typeof (IRepository<,>)).Use(new RepositoryInstanceFactory());
-            });
+            var container = new Container(_ => { _.For(typeof (IRepository<,>)).Use(new RepositoryInstanceFactory()); });
 
             container.GetInstance<IRepository<string, int>>()
                 .ShouldBeOfType<Repository<string, int>>();
@@ -46,7 +42,7 @@ namespace StructureMap.Testing.Acceptance
 
         public override Type ReturnedType
         {
-            get { return typeof(Repository<,>); }
+            get { return typeof (Repository<,>); }
         }
     }
 
@@ -62,9 +58,14 @@ namespace StructureMap.Testing.Acceptance
         public static IRepository<T, T1> Build<T, T1>()
         {
             return new Repository<T, T1>();
-        } 
+        }
     }
 
-    public interface IRepository<T, T1>{}
-    public class Repository<T, T1> : IRepository<T, T1>{} 
+    public interface IRepository<T, T1>
+    {
+    }
+
+    public class Repository<T, T1> : IRepository<T, T1>
+    {
+    }
 }

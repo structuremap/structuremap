@@ -3,23 +3,25 @@
 namespace StructureMap.Docs.samples
 {
 // SAMPLE: foobar-registry
-public class FooBarRegistry : Registry
-{
-    public FooBarRegistry()
+    public class FooBarRegistry : Registry
     {
-        For<IFoo>().Use<Foo>();
-        For<IBar>().Use<Bar>();
+        public FooBarRegistry()
+        {
+            For<IFoo>().Use<Foo>();
+            For<IBar>().Use<Bar>();
+        }
     }
-}
+
 // ENDSAMPLE
 
 // SAMPLE: foo-registry
-public class FooRegistry : Registry
-{
-    public FooRegistry()
+    public class FooRegistry : Registry
     {
-        For<IFoo>().Use<Foo>();        
+        public FooRegistry()
+        {
+            For<IFoo>().Use<Foo>();
+        }
     }
-}
+
 // ENDSAMPLE
 }

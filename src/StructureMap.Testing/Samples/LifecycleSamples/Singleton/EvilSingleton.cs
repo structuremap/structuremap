@@ -14,7 +14,7 @@
             // do something with the static data here
         }
     }
-    
+
 
     public class EvilSingletonUser
     {
@@ -23,5 +23,6 @@
             EvilSingleton.Instance.DoSomething();
         }
     }
+
     // ENDSAMPLE
 }

@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Building
         {
             var step = ConcreteBuild<CtorTarget>.For(() => new CtorTarget("", 0));
             step.Constructor.Add(Constant.For("Jeremy"));
-            step.Constructor.Add(Constant.For<int>(39));
+            step.Constructor.Add(Constant.For(39));
 
             var context = new FakeBuildSession();
 

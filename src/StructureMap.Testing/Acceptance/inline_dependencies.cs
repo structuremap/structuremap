@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
-using StructureMap.Testing.Samples;
 
 namespace StructureMap.Testing.Acceptance
 {
@@ -23,13 +21,15 @@ namespace StructureMap.Testing.Acceptance
                 Color = color;
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: inline-dependencies-value
         [Test]
         public void inline_usage_of_primitive_constructor_argument()
         {
-            var container = new Container(_ => {
+            var container = new Container(_ =>
+            {
                 _.For<IWidget>().Use<ColorWidget>()
                     .Ctor<string>().Is("Red");
             });
@@ -38,10 +38,13 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<ColorWidget>()
                 .Color.ShouldBe("Red");
         }
+
         // ENDSAMPLE
 
         // SAMPLE: inline-dependencies-rule-classes
-        public class SomeEvent{}
+        public class SomeEvent
+        {
+        }
 
         public interface ICondition
         {
@@ -57,6 +60,7 @@ namespace StructureMap.Testing.Acceptance
         {
             void ProcessEvent(SomeEvent @event);
         }
+
         // ENDSAMPLE
 
         // SAMPLE: inline-dependencies-SimpleRule
@@ -79,6 +83,7 @@ namespace StructureMap.Testing.Acceptance
                 }
             }
         }
+
         // ENDSAMPLE
 
         public class Condition1 : ICondition
@@ -89,19 +94,29 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        public class Condition2 : Condition1{}
-        public class Condition3 : Condition1{}
+        public class Condition2 : Condition1
+        {
+        }
+
+        public class Condition3 : Condition1
+        {
+        }
 
         public class Action1 : IAction
         {
             public void PerformWork(SomeEvent @event)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
 
-        public class Action2 : Action1{}
-        public class Action3 : Action1{}
+        public class Action2 : Action1
+        {
+        }
+
+        public class Action3 : Action1
+        {
+        }
 
 
         // SAMPLE: inline-dependencies-simple-ctor-injection
@@ -138,7 +153,6 @@ namespace StructureMap.Testing.Acceptance
                     .Ctor<ICondition>().IsSpecial(_ => _.Type<BigCondition>().Ctor<int>().Is(100))
 
                     // or
-
                     .Ctor<ICondition>().Is(new SmartInstance<BigCondition>().Ctor<int>().Is(100));
             }
 
@@ -162,6 +176,7 @@ namespace StructureMap.Testing.Acceptance
                 }
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: inline-dependencies-ctor-by-name
@@ -198,8 +213,8 @@ namespace StructureMap.Testing.Acceptance
                     .Ctor<ICondition>("second").Is<Condition2>();
             }
         }
-        // ENDSAMPLE
 
+        // ENDSAMPLE
 
 
         // SAMPLE: inline-dependencies-setters
@@ -225,19 +240,17 @@ namespace StructureMap.Testing.Acceptance
                     .Setter<ICondition>().Is<Condition1>()
 
                     // or
-
                     .Setter(x => x.Action).Is(new Action1())
 
                     // or if you need to specify the name
-
                     .Setter<IAction>("Action").Is<Action2>()
 
                     // or you can configure values *after* the object
                     // is constructed with the SetProperty method
-
                     .SetProperty(x => x.Action = new Action2());
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: inline-dependencies-open-types
@@ -298,6 +311,7 @@ namespace StructureMap.Testing.Acceptance
                 }
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: inline-dependencies-programmatic-configuration
@@ -308,24 +322,24 @@ namespace StructureMap.Testing.Acceptance
                 var instance = new ConstructorInstance(typeof (EventRule<>));
 
                 // By name
-                instance.Dependencies.Add("action", typeof(Action1<>) );
+                instance.Dependencies.Add("action", typeof (Action1<>));
 
                 // Everything else is syntactical sugur over this:
                 instance.Dependencies.Add(new Argument
                 {
-                    Type = typeof(IAction<>), // The dependency type
-                    Name = "action",          // The name of the dependency, either
-                                              // a constructor argument name or
-                                              // the name of a setter property
+                    Type = typeof (IAction<>), // The dependency type
+                    Name = "action", // The name of the dependency, either
+                    // a constructor argument name or
+                    // the name of a setter property
 
                     // Specify the actual dependency
                     // This can be either a concrete type, the prebuilt value,
                     // or an Instance
-                    Dependency = typeof(Action1<>)
-                                              
+                    Dependency = typeof (Action1<>)
                 });
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: inline-dependencies-enumerables
@@ -358,16 +372,19 @@ namespace StructureMap.Testing.Acceptance
                     // Each line in the nested closure adds another
                     // ICondition to the enumerable dependency in
                     // the order in which they are configured
-                    .EnumerableOf<ICondition>().Contains(_ => {
+                    .EnumerableOf<ICondition>().Contains(_ =>
+                    {
                         _.Type<Condition1>();
                         _.Type<Condition2>();
                     })
-                    .EnumerableOf<IAction>().Contains(_ => {
+                    .EnumerableOf<IAction>().Contains(_ =>
+                    {
                         _.Type<Action1>();
                         _.Object(new Action2());
                     });
             }
         }
+
         // ENDSAMPLE
     }
 }

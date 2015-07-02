@@ -1,8 +1,6 @@
 using System;
 using NUnit.Framework;
-using Rhino.Mocks;
 using Shouldly;
-using StructureMap.Building.Interception;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget3;
 
@@ -19,7 +17,8 @@ namespace StructureMap.Testing.Configuration.DSL
             _lastService = null;
             _manager = null;
 
-            _defaultRegistry = (registry => {
+            _defaultRegistry = (registry =>
+            {
                 //registry.For<IService>()
                 //    .AddInstances(
                 //    Instance<ColorService>().Named("Red").Ctor<string>("color").
@@ -34,7 +33,8 @@ namespace StructureMap.Testing.Configuration.DSL
                 //        EqualTo("Orange")
                 //    );
 
-                registry.For<IService>().AddInstances(x => {
+                registry.For<IService>().AddInstances(x =>
+                {
                     x.Type<ColorService>().Named("Red").Ctor<string>("color").Is("Red");
 
                     x.Object(new ColorService("Yellow")).Named("Yellow");
@@ -56,7 +56,8 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             if (_manager == null)
             {
-                _manager = new Container(registry => {
+                _manager = new Container(registry =>
+                {
                     _defaultRegistry(registry);
                     action(registry);
                 });
@@ -68,7 +69,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DecorateForAll()
         {
-            var green = getService("Green", r => {
+            var green = getService("Green", r =>
+            {
                 r.For<IService>().DecorateAllWith(s => new DecoratorService(s))
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             });
@@ -80,7 +82,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void OnStartupForAll()
         {
-            Action<Registry> action = registry => {
+            Action<Registry> action = registry =>
+            {
                 registry.For<IService>().OnCreationForAll("setting the last service", s => _lastService = s)
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
@@ -112,7 +115,8 @@ namespace StructureMap.Testing.Configuration.DSL
             _manager = null;
 
             _defaultRegistry = (registry =>
-                registry.For<IService>().AddInstances(x => {
+                registry.For<IService>().AddInstances(x =>
+                {
                     x.Type<ColorService>().Named("Red")
                         .Ctor<string>("color").Is("Red");
 
@@ -135,7 +139,8 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             if (_manager == null)
             {
-                _manager = new Container(registry => {
+                _manager = new Container(registry =>
+                {
                     _defaultRegistry(registry);
                     action(registry);
                 });
@@ -147,7 +152,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DecorateForAll()
         {
-            Action<Registry> action = r => {
+            Action<Registry> action = r =>
+            {
                 r.For<IService>().DecorateAllWith(s => new DecoratorService(s))
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
@@ -164,7 +170,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void OnStartupForAll()
         {
-            Action<Registry> action = r => {
+            Action<Registry> action = r =>
+            {
                 r.For<IService>().OnCreationForAll("setting the last service", s => _lastService = s)
                     .AddInstances(x => x.ConstructedBy(() => new ColorService("Green")).Named("Green"));
             };

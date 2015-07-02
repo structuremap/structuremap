@@ -52,6 +52,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 For<IWidget>().Use<AWidget>();
             }
         }
+
         // ENDSAMPLE
 
         [Test]
@@ -124,6 +125,7 @@ namespace StructureMap.Testing.Configuration.DSL
             container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
             container.GetAllInstances<IWidget>().Count().ShouldBe(5);
         }
+
         // ENDSAMPLE
 
         public class MutatedWidget : IWidget
@@ -135,7 +137,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
         public class MutatingRegistry : Registry
         {
-            private static int count = 0;
+            private static int count;
 
             public MutatingRegistry()
             {
@@ -157,7 +159,8 @@ namespace StructureMap.Testing.Configuration.DSL
             var registry2 = new Registry();
             registry2.IncludeRegistry<MutatingRegistry>();
 
-            var container = new Container(config => {
+            var container = new Container(config =>
+            {
                 config.AddRegistry(registry1);
                 config.AddRegistry(registry2);
             });

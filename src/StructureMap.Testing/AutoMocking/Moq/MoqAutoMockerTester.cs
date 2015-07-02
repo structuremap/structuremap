@@ -17,7 +17,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
             var mockedService = autoMocker.Get<AutoMockerTester.IMockedService>();
             autoMocker.ClassUnderTest.CallService();
 
-            
+
             var mockedServiceWrapper = Mock.Get(mockedService);
             mockedServiceWrapper.Verify(x => x.Go());
         }
@@ -32,7 +32,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
         }
 
         protected override void setExpectation<T, TResult>(T mock, Expression<Func<T, TResult>> functionCall,
-                                                           TResult expectedResult)
+            TResult expectedResult)
         {
             Mock.Get(mock).Setup(functionCall).Returns(expectedResult);
         }

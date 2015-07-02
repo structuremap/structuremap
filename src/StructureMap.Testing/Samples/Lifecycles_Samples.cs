@@ -11,9 +11,7 @@ namespace StructureMap.Testing.Samples
         [Test]
         public void singletons()
         {
-            var c = new Container(x => {
-                x.For<IService>().Use<Service>().Singleton();
-            });
+            var c = new Container(x => { x.For<IService>().Use<Service>().Singleton(); });
 
             // It's always the same object instance
             c.GetInstance<IService>()
@@ -23,15 +21,13 @@ namespace StructureMap.Testing.Samples
                 .ShouldBeTheSameAs(c.GetInstance<IService>())
                 .ShouldBeTheSameAs(c.GetInstance<IService>());
         }
+
         // ENDSAMPLE
 
         [Test]
         public void singletons_2()
         {
-            var c = new Container(x =>
-            {
-                x.For<IService>().Singleton().Use<Service>();
-            });
+            var c = new Container(x => { x.For<IService>().Singleton().Use<Service>(); });
 
             // It's always the same object instance
             var original = c.GetInstance<IService>();
@@ -54,10 +50,7 @@ namespace StructureMap.Testing.Samples
         [Test]
         public void Transient()
         {
-            var c = new Container(x =>
-            {
-                x.For<IService>().Use<Service>().Transient();
-            });
+            var c = new Container(x => { x.For<IService>().Use<Service>().Transient(); });
 
             // In a normal container, you get a new object
             // instance of the Service class in subsequent
@@ -76,16 +69,14 @@ namespace StructureMap.Testing.Samples
                     .ShouldBeTheSameAs(nested.GetInstance<IService>());
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: how-always-unique
         [Test]
         public void Always_Unique()
         {
-            var c = new Container(x =>
-            {
-                x.For<IService>().Use<Service>().AlwaysUnique();
-            });
+            var c = new Container(x => { x.For<IService>().Use<Service>().AlwaysUnique(); });
 
             // In a normal container, you get a new object
             // instance of the Service class in subsequent
@@ -108,6 +99,7 @@ namespace StructureMap.Testing.Samples
             var holder = c.GetInstance<ServiceUserHolder>();
             holder.Service.ShouldNotBeTheSameAs(holder.User.Service);
         }
+
         // ENDSAMPLE
 
         public class ServiceUser
@@ -142,8 +134,6 @@ namespace StructureMap.Testing.Samples
         }
 
 
-
-
         // SAMPLE: lifecycle-configuration-at-plugin-type
         public class LifecycleAtPluginTypeRegistry : Registry
         {
@@ -166,6 +156,7 @@ namespace StructureMap.Testing.Samples
                 For<IWeirdThing>().LifecycleIs<MyCustomLifecycle>();
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: lifecycle-configuration-at-instance
@@ -179,6 +170,7 @@ namespace StructureMap.Testing.Samples
                 For<IService>().Use<Service>().Named("4").LifecycleIs<MyCustomLifecycle>();
             }
         }
+
         // ENDSAMPLE
 
 
@@ -186,10 +178,7 @@ namespace StructureMap.Testing.Samples
         {
             public string Description
             {
-                get
-                {
-                    return "Some explanatory text for diagnostics";
-                }
+                get { return "Some explanatory text for diagnostics"; }
             }
 
             public void EjectAll(ILifecycleContext context)
@@ -205,21 +194,45 @@ namespace StructureMap.Testing.Samples
                 return new LifecycleObjectCache();
             }
         }
-
     }
 
-    public interface IService { }
-    public class Service : IService{}
+    public interface IService
+    {
+    }
 
-    public interface IGateway { }
-    public class Gateway : IGateway{}
+    public class Service : IService
+    {
+    }
 
-    public interface IRule { }
-    public class Rule : IRule{}
+    public interface IGateway
+    {
+    }
 
-    public interface ICache { }
-    public class Cache{}
+    public class Gateway : IGateway
+    {
+    }
 
-    public interface IWeirdThing{}
-    public class WeirdThing{}
+    public interface IRule
+    {
+    }
+
+    public class Rule : IRule
+    {
+    }
+
+    public interface ICache
+    {
+    }
+
+    public class Cache
+    {
+    }
+
+    public interface IWeirdThing
+    {
+    }
+
+    public class WeirdThing
+    {
+    }
 }

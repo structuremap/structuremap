@@ -35,8 +35,10 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void try_get_instance_fills_from_open_generic_on_conventions()
         {
-            var container = new Container(x => {
-                x.Scan(o => {
+            var container = new Container(x =>
+            {
+                x.Scan(o =>
+                {
                     o.TheCallingAssembly();
                     o.ConnectImplementationsToTypesClosing(typeof (IOpenClass<>));
                 });

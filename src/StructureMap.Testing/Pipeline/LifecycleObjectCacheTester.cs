@@ -28,59 +28,57 @@ namespace StructureMap.Testing.Pipeline
         {
             var aWidget = new AWidget();
             var instance = new ObjectInstance(aWidget);
-            
-            var cachedWidget = cache.Get(typeof(IWidget), instance, new StubBuildSession());
+
+            var cachedWidget = cache.Get(typeof (IWidget), instance, new StubBuildSession());
 
             cachedWidget.ShouldBe(aWidget);
-        }    
-        
+        }
+
         [Test]
         public void get_for_uncached_instance_builds_instance()
         {
             var instance = new ObjectInstance(new AWidget());
             var mockBuildSession = MockRepository.GenerateMock<IBuildSession>();
 
-            cache.Get(typeof(IWidget), instance, mockBuildSession);
+            cache.Get(typeof (IWidget), instance, mockBuildSession);
 
-            mockBuildSession.AssertWasCalled(session => session.BuildNewInOriginalContext(typeof(IWidget), instance));
-        }      
-        
+            mockBuildSession.AssertWasCalled(session => session.BuildNewInOriginalContext(typeof (IWidget), instance));
+        }
+
         [Test]
         public void get_for_cached_instance_does_not_build_instance()
         {
             var instance = new ObjectInstance(new AWidget());
             var mockBuildSession = MockRepository.GenerateMock<IBuildSession>();
-            cache.Get(typeof(IWidget), instance, new StubBuildSession());
+            cache.Get(typeof (IWidget), instance, new StubBuildSession());
 
-            cache.Get(typeof(IWidget), instance, mockBuildSession);
+            cache.Get(typeof (IWidget), instance, mockBuildSession);
 
-            mockBuildSession.AssertWasNotCalled(session => session.BuildNewInOriginalContext(typeof(IWidget), instance));
-        }       
-        
+            mockBuildSession.AssertWasNotCalled(session => session.BuildNewInOriginalContext(typeof (IWidget), instance));
+        }
+
         [Test]
         public void get_for_cached_instance_returns_cached_instance()
         {
             var aWidget = new AWidget();
             var instance = new ObjectInstance(aWidget);
-            cache.Get(typeof(IWidget), instance, new StubBuildSession());
-            
-            var cachedWidget = cache.Get(typeof(IWidget), instance, new StubBuildSession());
+            cache.Get(typeof (IWidget), instance, new StubBuildSession());
+
+            var cachedWidget = cache.Get(typeof (IWidget), instance, new StubBuildSession());
 
             cachedWidget.ShouldBe(aWidget);
-        }     
-        
+        }
+
         [Test]
         public void get_for_cached_instance_created_on_different_thread_returns_cached_instance()
         {
             var aWidget = new AWidget();
             var instance = new ObjectInstance(aWidget);
-            cache.Get(typeof(IWidget), instance, new StubBuildSession());
-            
+            cache.Get(typeof (IWidget), instance, new StubBuildSession());
+
             object cachedWidget = null;
-            var thread = new Thread(() =>
-            {
-                cachedWidget = cache.Get(typeof(IWidget), instance, new StubBuildSession());
-            });
+            var thread =
+                new Thread(() => { cachedWidget = cache.Get(typeof (IWidget), instance, new StubBuildSession()); });
 
             thread.Start();
             // Allow 10ms for the thread to start and for Get call to complete
@@ -88,7 +86,7 @@ namespace StructureMap.Testing.Pipeline
 
             cachedWidget.NotNull();
             cachedWidget.ShouldBe(aWidget);
-        }   
+        }
 
         [Test]
         public void eject_a_disposable_object()
@@ -138,7 +136,5 @@ namespace StructureMap.Testing.Pipeline
 
             cache.Has(typeof (IWidget), instance).ShouldBeTrue();
         }
-
-
     }
 }

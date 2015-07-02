@@ -101,9 +101,7 @@ namespace StructureMap.Testing.Building
             var source = new AllPossibleValuesDependencySource(typeof (IGateway[]));
             source.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.AllPossibleOf(typeof(IGateway)));
+            theVisitor.AssertWasCalled(x => x.AllPossibleOf(typeof (IGateway)));
         }
-
-
     }
 }

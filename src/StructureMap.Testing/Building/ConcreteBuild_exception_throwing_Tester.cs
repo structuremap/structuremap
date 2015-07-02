@@ -12,7 +12,8 @@ namespace StructureMap.Testing.Building
         [Test]
         public void happily_throws_build_exception_with_description_of_the_constructor()
         {
-            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() =>
+            {
                 var build = new ConcreteBuild<ClassThatBlowsUp>();
                 var session = new StubBuildSession();
                 build.Build(session, session);
@@ -24,9 +25,9 @@ namespace StructureMap.Testing.Building
         [Test]
         public void exception_throwing_from_container()
         {
-            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
-                new Container().GetInstance<ClassThatBlowsUp>();
-            });
+            var ex =
+                Exception<StructureMapBuildException>.ShouldBeThrownBy(
+                    () => { new Container().GetInstance<ClassThatBlowsUp>(); });
 
             Debug.WriteLine(ex);
         }

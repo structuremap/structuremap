@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Shouldly;
 using StructureMap.Diagnostics;
 
@@ -11,7 +10,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void create_deep()
         {
-            new BuildPlanVisualizer(PipelineGraph.BuildEmpty(), deep: true)
+            new BuildPlanVisualizer(PipelineGraph.BuildEmpty(), true)
                 .MaxLevels.ShouldBe(int.MaxValue);
         }
 
@@ -25,7 +24,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void create_with_explicit_levels()
         {
-            new BuildPlanVisualizer(PipelineGraph.BuildEmpty(), levels:2)
+            new BuildPlanVisualizer(PipelineGraph.BuildEmpty(), levels: 2)
                 .MaxLevels.ShouldBe(2);
         }
     }

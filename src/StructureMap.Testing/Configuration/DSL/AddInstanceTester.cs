@@ -1,8 +1,6 @@
 using System;
-using System.Configuration;
 using NUnit.Framework;
 using Shouldly;
-using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -15,7 +13,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [SetUp]
         public void SetUp()
         {
-            container = new Container(registry => {
+            container = new Container(registry =>
+            {
                 registry.Scan(x => x.AssemblyContainingType<ColorWidget>());
 
                 // Add an instance with properties
@@ -55,7 +54,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceAndOverrideTheConcreteTypeForADependency()
         {
-            IContainer container = new Container(x => {
+            IContainer container = new Container(x =>
+            {
                 x.For<Rule>().Add<WidgetRule>()
                     .Named("AWidgetRule")
                     .Ctor<IWidget>().IsSpecial(i => i.Type<AWidget>());
@@ -73,14 +73,16 @@ namespace StructureMap.Testing.Configuration.DSL
             container = new Container(x => { x.For<IWidget>().Add<AWidget>().Named("MyInstance"); });
             // retrieve an instance by name
             var widget = (AWidget) container.GetInstance<IWidget>("MyInstance");
-            Assert.IsNotNull(widget);
+            widget.IsNotNull();
         }
+
         // ENDSAMPLE
 
         [Test]
         public void SpecifyANewInstanceOverrideADependencyWithANamedInstance()
         {
-            container = new Container(registry => {
+            container = new Container(registry =>
+            {
                 registry.For<Rule>().Add<ARule>().Named("Alias");
 
                 // Add an instance by specifying the ConcreteKey
@@ -106,7 +108,8 @@ namespace StructureMap.Testing.Configuration.DSL
             // Specify a new Instance, create an instance for a dependency on the fly
             var instanceKey = "OrangeWidgetRule";
 
-            var theContainer = new Container(registry => {
+            var theContainer = new Container(registry =>
+            {
                 registry.For<Rule>().Add<WidgetRule>().Named(instanceKey)
                     .Ctor<IWidget>().IsSpecial(
                         i => i.Type<ColorWidget>().Ctor<string>("color").Is("Orange").Named("Orange"));
@@ -115,7 +118,6 @@ namespace StructureMap.Testing.Configuration.DSL
             theContainer.GetInstance<Rule>(instanceKey).As<WidgetRule>()
                 .Widget.As<ColorWidget>()
                 .Color.ShouldBe("Orange");
-
         }
 
 
@@ -132,9 +134,9 @@ namespace StructureMap.Testing.Configuration.DSL
             var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Julia");
             var widget3 = (CloneableWidget) container.GetInstance<IWidget>("Julia");
 
-            Assert.AreSame(julia, widget1);
-            Assert.AreSame(julia, widget2);
-            Assert.AreSame(julia, widget3);
+            julia.AreSame(widget1);
+            julia.AreSame(widget2);
+            julia.AreSame(widget3);
         }
     }
 

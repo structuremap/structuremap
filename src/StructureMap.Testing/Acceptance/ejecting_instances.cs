@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Win32;
 using NUnit.Framework;
 using Shouldly;
+using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 using StructureMap.Query;
-using Registry = StructureMap.Configuration.DSL.Registry;
 
 namespace StructureMap.Testing.Acceptance
 {
@@ -15,8 +14,10 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void ejecting_all_from_a_family()
         {
-            var container = new Container(x => {
-                x.For<DisposedGuy>().Singleton().AddInstances(guys => {
+            var container = new Container(x =>
+            {
+                x.For<DisposedGuy>().Singleton().AddInstances(guys =>
+                {
                     guys.Type<DisposedGuy>().Named("A");
                     guys.Type<DisposedGuy>().Named("B");
                     guys.Type<DisposedGuy>().Named("C");
@@ -27,7 +28,7 @@ namespace StructureMap.Testing.Acceptance
             var guyA = container.GetInstance<DisposedGuy>("A");
             var guyB = container.GetInstance<DisposedGuy>("B");
             var guyC = container.GetInstance<DisposedGuy>("C");
-        
+
             container.Model.EjectAndRemove<DisposedGuy>();
 
             // All the singleton instances should be disposed
@@ -107,9 +108,7 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void obly_eject_a_single_instance()
         {
-            var container = new Container(x => {
-                x.For<DisposedGuy>().Singleton().Use<DisposedGuy>();
-            });
+            var container = new Container(x => { x.For<DisposedGuy>().Singleton().Use<DisposedGuy>(); });
 
             var first = container.GetInstance<DisposedGuy>();
             var second = container.GetInstance<DisposedGuy>();
@@ -131,7 +130,8 @@ namespace StructureMap.Testing.Acceptance
 
             var customLifecycle = new CustomLifecycle();
 
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<DisposedGuy>().LifecycleIs(customLifecycle).AddInstances(guys =>
                 {
                     guys.Type<DisposedGuy>().Named("A");
@@ -165,13 +165,14 @@ namespace StructureMap.Testing.Acceptance
         {
             CustomLifecycle.Cache.DisposeAndClear();
 
-            var container = new Container(x =>
-            {
-                x.For<DisposedGuy>().AddInstances(guys =>
-                {
-                    guys.Type<DisposedGuy>().Named("A").SetLifecycleTo(new CustomLifecycle());
-                });
-            });
+            var container =
+                new Container(
+                    x =>
+                    {
+                        x.For<DisposedGuy>()
+                            .AddInstances(
+                                guys => { guys.Type<DisposedGuy>().Named("A").SetLifecycleTo(new CustomLifecycle()); });
+                    });
 
             var guyA = container.GetInstance<DisposedGuy>("A");
             CustomLifecycle.Cache.Count.ShouldBe(1);
@@ -194,6 +195,7 @@ namespace StructureMap.Testing.Acceptance
             WasDisposed = true;
         }
     }
+
     // ENDSAMPLE
 
     // SAMPLE: CustomLifecycle
@@ -203,10 +205,7 @@ namespace StructureMap.Testing.Acceptance
 
         public string Description
         {
-            get
-            {
-                return "Custom";
-            }
+            get { return "Custom"; }
         }
 
         public void EjectAll(ILifecycleContext context)
@@ -223,6 +222,7 @@ namespace StructureMap.Testing.Acceptance
             return Cache;
         }
     }
+
     // ENDSAMPLE
 
     // SAMPLE: using-custom-lifecycle
@@ -238,6 +238,6 @@ namespace StructureMap.Testing.Acceptance
                 .LifecycleIs<CustomLifecycle>();
         }
     }
-    // ENDSAMPLE
 
+    // ENDSAMPLE
 }

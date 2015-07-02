@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Shouldly;
 
 namespace StructureMap.Testing.Examples.MultiTenancy
@@ -8,18 +7,30 @@ namespace StructureMap.Testing.Examples.MultiTenancy
     public class missing_instance_rule_overrides
     {
         // SAMPLE: missing-instance-mt-domain
-        public interface Rule {}
-        public class DefaultRule : Rule {}
+        public interface Rule
+        {
+        }
 
-        public class Client1Rule : Rule{}
-        public class Client2Rule : Rule{}
+        public class DefaultRule : Rule
+        {
+        }
+
+        public class Client1Rule : Rule
+        {
+        }
+
+        public class Client2Rule : Rule
+        {
+        }
+
         // ENDSAMPLE
 
         // SAMPLE: missing-instance-mt-fallthrough
         [Test]
         public void use_customer_overrides()
         {
-            var container = new Container(_ => {
+            var container = new Container(_ =>
+            {
                 _.For<Rule>().MissingNamedInstanceIs.Type<DefaultRule>();
 
                 _.For<Rule>().Add<Client1Rule>().Named("client1");
@@ -34,6 +45,7 @@ namespace StructureMap.Testing.Examples.MultiTenancy
             // DefaultRule
             container.GetInstance<Rule>("client3").ShouldBeOfType<DefaultRule>();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: missing-instance-mt-lookup
@@ -42,7 +54,9 @@ namespace StructureMap.Testing.Examples.MultiTenancy
             ClientRulesData Find(string clientName);
         }
 
-        public class ClientRulesData{}
+        public class ClientRulesData
+        {
+        }
 
         public class DataUsingRule : Rule
         {
@@ -57,9 +71,11 @@ namespace StructureMap.Testing.Examples.MultiTenancy
         [Test]
         public void register_by_looking_up_data()
         {
-            var container = new Container(_ => {
+            var container = new Container(_ =>
+            {
                 _.For<Rule>().MissingNamedInstanceIs.ConstructedBy(
-                    "Building client rules by looking up client data",c => {
+                    "Building client rules by looking up client data", c =>
+                    {
                         var data = c.GetInstance<IClientRulesRepsitory>()
                             .Find(c.RequestedName);
 
@@ -67,6 +83,7 @@ namespace StructureMap.Testing.Examples.MultiTenancy
                     });
             });
         }
+
         // ENDSAMPLE
     }
 }

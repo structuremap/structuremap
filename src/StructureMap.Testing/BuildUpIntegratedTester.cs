@@ -10,7 +10,8 @@ namespace StructureMap.Testing
         public void create_a_setter_rule_and_see_it_applied_in_BuildUp()
         {
             var theGateway = new DefaultGateway();
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IGateway>().Use(theGateway);
                 x.Policies.SetAllProperties(y => { y.OfType<IGateway>(); });
             });
@@ -26,7 +27,8 @@ namespace StructureMap.Testing
         public void create_a_setter_rule_and_see_it_applied_in_BuildUp_through_ObjectFactory()
         {
             var theGateway = new DefaultGateway();
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IGateway>().Use(theGateway);
 
                 // First we create a new Setter Injection Policy that
@@ -49,7 +51,8 @@ namespace StructureMap.Testing
         public void use_predefined_setter_values_for_buildup()
         {
             var theGateway = new DefaultGateway();
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForConcreteType<BuildUpTarget1>().Configure
                     .Setter(y => y.Gateway).Is(theGateway);
             });

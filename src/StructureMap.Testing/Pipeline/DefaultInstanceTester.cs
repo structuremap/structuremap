@@ -57,8 +57,10 @@ namespace StructureMap.Testing.Pipeline
             var widget2 = new AWidget();
             var widget3 = new AWidget();
 
-            var container = new Container(x => {
-                x.For<IWidget>().AddInstances(o => {
+            var container = new Container(x =>
+            {
+                x.For<IWidget>().AddInstances(o =>
+                {
                     o.Object(widget1);
                     o.Object(widget2);
                     o.Object(widget3);

@@ -91,30 +91,34 @@ namespace StructureMap.Testing.Graph
             var container = new Container();
             container.Inject<ISomething>(one);
 
-            Assert.AreSame(one, container.GetInstance<ISomething>());
+            one.AreSame(container.GetInstance<ISomething>());
         }
 
         [Test]
         public void AddInstanceToInstanceManagerWhenTheInstanceFactoryDoesNotExist()
         {
             IContainer container = new Container(new PluginGraph());
-            container.Configure(r => {
-                r.For<IService>().AddInstances(x => {
+            container.Configure(r =>
+            {
+                r.For<IService>().AddInstances(x =>
+                {
                     x.Object(_red).Named("Red");
                     x.Object(_blue).Named("Blue");
                 });
             });
 
-            Assert.AreSame(_red, container.GetInstance(typeof (IService), "Red"));
-            Assert.AreSame(_blue, container.GetInstance(typeof (IService), "Blue"));
+            _red.AreSame(container.GetInstance(typeof (IService), "Red"));
+            _blue.AreSame(container.GetInstance(typeof (IService), "Blue"));
         }
 
 
         [Test]
         public void AddNamedInstanceByType()
         {
-            var container = new Container(r => {
-                r.For<ISomething>().AddInstances(x => {
+            var container = new Container(r =>
+            {
+                r.For<ISomething>().AddInstances(x =>
+                {
                     x.Type<SomethingOne>().Named("One");
                     x.Type<SomethingTwo>().Named("Two");
                 });
@@ -130,15 +134,17 @@ namespace StructureMap.Testing.Graph
             var one = new SomethingOne();
             var two = new SomethingOne();
 
-            var container = new Container(r => {
-                r.For<ISomething>().AddInstances(x => {
+            var container = new Container(r =>
+            {
+                r.For<ISomething>().AddInstances(x =>
+                {
                     x.Object(one).Named("One");
                     x.Object(two).Named("Two");
                 });
             });
 
-            Assert.AreSame(one, container.GetInstance<ISomething>("One"));
-            Assert.AreSame(two, container.GetInstance<ISomething>("Two"));
+            one.AreSame(container.GetInstance<ISomething>("One"));
+            two.AreSame(container.GetInstance<ISomething>("Two"));
         }
 
 
@@ -168,8 +174,10 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container();
 
-            container.Configure(registry => {
-                registry.Scan(x => {
+            container.Configure(registry =>
+            {
+                registry.Scan(x =>
+                {
                     x.TheCallingAssembly();
                     x.AddAllTypesOf<IThingy>();
                 });
@@ -184,7 +192,8 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container();
             container.Configure(
-                registry => registry.Scan(x => {
+                registry => registry.Scan(x =>
+                {
                     x.TheCallingAssembly();
                     x.AddAllTypesOf<IWidget>();
                 }));
@@ -198,8 +207,10 @@ namespace StructureMap.Testing.Graph
             var container = new Container();
 
             container.Configure(
-                registry => {
-                    registry.Scan(x => {
+                registry =>
+                {
+                    registry.Scan(x =>
+                    {
                         x.TheCallingAssembly();
                         x.AddAllTypesOf(typeof (IWidget));
                     });
@@ -217,7 +228,8 @@ namespace StructureMap.Testing.Graph
             var container = new Container();
             container.Configure(
                 registry => registry.Scan(
-                    x => {
+                    x =>
+                    {
                         x.AssemblyContainingType(typeof (IOtherService<>));
                         x.AddAllTypesOf(typeof (IOtherService<>));
                     }));
@@ -230,7 +242,8 @@ namespace StructureMap.Testing.Graph
         public void Add_generic_stuff_in_configure()
         {
             var container = new Container();
-            container.Configure(registry => {
+            container.Configure(registry =>
+            {
                 registry.For(typeof (IService<>)).Add(typeof (Service1<>));
                 registry.For(typeof (IService<>)).Add(typeof (Service2<>));
             });
@@ -267,7 +280,7 @@ namespace StructureMap.Testing.Graph
             container.Inject<ISomething>(one);
             container.Inject<ISomething>(two);
 
-            Assert.AreSame(two, container.GetInstance<ISomething>());
+            two.AreSame(container.GetInstance<ISomething>());
         }
     }
 

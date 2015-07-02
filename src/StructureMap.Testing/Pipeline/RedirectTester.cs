@@ -10,7 +10,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void fail_with_cast_failure_when_the_types_are_not_convertible()
         {
-            Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
+            Exception<StructureMapBuildException>.ShouldBeThrownBy(() =>
+            {
                 var container = new Container(x =>
                 {
                     x.For<ITarget>().Use<ClassThatOnlyImplementsITarget>();
@@ -24,7 +25,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void successfully_redirect_from_one_type_to_another()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<ITarget>().Use<ClassThatImplementsBoth>();
                 x.Redirect<IOtherTarget, ITarget>();
             });

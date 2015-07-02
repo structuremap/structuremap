@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Graph
         public void FindPluginType()
         {
             new DefaultConventionScanner().FindPluginType(typeof (Convention))
-                .ShouldBe(typeof(IConvention));
+                .ShouldBe(typeof (IConvention));
 
             new DefaultConventionScanner().FindPluginType(GetType()).IsNull();
         }
@@ -24,8 +24,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Process_to_Container()
         {
-            var container = new Container(registry => {
-                registry.Scan(x => {
+            var container = new Container(registry =>
+            {
+                registry.Scan(x =>
+                {
                     x.TheCallingAssembly();
                     x.Convention<DefaultConventionScanner>();
                 });
@@ -38,8 +40,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Process_to_Container_2()
         {
-            var container = new Container(registry => {
-                registry.Scan(x => {
+            var container = new Container(registry =>
+            {
+                registry.Scan(x =>
+                {
                     x.TheCallingAssembly();
                     x.With(new DefaultConventionScanner());
                 });
@@ -70,7 +74,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void can_configure_plugin_families_via_dsl()
         {
-            var container = new Container(registry => registry.Scan(x => {
+            var container = new Container(registry => registry.Scan(x =>
+            {
                 x.TheCallingAssembly();
                 x.WithDefaultConventions().OnAddedPluginTypes(t => t.Singleton());
             }));

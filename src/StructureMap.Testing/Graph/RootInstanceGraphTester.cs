@@ -13,7 +13,7 @@ namespace StructureMap.Testing.Graph
         public void default_lifecycle_by_default_is_null()
         {
             var root = new RootInstanceGraph(new PluginGraph());
-            root.DefaultLifecycleFor(typeof(IGateway)).ShouldBeNull();
+            root.DefaultLifecycleFor(typeof (IGateway)).ShouldBeNull();
         }
 
         [Test]
@@ -23,19 +23,18 @@ namespace StructureMap.Testing.Graph
             graph.Families[typeof (IGateway)].SetDefault(new SmartInstance<StubbedGateway>());
 
             var root = new RootInstanceGraph(graph);
-            root.DefaultLifecycleFor(typeof(IGateway)).ShouldBeNull();
+            root.DefaultLifecycleFor(typeof (IGateway)).ShouldBeNull();
         }
 
         [Test]
         public void default_lifecycle_is_explicitly_set()
         {
             var graph = new PluginGraph();
-            graph.Families[typeof(IGateway)].SetLifecycleTo<SingletonLifecycle>();
+            graph.Families[typeof (IGateway)].SetLifecycleTo<SingletonLifecycle>();
 
             var root = new RootInstanceGraph(graph);
-            root.DefaultLifecycleFor(typeof(IGateway)).ShouldBeOfType<SingletonLifecycle>();
+            root.DefaultLifecycleFor(typeof (IGateway)).ShouldBeOfType<SingletonLifecycle>();
         }
-
 
 
         [Test]
@@ -45,7 +44,7 @@ namespace StructureMap.Testing.Graph
             plugins.SingletonCache.ShouldNotBeNull();
 
             var pipeline = PipelineGraph.BuildRoot(plugins);
-            
+
             pipeline.Singletons.ShouldBeTheSameAs(plugins.SingletonCache);
         }
 

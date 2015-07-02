@@ -28,15 +28,16 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void something_in_the_middle_of_container_that_tries_to_dispose_container_will_not_blow_everything_up_with_a_stack_overflow_exception()
+        public void
+            something_in_the_middle_of_container_that_tries_to_dispose_container_will_not_blow_everything_up_with_a_stack_overflow_exception
+            ()
         {
-            var container = new Container(x => {
-                x.ForSingletonOf<ITryToDisposeContainer>().Use<ITryToDisposeContainer>();
-            });
+            var container =
+                new Container(x => { x.ForSingletonOf<ITryToDisposeContainer>().Use<ITryToDisposeContainer>(); });
 
             // just want it spun up
             container.GetInstance<ITryToDisposeContainer>();
-        
+
             container.Dispose();
         }
 
@@ -85,10 +86,12 @@ namespace StructureMap.Testing.Pipeline
         public void
             disposing_a_nested_container_should_dispose_all_of_the_transient_objects_created_by_the_nested_container()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<I1>().Use<C1Yes>();
                 x.For<I2>().Use<C2Yes>();
-                x.For<I3>().AddInstances(o => {
+                x.For<I3>().AddInstances(o =>
+                {
                     o.Type<C3Yes>().Named("1");
                     o.Type<C3Yes>().Named("2");
                 });
@@ -101,7 +104,7 @@ namespace StructureMap.Testing.Pipeline
                 child.GetInstance<I1>().As<Disposable>(),
                 child.GetInstance<I2>().As<Disposable>(),
                 child.GetInstance<I3>("1").As<Disposable>(),
-                child.GetInstance<I3>("2").As<Disposable>(),
+                child.GetInstance<I3>("2").As<Disposable>()
             };
 
             child.Dispose();

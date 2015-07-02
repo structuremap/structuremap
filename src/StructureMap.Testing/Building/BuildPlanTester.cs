@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
-using StructureMap.Testing.Building.Interception;
 
 namespace StructureMap.Testing.Building
 {
@@ -30,17 +28,15 @@ namespace StructureMap.Testing.Building
             theInner = Constant.For(theTarget);
 
             _plan =
-                new Lazy<BuildPlan>(() => new BuildPlan(typeof (IBuildTarget), theInstance, theInner, new Policies(), theInterceptors));
+                new Lazy<BuildPlan>(
+                    () => new BuildPlan(typeof (IBuildTarget), theInstance, theInner, new Policies(), theInterceptors));
 
             theSession = new FakeBuildSession();
         }
 
         private BuildPlan thePlan
         {
-            get
-            {
-                return _plan.Value;
-            }
+            get { return _plan.Value; }
         }
 
         [Test]
@@ -67,9 +63,8 @@ namespace StructureMap.Testing.Building
         {
             theInner = new ConcreteBuild<ThrowsUpTarget>();
 
-            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
-                thePlan.Build(theSession, theSession);
-            });
+            var ex =
+                Exception<StructureMapBuildException>.ShouldBeThrownBy(() => { thePlan.Build(theSession, theSession); });
 
             ex.Message.ShouldContain(theInstance.Description);
             ex.Message.ShouldContain(thePlan.Description);
@@ -87,7 +82,8 @@ namespace StructureMap.Testing.Building
         [Test]
         public void description_when_the_instance_type_does_not_match_the_concrete_type()
         {
-            thePlan.Description.ShouldBe("Instance of StructureMap.Testing.Building.IBuildTarget (StructureMap.Testing.Building.BuildTarget)");
+            thePlan.Description.ShouldBe(
+                "Instance of StructureMap.Testing.Building.IBuildTarget (StructureMap.Testing.Building.BuildTarget)");
         }
 
         [Test]
@@ -100,7 +96,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void description_when_the_instance_concrete_type_is_the_plugin_type()
         {
-            theInstance = new RiggedInstance(typeof(IBuildTarget));
+            theInstance = new RiggedInstance(typeof (IBuildTarget));
             thePlan.Description.ShouldBe("Instance of StructureMap.Testing.Building.IBuildTarget");
         }
     }
@@ -132,7 +128,6 @@ namespace StructureMap.Testing.Building
 
     public interface IBuildTarget
     {
-        
     }
 
     public class ThrowsUpTarget : IBuildTarget
@@ -145,7 +140,6 @@ namespace StructureMap.Testing.Building
 
     public class BuildTarget : IBuildTarget
     {
-        
     }
 
     public class TargetDecorator : IBuildTarget

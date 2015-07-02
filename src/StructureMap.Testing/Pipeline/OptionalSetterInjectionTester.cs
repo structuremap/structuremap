@@ -11,7 +11,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void AutoFill_a_property()
         {
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 r.ForConcreteType<ClassWithDependency>().Configure
                     .Setter<Rule>().IsTheDefault();
 
@@ -25,7 +26,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void one_optional_child_array_setter()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<ClassWithDependency>().Use<ClassWithDependency>()
                     .EnumerableOf<Rule>().Contains(arr => { arr.IsThis(new ColorRule("Red")); });
             });
@@ -36,7 +38,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void one_optional_child_setter2()
         {
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 r.ForConcreteType<ClassWithDependency>().Configure
                     .Setter<Rule>().Is(new ColorRule("Red"));
             });
@@ -47,7 +50,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void one_optional_child_setter_with_the_setter_property_defined()
         {
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 r.ForConcreteType<ClassWithDependency>().Configure
                     .Setter<Rule>().Is(new ColorRule("Red"));
             });
@@ -67,7 +71,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void one_optional_enum_setter()
         {
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 r.ForConcreteType<ClassWithOneEnum>().Configure
                     .Setter(x => x.Color).Is(ColorEnum.Red);
             });
@@ -78,7 +83,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void one_optional_long_and_one_bool_setter()
         {
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 r.ForConcreteType<ClassWithOneLongAndOneBool>().Configure
                     .Setter(x => x.Age).Is(34)
                     .Setter(x => x.Active).Is(true);
@@ -92,7 +98,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void one_optional_setter_injection_with_string()
         {
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 r.ForConcreteType<ClassWithOneSetter>().Configure
                     .Setter(x => x.Name).Is("Jeremy");
             });
@@ -103,7 +110,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void optional_setter_injection_with_string()
         {
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 // The "Name" property is not configured for this instance
                 r.For<OptionalSetterTarget>().Use<OptionalSetterTarget>().Named("NoName");
 
@@ -119,7 +127,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void optional_setter_with_Action()
         {
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 // The "Name" property is not configured for this instance
                 r.For<OptionalSetterTarget>().Use<OptionalSetterTarget>().Named("NoName");
 

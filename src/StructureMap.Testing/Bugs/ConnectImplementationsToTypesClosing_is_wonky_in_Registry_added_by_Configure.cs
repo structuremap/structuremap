@@ -29,19 +29,32 @@ namespace StructureMap.Testing.Bugs
     {
         public BookRegistry()
         {
-            Scan(x => {
+            Scan(x =>
+            {
                 x.TheCallingAssembly();
                 x.ConnectImplementationsToTypesClosing(typeof (IBook<>));
             });
         }
     }
 
-    public interface IBook<T>{}
+    public interface IBook<T>
+    {
+    }
 
 
-    public class SciFi{}
-    public class SciFiBook : IBook<SciFi>{}
+    public class SciFi
+    {
+    }
 
-    public class Fantasy {}
-    public class FantasyBook : IBook<Fantasy>{}
+    public class SciFiBook : IBook<SciFi>
+    {
+    }
+
+    public class Fantasy
+    {
+    }
+
+    public class FantasyBook : IBook<Fantasy>
+    {
+    }
 }

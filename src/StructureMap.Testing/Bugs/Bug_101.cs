@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Shouldly;
-using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Bugs
 {
@@ -28,8 +26,8 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void open_generic_scanning()
         {
-
-            var container = new Container(i => i.Scan(s => {
+            var container = new Container(i => i.Scan(s =>
+            {
                 s.AssemblyContainingType<Bug_101>();
                 //s.WithDefaultConventions();
                 s.AddAllTypesOf(typeof (ISomeInterface<>));

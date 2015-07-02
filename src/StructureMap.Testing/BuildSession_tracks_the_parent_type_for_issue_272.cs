@@ -21,7 +21,8 @@ namespace StructureMap.Testing
         [Test]
         public void for_basic_get_instance()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<ILoggerHolder>().Use<LoggerHolder>();
 
                 x.For<FakeLogger>().Use(c => new FakeLogger(c.RootType));
@@ -34,7 +35,8 @@ namespace StructureMap.Testing
         [Test]
         public void in_get_instance_by_name()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<ILoggerHolder>().Use<BuildSessionTarget>()
                     .Named("Red");
 
@@ -48,18 +50,15 @@ namespace StructureMap.Testing
                 .Logger.RootType.ShouldBe(typeof (BuildSessionTarget));
 
             container.GetInstance<ILoggerHolder>("Blue")
-                .Logger.RootType.ShouldBe(typeof(LoggerHolder));
+                .Logger.RootType.ShouldBe(typeof (LoggerHolder));
 
-            container.GetInstance(typeof(ILoggerHolder),"Red")
+            container.GetInstance(typeof (ILoggerHolder), "Red")
                 .As<ILoggerHolder>()
-                .Logger.RootType.ShouldBe(typeof(BuildSessionTarget));
+                .Logger.RootType.ShouldBe(typeof (BuildSessionTarget));
 
-            container.GetInstance(typeof(ILoggerHolder), "Blue")
+            container.GetInstance(typeof (ILoggerHolder), "Blue")
                 .As<ILoggerHolder>()
-                .Logger.RootType.ShouldBe(typeof(LoggerHolder));
-
-
-
+                .Logger.RootType.ShouldBe(typeof (LoggerHolder));
         }
 
         [Test]
@@ -79,15 +78,12 @@ namespace StructureMap.Testing
             var holders = container.GetAllInstances<ILoggerHolder>().ToArray();
             holders[0].Logger.RootType.ShouldBe(typeof (BuildSessionTarget));
             holders[1].Logger.RootType.ShouldBe(typeof (LoggerHolder));
-
         }
 
         [Test]
         public void get_instance_for_a_supplied_instance()
         {
-            var container = new Container(x => {
-                x.For<FakeLogger>().Use(c => new FakeLogger(c.RootType));
-            });
+            var container = new Container(x => { x.For<FakeLogger>().Use(c => new FakeLogger(c.RootType)); });
 
             container.GetInstance<ILoggerHolder>(new SmartInstance<LoggerHolder>())
                 .Logger.RootType
@@ -97,7 +93,8 @@ namespace StructureMap.Testing
         [Test]
         public void get_instance_with_args()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<FakeLogger>().Use(c => new FakeLogger(c.RootType));
 
                 x.For<ILoggerHolder>().Use<WidgetLoggerHolder>();
@@ -106,7 +103,7 @@ namespace StructureMap.Testing
             var explicitArguments = new ExplicitArguments();
             explicitArguments.Set<IWidget>(new AWidget());
             container.GetInstance<ILoggerHolder>(explicitArguments)
-                .Logger.RootType.ShouldBe(typeof(WidgetLoggerHolder));
+                .Logger.RootType.ShouldBe(typeof (WidgetLoggerHolder));
         }
 
 
@@ -123,13 +120,14 @@ namespace StructureMap.Testing
             var explicitArguments = new ExplicitArguments();
             explicitArguments.Set<IWidget>(new AWidget());
             container.GetInstance<ILoggerHolder>(explicitArguments, "Foo")
-                .Logger.RootType.ShouldBe(typeof(WidgetLoggerHolder));
+                .Logger.RootType.ShouldBe(typeof (WidgetLoggerHolder));
         }
 
         [Test]
         public void inside_a_func()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<FakeLogger>().Use(c => new FakeLogger(c.RootType));
                 x.For<ILoggerHolder>().Use<LoggerHolder>();
             });
@@ -225,7 +223,7 @@ namespace StructureMap.Testing
         public static Logger ForType(Type type)
         {
             return new Logger(type);
-        } 
+        }
     }
 
     public class LoggerSample
@@ -233,18 +231,19 @@ namespace StructureMap.Testing
         public void contextual_logging()
         {
             // IContext.RootType is new for 3.1
-            var container = new Container(_ => {
+            var container = new Container(_ =>
+            {
                 _.For<Logger>()
                     .Use(c => LogManager.ForType(c.RootType))
                     .AlwaysUnique();
             });
 
             // Resolve the logger for the type one level up
-            container = new Container(_ => {
+            container = new Container(_ =>
+            {
                 _.For<Logger>().Use(c => LogManager.ForType(c.ParentType))
                     .AlwaysUnique();
             });
         }
     }
-    
 }

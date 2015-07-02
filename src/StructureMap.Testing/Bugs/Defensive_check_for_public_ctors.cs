@@ -9,19 +9,15 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void should_not_throw_a_null_reference_exception()
         {
-            var container = new Container(x => {
-                Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(() =>
-                {
-                    x.For<Test>().Use<Test>();
-                });
-
-                
-            });
-
-
+            var container =
+                new Container(
+                    x =>
+                    {
+                        Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(() => { x.For<Test>().Use<Test>(); });
+                    });
         }
 
-        class Test
+        private class Test
         {
             protected Test()
             {

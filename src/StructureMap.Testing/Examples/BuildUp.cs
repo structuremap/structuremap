@@ -18,7 +18,8 @@ namespace StructureMap.Testing.Examples
             // you can only use the .WithProperty().Is() syntax
             // for BuildUp()
             // SetProperty() will not work at this time.
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForConcreteType<ClassThatHasConnection>().Configure
                     .Setter(o => o.ConnectionString).Is("connect1");
             });

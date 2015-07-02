@@ -11,9 +11,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void happy_path_with_build_plans_all_good()
         {
-            var container = new Container(x => {
-                x.For<IWidget>().Use<NamedWidget>().Ctor<string>().Is("Marshall");
-            });
+            var container = new Container(x => { x.For<IWidget>().Use<NamedWidget>().Ctor<string>().Is("Marshall"); });
 
             container.AssertConfigurationIsValid();
         }
@@ -21,26 +19,22 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void sad_path_with_an_invalid_build_plan()
         {
-            var container = new Container(x =>
-            {
-                x.For<IWidget>().Use<NamedWidget>();
-            });
+            var container = new Container(x => { x.For<IWidget>().Use<NamedWidget>(); });
 
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
-                container.AssertConfigurationIsValid();
-            });
+            var ex =
+                Exception<StructureMapConfigurationException>.ShouldBeThrownBy(
+                    () => { container.AssertConfigurationIsValid(); });
 
             ex.Title.ShouldBe("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
-            ex.Context.ShouldContain("Unable to create a build plan for concrete type StructureMap.Testing.Diagnostics.NamedWidget");
-
+            ex.Context.ShouldContain(
+                "Unable to create a build plan for concrete type StructureMap.Testing.Diagnostics.NamedWidget");
         }
 
         [Test]
         public void happy_path_with_validation_method()
         {
-            var container = new Container(x => {
-                x.For<IWidget>().Use<ValidatingFailureWidget>().Ctor<bool>("fails").Is(false);
-            });
+            var container =
+                new Container(x => { x.For<IWidget>().Use<ValidatingFailureWidget>().Ctor<bool>("fails").Is(false); });
 
             container.AssertConfigurationIsValid();
         }
@@ -48,14 +42,12 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void sad_path_with_validation_method()
         {
-            var container = new Container(x =>
-            {
-                x.For<IWidget>().Use<ValidatingFailureWidget>().Ctor<bool>("fails").Is(true);
-            });
+            var container =
+                new Container(x => { x.For<IWidget>().Use<ValidatingFailureWidget>().Ctor<bool>("fails").Is(true); });
 
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
-                container.AssertConfigurationIsValid();
-            });
+            var ex =
+                Exception<StructureMapConfigurationException>.ShouldBeThrownBy(
+                    () => { container.AssertConfigurationIsValid(); });
 
             ex.Title.ShouldBe("StructureMap Failures:  0 Build/Configuration Failures and 1 Validation Errors");
             ex.Context.ShouldContain("Validation Error in Method Validate");
@@ -64,14 +56,11 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void sad_path_with_ctor_failure()
         {
-            var container = new Container(x => {
-                x.For<IWidget>().Use<FailingWidget>();
-            });
+            var container = new Container(x => { x.For<IWidget>().Use<FailingWidget>(); });
 
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
-            {
-                container.AssertConfigurationIsValid();
-            });
+            var ex =
+                Exception<StructureMapConfigurationException>.ShouldBeThrownBy(
+                    () => { container.AssertConfigurationIsValid(); });
 
             ex.Title.ShouldBe("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
 
@@ -89,10 +78,9 @@ namespace StructureMap.Testing.Diagnostics
                 x.ForConcreteType<WidgetHolderHolder>();
             });
 
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
-            {
-                container.AssertConfigurationIsValid();
-            });
+            var ex =
+                Exception<StructureMapConfigurationException>.ShouldBeThrownBy(
+                    () => { container.AssertConfigurationIsValid(); });
 
             ex.Title.ShouldBe("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
 
@@ -108,17 +96,13 @@ namespace StructureMap.Testing.Diagnostics
             {
                 x.For<IWidget>().Use<ValidatingFailureWidget>().Ctor<bool>("fails").Is(false);
 
-                x.Profile("Blue", blue => {
-                    x.For<IWidget>().Use<ValidatingFailureWidget>().Ctor<bool>("fails").Is(true);
-                });
-
-                
+                x.Profile("Blue",
+                    blue => { x.For<IWidget>().Use<ValidatingFailureWidget>().Ctor<bool>("fails").Is(true); });
             });
 
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
-            {
-                container.AssertConfigurationIsValid();
-            });
+            var ex =
+                Exception<StructureMapConfigurationException>.ShouldBeThrownBy(
+                    () => { container.AssertConfigurationIsValid(); });
 
             ex.Title.ShouldBe("StructureMap Failures:  0 Build/Configuration Failures and 1 Validation Errors");
             ex.Context.ShouldContain("Validation Error in Method Validate");
@@ -133,10 +117,9 @@ namespace StructureMap.Testing.Diagnostics
                 x.ForConcreteType<WidgetHolderHolder>();
             });
 
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
-            {
-                container.AssertConfigurationIsValid();
-            });
+            var ex =
+                Exception<StructureMapConfigurationException>.ShouldBeThrownBy(
+                    () => { container.AssertConfigurationIsValid(); });
 
             ex.Title.ShouldBe("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
 
@@ -145,7 +128,9 @@ namespace StructureMap.Testing.Diagnostics
         }
     }
 
-    public interface IWidget{}
+    public interface IWidget
+    {
+    }
 
     public class WidgetHolderHolder
     {
@@ -169,7 +154,6 @@ namespace StructureMap.Testing.Diagnostics
 
         public void DoSomething()
         {
-            
         }
     }
 
@@ -196,7 +180,6 @@ namespace StructureMap.Testing.Diagnostics
 
         public void DoSomething()
         {
-            
         }
 
         [ValidationMethod]
@@ -208,5 +191,4 @@ namespace StructureMap.Testing.Diagnostics
             }
         }
     }
-
 }

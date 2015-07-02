@@ -12,7 +12,7 @@ namespace StructureMap.Testing.AutoMocking
         public void can_make_dynamic_mocks()
         {
             var mockRepository = new RhinoMockRepositoryProxy();
-            object fooMock = mockRepository.DynamicMock(typeof (ITestMocks));
+            var fooMock = mockRepository.DynamicMock(typeof (ITestMocks));
 
             fooMock.ShouldNotBeNull();
         }

@@ -154,6 +154,7 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldHaveFamilyWithSameName<IWorker>();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: scan-calling-assembly
@@ -164,6 +165,7 @@ namespace StructureMap.Testing.Graph
 
             TestingRegistry.WasUsed.ShouldBeFalse();
         }
+
         // ENDSAMPLE
 
         [Test]
@@ -196,19 +198,22 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Search_for_registries_when_explicitly_told()
         {
-            Scan(x => {
+            Scan(x =>
+            {
                 x.TheCallingAssembly();
                 x.LookForRegistries();
             });
 
             TestingRegistry.WasUsed.ShouldBeTrue();
         }
+
         // ENDSAMPLE
 
         [Test]
         public void use_a_dual_exclude()
         {
-            Scan(x => {
+            Scan(x =>
+            {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.Exclude(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
                 x.Exclude(type => type == typeof (IInterfaceInWidget5));
@@ -222,7 +227,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void use_a_dual_exclude2()
         {
-            Scan(x => {
+            Scan(x =>
+            {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.Exclude(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
                 x.Exclude(type => type == GetType());
@@ -235,7 +241,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void use_a_single_exclude()
         {
-            Scan(x => {
+            Scan(x =>
+            {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.Exclude(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
             });
@@ -248,7 +255,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void use_a_single_exclude_of_type()
         {
-            Scan(x => {
+            Scan(x =>
+            {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.ExcludeType<ITypeThatHasAttributeButIsNotInRegistry>();
             });
@@ -261,7 +269,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void use_a_single_exclude2()
         {
-            Scan(x => {
+            Scan(x =>
+            {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.ExcludeNamespace("StructureMap.Testing.Widget5");
             });
@@ -274,7 +283,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void use_a_single_exclude3()
         {
-            Scan(x => {
+            Scan(x =>
+            {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.ExcludeNamespaceContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
             });
@@ -282,6 +292,7 @@ namespace StructureMap.Testing.Graph
             shouldNotHaveFamily<IInterfaceInWidget5>();
             shouldNotHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
+
         // ENDSAMPLE
 
         [Test]
@@ -292,7 +303,8 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamily<IInterfaceInWidget5>();
             shouldHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
 
-            Scan(x => {
+            Scan(x =>
+            {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.Include(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
             });
@@ -310,7 +322,8 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamily<IInterfaceInWidget5>();
             shouldHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
 
-            Scan(x => {
+            Scan(x =>
+            {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.IncludeNamespace(typeof (ITypeThatHasAttributeButIsNotInRegistry).Namespace);
             });
@@ -328,7 +341,8 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamily<IInterfaceInWidget5>();
             shouldHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
 
-            Scan(x => {
+            Scan(x =>
+            {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.IncludeNamespaceContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
             });
@@ -341,7 +355,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void use_two_predicates_for_includes()
         {
-            Scan(x => {
+            Scan(x =>
+            {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.Include(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
                 x.Include(type => type == typeof (IInterfaceInWidget5));
@@ -355,7 +370,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void use_two_predicates_for_includes2()
         {
-            Scan(x => {
+            Scan(x =>
+            {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.Include(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
                 x.Include(type => type == GetType());
@@ -387,8 +403,10 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x => {
-                x.Scan(o => {
+            container = new Container(x =>
+            {
+                x.Scan(o =>
+                {
                     o.TheCallingAssembly();
                     o.AddAllTypesOf<IController>().NameBy(type => type.Name.Replace("Controller", ""));
                 });

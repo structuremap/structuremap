@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using NUnit.Framework;
 
 namespace StructureMap.Testing.Bugs
@@ -20,9 +17,11 @@ namespace StructureMap.Testing.Bugs
         }
 
         public interface ITest
-        {}
+        {
+        }
 
         public class Test : ITest
-        { }
+        {
+        }
     }
 }

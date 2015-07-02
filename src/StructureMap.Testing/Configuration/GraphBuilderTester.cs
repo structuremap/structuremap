@@ -16,8 +16,9 @@ namespace StructureMap.Testing.Configuration
 
             var iWasCalled = false;
             var builder = new GraphBuilder(new PluginGraph());
-            builder.ConfigureFamily(typePath, f => {
-                f.PluginType.ShouldBe(typeof(IGateway));
+            builder.ConfigureFamily(typePath, f =>
+            {
+                f.PluginType.ShouldBe(typeof (IGateway));
 
                 iWasCalled = true;
             });
@@ -25,7 +26,5 @@ namespace StructureMap.Testing.Configuration
 
             iWasCalled.IsTrue();
         }
-
-
     }
 }

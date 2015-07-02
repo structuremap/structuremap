@@ -35,7 +35,7 @@ namespace StructureMap.Testing.Building
             var gateway1 = new StubbedGateway();
             var gateway2 = new StubbedGateway();
             var gateway3 = new StubbedGateway();
-            var array = new ArrayDependencySource(typeof(IGateway),
+            var array = new ArrayDependencySource(typeof (IGateway),
                 Constant.For(gateway1),
                 Constant.For(gateway2),
                 Constant.For(gateway3));

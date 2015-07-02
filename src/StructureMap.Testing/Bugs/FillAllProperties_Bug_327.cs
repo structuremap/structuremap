@@ -8,10 +8,8 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void try_out_the_convention()
         {
-            var container = new Container(_ =>
-            {
-                _.Policies.FillAllPropertiesOfType<ISettings>().Singleton().Use<Settings>();
-            });
+            var container =
+                new Container(_ => { _.Policies.FillAllPropertiesOfType<ISettings>().Singleton().Use<Settings>(); });
 
             // They'd be the same object because Settings is singleton scope
             var controller = container.GetInstance<HomeController>();
@@ -22,6 +20,7 @@ namespace StructureMap.Testing.Bugs
         public class HomeController
         {
             public ISettings Settings { get; set; }
+
             public HomeController(ISettings settings)
             {
                 FromConstructor = settings;
@@ -33,12 +32,10 @@ namespace StructureMap.Testing.Bugs
 
         public interface ISettings
         {
-
         }
 
         public class Settings : ISettings
         {
-
         }
     }
 }

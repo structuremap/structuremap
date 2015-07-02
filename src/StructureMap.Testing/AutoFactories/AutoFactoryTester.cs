@@ -19,7 +19,8 @@ namespace StructureMap.Testing.AutoFactories
         [Test]
         public void Can_build_the_factory()
         {
-            container.Configure(cfg => {
+            container.Configure(cfg =>
+            {
                 cfg.For<IDummyService>().Use<Dummy1>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
@@ -32,7 +33,8 @@ namespace StructureMap.Testing.AutoFactories
         [Test]
         public void Can_resolve_component()
         {
-            container.Configure(cfg => {
+            container.Configure(cfg =>
+            {
                 cfg.For<IDummyService>().Use<Dummy1>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
@@ -48,7 +50,8 @@ namespace StructureMap.Testing.AutoFactories
         [Test]
         public void Can_resolve_generic_components_via_a_generic_method()
         {
-            container.Configure(cfg => {
+            container.Configure(cfg =>
+            {
                 cfg.For<IDummyService>().Use<Dummy1>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
@@ -64,7 +67,8 @@ namespace StructureMap.Testing.AutoFactories
         [Test]
         public void Can_resolve_components_via_a_non_generic_type_based_factory_method()
         {
-            container.Configure(cfg => {
+            container.Configure(cfg =>
+            {
                 cfg.For<IDummyService>().Use<Dummy1>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
@@ -80,7 +84,8 @@ namespace StructureMap.Testing.AutoFactories
         [Test]
         public void Can_resolve_a_closed_generic_return_type()
         {
-            container.Configure(cfg => {
+            container.Configure(cfg =>
+            {
                 cfg.For<IHandler<Message>>().Use<MessageHandler>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });

@@ -43,7 +43,7 @@ namespace StructureMap.Testing.Building
             var visitor = mocks.StrictMock<IBuildPlanVisitor>();
             var inner = mocks.StrictMock<IDependencySource>();
 
-            var plan = new BuildPlan(typeof(IGateway), new ObjectInstance(new StubbedGateway()), inner, null);
+            var plan = new BuildPlan(typeof (IGateway), new ObjectInstance(new StubbedGateway()), inner, null);
 
             using (mocks.Ordered())
             {
@@ -65,10 +65,10 @@ namespace StructureMap.Testing.Building
             var mocks = new MockRepository();
 
             var visitor = mocks.StrictMock<IBuildPlanVisitor>();
-            var inner = mocks.StrictMultiMock<IDependencySource>(typeof(IBuildPlanVisitable));
+            var inner = mocks.StrictMultiMock<IDependencySource>(typeof (IBuildPlanVisitable));
             var interception = mocks.StrictMock<IInterceptionPlan>();
 
-            var plan = new BuildPlan(typeof(IGateway), new ObjectInstance(new StubbedGateway()), inner, interception);
+            var plan = new BuildPlan(typeof (IGateway), new ObjectInstance(new StubbedGateway()), inner, interception);
 
             using (mocks.Ordered())
             {
@@ -96,7 +96,7 @@ namespace StructureMap.Testing.Building
             var interception = mocks.StrictMock<IInterceptionPlan>();
 
 
-            var plan = new BuildPlan(typeof(IGateway), new ObjectInstance(new StubbedGateway()), inner, interception);
+            var plan = new BuildPlan(typeof (IGateway), new ObjectInstance(new StubbedGateway()), inner, interception);
 
             using (mocks.Ordered())
             {

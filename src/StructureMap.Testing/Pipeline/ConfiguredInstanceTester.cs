@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Rhino.Mocks;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.GenericWidgets;
@@ -25,7 +22,8 @@ namespace StructureMap.Testing.Pipeline
         {
             var registry = new Registry();
             registry.For<Rule>();
-            registry.Scan(x => {
+            registry.Scan(x =>
+            {
                 x.Assembly("StructureMap.Testing.Widget");
                 x.Assembly("StructureMap.Testing.Widget2");
             });
@@ -76,9 +74,8 @@ namespace StructureMap.Testing.Pipeline
             var instance = ComplexRule.GetInstance();
             instance.Dependencies.RemoveByName("String");
 
-            Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() => {
-                instance.As<Instance>().Build<Rule>(_session);
-            });
+            Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(
+                () => { instance.As<Instance>().Build<Rule>(_session); });
         }
 
         [Test]
@@ -147,11 +144,10 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void build_fails_with_StructureMapException_adds_context()
         {
-            var instance = new ConfiguredInstance(typeof(ClassThatBlowsUp));
+            var instance = new ConfiguredInstance(typeof (ClassThatBlowsUp));
 
-            var actual = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
-                instance.Build<ClassThatBlowsUp>();
-            });
+            var actual =
+                Exception<StructureMapBuildException>.ShouldBeThrownBy(() => { instance.Build<ClassThatBlowsUp>(); });
 
             actual.Message.ShouldContain(instance.Description);
             actual.ShouldBeOfType<StructureMapBuildException>();
@@ -172,7 +168,8 @@ namespace StructureMap.Testing.Pipeline
 
             var container =
                 new Container(
-                    x => {
+                    x =>
+                    {
                         x.For(typeof (ClassWithDependency)).Use(typeof (ClassWithDependency)).Setter<Rule>().Is(
                             theRule);
                     });

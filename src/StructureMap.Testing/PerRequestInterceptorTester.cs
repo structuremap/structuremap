@@ -54,7 +54,8 @@ namespace StructureMap.Testing
         public void TestObjectReturnedAreUnique()
         {
             var container = new Container(
-                x => {
+                x =>
+                {
                     x.For<Session>()
                         .AlwaysUnique()
                         .Use<Session>();

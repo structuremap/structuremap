@@ -1,13 +1,10 @@
-﻿using System.Diagnostics;
-using System.Windows.Forms.VisualStyles;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Rhino.Mocks;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
 using StructureMap.Testing.Pipeline;
-using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Building.Interception
 {
@@ -28,12 +25,13 @@ namespace StructureMap.Testing.Building.Interception
             var target = new Target();
             var inner = Constant.For(target);
 
-            Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() => {
-                new InterceptionPlan(typeof(ITarget), inner, new Policies(),
+            Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() =>
+            {
+                new InterceptionPlan(typeof (ITarget), inner, new Policies(),
                     new IInterceptor[]
-                {
-                    new DecoratorInterceptor(typeof(ATarget), typeof(ATarget)), 
-                });
+                    {
+                        new DecoratorInterceptor(typeof (ATarget), typeof (ATarget))
+                    });
             });
         }
 
@@ -44,7 +42,7 @@ namespace StructureMap.Testing.Building.Interception
             var target = new Target();
             var inner = Constant.For(target);
 
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(), 
+            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(),
                 new IInterceptor[]
                 {
                     new ActivatorInterceptor<ITarget>(x => x.Activate())
@@ -127,12 +125,14 @@ namespace StructureMap.Testing.Building.Interception
 
             var ex =
                 Exception<StructureMapInterceptorException>.ShouldBeThrownBy(
-                    () => {
+                    () =>
+                    {
                         var session = new StubBuildSession();
                         plan.ToBuilder<ITarget>()(session, session);
                     });
 
-            ex.Title.ShouldBe("Activator interceptor failed during object creation.  See the inner exception for details.");
+            ex.Title.ShouldBe(
+                "Activator interceptor failed during object creation.  See the inner exception for details.");
             ex.Message.ShouldContain(interceptor.Description);
         }
 
@@ -159,7 +159,8 @@ namespace StructureMap.Testing.Building.Interception
 
             var decorator1 = new FuncInterceptor<ITarget>(t => new DecoratedTarget(t));
             var decorator2 = new FuncInterceptor<ITarget>(t => new BorderedTarget(t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(), new IInterceptor[] {decorator1, decorator2});
+            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(),
+                new IInterceptor[] {decorator1, decorator2});
 
             var session = new StubBuildSession();
             plan.ToBuilder<ITarget>()(session, session)
@@ -178,8 +179,8 @@ namespace StructureMap.Testing.Building.Interception
             var decorator2 = new FuncInterceptor<ITarget>(t => new BorderedTarget(t));
             var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(), new IInterceptor[]
             {
-                decorator1, 
-                decorator2, 
+                decorator1,
+                decorator2,
                 new ActivatorInterceptor<ITarget>(x => x.Activate()),
                 new ActivatorInterceptor<Target>(x => x.TurnGreen())
             });
@@ -205,7 +206,8 @@ namespace StructureMap.Testing.Building.Interception
 
             var ex =
                 Exception<StructureMapInterceptorException>.ShouldBeThrownBy(
-                    () => {
+                    () =>
+                    {
                         var session = new StubBuildSession();
                         plan.ToBuilder<ITarget>()(session, session);
                     });
@@ -250,7 +252,7 @@ namespace StructureMap.Testing.Building.Interception
             ex.Message.ShouldContain("new SadContextKeepingTarget(IContext, ITarget)");
         }
 
-        
+
         [Test]
         public void accept_visitor_for_activator()
         {
@@ -258,7 +260,7 @@ namespace StructureMap.Testing.Building.Interception
             var inner = Constant.For(target);
 
             var interceptor = new ActivatorInterceptor<Target>(x => x.ThrowUp());
-            var plan = new InterceptionPlan(typeof(ITarget), inner, new Policies(),
+            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(),
                 new IInterceptor[]
                 {
                     interceptor
@@ -276,7 +278,7 @@ namespace StructureMap.Testing.Building.Interception
             var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>((s, t) => new ContextKeepingTarget(s, t));
-            var plan = new InterceptionPlan(typeof(ITarget), inner, new Policies(), new IInterceptor[] { decorator });
+            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(), new IInterceptor[] {decorator});
 
             plan.AcceptVisitor(theVisitor);
 
@@ -289,13 +291,12 @@ namespace StructureMap.Testing.Building.Interception
             var target = new Target();
             var inner = Constant.For(target);
 
-            var decorator = new DecoratorInterceptor(typeof(ITarget), typeof(DecoratedTarget));
-            var plan = new InterceptionPlan(typeof(ITarget), inner, new Policies(), new IInterceptor[] { decorator });
+            var decorator = new DecoratorInterceptor(typeof (ITarget), typeof (DecoratedTarget));
+            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(), new IInterceptor[] {decorator});
 
             plan.AcceptVisitor(theVisitor);
 
             theVisitor.AssertWasCalled(x => x.Decorator(decorator));
         }
-         
     }
 }

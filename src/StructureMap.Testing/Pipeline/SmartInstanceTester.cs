@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Castle.DynamicProxy.Contributors;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Pipeline;
@@ -53,7 +52,7 @@ namespace StructureMap.Testing.Pipeline
                 .Use<ClassWithWidgetProperty>()
                 .Setter(o => o.Widget).Is(widget));
 
-            Assert.AreSame(widget, container.GetInstance<ClassWithWidgetProperty>().Widget);
+            widget.AreSame(container.GetInstance<ClassWithWidgetProperty>().Widget);
         }
 
         [Test]
@@ -63,7 +62,8 @@ namespace StructureMap.Testing.Pipeline
             build<ClassWithWidgetProperty>(i => i.Setter(x => x.Widget).IsSpecial(x => x.Object(widget))).Widget.
                 ShouldBeTheSameAs(widget);
 
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForConcreteType<ClassWithWidgetProperty>().Configure
                     .Setter(o => o.Widget).IsSpecial(o => o.Object(new ColorWidget("Red")));
             });
@@ -76,9 +76,11 @@ namespace StructureMap.Testing.Pipeline
                 "Jeremy");
             build<SimplePropertyTarget>(i => i.SetProperty(x => x.Age = 16)).Age.ShouldBe(16);
 
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForConcreteType<SimplePropertyTarget>().Configure
-                    .SetProperty(target => {
+                    .SetProperty(target =>
+                    {
                         target.Name = "Max";
                         target.Age = 4;
                     });
@@ -105,7 +107,8 @@ namespace StructureMap.Testing.Pipeline
             IWidget widget2 = new AWidget();
             IWidget widget3 = new AWidget();
 
-            build<ClassWithWidgetArrayCtor>(i => i.EnumerableOf<IWidget>().Contains(x => {
+            build<ClassWithWidgetArrayCtor>(i => i.EnumerableOf<IWidget>().Contains(x =>
+            {
                 x.Object(widget1);
                 x.Object(widget2);
                 x.Object(widget3);
@@ -120,7 +123,8 @@ namespace StructureMap.Testing.Pipeline
             IWidget widget2 = new AWidget();
             IWidget widget3 = new AWidget();
 
-            build<ClassWithWidgetArraySetter>(i => i.EnumerableOf<IWidget>().Contains(x => {
+            build<ClassWithWidgetArraySetter>(i => i.EnumerableOf<IWidget>().Contains(x =>
+            {
                 x.Object(widget1);
                 x.Object(widget2);
                 x.Object(widget3);
@@ -135,7 +139,7 @@ namespace StructureMap.Testing.Pipeline
                 .Use<ClassWithWidget>()
                 .Ctor<IWidget>().Is(widget));
 
-            Assert.AreSame(widget, container.GetInstance<ClassWithWidget>().Widget);
+            widget.AreSame(container.GetInstance<ClassWithWidget>().Widget);
         }
 
         [Test]
@@ -147,7 +151,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void specify_a_constructor_dependency_by_name()
         {
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 r.For<ClassA>().Use<ClassA>().Ctor<ClassB>().Named("classB");
                 r.For<ClassB>().Use<ClassB>().Named("classB").Ctor<string>("b").Is("named");
                 r.For<ClassB>().Use<ClassB>().Ctor<string>("b").Is("default");
@@ -160,23 +165,29 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void smart_instance_can_specify_the_constructor()
         {
-            new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null)).As<IConfiguredInstance>().Constructor.GetParameters().Select(x => x.ParameterType)
-                .ShouldHaveTheSameElementsAs(typeof(IGateway));
+            new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null))
+                .As<IConfiguredInstance>().Constructor.GetParameters().Select(x => x.ParameterType)
+                .ShouldHaveTheSameElementsAs(typeof (IGateway));
 
-            new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null, null)).As<IConfiguredInstance>().Constructor.GetParameters().Select(x => x.ParameterType)
-                .ShouldHaveTheSameElementsAs(typeof(IGateway), typeof(IService));
+            new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null, null))
+                .As<IConfiguredInstance>().Constructor.GetParameters().Select(x => x.ParameterType)
+                .ShouldHaveTheSameElementsAs(typeof (IGateway), typeof (IService));
         }
 
         [Test]
         public void integrated_building_with_distinct_ctor_selection()
         {
-            var container = new Container(x => {
-                x.For<ClassWithMultipleConstructors>().AddInstances(o => {
-                    o.Type<ClassWithMultipleConstructors>().SelectConstructor(() => new ClassWithMultipleConstructors(null)).Named("One");
-                    o.Type<ClassWithMultipleConstructors>().SelectConstructor(() => new ClassWithMultipleConstructors(null, null)).Named("Two");
+            var container = new Container(x =>
+            {
+                x.For<ClassWithMultipleConstructors>().AddInstances(o =>
+                {
+                    o.Type<ClassWithMultipleConstructors>()
+                        .SelectConstructor(() => new ClassWithMultipleConstructors(null))
+                        .Named("One");
+                    o.Type<ClassWithMultipleConstructors>()
+                        .SelectConstructor(() => new ClassWithMultipleConstructors(null, null))
+                        .Named("Two");
                     o.Type<ClassWithMultipleConstructors>().Named("Default");
-
-
                 });
 
                 x.For<IGateway>().Use<StubbedGateway>();

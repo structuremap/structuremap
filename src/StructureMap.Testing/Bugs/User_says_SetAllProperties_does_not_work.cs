@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Shouldly;
 
 namespace StructureMap.Testing.Bugs
@@ -10,7 +9,8 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void try_the_setter_policy()
         {
-            var container = new Container(_ => {
+            var container = new Container(_ =>
+            {
                 _.Policies.FillAllPropertiesOfType<IApiCommunicator>()
                     .Use<ApiCommunicatorWindowsAuthentication>();
             });
@@ -21,11 +21,15 @@ namespace StructureMap.Testing.Bugs
     }
 
 
-    public interface IApiCommunicator{}
+    public interface IApiCommunicator
+    {
+    }
 
-    public class ApiCommunicatorWindowsAuthentication : IApiCommunicator{}
+    public class ApiCommunicatorWindowsAuthentication : IApiCommunicator
+    {
+    }
 
-    public class BaseController 
+    public class BaseController
     {
         public IApiCommunicator ApiCommunicator { get; set; }
     }

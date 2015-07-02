@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection;
+﻿using System.Reflection;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
@@ -10,7 +9,7 @@ namespace StructureMap.Testing.Building
     [TestFixture]
     public class ConstructorStepTester
     {
-        private ConstructorInfo[] ctors = typeof (ClassWithCtors).GetConstructors();
+        private readonly ConstructorInfo[] ctors = typeof (ClassWithCtors).GetConstructors();
 
         [Test]
         public void build_ctor_description_with_no_args()
@@ -38,8 +37,6 @@ namespace StructureMap.Testing.Building
         {
             ConstructorStep.ToDescription(ctors[3])
                 .ShouldBe("new ClassWithCtors(IWidget)");
-
-
         }
 
         [Test]
@@ -77,12 +74,10 @@ namespace StructureMap.Testing.Building
 
         public ClassWithCtors(IWidget widget1, IWidget widget2)
         {
-            
         }
 
         public ClassWithCtors(IWidget widget, IService service, string name)
         {
-            
         }
     }
 }

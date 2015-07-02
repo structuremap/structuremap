@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Shouldly;
-using StructureMap.Building;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing
@@ -68,12 +66,12 @@ namespace StructureMap.Testing
 
             theResolver.Expect(x => x.ResolveFromLifecycle(typeof (IFoo), instance)).Return(foo).Repeat.Once();
 
-           
+
             theCache.GetObject(typeof (IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
-            theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof (IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof (IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof (IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
+            theCache.GetObject(typeof (IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
 
             theResolver.VerifyAllExpectations();
         }
@@ -186,29 +184,36 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void should_throw_configuration_exception_if_you_try_to_build_the_default_of_something_that_does_not_exist()
+        public void
+            should_throw_configuration_exception_if_you_try_to_build_the_default_of_something_that_does_not_exist()
         {
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => theCache.GetDefault(typeof (IFoo), thePipeline));
+            var ex =
+                Exception<StructureMapConfigurationException>.ShouldBeThrownBy(
+                    () => theCache.GetDefault(typeof (IFoo), thePipeline));
 
             ex.Context.ShouldBe(
                 "There is no configuration specified for StructureMap.Testing.SessionCacheTester+IFoo");
 
-            ex.Title.ShouldBe("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.SessionCacheTester+IFoo'");
+            ex.Title.ShouldBe(
+                "No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.SessionCacheTester+IFoo'");
         }
 
         [Test]
-        public void should_throw_configuration_exception_if_you_try_to_build_the_default_when_there_is_configuration_by_no_default()
+        public void
+            should_throw_configuration_exception_if_you_try_to_build_the_default_when_there_is_configuration_by_no_default
+            ()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IFoo>().Add<Foo>().Named("one");
                 x.For<IFoo>().Add<Foo>().Named("two");
             });
 
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
-                container.GetInstance<IFoo>();
-            });
+            var ex =
+                Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => { container.GetInstance<IFoo>(); });
 
-            ex.Context.ShouldContain("No default instance is specified.  The current configuration for type StructureMap.Testing.SessionCacheTester+IFoo is:");
+            ex.Context.ShouldContain(
+                "No default instance is specified.  The current configuration for type StructureMap.Testing.SessionCacheTester+IFoo is:");
         }
 
 

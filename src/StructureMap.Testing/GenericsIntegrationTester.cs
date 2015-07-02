@@ -10,7 +10,8 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x => {
+            container = new Container(x =>
+            {
                 x.For(typeof (IThing<,>)).Use(typeof (ColorThing<,>)).Ctor<string>("color").Is("Red").Named("Red");
                 x.For(typeof (IThing<,>)).Add(typeof (ComplexThing<,>))
                     .Ctor<string>("name").Is("Jeremy")
@@ -60,7 +61,7 @@ namespace StructureMap.Testing
         public void PicksUpASimpleGenericPluginFamilyFromConfiguration()
         {
             var thing = (ISimpleThing<int>) container.GetInstance(typeof (ISimpleThing<int>));
-            Assert.IsNotNull(thing);
+            thing.IsNotNull();
         }
 
         [Test]
@@ -80,7 +81,7 @@ namespace StructureMap.Testing
             intService.GetT().ShouldBe(typeof (int));
 
             container.GetInstance(typeof (IService<string>), "Default")
-                .As<Service<string>>().GetT().ShouldBe(typeof(string));
+                .As<Service<string>>().GetT().ShouldBe(typeof (string));
         }
 
         [Test]

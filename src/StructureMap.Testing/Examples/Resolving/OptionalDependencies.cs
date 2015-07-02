@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using Shouldly;
-using StructureMap.Testing.GenericWidgets;
 
 namespace StructureMap.Testing.Examples.Resolving
 {
@@ -8,8 +7,14 @@ namespace StructureMap.Testing.Examples.Resolving
     public class OptionalDependencies
     {
         // SAMPLE: optional-foo
-        public interface IFoo{}
-        public class Foo : IFoo{}
+        public interface IFoo
+        {
+        }
+
+        public class Foo : IFoo
+        {
+        }
+
         // ENDSAMPLE
 
         // SAMPLE: optional-got-it
@@ -20,12 +25,13 @@ namespace StructureMap.Testing.Examples.Resolving
 
             container.TryGetInstance<IFoo>()
                 .ShouldNotBeNull();
-        
+
             // -- or --
 
-            container.TryGetInstance(typeof(IFoo))
+            container.TryGetInstance(typeof (IFoo))
                 .ShouldNotBeNull();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: optional-dont-got-it
@@ -39,13 +45,16 @@ namespace StructureMap.Testing.Examples.Resolving
 
             // -- or --
 
-            container.TryGetInstance(typeof(IFoo))
+            container.TryGetInstance(typeof (IFoo))
                 .ShouldBeNull();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: optional-no-concrete
-        public class ConcreteThing{}
+        public class ConcreteThing
+        {
+        }
 
         [Test]
         public void no_auto_resolution_of_concrete_types()
@@ -56,33 +65,38 @@ namespace StructureMap.Testing.Examples.Resolving
                 .ShouldBeNull();
 
             // now register ConcreteThing and do it again
-            container.Configure(_ => {
-                _.For<ConcreteThing>().Use<ConcreteThing>();
-            });
+            container.Configure(_ => { _.For<ConcreteThing>().Use<ConcreteThing>(); });
 
             container.TryGetInstance<ConcreteThing>()
                 .ShouldNotBeNull();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: optional-close-generics
-        public interface IThing<T>{}
-        public class Thing<T> : IThing<T>{}
+        public interface IThing<T>
+        {
+        }
+
+        public class Thing<T> : IThing<T>
+        {
+        }
 
         [Test]
         public void can_try_get_open_type_resolution()
         {
-            var container = new Container(_ => {
-                _.For(typeof (IThing<>)).Use(typeof (Thing<>));
-            });
+            var container = new Container(_ => { _.For(typeof (IThing<>)).Use(typeof (Thing<>)); });
 
             container.TryGetInstance<IThing<string>>()
                 .ShouldBeOfType<Thing<string>>();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: optional-real-usage
-        public class MyFoo : IFoo{}
+        public class MyFoo : IFoo
+        {
+        }
 
         [Test]
         public void real_usage()
@@ -94,6 +108,7 @@ namespace StructureMap.Testing.Examples.Resolving
             var foo = container.TryGetInstance<IFoo>()
                       ?? new MyFoo();
         }
+
         // ENDSAMPLE
     }
 }

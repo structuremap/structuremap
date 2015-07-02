@@ -41,8 +41,10 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Singleton_build_policy()
         {
-            var container = new Container(x => {
-                x.For<IService>().Singleton().AddInstances(o => {
+            var container = new Container(x =>
+            {
+                x.For<IService>().Singleton().AddInstances(o =>
+                {
                     o.Is.ConstructedBy(() => new ColorService("Red")).Named("Red");
                     o.Is.ConstructedBy(() => new ColorService("Green")).Named("Green");
                 });
@@ -56,10 +58,10 @@ namespace StructureMap.Testing.Pipeline
             var red3 = container.GetInstance<IService>("Red");
             var green3 = container.GetInstance<IService>("Green");
 
-            Assert.AreSame(red1, red2);
-            Assert.AreSame(red1, red3);
-            Assert.AreSame(green1, green2);
-            Assert.AreSame(green1, green3);
+            red1.AreSame(red2);
+            red1.AreSame(red3);
+            green1.AreSame(green2);
+            green1.AreSame(green3);
         }
     }
 

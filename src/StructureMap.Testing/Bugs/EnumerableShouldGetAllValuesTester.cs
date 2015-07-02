@@ -38,8 +38,10 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void ienumerable_arg_should_get_all_registered()
         {
-            var container = new Container(x => {
-                x.For<IWidget>().AddInstances(o => {
+            var container = new Container(x =>
+            {
+                x.For<IWidget>().AddInstances(o =>
+                {
                     o.Type<ColorWidget>().Ctor<string>("color").Is("red");
                     o.Type<ColorWidget>().Ctor<string>("color").Is("blue");
                     o.Type<ColorWidget>().Ctor<string>("color").Is("green");

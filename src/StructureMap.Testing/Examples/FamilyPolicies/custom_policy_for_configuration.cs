@@ -1,20 +1,18 @@
 ﻿using System;
-using Microsoft.Win32;
-using NUnit.Framework;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
-using Registry = StructureMap.Configuration.DSL.Registry;
 
 namespace StructureMap.Testing.Examples.FamilyPolicies
 {
-
     // SAMPLE: SomeSettings
     public class SomeSettings
     {
         public string ThisDirectory { get; set; }
         public string ThatDirectory { get; set; }
     }
+
     // ENDSAMPLE
 
     // SAMPLE: ISettingsProvider
@@ -41,6 +39,7 @@ namespace StructureMap.Testing.Examples.FamilyPolicies
             return null;
         }
     }
+
     // ENDSAMPLE
 
     // SAMPLE: SettingPolicy
@@ -83,6 +82,7 @@ namespace StructureMap.Testing.Examples.FamilyPolicies
         {
         }
     }
+
     // ENDSAMPLE
 
 
@@ -95,8 +95,6 @@ namespace StructureMap.Testing.Examples.FamilyPolicies
             Policies.OnMissingFamily<SettingPolicy>();
         }
     }
+
     // ENDSAMPLE
-
-
-    
 }

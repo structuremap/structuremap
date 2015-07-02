@@ -25,20 +25,20 @@ namespace StructureMap.Testing.Building.Interception
         public void description()
         {
             thePolicy.Description.ShouldContain(theActivator.Description);
-            thePolicy.Description.ShouldContain("can be cast to " + typeof(ITarget).GetFullName());
+            thePolicy.Description.ShouldContain("can be cast to " + typeof (ITarget).GetFullName());
         }
 
         [Test]
         public void determine_interceptors_positive_match()
         {
-            thePolicy.DetermineInterceptors(typeof(Target), new SmartInstance<Target>())
+            thePolicy.DetermineInterceptors(typeof (Target), new SmartInstance<Target>())
                 .Single().ShouldBeTheSameAs(theActivator);
         }
 
         [Test]
         public void determine_interceptions_negative_match()
         {
-            thePolicy.DetermineInterceptors(typeof(ITarget), new ConstructorInstance(GetType()))
+            thePolicy.DetermineInterceptors(typeof (ITarget), new ConstructorInstance(GetType()))
                 .Any().ShouldBeFalse();
         }
 
@@ -46,10 +46,10 @@ namespace StructureMap.Testing.Building.Interception
         public void matches_exactly_on_plugin_type_if_the_interceptor_is_a_decorator()
         {
             var policy = new InterceptorPolicy<ITarget>(new FuncInterceptor<ITarget>(x => new DecoratedTarget(x)));
-            policy.DetermineInterceptors(typeof(Target), new SmartInstance<Target>())
+            policy.DetermineInterceptors(typeof (Target), new SmartInstance<Target>())
                 .Any().ShouldBeFalse();
 
-            policy.DetermineInterceptors(typeof(ITarget), new SmartInstance<Target>())
+            policy.DetermineInterceptors(typeof (ITarget), new SmartInstance<Target>())
                 .Any().ShouldBeTrue();
         }
 
@@ -58,21 +58,18 @@ namespace StructureMap.Testing.Building.Interception
         {
             thePolicy.Filter = i => i.Name == "good";
 
-            thePolicy.DetermineInterceptors(typeof(Target), new SmartInstance<Target>().Named("good"))
+            thePolicy.DetermineInterceptors(typeof (Target), new SmartInstance<Target>().Named("good"))
                 .Any().ShouldBeTrue();
 
-            thePolicy.DetermineInterceptors(typeof(Target), new SmartInstance<Target>().Named("bad"))
+            thePolicy.DetermineInterceptors(typeof (Target), new SmartInstance<Target>().Named("bad"))
                 .Any().ShouldBeFalse();
-
-
         }
 
         [Test]
         public void defensive_check_if_interceptor_does_not_fit_the_type()
         {
-            Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(() => {
-                new InterceptorPolicy<IGateway>(theActivator);
-            });
+            Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(
+                () => { new InterceptorPolicy<IGateway>(theActivator); });
         }
     }
 }

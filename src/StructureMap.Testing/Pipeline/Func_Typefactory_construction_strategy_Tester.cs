@@ -1,7 +1,6 @@
 using System;
 using NUnit.Framework;
 using Shouldly;
-using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -13,7 +12,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container();
             var c1 = new ConcreteClass1();
-            container.GetInstance<Func<ConcreteClass1,ConcreteClass2>>()(c1).ShouldNotBeNull();
+            container.GetInstance<Func<ConcreteClass1, ConcreteClass2>>()(c1).ShouldNotBeNull();
         }
 
         [Test]

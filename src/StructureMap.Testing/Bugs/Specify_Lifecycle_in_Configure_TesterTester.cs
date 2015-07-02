@@ -10,7 +10,8 @@ namespace StructureMap.Testing.Bugs
         public void specify_the_lifecycle_in_a_Configure_if_it_is_not_already_set()
         {
             var container = new Container(x => { });
-            container.Configure(x => {
+            container.Configure(x =>
+            {
                 x.ForSingletonOf<IGateway>()
                     .Use<DefaultGateway>();
             });

@@ -6,11 +6,21 @@ using Shouldly;
 namespace StructureMap.Testing
 {
     // SAMPLE: auto-wiring-sample
-    public interface Xman{}
-    public class Cyclops : Xman{}
+    public interface Xman
+    {
+    }
 
-    public interface Avenger{}
-    public class IronMan : Avenger{}
+    public class Cyclops : Xman
+    {
+    }
+
+    public interface Avenger
+    {
+    }
+
+    public class IronMan : Avenger
+    {
+    }
 
     public class CrossoverEvent
     {
@@ -29,7 +39,8 @@ namespace StructureMap.Testing
         [Test]
         public void showing_auto_wiring()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<Xman>().Use<Cyclops>();
                 x.For<Avenger>().Use<IronMan>();
             });
@@ -41,6 +52,7 @@ namespace StructureMap.Testing
             @event.Xman.ShouldBeOfType<Cyclops>();
         }
     }
+
     // ENDSAMPLE
 
     public interface IValidator
@@ -88,21 +100,25 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x => {
-                x.For<IValidator>().AddInstances(o => {
+            container = new Container(x =>
+            {
+                x.For<IValidator>().AddInstances(o =>
+                {
                     o.Type<Validator>().Ctor<string>("name").Is("Red").Named("Red");
                     o.Type<Validator>().Ctor<string>("name").Is("Blue").Named("Blue");
                     o.Type<Validator>().Ctor<string>("name").Is("Purple").Named("Purple");
                     o.Type<Validator>().Ctor<string>("name").Is("Green").Named("Green");
                 });
 
-                x.For<ClassThatUsesValidators>().AddInstances(o => {
+                x.For<ClassThatUsesValidators>().AddInstances(o =>
+                {
                     // Define an Instance of ClassThatUsesValidators that depends on AutoWiring
                     o.Type<ClassThatUsesValidators>().Named("WithAutoWiring");
 
                     // Define an Instance of ClassThatUsesValidators that overrides AutoWiring
                     o.Type<ClassThatUsesValidators>().Named("ExplicitArray")
-                        .EnumerableOf<IValidator>().Contains(y => {
+                        .EnumerableOf<IValidator>().Contains(y =>
+                        {
                             y.TheInstanceNamed("Red");
                             y.TheInstanceNamed("Green");
                         });

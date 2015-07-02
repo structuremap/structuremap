@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using StructureMap;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMapBugRepo.NS1;
@@ -12,7 +11,8 @@ namespace StructureMap.Testing.Bugs
     {
         public void Repro()
         {
-            var container = new Container(i => {
+            var container = new Container(i =>
+            {
                 // Add our two registries. One is shared, the other is specific to this project.
                 // NOTE: Changing the order of these two will determine which GetInstance call fails.
                 i.AddRegistry<SharedRegistry>();
@@ -32,7 +32,8 @@ namespace StructureMapBugRepo.NS1
     {
         public SharedRegistry()
         {
-            Scan(s => {
+            Scan(s =>
+            {
                 // For this sample, we're using Namespaces, but in my real project, 
                 // it's two different assemblies, and has the exact same issue.
                 s.TheCallingAssembly();
@@ -58,7 +59,8 @@ namespace StructureMapBugRepo.NS2
     {
         public MyRegistry()
         {
-            Scan(s => {
+            Scan(s =>
+            {
                 // For this sample, we're using Namespaces, but in my real project, 
                 // it's two different assemblies, and has the exact same issue.
                 s.TheCallingAssembly();

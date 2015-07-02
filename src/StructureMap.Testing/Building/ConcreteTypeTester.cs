@@ -49,7 +49,7 @@ namespace StructureMap.Testing.Building
                 .ShouldBe(Constant.For("foo"));
 
             ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (int), 42)
-                .ShouldBe(Constant.For<int>(42));
+                .ShouldBe(Constant.For(42));
 
             // My dad raises registered Beefmasters and he'd be disappointed
             // if the default here was anything else
@@ -230,7 +230,8 @@ namespace StructureMap.Testing.Building
         [Test]
         public void throw_a_description_exception_when_no_suitable_ctor_can_be_found()
         {
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
+            {
                 ConcreteType.BuildConstructorStep(typeof (GuyWithNoSuitableCtor), null, new DependencyCollection(),
                     new Policies());
             });

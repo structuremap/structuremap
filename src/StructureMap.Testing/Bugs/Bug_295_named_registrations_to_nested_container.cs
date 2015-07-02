@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using NUnit.Framework;
-using System;
 using Shouldly;
 
 namespace StructureMap.Testing.Bugs
@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Bugs
 
             var child2 = container.CreateChildContainer();
             var child2Thing = Thing1.Build("child2");
-            
+
             child2.Configure(_ => _.For<IThing>().Add(child2Thing).Named("A"));
 
             child2.GetInstance<IThing>("A")
@@ -33,13 +33,11 @@ namespace StructureMap.Testing.Bugs
                 .ShouldBeTheSameAs(child2Thing);
 
 
-
             child2.TryGetInstance<IThing>("A")
                 .ShouldBeTheSameAs(child2Thing);
 
 
             container.TryGetInstance<IThing>("A").ShouldBeNull();
-
         }
 
         [Test]
@@ -111,7 +109,9 @@ namespace StructureMap.Testing.Bugs
         */
 
 
-        public interface IThing { }
+        public interface IThing
+        {
+        }
 
         public class Thing1 : IThing, IEquatable<Thing1>
         {
@@ -137,7 +137,7 @@ namespace StructureMap.Testing.Bugs
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != this.GetType()) return false;
-                return Equals((Thing1)obj);
+                return Equals((Thing1) obj);
             }
 
             public override int GetHashCode()
@@ -157,7 +157,7 @@ namespace StructureMap.Testing.Bugs
 
             public static Thing1 Build(string source)
             {
-                return new Thing1()
+                return new Thing1
                 {
                     Value = source,
                 };
@@ -166,7 +166,5 @@ namespace StructureMap.Testing.Bugs
 
             public string Value { get; private set; }
         }
-
-
     }
 }

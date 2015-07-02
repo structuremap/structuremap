@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using StructureMap.Graph;
 
 namespace StructureMap.Testing.Bugs
@@ -22,14 +21,13 @@ namespace StructureMap.Testing.Bugs
                 });
                 x.For<IActivityService>().Singleton();
 
-                
+
                 x.ForConcreteType<ClassWithTwoConstructors>()
                     .Configure.SelectConstructor(() => new ClassWithTwoConstructors(new AnotherDependency()))
                     .Ctor<AnotherDependency>().Is(anotherDependency);
 
-                    // You don't need to specify the argument name if there is only 1 for that type
-                    //.Ctor<AnotherDependency>("anotherDependency").Is(anotherDependency);
-
+                // You don't need to specify the argument name if there is only 1 for that type
+                //.Ctor<AnotherDependency>("anotherDependency").Is(anotherDependency);
             });
 
             container.GetInstance<MainService>()
@@ -39,9 +37,6 @@ namespace StructureMap.Testing.Bugs
 
         public class AnotherDependency
         {
-            public AnotherDependency()
-            {
-            }
         }
 
         public class ClassWithTwoConstructors
@@ -51,7 +46,6 @@ namespace StructureMap.Testing.Bugs
 
             public ClassWithTwoConstructors(int age, string name)
             {
-
             }
 
             public ClassWithTwoConstructors(AnotherDependency anotherDependency)
@@ -65,21 +59,28 @@ namespace StructureMap.Testing.Bugs
             }
         }
 
-        public interface IStoryService { }
+        public interface IStoryService
+        {
+        }
 
         public class StoryService : IStoryService
         {
         }
 
-        public interface IActivityService { }
-        public class ActivityService : IActivityService { }
+        public interface IActivityService
+        {
+        }
+
+        public class ActivityService : IActivityService
+        {
+        }
 
         public class MainService
         {
             private readonly ClassWithTwoConstructors _anotherDependency;
 
             public MainService(IStoryService storyService,
-                               ClassWithTwoConstructors anotherDependency)
+                ClassWithTwoConstructors anotherDependency)
             {
                 _anotherDependency = anotherDependency;
             }
@@ -90,9 +91,4 @@ namespace StructureMap.Testing.Bugs
             }
         }
     }
-
-
-
-
-
 }

@@ -120,7 +120,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var registry = new Registry();
             var expression =
                 registry.For<IGateway>(Lifecycles.ThreadLocal);
-            Assert.IsNotNull(expression);
+            expression.IsNotNull();
 
             var pluginGraph = registry.Build();
 
@@ -136,7 +136,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For<IGateway>();
             var pluginGraph = registry.Build();
 
-            Assert.IsTrue(pluginGraph.Families.Has(typeof (IGateway)));
+            pluginGraph.Families.Has(typeof (IGateway)).IsTrue();
         }
 
 
@@ -146,7 +146,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var registry = new Registry();
             var expression =
                 registry.For<IGateway>();
-            Assert.IsNotNull(expression);
+            expression.IsNotNull();
 
             var pluginGraph = registry.Build();
 
@@ -160,7 +160,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var registry = new Registry();
             var expression =
                 registry.For<IGateway>().Singleton();
-            Assert.IsNotNull(expression);
+            expression.IsNotNull();
 
             var pluginGraph = registry.Build();
             var family = pluginGraph.Families[typeof (IGateway)];
@@ -175,7 +175,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For<IGateway>().Use<StubbedGateway>();
 
             var pluginGraph = registry.Build();
-            Assert.IsTrue(pluginGraph.Families.Has(typeof (IGateway)));
+            pluginGraph.Families.Has(typeof (IGateway)).IsTrue();
 
             var manager = new Container(pluginGraph);
             var gateway = (IGateway) manager.GetInstance(typeof (IGateway));
@@ -190,7 +190,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For<IGateway>().Use<FakeGateway>();
             var pluginGraph = registry.Build();
 
-            Assert.IsTrue(pluginGraph.Families.Has(typeof (IGateway)));
+            pluginGraph.Families.Has(typeof (IGateway)).IsTrue();
 
             var container = new Container(pluginGraph);
             var gateway = (IGateway) container.GetInstance(typeof (IGateway));
@@ -201,7 +201,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CreatePluginFamilyWithADefault()
         {
-            var container = new Container(r => {
+            var container = new Container(r =>
+            {
                 r.For<IWidget>().Use<ColorWidget>()
                     .Ctor<string>("color").Is("Red");
             });
@@ -212,15 +213,13 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void weird_generics_casting()
         {
-            typeof(SomethingElseEntirely).CanBeCastTo<SomethingElse>()
+            typeof (SomethingElseEntirely).CanBeCastTo<SomethingElse>()
                 .ShouldBeTrue();
         }
 
         [Test]
         public void CreatePluginFamilyWithReferenceToAnotherFamily()
         {
-
-
             var container = new Container(r =>
             {
                 // Had to be a singleton for this to work
@@ -228,7 +227,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.For<SomethingElse>().Use(context =>
                     // If the return is cast to OrangeSomething, this works.
                     context.GetInstance<SomethingElseEntirely>());
-                r.For<Something>().Use(context => 
+                r.For<Something>().Use(context =>
                     // If the return is cast to OrangeSomething, this works.
                     context.GetInstance<SomethingElseEntirely>());
             });
@@ -239,7 +238,7 @@ namespace StructureMap.Testing.Configuration.DSL
             container.GetInstance<SomethingElse>()
                 .ShouldBeOfType<OrangeSomething>()
                 .ShouldBe(orangeSomething);
-            
+
             container.GetInstance<Something>()
                 .ShouldBeOfType<OrangeSomething>()
                 .ShouldBe(orangeSomething);

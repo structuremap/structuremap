@@ -11,11 +11,11 @@ namespace StructureMap.Testing.Bugs
         {
             var container = new Container();
 
-            Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
-                container.GetNestedContainer().Configure(_ => {
-                    _.Policies.FillAllPropertiesOfType<IWidget>();
+            Exception<StructureMapConfigurationException>.ShouldBeThrownBy(
+                () =>
+                {
+                    container.GetNestedContainer().Configure(_ => { _.Policies.FillAllPropertiesOfType<IWidget>(); });
                 });
-            });
         }
     }
 }

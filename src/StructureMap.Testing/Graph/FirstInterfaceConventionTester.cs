@@ -12,8 +12,10 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x => {
-                x.Scan(o => {
+            container = new Container(x =>
+            {
+                x.Scan(o =>
+                {
                     o.TheCallingAssembly();
                     o.RegisterConcreteTypesAgainstTheFirstInterface();
 

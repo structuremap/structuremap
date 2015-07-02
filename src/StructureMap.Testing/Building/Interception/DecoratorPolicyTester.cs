@@ -20,28 +20,26 @@ namespace StructureMap.Testing.Building.Interception
                 .Instance
                 .PluggedType
                 .ShouldBe(typeof (WidgetDecorator));
-
         }
 
         [Test]
         public void decorate_closed_type_no_filter_does_not_match_on_plugin_type()
         {
-            var policy = new DecoratorPolicy(typeof(IWidget), typeof(WidgetDecorator));
+            var policy = new DecoratorPolicy(typeof (IWidget), typeof (WidgetDecorator));
 
-            policy.DetermineInterceptors(typeof(AWidget), new SmartInstance<AWidget>())
+            policy.DetermineInterceptors(typeof (AWidget), new SmartInstance<AWidget>())
                 .Any().ShouldBeFalse();
-
         }
 
         [Test]
         public void decorate_closed_type_uses_filter()
         {
-            var policy = new DecoratorPolicy(typeof(IWidget), typeof(WidgetDecorator), i => i.Name == "ok");
+            var policy = new DecoratorPolicy(typeof (IWidget), typeof (WidgetDecorator), i => i.Name == "ok");
 
-            policy.DetermineInterceptors(typeof(IWidget), new SmartInstance<AWidget>().Named("not right"))
+            policy.DetermineInterceptors(typeof (IWidget), new SmartInstance<AWidget>().Named("not right"))
                 .Any().ShouldBeFalse();
 
-            policy.DetermineInterceptors(typeof(IWidget), new SmartInstance<AWidget>().Named("ok"))
+            policy.DetermineInterceptors(typeof (IWidget), new SmartInstance<AWidget>().Named("ok"))
                 .Any().ShouldBeTrue();
         }
 
@@ -50,15 +48,14 @@ namespace StructureMap.Testing.Building.Interception
         {
             var policy = new DecoratorPolicy(typeof (IFoo<,>), typeof (DecoratedFoo<,>));
 
-            policy.DetermineInterceptors(typeof(IFoo<string, int>), new SmartInstance<Foo<string, int>>())
+            policy.DetermineInterceptors(typeof (IFoo<string, int>), new SmartInstance<Foo<string, int>>())
                 .Single()
                 .ShouldBeOfType<DecoratorInterceptor>()
                 .Instance.PluggedType
-                .ShouldBe(typeof(DecoratedFoo<string, int>));
+                .ShouldBe(typeof (DecoratedFoo<string, int>));
         }
     }
 
-    
 
     public interface IFoo<T1, T2>
     {
@@ -99,18 +96,12 @@ namespace StructureMap.Testing.Building.Interception
 
         public T1 One
         {
-            get
-            {
-                return _inner.One;
-            }
+            get { return _inner.One; }
         }
 
         public T2 Two
         {
-            get
-            {
-                return _inner.Two;
-            }
+            get { return _inner.Two; }
         }
     }
 }

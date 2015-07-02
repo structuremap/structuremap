@@ -26,12 +26,14 @@ namespace StructureMap.Testing.Query
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x => {
+            container = new Container(x =>
+            {
                 x.For(typeof (IService<>)).Add(typeof (Service<>));
                 x.For(typeof (IService<>)).Add(typeof (Service2<>));
 
                 x.For<IWidget>().Singleton().Use<AWidget>();
-                x.For<Rule>().AddInstances(o => {
+                x.For<Rule>().AddInstances(o =>
+                {
                     o.Type<DefaultRule>();
                     o.Type<ARule>();
                     o.Type<ColorRule>().Ctor<string>("color").Is("red");
@@ -53,7 +55,7 @@ namespace StructureMap.Testing.Query
         public void can_iterate_through_families_including_both_generics_and_normal()
         {
             // +1 for "IContainer" itself + Func + Lazy + FuncWithArg
-            container.Model.PluginTypes.Count().ShouldBe(11); 
+            container.Model.PluginTypes.Count().ShouldBe(11);
 
             container.Model.PluginTypes.Each(x => Debug.WriteLine(x.PluginType.FullName));
         }

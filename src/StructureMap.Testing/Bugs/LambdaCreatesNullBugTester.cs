@@ -19,7 +19,8 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void Returning_null_values_in_contructed_by_generates_a_duplicate_cache_entry()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IPrincipal>().UseInstance(new NullInstance());
 
                 x.For<TestClass>().Use<TestClass>();

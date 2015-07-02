@@ -12,7 +12,8 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void Setup()
         {
-            _container = new Container(registry => registry.Scan(x => {
+            _container = new Container(registry => registry.Scan(x =>
+            {
                 x.TheCallingAssembly();
                 x.IncludeNamespaceContainingType<SingleImplementationScannerTester>();
                 x.SingleImplementationsOfInterface();
@@ -35,7 +36,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void can_configure_plugin_families_via_dsl()
         {
-            var differentContainer = new Container(registry => registry.Scan(x => {
+            var differentContainer = new Container(registry => registry.Scan(x =>
+            {
                 x.TheCallingAssembly();
                 x.IncludeNamespaceContainingType<SingleImplementationScannerTester>();
                 x.SingleImplementationsOfInterface().OnAddedPluginTypes(t => t.Singleton());

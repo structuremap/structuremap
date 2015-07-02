@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using System;
 using System.Linq;
 using NUnit.Framework;
 using Shouldly;
@@ -47,14 +47,13 @@ namespace StructureMap.Testing.Building.Interception
             policies.Add(activator5.ToPolicy());
 
 
-
-            policies.SelectInterceptors(typeof(ITarget), new SmartInstance<Target>())
+            policies.SelectInterceptors(typeof (ITarget), new SmartInstance<Target>())
                 .ShouldHaveTheSameElementsAs(activator1, activator2, activator3, activator4);
 
-            policies.SelectInterceptors(typeof(ITarget), new SmartInstance<ATarget>())
+            policies.SelectInterceptors(typeof (ITarget), new SmartInstance<ATarget>())
                 .ShouldHaveTheSameElementsAs(activator1, activator4);
 
-            policies.SelectInterceptors(typeof(ITarget), new SmartInstance<StubbedGateway>())
+            policies.SelectInterceptors(typeof (ITarget), new SmartInstance<StubbedGateway>())
                 .ShouldHaveTheSameElementsAs(activator5);
         }
 
@@ -64,9 +63,11 @@ namespace StructureMap.Testing.Building.Interception
             var activator1 = new ActivatorInterceptor<ITarget>(x => x.Activate());
             var policy = new InterceptorPolicy<ITarget>(activator1, i => i.Name.StartsWith("A"));
 
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.Policies.Interceptors(policy);
-                x.For<ITarget>().AddInstances(targets => {
+                x.For<ITarget>().AddInstances(targets =>
+                {
                     targets.Type<ATarget>().Named("A");
                     targets.Type<ATarget>().Named("A1");
                     targets.Type<ATarget>().Named("A2");
@@ -96,11 +97,19 @@ namespace StructureMap.Testing.Building.Interception
 
         public void Debug()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 
-    public class BTarget : ATarget{}
-    public class CTarget : ATarget{}
-    public class DTarget : ATarget{}
+    public class BTarget : ATarget
+    {
+    }
+
+    public class CTarget : ATarget
+    {
+    }
+
+    public class DTarget : ATarget
+    {
+    }
 }

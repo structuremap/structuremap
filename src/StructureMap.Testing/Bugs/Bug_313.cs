@@ -22,7 +22,7 @@ namespace StructureMap.Testing.Bugs
 
             container.GetAllInstances<IFoo>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(Foo1), typeof(Foo3));
+                .ShouldHaveTheSameElementsAs(typeof (Foo1), typeof (Foo3));
         }
 
         [Test, Explicit("This test is invalid and will fail, included to demonstrate a usage problem")]
@@ -48,16 +48,23 @@ namespace StructureMap.Testing.Bugs
             // This will fail! 
             container.GetAllInstances<IFoo>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(Foo3));
+                .ShouldHaveTheSameElementsAs(typeof (Foo3));
         }
 
         public interface IFoo
         {
-            
         }
 
-        public class Foo1 : IFoo { }
-        public class Foo2 : IFoo { }
-        public class Foo3 : IFoo { }
+        public class Foo1 : IFoo
+        {
+        }
+
+        public class Foo2 : IFoo
+        {
+        }
+
+        public class Foo3 : IFoo
+        {
+        }
     }
 }

@@ -24,12 +24,12 @@ namespace StructureMap.Testing.Bugs
             public TestStructureMapRegistry()
             {
                 For<MyService1>().Use<MyService1>()
-                        .Ctor<MyDependency>("dep1").Is(new MyDependency())
-                        .Ctor<MyDependency>("dep2").Is(new MyDependency());
+                    .Ctor<MyDependency>("dep1").Is(new MyDependency())
+                    .Ctor<MyDependency>("dep2").Is(new MyDependency());
 
                 For<MyService2>().Use<MyService2>()
-                        .Ctor<MyDependency>("dep1").Is(new MyDependency())
-                        .Ctor<MyDependency>("dep2").Is(new MyDependency());
+                    .Ctor<MyDependency>("dep1").Is(new MyDependency())
+                    .Ctor<MyDependency>("dep2").Is(new MyDependency());
             }
         }
 
@@ -52,10 +52,18 @@ namespace StructureMap.Testing.Bugs
 
         public class MyService2
         {
-            MyDependency dep1, dep2;
+            private readonly MyDependency dep1;
+            private readonly MyDependency dep2;
 
-            public MyDependency Dep1 { get { return dep1; } }
-            public MyDependency Dep2 { get { return dep2; } }
+            public MyDependency Dep1
+            {
+                get { return dep1; }
+            }
+
+            public MyDependency Dep2
+            {
+                get { return dep2; }
+            }
 
             public MyService2(MyDependency dep1, MyDependency dep2)
             {
@@ -63,9 +71,5 @@ namespace StructureMap.Testing.Bugs
                 this.dep2 = dep2;
             }
         }
-
-
     }
-
-
 }

@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Testing.Widget;
@@ -12,7 +11,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanFillDependenciesSuccessfully()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IStrategy>().Use(new Strategy("name", 3, 3, 3, true));
                 x.For<IWidget>().Use(new ColorWidget("Red"));
             });
@@ -20,32 +20,35 @@ namespace StructureMap.Testing.Graph
             var concreteClass =
                 (FilledConcreteClass) container.GetInstance(typeof (FilledConcreteClass));
 
-            Assert.IsNotNull(concreteClass.Widget);
-            Assert.IsNotNull(concreteClass.Strategy);
+            concreteClass.Widget.IsNotNull();
+            concreteClass.Strategy.IsNotNull();
         }
 
         [Test]
         public void TryToFillDependenciesOnAbstractClassThrowsException()
         {
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
+            {
                 var container = new Container();
-                container.GetInstance(typeof(AbstractClass));
+                container.GetInstance(typeof (AbstractClass));
             });
 
-            ex.Title.ShouldBe("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.AbstractClass'");
+            ex.Title.ShouldBe(
+                "No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.AbstractClass'");
         }
 
 
         [Test]
         public void TryToFillDependenciesOnClassWithPrimitiveArgumentsThrowsException()
         {
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
+            {
                 var container = new Container();
-                container.GetInstance(typeof(CannotBeFilledConcreteClass));
+                container.GetInstance(typeof (CannotBeFilledConcreteClass));
             });
 
-            ex.Title.ShouldBe("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.CannotBeFilledConcreteClass'");
-
+            ex.Title.ShouldBe(
+                "No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.CannotBeFilledConcreteClass'");
         }
     }
 

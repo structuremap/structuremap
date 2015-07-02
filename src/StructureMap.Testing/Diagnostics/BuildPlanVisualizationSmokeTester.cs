@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Security.Cryptography;
 using NUnit.Framework;
 using StructureMap.Query;
 using StructureMap.Testing.Widget;
@@ -69,7 +68,6 @@ namespace StructureMap.Testing.Diagnostics
                 .Find("B")
                 .DescribeBuildPlan();
 
-            
 
             description.ShouldContain("Value: StructureMap.Testing.Diagnostics.BDevice");
         }
@@ -121,7 +119,8 @@ namespace StructureMap.Testing.Diagnostics
 
             Debug.WriteLine(description);
 
-            description.ShouldContain("ActivatorInterceptor of StructureMap.Testing.Acceptance.Activateable: Activateable.Activate()");
+            description.ShouldContain(
+                "ActivatorInterceptor of StructureMap.Testing.Acceptance.Activateable: Activateable.Activate()");
         }
 
         [Test]
@@ -134,13 +133,13 @@ namespace StructureMap.Testing.Diagnostics
             Debug.WriteLine(description);
 
             description.ShouldContain("┗ IDevice = **Default**");
-
         }
 
         [Test]
         public void show_problems_in_flat_visualization()
         {
-            var ex = Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() =>
+            {
                 theContainer.Model
                     .Find<IDevice>("MixedCtorAndSetterWithProblems")
                     .DescribeBuildPlan();
@@ -151,7 +150,6 @@ namespace StructureMap.Testing.Diagnostics
             ex.Context.ShouldContain("┣ String color = Required primitive dependency is not explicitly defined");
 
             ex.Context.ShouldContain("Set Int64 Age = Required primitive dependency is not explicitly defined");
-
         }
 
         [Test]
@@ -175,7 +173,8 @@ namespace StructureMap.Testing.Diagnostics
 
             Debug.WriteLine(description);
 
-            description.ShouldContain("┗ IEnumerable<IDevice> = All registered Instances of StructureMap.Testing.Diagnostics.IDevice");
+            description.ShouldContain(
+                "┗ IEnumerable<IDevice> = All registered Instances of StructureMap.Testing.Diagnostics.IDevice");
         }
 
         [Test]
@@ -206,7 +205,6 @@ namespace StructureMap.Testing.Diagnostics
                 .DescribeBuildPlan();
 
             Debug.WriteLine(description);
-
         }
 
         [Test]
@@ -255,9 +253,5 @@ namespace StructureMap.Testing.Diagnostics
 
             Debug.WriteLine(description);
         }
-
     }
-
-
-
 }

@@ -37,7 +37,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void set_and_get_a_collection()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForConcreteType<ClassWithArrayOfWidgets>().Configure.EnumerableOf<IWidget>()
                     .Contains(
                         new SmartInstance<ColorWidget>().Ctor<string>("color").Is("red"),
@@ -73,7 +74,6 @@ namespace StructureMap.Testing.Pipeline
     {
         public void TurnOn()
         {
-            
         }
     }
 

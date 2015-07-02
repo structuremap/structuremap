@@ -9,9 +9,7 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void setter_policies_should_be_applied_in_nested_container()
         {
-            var container = new Container(cfg => {
-                cfg.Policies.SetAllProperties(x => x.OfType<Injected>());
-            });
+            var container = new Container(cfg => { cfg.Policies.SetAllProperties(x => x.OfType<Injected>()); });
 
 
             var product = container.GetNestedContainer().GetInstance<Product>();
@@ -21,17 +19,12 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void setter_policies_should_be_applied_in_profile_container()
         {
-            var container = new Container(cfg =>
-            {
-                cfg.Policies.SetAllProperties(x => x.OfType<Injected>());
-            });
+            var container = new Container(cfg => { cfg.Policies.SetAllProperties(x => x.OfType<Injected>()); });
 
 
             var product = container.GetProfile("Foo").GetInstance<Product>();
             product.Inject.ShouldNotBeNull();
         }
-
-
     }
 
     public class Product

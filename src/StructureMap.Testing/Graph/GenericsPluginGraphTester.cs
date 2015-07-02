@@ -20,18 +20,19 @@ namespace StructureMap.Testing.Graph
 
         private void assertCanBeCast(Type pluginType, Type TPluggedType)
         {
-            Assert.IsTrue(GenericsPluginGraph.CanBeCast(pluginType, TPluggedType));
+            GenericsPluginGraph.CanBeCast(pluginType, TPluggedType).IsTrue();
         }
 
         private void assertCanNotBeCast(Type pluginType, Type TPluggedType)
         {
-            Assert.IsFalse(GenericsPluginGraph.CanBeCast(pluginType, TPluggedType));
+            GenericsPluginGraph.CanBeCast(pluginType, TPluggedType).IsFalse();
         }
 
         [Test]
         public void BuildAnInstanceManagerFromTemplatedPluginFamily()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For(typeof (IGenericService<>)).Use(typeof (GenericService<>)).Named("Default");
                 x.For(typeof (IGenericService<>)).Add(typeof (SecondGenericService<>)).Named("Second");
                 x.For(typeof (IGenericService<>)).Add(typeof (ThirdGenericService<>)).Named("Third");
@@ -61,7 +62,7 @@ namespace StructureMap.Testing.Graph
             var templatedFamily = templatedFamily1;
 
             templatedFamily.IsNotNull();
-            templatedFamily.PluginType.ShouldBe(typeof(IGenericService<int>));
+            templatedFamily.PluginType.ShouldBe(typeof (IGenericService<int>));
         }
 
         [Test]
@@ -69,7 +70,8 @@ namespace StructureMap.Testing.Graph
         {
             var container =
                 new Container(
-                    r => {
+                    r =>
+                    {
                         r.For(typeof (IGenericService<>)).Use(
                             typeof (GenericService<>));
                     });

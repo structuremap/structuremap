@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -19,21 +18,21 @@ namespace StructureMap.Testing.Bugs
         public void attribute_should_alter_the_concrete_instance_in_explicit_config()
         {
             new SmartInstance<ClassWithInstanceAttributes>().Name.ShouldBe("SteveBono");
-            
-            var container = new Container(x => {
-                x.For<IBase>().Use<ClassWithInstanceAttributes>();
-            });
-            
+
+            var container = new Container(x => { x.For<IBase>().Use<ClassWithInstanceAttributes>(); });
+
             container.GetInstance<IBase>("SteveBono").ShouldNotBeNull();
-            
+
             container.Model.Find<IBase>("SteveBono").ShouldNotBeNull();
         }
 
         [Test]
         public void attribute_should_alter_the_concrete_instance_in_scanning()
         {
-            var container = new Container(x => {
-                x.Scan(_ => {
+            var container = new Container(x =>
+            {
+                x.Scan(_ =>
+                {
                     _.TheCallingAssembly();
                     _.AddAllTypesOf<IBase>();
                 });

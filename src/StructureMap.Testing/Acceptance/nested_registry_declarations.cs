@@ -14,7 +14,8 @@ namespace StructureMap.Testing.Acceptance
 
             container.GetAllInstances<IWidget>().OrderBy(x => x.GetType().Name)
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget), typeof(DefaultWidget));
+                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget),
+                    typeof (DefaultWidget));
         }
 
         [Test]
@@ -25,7 +26,8 @@ namespace StructureMap.Testing.Acceptance
 
             container.GetAllInstances<IWidget>().OrderBy(x => x.GetType().Name)
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget), typeof(DefaultWidget));
+                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget),
+                    typeof (DefaultWidget));
         }
     }
 

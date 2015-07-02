@@ -12,8 +12,10 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AutomaticallyFindRegistryFromAssembly()
         {
-            var container = new Container(x => {
-                x.Scan(s => {
+            var container = new Container(x =>
+            {
+                x.Scan(s =>
+                {
                     s.AssemblyContainingType<RedGreenRegistry>();
                     s.LookForRegistries();
                 });
@@ -33,8 +35,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
             colors.Sort();
             colors.ShouldHaveTheSameElementsAs("Black", "Blue", "Brown", "Green", "Red", "Yellow");
-
-
         }
 
 

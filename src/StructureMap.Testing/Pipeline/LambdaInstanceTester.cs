@@ -16,10 +16,9 @@ namespace StructureMap.Testing.Pipeline
         {
             var instance = new LambdaInstance<object>("throws", () => { throw new NotImplementedException(); });
 
-            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
-
-                instance.Build<IWidget>(new StubBuildSession());
-            });
+            var ex =
+                Exception<StructureMapBuildException>.ShouldBeThrownBy(
+                    () => { instance.Build<IWidget>(new StubBuildSession()); });
 
             ex.Title.ShouldContain("'Lambda: throws'");
         }
@@ -27,7 +26,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void can_use_lambda_as_inline_dependency()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForConcreteType<DecoratedGateway>().Configure
                     .Ctor<IGateway>().Is(c => new StubbedGateway());
             });

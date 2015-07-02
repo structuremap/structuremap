@@ -24,10 +24,10 @@ namespace StructureMap.Testing.Building
         public void see_the_description_of_class_with_ctors_and_setters_with_inline_depencencies()
         {
             var dependencies = new DependencyCollection();
-            dependencies.Add(typeof(Rule), new ColorRule("Red"));
-            dependencies.Add(typeof(IWidget), new AWidget());
+            dependencies.Add(typeof (Rule), new ColorRule("Red"));
+            dependencies.Add(typeof (IWidget), new AWidget());
 
-            var build = ConcreteType.BuildSource(typeof(GuyWithCtorAndArgs), null, dependencies,
+            var build = ConcreteType.BuildSource(typeof (GuyWithCtorAndArgs), null, dependencies,
                 new Policies());
 
             Debug.WriteLine(build.Description);
@@ -36,7 +36,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void see_the_description_of_class_with__only_ctors()
         {
-            var build = ConcreteType.BuildSource(typeof(GuyWithOnlyCtor), null, new DependencyCollection(),
+            var build = ConcreteType.BuildSource(typeof (GuyWithOnlyCtor), null, new DependencyCollection(),
                 new Policies());
 
             Debug.WriteLine(build.Description);
@@ -46,10 +46,10 @@ namespace StructureMap.Testing.Building
         public void see_the_description_of_class_with_only_ctor_with_inline_depencencies()
         {
             var dependencies = new DependencyCollection();
-            dependencies.Add(typeof(Rule), new ColorRule("Red"));
-            dependencies.Add(typeof(IWidget), new AWidget());
+            dependencies.Add(typeof (Rule), new ColorRule("Red"));
+            dependencies.Add(typeof (IWidget), new AWidget());
 
-            var build = ConcreteType.BuildSource(typeof(GuyWithOnlyCtor), null, dependencies,
+            var build = ConcreteType.BuildSource(typeof (GuyWithOnlyCtor), null, dependencies,
                 new Policies());
 
             Debug.WriteLine(build.Description);

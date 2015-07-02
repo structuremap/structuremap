@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using NUnit.Framework;
-using Rhino.Mocks;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
@@ -25,7 +23,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
         #endregion
-
 
         [Test]
         public void Build_the_InstanceToken()
@@ -109,7 +106,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var instance = new InstanceUnderTest
             {
-                Type = typeof(ColorRule)
+                Type = typeof (ColorRule)
             };
 
             var interceptor = new ActivatorInterceptor<IGateway>(g => g.DoSomething());
@@ -117,11 +114,8 @@ namespace StructureMap.Testing.Pipeline
             instance.ReturnedType.CanBeCastTo(interceptor.Accepts)
                 .ShouldBeFalse();
 
-            Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(() => {
-                instance.AddInterceptor(interceptor);
-            });
+            Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(() => { instance.AddInterceptor(interceptor); });
         }
-
     }
 
     public class InstanceUnderTest : Instance
@@ -137,10 +131,7 @@ namespace StructureMap.Testing.Pipeline
 
         public override Type ReturnedType
         {
-            get
-            {
-                return Type;
-            }
+            get { return Type; }
         }
 
         public override string Description

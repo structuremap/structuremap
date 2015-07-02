@@ -70,10 +70,7 @@ namespace StructureMap.Testing.Diagnostics.TreeView
             writer.EndSection();
 
 
-
-
             writer.WriteAll(Console.Out);
-
         }
 
 //        [Test]

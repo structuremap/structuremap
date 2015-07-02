@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Building;
@@ -18,10 +17,10 @@ namespace StructureMap.Testing.Building
         public void sends_the_constructor_args_and_parameters_to_the_visitor()
         {
             var dependencies = new DependencyCollection();
-            dependencies.Add(typeof(Rule), new ColorRule("Red"));
-            dependencies.Add(typeof(IWidget), new AWidget());
+            dependencies.Add(typeof (Rule), new ColorRule("Red"));
+            dependencies.Add(typeof (IWidget), new AWidget());
 
-            var build = ConcreteType.BuildSource(typeof(GuyWithCtorAndArgs), null, dependencies,
+            var build = ConcreteType.BuildSource(typeof (GuyWithCtorAndArgs), null, dependencies,
                 new Policies());
 
             var visitor = new StubVisitor();

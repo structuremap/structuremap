@@ -23,13 +23,15 @@ namespace StructureMap.Testing.Graph
         {
             var theService = new ColorService("red");
 
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IService>().Use(theService);
                 x.For<IGateway>().Use<DefaultGateway>();
 
                 x.ForConcreteType<ClassWithNamedProperties>().Configure.Setter<int>().Is(5);
 
-                x.Policies.SetAllProperties(policy => { policy.WithAnyTypeFromNamespace("StructureMap.Testing.Widget3"); });
+                x.Policies.SetAllProperties(
+                    policy => { policy.WithAnyTypeFromNamespace("StructureMap.Testing.Widget3"); });
             });
 
             var description = container.Model.For<ClassWithNamedProperties>().Default.DescribeBuildPlan();
@@ -69,7 +71,8 @@ namespace StructureMap.Testing.Graph
         {
             var theService = new ColorService("red");
 
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IService>().Use(theService);
                 x.For<IGateway>().Use<DefaultGateway>();
 

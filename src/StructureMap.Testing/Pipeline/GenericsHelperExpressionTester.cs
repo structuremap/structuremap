@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using NUnit.Framework;
 using Shouldly;
 
@@ -58,7 +57,8 @@ namespace StructureMap.Testing.Pipeline
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x => {
+            container = new Container(x =>
+            {
                 // Define the basic open type for IFlattener<>
                 x.For(typeof (IFlattener<>)).Use(typeof (PassthroughFlattener<>));
 
@@ -88,8 +88,9 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void throws_exception_if_passed_a_type_that_is_not_an_open_generic_type()
         {
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
-                container.ForGenericType(typeof(string)).WithParameters().GetInstanceAs<IFlattener>();
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
+            {
+                container.ForGenericType(typeof (string)).WithParameters().GetInstanceAs<IFlattener>();
                 Assert.Fail("Should have thrown exception");
             });
 
@@ -188,7 +189,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void fetch_the_objects()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IHandler<Shipment>>().Use<ShipmentHandler>();
                 x.For<IHandler<Shipment>>().Add<ShipmentHandler2>();
             });

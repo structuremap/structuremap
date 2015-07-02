@@ -11,7 +11,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void build_with_lambdas_1()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 // Build by a simple Expression<Func<T>>
                 x.For<Rule>().Add(() => new ColorRule("Red")).Named("Red");
 
@@ -42,8 +43,10 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void add_batch_of_lambdas()
         {
-            var container = new Container(x => {
-                x.For<Rule>().AddInstances(rules => {
+            var container = new Container(x =>
+            {
+                x.For<Rule>().AddInstances(rules =>
+                {
                     // Build by a simple Expression<Func<T>>
                     rules.ConstructedBy(() => new ColorRule("Red")).Named("Red");
 
@@ -73,7 +76,8 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void as_inline_dependency()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 // Build by a simple Expression<Func<T>>
                 x.For<RuleHolder>()
                     .Add<RuleHolder>()

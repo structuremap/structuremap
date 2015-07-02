@@ -43,7 +43,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void using_the_greediest_ctor()
         {
-            var container = new Container(_ => {
+            var container = new Container(_ =>
+            {
                 _.ForConcreteType<GreaterThanRule>().Configure
                     .Ctor<string>("attribute").Is("foo")
                     .Ctor<int>("value").Is(42);
@@ -72,17 +73,17 @@ namespace StructureMap.Testing.Pipeline
             var selector = new ConstructorSelector();
             selector.Add(new PickTheFirstOne());
 
-            selector.Select(typeof(ClassWithMultipleConstructors))
+            selector.Select(typeof (ClassWithMultipleConstructors))
                 .GetParameters().Select(x => x.ParameterType)
-                .ShouldHaveTheSameElementsAs(typeof(IGateway));
+                .ShouldHaveTheSameElementsAs(typeof (IGateway));
         }
-
 
 
         [Test]
         public void integration_test_with_custom_rule_in_container()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.Policies.ConstructorSelector<PickTheFirstOne>();
 
                 x.For<IGateway>().Use<StubbedGateway>();
@@ -107,9 +108,6 @@ namespace StructureMap.Testing.Pipeline
         public class ClassWithMultipleConstructors
         {
             public string CtorUsed;
-
-
-
 
 
             public ClassWithMultipleConstructors(IGateway gateway)

@@ -11,7 +11,9 @@ namespace StructureMap.Testing.Pipeline
     public class MissingInstanceTester
     {
         // SAMPLE: missing-instance-objects
-        public interface Rule{}
+        public interface Rule
+        {
+        }
 
         public class ColorRule : Rule
         {
@@ -22,13 +24,15 @@ namespace StructureMap.Testing.Pipeline
                 Color = color;
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: missing-instance-simple-usage
         [Test]
         public void configure_and_use_missing_instance()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<Rule>().MissingNamedInstanceIs
                     .ConstructedBy(context => new ColorRule(context.RequestedName));
             });
@@ -42,13 +46,15 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<Rule>("blue")
                 .ShouldBeOfType<ColorRule>().Color.ShouldBe("blue");
         }
+
         // ENDSAMPLE
 
         // SAMPLE: missing-instance-does-not-override-explicit
         [Test]
         public void does_not_override_explicit_registrations()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<Rule>().Add(new ColorRule("DarkRed")).Named("red");
 
                 x.For<Rule>().MissingNamedInstanceIs
@@ -59,6 +65,7 @@ namespace StructureMap.Testing.Pipeline
                 .ShouldBeOfType<ColorRule>()
                 .Color.ShouldBe("DarkRed");
         }
+
         // ENDSAMPLE
 
         // SAMPLE: missing-instance-with-Instance-registration
@@ -66,8 +73,9 @@ namespace StructureMap.Testing.Pipeline
         public void configure_and_use_missing_instance_by_generic_registration()
         {
             var instance = new LambdaInstance<ColorRule>(c => new ColorRule(c.RequestedName));
-            
-            var container = new Container(x => {
+
+            var container = new Container(x =>
+            {
                 x.For(typeof (Rule))
                     .MissingNamedInstanceIs(instance);
             });
@@ -76,6 +84,7 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<Rule>("green").ShouldBeOfType<ColorRule>().Color.ShouldBe("green");
             container.GetInstance<Rule>("blue").ShouldBeOfType<ColorRule>().Color.ShouldBe("blue");
         }
+
         // ENDSAMPLE
 
         [Test]
@@ -89,7 +98,5 @@ namespace StructureMap.Testing.Pipeline
             graph.FindInstance(typeof (IWidget), "anything").ShouldBeTheSameAs(missing);
             graph.FindInstance(typeof (IWidget), Guid.NewGuid().ToString()).ShouldBeTheSameAs(missing);
         }
-
     }
-
 }

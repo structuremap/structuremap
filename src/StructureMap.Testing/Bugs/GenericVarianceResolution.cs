@@ -1,14 +1,11 @@
 ﻿using System.Diagnostics;
+using System.Linq;
+using NUnit.Framework;
+using StructureMap.Graph;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Bugs
 {
-    using System.Linq;
-    using NUnit.Framework;
-    using StructureMap.Graph;
-
-
-
     [TestFixture]
     public class GenericVarianceResolution
     {
@@ -21,7 +18,6 @@ namespace StructureMap.Testing.Bugs
         {
             public void Handle(object notification)
             {
-
             }
         }
 
@@ -29,24 +25,24 @@ namespace StructureMap.Testing.Bugs
         {
             public void Handle(TNotification notification)
             {
-
             }
         }
 
-        public class Notification { }
+        public class Notification
+        {
+        }
 
         public class ConcreteNotificationHandler : INotificationHandler<Notification>
         {
             public void Handle(Notification notification)
             {
-
             }
         }
 
         [Test]
         public void RegisterMultipleHandlersOfSameInterface()
         {
-            typeof(OpenNotificationHandler<Notification>).CanBeCastTo<INotificationHandler<Notification>>()
+            typeof (OpenNotificationHandler<Notification>).CanBeCastTo<INotificationHandler<Notification>>()
                 .ShouldBeTrue();
 
             typeof (OpenNotificationHandler<>).CanBeCastTo(typeof (INotificationHandler<>))
@@ -65,8 +61,8 @@ namespace StructureMap.Testing.Bugs
 
             handlers.Select(x => x.GetType()).OrderBy(x => x.Name)
                 .Each(x => Debug.WriteLine(x.Name))
-                .ShouldHaveTheSameElementsAs(typeof(BaseNotificationHandler), typeof(ConcreteNotificationHandler), typeof(OpenNotificationHandler<Notification>));
-
+                .ShouldHaveTheSameElementsAs(typeof (BaseNotificationHandler), typeof (ConcreteNotificationHandler),
+                    typeof (OpenNotificationHandler<Notification>));
         }
     }
 }

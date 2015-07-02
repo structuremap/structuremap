@@ -18,18 +18,17 @@ namespace StructureMap.Testing.Bugs
             // 1st attempt : database is down, expect "Database is down" exception
             DatabaseStatus.DatabaseIsDown = true;
 
-            Exception<StructureMapBuildException>.ShouldBeThrownBy(() =>
-            {
-                container.GetInstance<SomeSingletonThatConnectsToDatabaseOnConstruction>();
-            }).InnerException.ShouldBeOfType<DivideByZeroException>().Message.ShouldContain("Database is down");
+            Exception<StructureMapBuildException>.ShouldBeThrownBy(
+                () => { container.GetInstance<SomeSingletonThatConnectsToDatabaseOnConstruction>(); })
+                .InnerException.ShouldBeOfType<DivideByZeroException>()
+                .Message.ShouldContain("Database is down");
 
             // 2nd attempt : database is still down, still expect "Database is down" exception
-            Exception<StructureMapBuildException>.ShouldBeThrownBy(() =>
-            {
-                container.GetInstance<SomeSingletonThatConnectsToDatabaseOnConstruction>();
-            }).InnerException.ShouldBeOfType<DivideByZeroException>().Message.ShouldContain("Database is down");
+            Exception<StructureMapBuildException>.ShouldBeThrownBy(
+                () => { container.GetInstance<SomeSingletonThatConnectsToDatabaseOnConstruction>(); })
+                .InnerException.ShouldBeOfType<DivideByZeroException>()
+                .Message.ShouldContain("Database is down");
 
-            
 
             // The database has now come online.
             DatabaseStatus.DatabaseIsDown = false;
@@ -38,10 +37,7 @@ namespace StructureMap.Testing.Bugs
             // instead still throws a bi-di error
             var attempt3 = container.GetInstance<SomeSingletonThatConnectsToDatabaseOnConstruction>();
             attempt3.ShouldNotBeNull();
-
         }
-
-
     }
 
     public static class DatabaseStatus

@@ -1,16 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing
 {
-
     [TestFixture]
     public class WhatDoIHave_Smoke_Tester
     {
@@ -29,7 +23,8 @@ namespace StructureMap.Testing
         public void display_one_service_for_an_interface()
         {
             // SAMPLE: what_do_i_have_container
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IEngine>().Use<Hemi>().Named("The Hemi");
 
                 x.For<IEngine>().Add<VEight>().Singleton().Named("V8");
@@ -50,7 +45,6 @@ namespace StructureMap.Testing
             Debug.WriteLine(container.WhatDoIHave());
             // ENDSAMPLE
         }
-
 
 
         [Test]
@@ -82,10 +76,12 @@ namespace StructureMap.Testing
         [Test]
         public void render_the_missing_named_instance_if_it_exists()
         {
-            var container = new Container(x =>
-            {
-                x.For<IEngine>().MissingNamedInstanceIs.ConstructedBy(c => new NamedEngine(c.RequestedName));
-            });
+            var container =
+                new Container(
+                    x =>
+                    {
+                        x.For<IEngine>().MissingNamedInstanceIs.ConstructedBy(c => new NamedEngine(c.RequestedName));
+                    });
 
             var description = container.WhatDoIHave();
             description.ShouldContain("*Missing Named Instance*");
@@ -128,9 +124,7 @@ namespace StructureMap.Testing
 
                 x.For<IEngine>().Add(new InlineFour());
 
-                x.Profile("Blue", blue => {
-                    blue.For<IEngine>().Use<FourFiftyFour>().Named("Gas Guzzler");
-                });
+                x.Profile("Blue", blue => { blue.For<IEngine>().Use<FourFiftyFour>().Named("Gas Guzzler"); });
             });
 
             Debug.WriteLine(container.GetProfile("Blue").WhatDoIHave());
@@ -156,7 +150,7 @@ namespace StructureMap.Testing
             });
 
             // SAMPLE: whatdoihave-assembly
-            Debug.WriteLine(container.WhatDoIHave(assembly:typeof(IWidget).Assembly));
+            Debug.WriteLine(container.WhatDoIHave(assembly: typeof (IWidget).Assembly));
             // ENDSAMPLE
         }
 
@@ -170,7 +164,7 @@ namespace StructureMap.Testing
             var byAssembly = container.WhatDoIHave(assembly: typeof (IWidget).Assembly);
 
             // Only report on the specified Plugin Type
-            var byPluginType = container.WhatDoIHave(pluginType:typeof(IWidget));
+            var byPluginType = container.WhatDoIHave(typeof (IWidget));
 
             // Filter to Plugin Type's in the named namespace
             // The 'IsInNamespace' test will include child namespaces
@@ -202,7 +196,7 @@ namespace StructureMap.Testing
             });
 
             // SAMPLE: whatdoihave-plugintype
-            Debug.WriteLine(container.WhatDoIHave(pluginType:typeof(IWidget)));
+            Debug.WriteLine(container.WhatDoIHave(typeof (IWidget)));
             // ENDSAMPLE
         }
 
@@ -228,7 +222,7 @@ namespace StructureMap.Testing
             });
 
             // SAMPLE: whatdoihave-type
-            Debug.WriteLine(container.WhatDoIHave(typeName:"Widget"));
+            Debug.WriteLine(container.WhatDoIHave(typeName: "Widget"));
             // ENDSAMPLE
         }
 
@@ -254,7 +248,7 @@ namespace StructureMap.Testing
             });
 
             // SAMPLE: whatdoihave-namespace
-            Debug.WriteLine(container.WhatDoIHave(@namespace:"System"));
+            Debug.WriteLine(container.WhatDoIHave(@namespace: "System"));
             // ENDSAMPLE
         }
     }
@@ -282,15 +276,33 @@ namespace StructureMap.Testing
         }
     }
 
-    public class VEight : IEngine{}
-    public class StraightSix : IEngine{}
-    public class Hemi : IEngine{}
-    public class FourFiftyFour : IEngine{}
+    public class VEight : IEngine
+    {
+    }
 
-    public class VTwelve : IEngine{}
+    public class StraightSix : IEngine
+    {
+    }
 
-    public class Rotary : IEngine{}
-    public class PluginElectric : IEngine{}
+    public class Hemi : IEngine
+    {
+    }
+
+    public class FourFiftyFour : IEngine
+    {
+    }
+
+    public class VTwelve : IEngine
+    {
+    }
+
+    public class Rotary : IEngine
+    {
+    }
+
+    public class PluginElectric : IEngine
+    {
+    }
 
     public class InlineFour : IEngine
     {

@@ -27,11 +27,18 @@ namespace StructureMap.Testing.Web
             For<ICache>().LifecycleIs<HybridSessionLifecycle>();
         }
     }
+
     // ENDSAMPLE
 
-    public interface IRule { }
+    public interface IRule
+    {
+    }
 
-    public interface ICache { }
-    public class Cache { }
+    public interface ICache
+    {
+    }
 
+    public class Cache
+    {
+    }
 }

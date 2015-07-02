@@ -9,7 +9,8 @@ namespace StructureMap.Testing
         [Test]
         public void specify_a_string_array()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForConcreteType<ClassWithStringAndIntArray>().Configure
                     .Ctor<string[]>().Is(new[] {"a", "b", "c"})
                     .Ctor<int[]>().Is(new[] {1, 2, 3});

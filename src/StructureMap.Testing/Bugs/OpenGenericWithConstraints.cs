@@ -7,15 +7,14 @@ using StructureMap.Graph;
 
 namespace StructureMap.Testing.Bugs
 {
-
-
     [TestFixture]
     public class OpenGenericWithConstraints
     {
         [Test]
         public void RegisterTwoInheritorsWithDifferentTypeConstraints()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.Scan(y => y.TheCallingAssembly());
                 x.For(typeof (IAmOpenGeneric<>)).Add(typeof (ClosedGenericForEnumerable<>));
                 x.For(typeof (IAmOpenGeneric<>)).Add(typeof (ClosedGenericForStruct<>));

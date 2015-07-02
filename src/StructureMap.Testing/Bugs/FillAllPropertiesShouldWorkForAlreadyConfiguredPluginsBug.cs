@@ -14,7 +14,8 @@ namespace StructureMap.Testing.Bugs
             container.Configure(x => { x.ForConcreteType<ClassWithSetterDependency>(); });
 
 
-            container.Configure(x => {
+            container.Configure(x =>
+            {
                 x.For<ISomeDependency>()
                     .Use<ClassThatImplementsDependency>();
 

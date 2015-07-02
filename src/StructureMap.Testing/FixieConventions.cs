@@ -9,8 +9,13 @@ using StructureMap.Testing;
 
 namespace NUnit.Framework
 {
-    public class TestFixtureAttribute : Attribute { }
-    public class TestAttribute : Attribute { }
+    public class TestFixtureAttribute : Attribute
+    {
+    }
+
+    public class TestAttribute : Attribute
+    {
+    }
 
     public class ExplicitAttribute : Attribute
     {
@@ -30,10 +35,22 @@ namespace NUnit.Framework
             get { return _description; }
         }
     }
-    public class TestFixtureSetUpAttribute : Attribute { }
-    public class SetUpAttribute : Attribute { }
-    public class TearDownAttribute : Attribute { }
-    public class TestFixtureTearDownAttribute : Attribute { }
+
+    public class TestFixtureSetUpAttribute : Attribute
+    {
+    }
+
+    public class SetUpAttribute : Attribute
+    {
+    }
+
+    public class TearDownAttribute : Attribute
+    {
+    }
+
+    public class TestFixtureTearDownAttribute : Attribute
+    {
+    }
 
     public static class Assert
     {
@@ -70,7 +87,6 @@ namespace NUnit.Framework
         }
 
 
-
         public static void IsFalse(this bool condition)
         {
             condition.ShouldBeFalse();
@@ -96,8 +112,8 @@ namespace StructureMap.Testing
                 .HasOrInherits<TestAttribute>().Where(m => !m.HasAttribute<ExplicitAttribute>());
 
             ClassExecution
-                    .CreateInstancePerClass()
-                    .SortCases((caseA, caseB) => String.Compare(caseA.Name, caseB.Name, StringComparison.Ordinal));
+                .CreateInstancePerClass()
+                .SortCases((caseA, caseB) => String.Compare(caseA.Name, caseB.Name, StringComparison.Ordinal));
 
             FixtureExecution
                 .Wrap<FixtureSetUpTearDown>();
@@ -108,7 +124,7 @@ namespace StructureMap.Testing
     }
 
 
-    class SetUpTearDown : CaseBehavior
+    internal class SetUpTearDown : CaseBehavior
     {
         public void Execute(Case @case, Action next)
         {
@@ -118,10 +134,9 @@ namespace StructureMap.Testing
         }
     }
 
-    class FixtureSetUpTearDown : FixtureBehavior
+    internal class FixtureSetUpTearDown : FixtureBehavior
     {
-
-        public void Execute(Fixie.Fixture fixture, Action next)
+        public void Execute(Fixture fixture, Action next)
         {
             fixture.Class.Type.InvokeAll<TestFixtureSetUpAttribute>(fixture.Instance);
             next();
@@ -147,7 +162,7 @@ namespace StructureMap.Testing
             }
         }
 
-        static IEnumerable<MethodInfo> Has<TAttribute>(Type type) where TAttribute : Attribute
+        private static IEnumerable<MethodInfo> Has<TAttribute>(Type type) where TAttribute : Attribute
         {
             return type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
                 .Where(x => x.HasOrInherits<TAttribute>());

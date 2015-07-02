@@ -9,7 +9,8 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void Test()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForConcreteType<SomeDbRepository>().Configure.
                     Ctor<string>("connectionString").Is("some connection string");
 

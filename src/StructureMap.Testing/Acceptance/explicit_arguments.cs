@@ -11,7 +11,8 @@ namespace StructureMap.Testing.Acceptance
         public void supply_defaults_by_generic()
         {
             // SAMPLE: explicit-arg-container
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.For<IWidget>().Use<BWidget>();
                 x.For<IService>().Use<AService>();
             });
@@ -76,7 +77,8 @@ namespace StructureMap.Testing.Acceptance
             var service = new BService();
 
             var guyWithWidgetAndService = container
-                .With(x => {
+                .With(x =>
+                {
                     x.With<IWidget>(widget);
                     x.With<IService>(service);
                 })
@@ -94,9 +96,7 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void supply_named_arguments()
         {
-            var container = new Container(x => {
-                x.For<IWidget>().Use<ColorWidget>().Ctor<string>().Is("Red");
-            });
+            var container = new Container(x => { x.For<IWidget>().Use<ColorWidget>().Ctor<string>().Is("Red"); });
 
             container.GetInstance<IWidget>()
                 .ShouldBeOfType<ColorWidget>()
@@ -107,6 +107,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<ColorWidget>()
                 .Color.ShouldBe("Blue");
         }
+
         // ENDSAMPLE
     }
 
@@ -132,5 +133,6 @@ namespace StructureMap.Testing.Acceptance
             Service = service;
         }
     }
+
     // ENDSAMPLE
 }

@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Testing.Configuration.DSL;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Bugs
@@ -15,8 +14,6 @@ namespace StructureMap.Testing.Bugs
         {
             var container = new Container(cfg =>
             {
-                
-
                 cfg.Scan(scan =>
                 {
                     scan.TheCallingAssembly();
@@ -29,23 +26,37 @@ namespace StructureMap.Testing.Bugs
 
             container.GetAllInstances<IBird<Bird>>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(BirdImpl), typeof(BirdBaseImpl));
+                .ShouldHaveTheSameElementsAs(typeof (BirdImpl), typeof (BirdBaseImpl));
         }
 
         [Test]
         public void GenericConnectionScanner_can_match_on_it()
         {
-            typeof(BirdBaseImpl).CanBeCastTo<IBird<Bird>>()
+            typeof (BirdBaseImpl).CanBeCastTo<IBird<Bird>>()
                 .ShouldBeTrue();
 
             var scanner = new GenericConnectionScanner(typeof (IBird<>));
-            scanner.Process(typeof(BirdBaseImpl), new Registry());
+            scanner.Process(typeof (BirdBaseImpl), new Registry());
         }
     }
 
-    public interface IBird<in T> { }
-    public class BirdBase { }
-    public class Bird : BirdBase { }
-    public class BirdImpl : IBird<Bird> { }
-    public class BirdBaseImpl : IBird<BirdBase> { }
+    public interface IBird<in T>
+    {
+    }
+
+    public class BirdBase
+    {
+    }
+
+    public class Bird : BirdBase
+    {
+    }
+
+    public class BirdImpl : IBird<Bird>
+    {
+    }
+
+    public class BirdBaseImpl : IBird<BirdBase>
+    {
+    }
 }

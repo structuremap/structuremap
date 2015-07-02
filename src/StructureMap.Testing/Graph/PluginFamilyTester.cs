@@ -42,11 +42,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void throw_exception_if_instance_is_not_compatible_with_PluginType_in_AddInstance()
         {
-            var family = new PluginFamily(typeof(IGateway));
-            Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(() =>
-            {
-                family.AddInstance(new SmartInstance<ColorRule>());
-            });
+            var family = new PluginFamily(typeof (IGateway));
+            Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(
+                () => { family.AddInstance(new SmartInstance<ColorRule>()); });
         }
 
         [Test]

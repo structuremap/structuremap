@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
@@ -19,12 +18,14 @@ namespace StructureMap.Testing.Configuration.DSL
             _lastService = null;
             recorder = new ContextRecorder();
 
-            _container = new Container(r => {
+            _container = new Container(r =>
+            {
                 r.For<ContextRecorder>().Use(recorder);
 
-                r.For<IService>().AddInstances(x => {
+                r.For<IService>().AddInstances(x =>
+                {
                     x.Type<ColorService>()
-                        .OnCreation("last service",s => _lastService = s)
+                        .OnCreation("last service", s => _lastService = s)
                         .Named("Intercepted")
                         .Ctor<string>("color").Is("Red");
 
@@ -45,7 +46,8 @@ namespace StructureMap.Testing.Configuration.DSL
                         .DecorateWith(s => new DecoratorService(s));
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("DecoratedWithContext")
-                        .DecorateWith("decorated with context", (c, s) => {
+                        .DecorateWith("decorated with context", (c, s) =>
+                        {
                             c.GetInstance<ContextRecorder>().WasTouched = true;
                             return new DecoratorService(s);
                         });
@@ -127,9 +129,9 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void TrapFailureInInterceptor()
         {
-            var ex = Exception<StructureMapInterceptorException>.ShouldBeThrownBy(() => {
-                _container.GetInstance<IService>("Bad");
-            });
+            var ex =
+                Exception<StructureMapInterceptorException>.ShouldBeThrownBy(
+                    () => { _container.GetInstance<IService>("Bad"); });
 
             ex.Title.ShouldBe(
                 "Activator interceptor failed during object creation.  See the inner exception for details.");

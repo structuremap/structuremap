@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Acceptance
 {
@@ -14,7 +13,8 @@ namespace StructureMap.Testing.Acceptance
         {
             // NOTE that we do NOT make any explicit registration of 
             // IList<IWidget>, IEnumerable<IWidget>, ICollection<IWidget>, or IWidget[]
-            var container = new Container(_ => {
+            var container = new Container(_ =>
+            {
                 _.For<IWidget>().Add<AWidget>();
                 _.For<IWidget>().Add<BWidget>();
                 _.For<IWidget>().Add<CWidget>();
@@ -23,18 +23,19 @@ namespace StructureMap.Testing.Acceptance
             // IList<T>
             container.GetInstance<IList<IWidget>>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
+                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
 
             // ICollection<T>
             container.GetInstance<ICollection<IWidget>>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
+                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
 
             // Array of T
             container.GetInstance<IWidget[]>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
+                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
         }
+
         // ENDSAMPLE
     }
 }

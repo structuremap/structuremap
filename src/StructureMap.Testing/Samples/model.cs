@@ -1,11 +1,11 @@
-﻿using System;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Graph;
-using StructureMap.Testing;
 
 namespace StructureMap.Docs.samples
 {
-    public interface IBlah { }
+    public interface IBlah
+    {
+    }
 
     public interface IService
     {
@@ -14,9 +14,17 @@ namespace StructureMap.Docs.samples
 
 
 // SAMPLE: foobar-model
-    public interface IBar{}
-    public class Bar : IBar{}
-    public interface IFoo{}
+    public interface IBar
+    {
+    }
+
+    public class Bar : IBar
+    {
+    }
+
+    public interface IFoo
+    {
+    }
 
     public class Foo : IFoo
     {
@@ -27,6 +35,7 @@ namespace StructureMap.Docs.samples
             Bar = bar;
         }
     }
+
 // ENDSAMPLE
 
 
@@ -37,18 +46,19 @@ namespace StructureMap.Docs.samples
 // SAMPLE: foobar-quickstart1
 // Configure and build a brand new
 // StructureMap Container object
-var container = new Container(_ => {
-    _.For<IFoo>().Use<Foo>();
-    _.For<IBar>().Use<Bar>();
-});
+            var container = new Container(_ =>
+            {
+                _.For<IFoo>().Use<Foo>();
+                _.For<IBar>().Use<Bar>();
+            });
 
 // Now, resolve a new object instance of IFoo
-container.GetInstance<IFoo>()
-    // should be type Foo
-    .ShouldBeOfType<Foo>()
+            container.GetInstance<IFoo>()
+                // should be type Foo
+                .ShouldBeOfType<Foo>()
 
-    // and the IBar dependency too
-    .Bar.ShouldBeOfType<Foo>();
+                // and the IBar dependency too
+                .Bar.ShouldBeOfType<Foo>();
 
 
 // ENDSAMPLE
@@ -57,17 +67,18 @@ container.GetInstance<IFoo>()
         public static void Quickstart2()
         {
 // SAMPLE: foobar-quickstart2
-var container = new Container(_ =>
-{
-    _.Scan(x => {
-        x.TheCallingAssembly();
-        x.WithDefaultConventions();
-    });
-});
+            var container = new Container(_ =>
+            {
+                _.Scan(x =>
+                {
+                    x.TheCallingAssembly();
+                    x.WithDefaultConventions();
+                });
+            });
 
-container.GetInstance<IFoo>()
-    .ShouldBeOfType<Foo>()
-    .Bar.ShouldBeOfType<Foo>();
+            container.GetInstance<IFoo>()
+                .ShouldBeOfType<Foo>()
+                .Bar.ShouldBeOfType<Foo>();
 
 // ENDSAMPLE
         }
@@ -116,5 +127,4 @@ container.GetInstance<IFoo>()
     }
 
 // ENDSAMPLE
-
 }

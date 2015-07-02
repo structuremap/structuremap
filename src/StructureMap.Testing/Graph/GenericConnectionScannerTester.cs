@@ -11,7 +11,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void can_find_the_closed_finders()
         {
-            var container = new Container(x => x.Scan(o => {
+            var container = new Container(x => x.Scan(o =>
+            {
                 o.TheCallingAssembly();
                 o.ConnectImplementationsToTypesClosing(typeof (IFinder<>));
             }));
@@ -23,7 +24,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void single_class_can_close_multiple_open_interfaces()
         {
-            var container = new Container(x => x.Scan(o => {
+            var container = new Container(x => x.Scan(o =>
+            {
                 o.TheCallingAssembly();
                 o.ConnectImplementationsToTypesClosing(typeof (IFinder<>));
                 o.ConnectImplementationsToTypesClosing(typeof (IFindHandler<>));
@@ -35,7 +37,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void single_class_can_close_the_same_open_interface_multiple_times()
         {
-            var container = new Container(x => x.Scan(o => {
+            var container = new Container(x => x.Scan(o =>
+            {
                 o.TheCallingAssembly();
                 o.ConnectImplementationsToTypesClosing(typeof (IFinder<>));
             }));
@@ -48,16 +51,15 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void fails_on_closed_type()
         {
-            Exception<InvalidOperationException>.ShouldBeThrownBy(() =>
-            {
-                new GenericConnectionScanner(typeof(double));
-            });
+            Exception<InvalidOperationException>.ShouldBeThrownBy(
+                () => { new GenericConnectionScanner(typeof (double)); });
         }
 
         [Test]
         public void can_configure_plugin_families_via_dsl()
         {
-            var container = new Container(registry => registry.Scan(x => {
+            var container = new Container(registry => registry.Scan(x =>
+            {
                 x.TheCallingAssembly();
                 x.ConnectImplementationsToTypesClosing(typeof (IFinder<>)).OnAddedPluginTypes(t => t.Singleton());
             }));
@@ -71,7 +73,6 @@ namespace StructureMap.Testing.Graph
             secondIntFinder.ShouldBeTheSameAs(firstIntFinder);
         }
     }
-
 
 
     public interface IFinder<T>

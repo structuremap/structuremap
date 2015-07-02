@@ -10,15 +10,12 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void can_happily_use_the_parent_type()
         {
-            var container = new Container(x => {
-                x.For<Logger>().Use(c => new Logger(c.ParentType)).AlwaysUnique();
-            });
+            var container = new Container(x => { x.For<Logger>().Use(c => new Logger(c.ParentType)).AlwaysUnique(); });
 
             var top = container.GetInstance<LoggedClass1>();
             top.Logger.ParentType.ShouldBe(typeof (LoggedClass1));
             top.Child.Logger.ParentType.ShouldBe(typeof (LoggedClass2));
             top.Child.Child.Logger.ParentType.ShouldBe(typeof (LoggedClass3));
-
         }
     }
 

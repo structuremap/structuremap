@@ -15,10 +15,8 @@ namespace StructureMap.Testing.Acceptance
             // by default
             container.GetInstance<GuyWithWidget>()
                 .Widget.ShouldBeNull();
-        
-            container.Configure(x => {
-                x.Policies.FillAllPropertiesOfType<IWidget>().Use<AWidget>();
-            });
+
+            container.Configure(x => { x.Policies.FillAllPropertiesOfType<IWidget>().Use<AWidget>(); });
 
             container.GetInstance<GuyWithWidget>()
                 .Widget.ShouldBeOfType<AWidget>();

@@ -187,8 +187,7 @@ namespace StructureMap.Testing
             {
                 if (b.NodeType == ExpressionType.Coalesce && b.Conversion != null)
                     return Expression.Coalesce(left, right, conversion as LambdaExpression);
-                else
-                    return Expression.MakeBinary(b.NodeType, left, right, b.IsLiftedToNull, b.Method);
+                return Expression.MakeBinary(b.NodeType, left, right, b.IsLiftedToNull, b.Method);
             }
             return b;
         }
@@ -383,8 +382,7 @@ namespace StructureMap.Testing
             {
                 if (nex.Members != null)
                     return Expression.New(nex.Constructor, args, nex.Members);
-                else
-                    return Expression.New(nex.Constructor, args);
+                return Expression.New(nex.Constructor, args);
             }
 
             return nex;
@@ -425,10 +423,7 @@ namespace StructureMap.Testing
                 {
                     return Expression.NewArrayInit(na.Type.GetElementType(), exprs);
                 }
-                else
-                {
-                    return Expression.NewArrayBounds(na.Type.GetElementType(), exprs);
-                }
+                return Expression.NewArrayBounds(na.Type.GetElementType(), exprs);
             }
 
             return na;

@@ -13,7 +13,8 @@ namespace StructureMap.Testing.Acceptance
         [SetUp]
         public void SetUp()
         {
-            parent = new Container(_ => {
+            parent = new Container(_ =>
+            {
                 _.For<IWidget>().Use<AWidget>();
                 _.For<IService>().Use<AService>();
             });
@@ -31,9 +32,7 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void resolve_the_child_override()
         {
-            child.Configure(x => {
-                x.For<IWidget>().Use<BWidget>();
-            });
+            child.Configure(x => { x.For<IWidget>().Use<BWidget>(); });
 
             child.GetInstance<IWidget>()
                 .ShouldBeOfType<BWidget>();
@@ -45,10 +44,7 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void with_dependencies()
         {
-            child.Configure(x =>
-            {
-                x.For<IWidget>().Use<BWidget>();
-            });
+            child.Configure(x => { x.For<IWidget>().Use<BWidget>(); });
 
             var guy = child.GetInstance<GuyWithWidgetAndService>();
 
@@ -59,6 +55,4 @@ namespace StructureMap.Testing.Acceptance
             guy.Service.ShouldBeOfType<AService>();
         }
     }
-
-
 }

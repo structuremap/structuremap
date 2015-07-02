@@ -251,6 +251,7 @@ namespace StructureMap.Testing.Graph
         }
 
         public Type ReturnedType { get; private set; }
+
         public void AcceptVisitor(IDependencyVisitor visitor)
         {
             visitor.Dependency(this);

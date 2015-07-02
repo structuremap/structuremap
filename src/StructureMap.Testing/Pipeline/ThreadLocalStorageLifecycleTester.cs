@@ -34,7 +34,7 @@ namespace StructureMap.Testing.Pipeline
             _rule1 = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
 
             var rule = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
-            Assert.AreSame(_rule1, rule);
+            _rule1.AreSame(rule);
         }
 
         private void findRule2()
@@ -42,7 +42,7 @@ namespace StructureMap.Testing.Pipeline
             _rule2 = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
 
             var rule = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
-            Assert.AreSame(_rule2, rule);
+            _rule2.AreSame(rule);
         }
 
         private void findRule3()
@@ -50,16 +50,16 @@ namespace StructureMap.Testing.Pipeline
             _rule3 = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
 
             var rule = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
-            Assert.AreSame(_rule3, rule);
+            _rule3.AreSame(rule);
 
             rule = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
-            Assert.AreSame(_rule3, rule);
+            _rule3.AreSame(rule);
 
             rule = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
-            Assert.AreSame(_rule3, rule);
+            _rule3.AreSame(rule);
 
             rule = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
-            Assert.AreSame(_rule3, rule);
+            _rule3.AreSame(rule);
         }
 
         [Test]
@@ -85,13 +85,14 @@ namespace StructureMap.Testing.Pipeline
             t2.Join();
             t3.Join();
 
-            Assert.AreNotSame(_rule1, _rule2);
-            Assert.AreNotSame(_rule1, _rule3);
-            Assert.AreNotSame(_rule2, _rule3);
-            Assert.IsTrue(_rule1.ID != _rule2.ID);
-            Assert.IsTrue(_rule1.ID != _rule3.ID);
-            Assert.IsTrue(_rule2.ID != _rule3.ID);
+            _rule1.AreNotSame(_rule2);
+            _rule1.AreNotSame(_rule3);
+            _rule2.AreNotSame(_rule3);
+            (_rule1.ID != _rule2.ID).IsTrue();
+            (_rule1.ID != _rule3.ID).IsTrue();
+            (_rule2.ID != _rule3.ID).IsTrue();
         }
     }
+
     // ENDSAMPLE
 }
