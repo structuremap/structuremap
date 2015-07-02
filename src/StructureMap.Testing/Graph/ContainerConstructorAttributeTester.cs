@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Graph
             var constructor = DefaultConstructorAttribute.GetConstructor(
                 typeof (ComplexRule));
 
-            constructor.IsNotNull();
+            constructor.ShouldNotBeNull();
         }
     }
 }

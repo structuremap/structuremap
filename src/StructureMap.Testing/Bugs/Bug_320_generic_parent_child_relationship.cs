@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Bugs
         {
             typeof (IGeneric<ConcreteChild>).IsAssignableFrom(typeof (GenericClass1)).ShouldBeTrue();
             typeof (IGeneric<ConcreteChild>).IsAssignableFrom(typeof (GenericClass2)).ShouldBeTrue();
-            //Assert.IsTrue(typeof(IGeneric<ConcreteChild>).IsAssignableFrom(typeof(GenericClass3)));
+            //Assert.ShouldBeTrue(typeof(IGeneric<ConcreteChild>).IsAssignableFrom(typeof(GenericClass3)));
 
             var container = new Container(cfg =>
             {

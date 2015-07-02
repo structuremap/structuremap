@@ -58,10 +58,10 @@ namespace StructureMap.Testing.Pipeline
             var red3 = container.GetInstance<IService>("Red");
             var green3 = container.GetInstance<IService>("Green");
 
-            red1.AreSame(red2);
-            red1.AreSame(red3);
-            green1.AreSame(green2);
-            green1.AreSame(green3);
+            red1.ShouldBeTheSameAs(red2);
+            red1.ShouldBeTheSameAs(red3);
+            green1.ShouldBeTheSameAs(green2);
+            green1.ShouldBeTheSameAs(green3);
         }
     }
 

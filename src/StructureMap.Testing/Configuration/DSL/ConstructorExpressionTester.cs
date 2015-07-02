@@ -28,8 +28,8 @@ namespace StructureMap.Testing.Configuration.DSL
                     x.ConstructedBy(() => concretion2).Named("Two");
                 }));
 
-            concretion1.AreSame(container.GetInstance<Abstraction>("One"));
-            concretion2.AreSame(container.GetInstance<Abstraction>("Two"));
+            concretion1.ShouldBeTheSameAs(container.GetInstance<Abstraction>("One"));
+            concretion2.ShouldBeTheSameAs(container.GetInstance<Abstraction>("Two"));
         }
 
         [Test]

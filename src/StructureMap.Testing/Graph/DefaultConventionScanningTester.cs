@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Graph
             new DefaultConventionScanner().FindPluginType(typeof (Convention))
                 .ShouldBe(typeof (IConvention));
 
-            new DefaultConventionScanner().FindPluginType(GetType()).IsNull();
+            new DefaultConventionScanner().FindPluginType(GetType()).ShouldBeNull();
         }
 
 
@@ -64,8 +64,8 @@ namespace StructureMap.Testing.Graph
 
             registry.As<IPluginGraphConfiguration>().Configure(graph);
 
-            graph.Families.Has(typeof (IServer)).IsFalse();
-            graph.Families.Has(typeof (IConvention)).IsTrue();
+            graph.Families.Has(typeof (IServer)).ShouldBeFalse();
+            graph.Families.Has(typeof (IConvention)).ShouldBeTrue();
 
             var family = graph.Families[typeof (IConvention)];
             family.Instances.Count().ShouldBe(1);

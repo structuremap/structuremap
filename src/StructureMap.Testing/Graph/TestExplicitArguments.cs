@@ -228,7 +228,7 @@ namespace StructureMap.Testing.Graph
             // Now, set the explicit arg for IProvider
             var theBlueProvider = new BlueProvider();
             var secondTarget = container.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>();
-            theBlueProvider.AreSame(secondTarget.Provider);
+            theBlueProvider.ShouldBeTheSameAs(secondTarget.Provider);
         }
 
         [Test]
@@ -340,7 +340,7 @@ namespace StructureMap.Testing.Graph
             args.Set(theLump);
 
             var instance = (LumpProvider) manager.GetInstance<IProvider>(args);
-            theLump.AreSame(instance.Lump);
+            theLump.ShouldBeTheSameAs(instance.Lump);
         }
 
         [Test]
@@ -352,7 +352,7 @@ namespace StructureMap.Testing.Graph
             var theLump = new Lump();
 
             var provider = (LumpProvider) container.With(theLump).GetInstance<IProvider>();
-            theLump.AreSame(provider.Lump);
+            theLump.ShouldBeTheSameAs(provider.Lump);
         }
 
         [Test]
@@ -362,7 +362,7 @@ namespace StructureMap.Testing.Graph
 
             var theLump = new Lump();
             var provider = container.With(theLump).GetInstance<LumpProvider>();
-            theLump.AreSame(provider.Lump);
+            theLump.ShouldBeTheSameAs(provider.Lump);
         }
 
         [Test]
@@ -391,12 +391,12 @@ namespace StructureMap.Testing.Graph
         public void RegisterAndFindServicesOnTheExplicitArgument()
         {
             var args = new ExplicitArguments();
-            args.Get<IProvider>().IsNull();
+            args.Get<IProvider>().ShouldBeNull();
 
             var red = new RedProvider();
             args.Set<IProvider>(red);
 
-            red.AreSame(args.Get<IProvider>());
+            red.ShouldBeTheSameAs(args.Get<IProvider>());
 
             args.Set<IExplicitTarget>(new RedTarget());
             args.Get<IExplicitTarget>().ShouldBeOfType<RedTarget>();
@@ -406,7 +406,7 @@ namespace StructureMap.Testing.Graph
         public void RegisterAndRetrieveArgs()
         {
             var args = new ExplicitArguments();
-            args.GetArg("name").IsNull();
+            args.GetArg("name").ShouldBeNull();
 
             args.SetArg("name", "Jeremy");
             args.GetArg("name").ShouldBe("Jeremy");

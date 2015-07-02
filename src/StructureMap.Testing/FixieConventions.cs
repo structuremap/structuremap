@@ -59,43 +59,7 @@ namespace NUnit.Framework
             throw new Exception(message);
         }
 
-        public static void AreSame(this object anObject, object other)
-        {
-            anObject.ShouldBeTheSameAs(other);
-        }
 
-
-        public static void AreNotSame(this object anObject, object other)
-        {
-            anObject.ShouldNotBeTheSameAs(other);
-        }
-
-        public static void IsNull(this object anObject)
-        {
-            anObject.ShouldBeNull();
-        }
-
-        public static void IsNotNull(this object anObject)
-        {
-            anObject.ShouldNotBeNull();
-        }
-
-
-        public static void NotNull(this object anObject)
-        {
-            anObject.ShouldNotBeNull();
-        }
-
-
-        public static void IsFalse(this bool condition)
-        {
-            condition.ShouldBeFalse();
-        }
-
-        public static void IsTrue(this bool condition)
-        {
-            condition.ShouldBeTrue();
-        }
     }
 }
 

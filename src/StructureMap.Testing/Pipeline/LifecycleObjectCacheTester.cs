@@ -84,7 +84,7 @@ namespace StructureMap.Testing.Pipeline
             // Allow 10ms for the thread to start and for Get call to complete
             thread.Join(10);
 
-            cachedWidget.NotNull();
+            cachedWidget.ShouldNotBeNull();
             cachedWidget.ShouldBe(aWidget);
         }
 

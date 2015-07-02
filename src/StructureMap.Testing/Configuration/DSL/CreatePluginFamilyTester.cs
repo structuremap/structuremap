@@ -118,9 +118,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void as_another_lifecycle()
         {
             var registry = new Registry();
-            var expression =
-                registry.For<IGateway>(Lifecycles.ThreadLocal);
-            expression.IsNotNull();
+            registry.For<IGateway>(Lifecycles.ThreadLocal).ShouldNotBeNull();
 
             var pluginGraph = registry.Build();
 
@@ -136,7 +134,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For<IGateway>();
             var pluginGraph = registry.Build();
 
-            pluginGraph.Families.Has(typeof (IGateway)).IsTrue();
+            pluginGraph.Families.Has(typeof (IGateway)).ShouldBeTrue();
         }
 
 
@@ -144,9 +142,6 @@ namespace StructureMap.Testing.Configuration.DSL
         public void BuildPluginFamilyAsPerRequest()
         {
             var registry = new Registry();
-            var expression =
-                registry.For<IGateway>();
-            expression.IsNotNull();
 
             var pluginGraph = registry.Build();
 
@@ -158,9 +153,8 @@ namespace StructureMap.Testing.Configuration.DSL
         public void BuildPluginFamilyAsSingleton()
         {
             var registry = new Registry();
-            var expression =
-                registry.For<IGateway>().Singleton();
-            expression.IsNotNull();
+            registry.For<IGateway>().Singleton()
+                .ShouldNotBeNull();
 
             var pluginGraph = registry.Build();
             var family = pluginGraph.Families[typeof (IGateway)];
@@ -175,7 +169,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For<IGateway>().Use<StubbedGateway>();
 
             var pluginGraph = registry.Build();
-            pluginGraph.Families.Has(typeof (IGateway)).IsTrue();
+            pluginGraph.Families.Has(typeof (IGateway)).ShouldBeTrue();
 
             var manager = new Container(pluginGraph);
             var gateway = (IGateway) manager.GetInstance(typeof (IGateway));
@@ -190,7 +184,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For<IGateway>().Use<FakeGateway>();
             var pluginGraph = registry.Build();
 
-            pluginGraph.Families.Has(typeof (IGateway)).IsTrue();
+            pluginGraph.Families.Has(typeof (IGateway)).ShouldBeTrue();
 
             var container = new Container(pluginGraph);
             var gateway = (IGateway) container.GetInstance(typeof (IGateway));
@@ -276,7 +270,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 new Container(
                     registry => registry.For<IWidget>().Use(aWidget));
 
-            aWidget.AreSame(manager.GetInstance<IWidget>());
+            aWidget.ShouldBeTheSameAs(manager.GetInstance<IWidget>());
         }
 
         // Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en

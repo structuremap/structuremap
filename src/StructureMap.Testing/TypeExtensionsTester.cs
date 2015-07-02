@@ -87,56 +87,56 @@ namespace StructureMap.Testing
         [Test]
         public void IsChild()
         {
-            typeof (int).IsChild().IsFalse();
-            typeof (bool).IsChild().IsFalse();
-            typeof (double).IsChild().IsFalse();
-            typeof (string).IsChild().IsFalse();
-            typeof (BreedEnum).IsChild().IsFalse();
-            typeof (IGateway[]).IsChild().IsFalse();
-            typeof (IGateway).IsChild().IsTrue();
+            typeof (int).IsChild().ShouldBeFalse();
+            typeof (bool).IsChild().ShouldBeFalse();
+            typeof (double).IsChild().ShouldBeFalse();
+            typeof (string).IsChild().ShouldBeFalse();
+            typeof (BreedEnum).IsChild().ShouldBeFalse();
+            typeof (IGateway[]).IsChild().ShouldBeFalse();
+            typeof (IGateway).IsChild().ShouldBeTrue();
         }
 
         [Test]
         public void IsChildArray()
         {
-            typeof (int).IsChildArray().IsFalse();
-            typeof (bool).IsChildArray().IsFalse();
-            typeof (double).IsChildArray().IsFalse();
-            typeof (double[]).IsChildArray().IsFalse();
-            typeof (string).IsChildArray().IsFalse();
-            typeof (string[]).IsChildArray().IsFalse();
-            typeof (BreedEnum).IsChildArray().IsFalse();
-            typeof (IGateway[]).IsChildArray().IsTrue();
-            typeof (IGateway).IsChildArray().IsFalse();
+            typeof (int).IsChildArray().ShouldBeFalse();
+            typeof (bool).IsChildArray().ShouldBeFalse();
+            typeof (double).IsChildArray().ShouldBeFalse();
+            typeof (double[]).IsChildArray().ShouldBeFalse();
+            typeof (string).IsChildArray().ShouldBeFalse();
+            typeof (string[]).IsChildArray().ShouldBeFalse();
+            typeof (BreedEnum).IsChildArray().ShouldBeFalse();
+            typeof (IGateway[]).IsChildArray().ShouldBeTrue();
+            typeof (IGateway).IsChildArray().ShouldBeFalse();
         }
 
         [Test]
         public void IsPrimitive()
         {
-            typeof (int).IsPrimitive().IsTrue();
-            typeof (bool).IsPrimitive().IsTrue();
-            typeof (double).IsPrimitive().IsTrue();
-            typeof (string).IsPrimitive().IsFalse();
-            typeof (BreedEnum).IsPrimitive().IsFalse();
-            typeof (IGateway).IsPrimitive().IsFalse();
+            typeof (int).IsPrimitive().ShouldBeTrue();
+            typeof (bool).IsPrimitive().ShouldBeTrue();
+            typeof (double).IsPrimitive().ShouldBeTrue();
+            typeof (string).IsPrimitive().ShouldBeFalse();
+            typeof (BreedEnum).IsPrimitive().ShouldBeFalse();
+            typeof (IGateway).IsPrimitive().ShouldBeFalse();
         }
 
         [Test]
         public void IsSimple()
         {
-            typeof (int).IsSimple().IsTrue();
-            typeof (bool).IsSimple().IsTrue();
-            typeof (double).IsSimple().IsTrue();
-            typeof (string).IsSimple().IsTrue();
-            typeof (BreedEnum).IsSimple().IsTrue();
-            typeof (IGateway).IsSimple().IsFalse();
+            typeof (int).IsSimple().ShouldBeTrue();
+            typeof (bool).IsSimple().ShouldBeTrue();
+            typeof (double).IsSimple().ShouldBeTrue();
+            typeof (string).IsSimple().ShouldBeTrue();
+            typeof (BreedEnum).IsSimple().ShouldBeTrue();
+            typeof (IGateway).IsSimple().ShouldBeFalse();
         }
 
         [Test]
         public void IsString()
         {
-            typeof (string).IsString().IsTrue();
-            typeof (int).IsString().IsFalse();
+            typeof (string).IsString().ShouldBeTrue();
+            typeof (int).IsString().ShouldBeFalse();
         }
     }
 

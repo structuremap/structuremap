@@ -120,7 +120,7 @@ namespace StructureMap.Testing
             var first = con.GetInstance<IService<string>>();
             var second = con.GetInstance<IService<string>>();
 
-            first.AreSame(second);
+            first.ShouldBeTheSameAs(second);
         }
 
 
@@ -128,7 +128,7 @@ namespace StructureMap.Testing
         public void CanPlugGenericConcreteClassIntoGenericInterfaceWithNoGenericParametersSpecified()
         {
             var canPlug = typeof (GenericService<>).CanBeCastTo(typeof (IGenericService<>));
-            canPlug.IsTrue();
+            canPlug.ShouldBeTrue();
         }
 
         [Test]
@@ -213,7 +213,7 @@ namespace StructureMap.Testing
         [Test]
         public void SmokeTestCanBeCaseWithImplementationOfANonGenericInterface()
         {
-            GenericsPluginGraph.CanBeCast(typeof (ITarget<,>), typeof (DisposableTarget<,>)).IsTrue();
+            GenericsPluginGraph.CanBeCast(typeof (ITarget<,>), typeof (DisposableTarget<,>)).ShouldBeTrue();
         }
     }
 

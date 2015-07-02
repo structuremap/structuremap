@@ -139,9 +139,9 @@ namespace StructureMap.Testing
 
             count.ShouldBe(2);
 
-            result1.AreSame(result2);
-            result1.AreNotSame(result3);
-            result3.AreSame(result4);
+            result1.ShouldBeTheSameAs(result2);
+            result1.ShouldNotBeTheSameAs(result3);
+            result3.ShouldBeTheSameAs(result4);
         }
 
         [Test]
@@ -180,9 +180,9 @@ namespace StructureMap.Testing
 
             count.ShouldBe(1);
 
-            result1.AreSame(result2);
-            result1.AreSame(result3);
-            result1.AreSame(result4);
+            result1.ShouldBeTheSameAs(result2);
+            result1.ShouldBeTheSameAs(result3);
+            result1.ShouldBeTheSameAs(result4);
         }
 
         [Test]
@@ -209,9 +209,9 @@ namespace StructureMap.Testing
 
             count.ShouldBe(1);
 
-            result1.AreSame(result2);
-            result1.AreSame(result3);
-            result1.AreSame(result4);
+            result1.ShouldBeTheSameAs(result2);
+            result1.ShouldBeTheSameAs(result3);
+            result1.ShouldBeTheSameAs(result4);
         }
 
         [Test]

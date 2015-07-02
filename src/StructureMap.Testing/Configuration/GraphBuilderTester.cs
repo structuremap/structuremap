@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Configuration
             });
 
 
-            iWasCalled.IsTrue();
+            iWasCalled.ShouldBeTrue();
         }
     }
 }

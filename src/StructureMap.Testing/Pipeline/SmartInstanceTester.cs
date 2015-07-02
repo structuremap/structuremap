@@ -52,7 +52,7 @@ namespace StructureMap.Testing.Pipeline
                 .Use<ClassWithWidgetProperty>()
                 .Setter(o => o.Widget).Is(widget));
 
-            widget.AreSame(container.GetInstance<ClassWithWidgetProperty>().Widget);
+            widget.ShouldBeTheSameAs(container.GetInstance<ClassWithWidgetProperty>().Widget);
         }
 
         [Test]
@@ -139,7 +139,7 @@ namespace StructureMap.Testing.Pipeline
                 .Use<ClassWithWidget>()
                 .Ctor<IWidget>().Is(widget));
 
-            widget.AreSame(container.GetInstance<ClassWithWidget>().Widget);
+            widget.ShouldBeTheSameAs(container.GetInstance<ClassWithWidget>().Widget);
         }
 
         [Test]

@@ -61,7 +61,7 @@ namespace StructureMap.Testing
         public void PicksUpASimpleGenericPluginFamilyFromConfiguration()
         {
             var thing = (ISimpleThing<int>) container.GetInstance(typeof (ISimpleThing<int>));
-            thing.IsNotNull();
+            thing.ShouldNotBeNull();
         }
 
         [Test]
@@ -98,12 +98,12 @@ namespace StructureMap.Testing
             var object6 =
                 (AbstractClass<string>) container.GetInstance(typeof (AbstractClass<string>));
 
-            object1.AreSame(object2);
-            object1.AreSame(object3);
-            object4.AreSame(object5);
-            object4.AreSame(object6);
+            object1.ShouldBeTheSameAs(object2);
+            object1.ShouldBeTheSameAs(object3);
+            object4.ShouldBeTheSameAs(object5);
+            object4.ShouldBeTheSameAs(object6);
 
-            object1.AreNotSame(object4);
+            object1.ShouldNotBeTheSameAs(object4);
         }
     }
 }

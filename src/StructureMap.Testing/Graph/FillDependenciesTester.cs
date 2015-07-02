@@ -20,8 +20,8 @@ namespace StructureMap.Testing.Graph
             var concreteClass =
                 (FilledConcreteClass) container.GetInstance(typeof (FilledConcreteClass));
 
-            concreteClass.Widget.IsNotNull();
-            concreteClass.Strategy.IsNotNull();
+            concreteClass.Widget.ShouldNotBeNull();
+            concreteClass.Strategy.ShouldNotBeNull();
         }
 
         [Test]

@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Graph
 
             var angus = manager.GetInstance<Cow>("Angus");
 
-            angus.IsNotNull();
+            angus.ShouldNotBeNull();
             angus.Name.ShouldBe("Bessie");
             angus.Breed.ShouldBe(BreedEnum.Angus);
             angus.Weight.ShouldBe(1200);

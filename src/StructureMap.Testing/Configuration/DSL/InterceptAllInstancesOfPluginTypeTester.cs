@@ -90,13 +90,13 @@ namespace StructureMap.Testing.Configuration.DSL
 
 
             var red = getService("Red", action);
-            red.AreSame(_lastService);
+            red.ShouldBeTheSameAs(_lastService);
 
             var purple = getService("Purple", action);
-            purple.AreSame(_lastService);
+            purple.ShouldBeTheSameAs(_lastService);
 
             var green = getService("Green", action);
-            green.AreSame(_lastService);
+            green.ShouldBeTheSameAs(_lastService);
 
             var yellow = getService("Yellow", action);
             _lastService.ShouldBe(yellow);
@@ -177,13 +177,13 @@ namespace StructureMap.Testing.Configuration.DSL
             };
 
             var red = getService(action, "Red");
-            red.AreSame(_lastService);
+            red.ShouldBeTheSameAs(_lastService);
 
             var purple = getService(action, "Purple");
-            purple.AreSame(_lastService);
+            purple.ShouldBeTheSameAs(_lastService);
 
             var green = getService(action, "Green");
-            green.AreSame(_lastService);
+            green.ShouldBeTheSameAs(_lastService);
 
             var yellow = getService(action, "Yellow");
             _lastService.ShouldBe(yellow);

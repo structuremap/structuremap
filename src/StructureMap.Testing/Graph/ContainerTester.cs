@@ -139,7 +139,7 @@ namespace StructureMap.Testing.Graph
             args.Set<IProvider>(differentProvider);
 
             var classThatUsesProvider = manager.GetInstance<ClassThatUsesProvider>(args);
-            differentProvider.AreSame(classThatUsesProvider.Provider);
+            differentProvider.ShouldBeTheSameAs(classThatUsesProvider.Provider);
         }
 
 
@@ -163,15 +163,15 @@ namespace StructureMap.Testing.Graph
             addColorInstance("Blue");
 
             var rule = _container.GetInstance(typeof (Rule), "Blue") as ColorRule;
-            rule.IsNotNull();
+            rule.ShouldNotBeNull();
             rule.Color.ShouldBe("Blue");
 
             var widget = _container.GetInstance(typeof (IWidget), "Red") as ColorWidget;
-            widget.IsNotNull();
+            widget.ShouldNotBeNull();
             widget.Color.ShouldBe("Red");
 
             var maker = _container.GetInstance(typeof (WidgetMaker), "Orange") as ColorWidgetMaker;
-            maker.IsNotNull();
+            maker.ShouldNotBeNull();
             maker.Color.ShouldBe("Orange");
         }
 
@@ -199,8 +199,8 @@ namespace StructureMap.Testing.Graph
                 x.For<Rule>().Add(blue).Named("Blue");
             });
 
-            red.AreSame(container.GetInstance<Rule>("Red"));
-            blue.AreSame(container.GetInstance<Rule>("Blue"));
+            red.ShouldBeTheSameAs(container.GetInstance<Rule>("Red"));
+            blue.ShouldBeTheSameAs(container.GetInstance<Rule>("Blue"));
         }
 
         [Test]

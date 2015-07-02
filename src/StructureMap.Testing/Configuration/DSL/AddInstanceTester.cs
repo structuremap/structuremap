@@ -73,7 +73,7 @@ namespace StructureMap.Testing.Configuration.DSL
             container = new Container(x => { x.For<IWidget>().Add<AWidget>().Named("MyInstance"); });
             // retrieve an instance by name
             var widget = (AWidget) container.GetInstance<IWidget>("MyInstance");
-            widget.IsNotNull();
+            widget.ShouldNotBeNull();
         }
 
         // ENDSAMPLE
@@ -134,9 +134,9 @@ namespace StructureMap.Testing.Configuration.DSL
             var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Julia");
             var widget3 = (CloneableWidget) container.GetInstance<IWidget>("Julia");
 
-            julia.AreSame(widget1);
-            julia.AreSame(widget2);
-            julia.AreSame(widget3);
+            julia.ShouldBeTheSameAs(widget1);
+            julia.ShouldBeTheSameAs(widget2);
+            julia.ShouldBeTheSameAs(widget3);
         }
     }
 

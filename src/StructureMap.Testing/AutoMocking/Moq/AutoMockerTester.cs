@@ -176,9 +176,9 @@ namespace StructureMap.Testing.AutoMocking.Moq
             var autoMocker = createAutoMocker<ConcreteClass>();
             var concreteClass = autoMocker.ClassUnderTest;
 
-            concreteClass.AreSame(autoMocker.ClassUnderTest);
-            concreteClass.AreSame(autoMocker.ClassUnderTest);
-            concreteClass.AreSame(autoMocker.ClassUnderTest);
+            concreteClass.ShouldBeTheSameAs(autoMocker.ClassUnderTest);
+            concreteClass.ShouldBeTheSameAs(autoMocker.ClassUnderTest);
+            concreteClass.ShouldBeTheSameAs(autoMocker.ClassUnderTest);
         }
 
         [Test]
@@ -193,9 +193,9 @@ namespace StructureMap.Testing.AutoMocking.Moq
 
             var concreteClass = autoMocker.ClassUnderTest;
 
-            stub.AreSame(concreteClass.Service);
-            service2.AreSame(concreteClass.Service2);
-            service3.AreSame(concreteClass.Service3);
+            stub.ShouldBeTheSameAs(concreteClass.Service);
+            service2.ShouldBeTheSameAs(concreteClass.Service2);
+            service3.ShouldBeTheSameAs(concreteClass.Service3);
         }
 
         [Test]
@@ -210,9 +210,9 @@ namespace StructureMap.Testing.AutoMocking.Moq
             autoMocker.PartialMockTheClassUnderTest();
             var concreteClass = autoMocker.ClassUnderTest;
 
-            service.AreSame(concreteClass.Service);
-            service2.AreSame(concreteClass.Service2);
-            service3.AreSame(concreteClass.Service3);
+            service.ShouldBeTheSameAs(concreteClass.Service);
+            service2.ShouldBeTheSameAs(concreteClass.Service2);
+            service3.ShouldBeTheSameAs(concreteClass.Service3);
         }
 
         [Test]
@@ -224,8 +224,8 @@ namespace StructureMap.Testing.AutoMocking.Moq
             var thing = mocker.Get<ConcreteThing>();
             thing.ShouldBeOfType<ConcreteThing>();
 
-            mocker.Get<IMockedService>().AreSame(thing.Service);
-            mocker.Get<IMockedService2>().AreSame(thing.Service2);
+            mocker.Get<IMockedService>().ShouldBeTheSameAs(thing.Service);
+            mocker.Get<IMockedService2>().ShouldBeTheSameAs(thing.Service2);
         }
 
         [Test]

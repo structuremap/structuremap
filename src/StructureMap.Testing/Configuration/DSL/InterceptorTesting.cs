@@ -107,9 +107,9 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void OnCreationWithAConstructedService()
         {
-            _lastService.IsNull();
+            _lastService.ShouldBeNull();
             var interceptedService = _container.GetInstance<IService>("Yellow");
-            _lastService.AreSame(interceptedService);
+            _lastService.ShouldBeTheSameAs(interceptedService);
         }
 
         [Test]
@@ -118,12 +118,12 @@ namespace StructureMap.Testing.Configuration.DSL
             // "Intercepted" should get intercepted and stored as _lastService.
             // "NotIntercepted" should not.
 
-            _lastService.IsNull();
+            _lastService.ShouldBeNull();
             _container.GetInstance<IService>("NotIntercepted");
-            _lastService.IsNull();
+            _lastService.ShouldBeNull();
 
             var interceptedService = _container.GetInstance<IService>("Intercepted");
-            _lastService.AreSame(interceptedService);
+            _lastService.ShouldBeTheSameAs(interceptedService);
         }
 
         [Test]

@@ -91,7 +91,7 @@ namespace StructureMap.Testing.Graph
             var container = new Container();
             container.Inject<ISomething>(one);
 
-            one.AreSame(container.GetInstance<ISomething>());
+            one.ShouldBeTheSameAs(container.GetInstance<ISomething>());
         }
 
         [Test]
@@ -107,8 +107,8 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-            _red.AreSame(container.GetInstance(typeof (IService), "Red"));
-            _blue.AreSame(container.GetInstance(typeof (IService), "Blue"));
+            _red.ShouldBeTheSameAs(container.GetInstance(typeof (IService), "Red"));
+            _blue.ShouldBeTheSameAs(container.GetInstance(typeof (IService), "Blue"));
         }
 
 
@@ -143,8 +143,8 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-            one.AreSame(container.GetInstance<ISomething>("One"));
-            two.AreSame(container.GetInstance<ISomething>("Two"));
+            one.ShouldBeTheSameAs(container.GetInstance<ISomething>("One"));
+            two.ShouldBeTheSameAs(container.GetInstance<ISomething>("Two"));
         }
 
 
@@ -280,7 +280,7 @@ namespace StructureMap.Testing.Graph
             container.Inject<ISomething>(one);
             container.Inject<ISomething>(two);
 
-            two.AreSame(container.GetInstance<ISomething>());
+            two.ShouldBeTheSameAs(container.GetInstance<ISomething>());
         }
     }
 

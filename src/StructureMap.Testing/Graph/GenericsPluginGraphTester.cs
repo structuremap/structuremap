@@ -20,12 +20,12 @@ namespace StructureMap.Testing.Graph
 
         private void assertCanBeCast(Type pluginType, Type TPluggedType)
         {
-            GenericsPluginGraph.CanBeCast(pluginType, TPluggedType).IsTrue();
+            GenericsPluginGraph.CanBeCast(pluginType, TPluggedType).ShouldBeTrue();
         }
 
         private void assertCanNotBeCast(Type pluginType, Type TPluggedType)
         {
-            GenericsPluginGraph.CanBeCast(pluginType, TPluggedType).IsFalse();
+            GenericsPluginGraph.CanBeCast(pluginType, TPluggedType).ShouldBeFalse();
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace StructureMap.Testing.Graph
             var templatedFamily1 = family.CreateTemplatedClone(new[] {typeof (int)});
             var templatedFamily = templatedFamily1;
 
-            templatedFamily.IsNotNull();
+            templatedFamily.ShouldNotBeNull();
             templatedFamily.PluginType.ShouldBe(typeof (IGenericService<int>));
         }
 

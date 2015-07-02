@@ -45,9 +45,9 @@ namespace StructureMap.Testing.AutoMocking
 
             var concreteClass = _container.GetInstance<ConcreteClass>();
 
-            service.AreSame(concreteClass.Service);
-            service2.AreSame(concreteClass.Service2);
-            service3.AreSame(concreteClass.Service3);
+            service.ShouldBeTheSameAs(concreteClass.Service);
+            service2.ShouldBeTheSameAs(concreteClass.Service2);
+            service3.ShouldBeTheSameAs(concreteClass.Service3);
         }
 
 
@@ -64,19 +64,19 @@ namespace StructureMap.Testing.AutoMocking
             var stub = new StubService();
             _container.Inject<IMockedService>(stub);
 
-            stub.AreSame(_container.GetInstance<IMockedService>());
-            stub.AreSame(_container.GetInstance<IMockedService>());
-            stub.AreSame(_container.GetInstance<IMockedService>());
+            stub.ShouldBeTheSameAs(_container.GetInstance<IMockedService>());
+            stub.ShouldBeTheSameAs(_container.GetInstance<IMockedService>());
+            stub.ShouldBeTheSameAs(_container.GetInstance<IMockedService>());
         }
 
         [Test]
         public void RequestTheServiceTwiceAndGetTheExactSameMockObject()
         {
             var service = _container.GetInstance<IMockedService>();
-            service.AreSame(_container.GetInstance<IMockedService>());
-            service.AreSame(_container.GetInstance<IMockedService>());
-            service.AreSame(_container.GetInstance<IMockedService>());
-            service.AreSame(_container.GetInstance<IMockedService>());
+            service.ShouldBeTheSameAs(_container.GetInstance<IMockedService>());
+            service.ShouldBeTheSameAs(_container.GetInstance<IMockedService>());
+            service.ShouldBeTheSameAs(_container.GetInstance<IMockedService>());
+            service.ShouldBeTheSameAs(_container.GetInstance<IMockedService>());
         }
 
 
