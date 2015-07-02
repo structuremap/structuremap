@@ -16,6 +16,8 @@ namespace StructureMap.Testing.Bugs
         {
         }
 
+        public abstract class OtherChildClass : ParentClass { }
+
         [Test]
         public void be_smart_and_do_not_add_abstract_types()
         {
@@ -28,8 +30,8 @@ namespace StructureMap.Testing.Bugs
                 });
             });
 
-            container.GetAllInstances<ParentClass>().Count()
-                .ShouldBe(1);
+            container.GetAllInstances<ParentClass>()
+                .Single().ShouldBeOfType<ChildClass>();
         }
     }
 }
