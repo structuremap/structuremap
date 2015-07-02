@@ -164,7 +164,7 @@ namespace StructureMap.Query
 
         public IEnumerable<InstanceRef> AllInstances
         {
-            get { return PluginTypes.SelectMany(x => x.Instances); }
+            get { return PluginTypes.ToList().SelectMany(x => x.Instances).ToList(); }
         }
 
         private T findForFamily<T>(Type pluginType, Func<IPluginTypeConfiguration, T> func, T defaultValue)
