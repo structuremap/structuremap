@@ -7,7 +7,7 @@ build_revision = tc_build_number || Time.new.strftime('5%H%M')
 build_number = "#{BUILD_VERSION}.#{build_revision}"
 BUILD_NUMBER = build_number 
 
-task :ci => [:default]
+task :ci => [:default, :pack]
 
 task :default => [:test]
 
@@ -15,6 +15,7 @@ desc "Prepares the working directory for a new build"
 task :clean do
 	#TODO: do any other tasks required to clean/prepare the working directory
 	FileUtils.rm_rf RESULTS_DIR
+	FileUtils.rm_rf artifacts
 
 end
 
@@ -63,4 +64,8 @@ task :test => [:compile] do
 	Dir.mkdir RESULTS_DIR
 
 	sh "packages/Fixie/lib/net45/Fixie.Console.exe src/StructureMap.Testing/bin/#{COMPILE_TARGET}/StructureMap.Testing.dll --NUnitXml results/TestResult.xml"
+end
+
+task :pack do
+	sh ".paket/paket.exe pack output artifacts version #{build_number}"
 end

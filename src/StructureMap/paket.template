@@ -1,0 +1,11 @@
+type project
+id structuremap
+authors Jeremy Miller
+description
+    StructureMap is a Dependency Injection / Inversion of Control tool for .Net
+files
+    bin/Release/StructureMap.* ==> lib/net40
+    bin/Release/StructureMap.* ==> lib/wp80
+    bin/Release/StructureMap.* ==> lib/wp81
+licenseUrl https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT
+projectUrl http://structuremap.github.io

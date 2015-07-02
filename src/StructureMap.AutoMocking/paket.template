@@ -1,0 +1,9 @@
+type project
+id structuremap.automocking
+authors Jeremy Miller
+description
+    StructureMap AutoMocker for RhinoMocks
+files
+    bin/Release/StructureMap.AutoMocking.* ==> lib/net40
+licenseUrl https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT
+projectUrl http://structuremap.github.io
