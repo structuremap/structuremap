@@ -45,10 +45,13 @@ namespace StructureMap.Testing.Graph
         }
 
 
-        [Test, ExpectedException(typeof (InvalidOperationException))]
+        [Test]
         public void fails_on_closed_type()
         {
-            new GenericConnectionScanner(typeof (double));
+            Exception<InvalidOperationException>.ShouldBeThrownBy(() =>
+            {
+                new GenericConnectionScanner(typeof(double));
+            });
         }
 
         [Test]

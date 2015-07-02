@@ -100,11 +100,11 @@ namespace StructureMap.Testing.Pipeline
             IConfiguredInstance configuredInstance = instance;
 
 
-            Assert.AreEqual("Red", configuredInstance.Dependencies.Get("color"));
-            Assert.AreEqual(34, configuredInstance.Dependencies.Get("Age"));
+            configuredInstance.Dependencies.Get("color").ShouldBe("Red");
+            configuredInstance.Dependencies.Get("Age").ShouldBe(34);
 
             instance.Ctor<string>("color").Is("Blue");
-            Assert.AreEqual("Blue", configuredInstance.Dependencies.Get("color"));
+            configuredInstance.Dependencies.Get("color").ShouldBe("Blue");
         }
 
         [Test]

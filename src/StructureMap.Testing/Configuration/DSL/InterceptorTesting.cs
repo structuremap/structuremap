@@ -88,7 +88,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var decoratorService = (DecoratorService) service;
 
             var innerService = (ColorService) decoratorService.Inner;
-            Assert.AreEqual("Purple", innerService.Color);
+            innerService.Color.ShouldBe("Purple");
         }
 
         [Test]
@@ -98,16 +98,16 @@ namespace StructureMap.Testing.Configuration.DSL
             var decoratorService = (DecoratorService) service;
 
             var innerService = (ColorService) decoratorService.Inner;
-            Assert.AreEqual("Orange", innerService.Color);
+            innerService.Color.ShouldBe("Orange");
         }
 
 
         [Test]
         public void OnCreationWithAConstructedService()
         {
-            Assert.IsNull(_lastService);
+            _lastService.IsNull();
             var interceptedService = _container.GetInstance<IService>("Yellow");
-            Assert.AreSame(_lastService, interceptedService);
+            _lastService.AreSame(interceptedService);
         }
 
         [Test]
@@ -116,12 +116,12 @@ namespace StructureMap.Testing.Configuration.DSL
             // "Intercepted" should get intercepted and stored as _lastService.
             // "NotIntercepted" should not.
 
-            Assert.IsNull(_lastService);
+            _lastService.IsNull();
             _container.GetInstance<IService>("NotIntercepted");
-            Assert.IsNull(_lastService);
+            _lastService.IsNull();
 
             var interceptedService = _container.GetInstance<IService>("Intercepted");
-            Assert.AreSame(_lastService, interceptedService);
+            _lastService.AreSame(interceptedService);
         }
 
         [Test]

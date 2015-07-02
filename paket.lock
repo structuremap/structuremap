@@ -15,8 +15,7 @@ NUGET
   remote: http://nuget.org/api/v2
   specs:
     Castle.Core (3.1.0)
+    Fixie (1.0.0.15)
     Moq (4.0.10827)
-    NUnit (2.6.3.0)
-    NUnit.Runners (2.6.3)
     RhinoMocks (3.6.1)
     Shouldly (2.5.0)

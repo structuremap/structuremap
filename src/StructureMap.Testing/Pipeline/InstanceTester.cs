@@ -35,8 +35,8 @@ namespace StructureMap.Testing.Pipeline
 
             var token = instance.CreateToken();
 
-            Assert.AreEqual(instance.Name, token.Name);
-            Assert.AreEqual("InstanceUnderTest", token.Description);
+            token.Name.ShouldBe(instance.Name);
+            token.Description.ShouldBe("InstanceUnderTest");
         }
 
         [Test]

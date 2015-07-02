@@ -14,8 +14,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FindPluginType()
         {
-            Assert.AreEqual(typeof (IConvention), new DefaultConventionScanner().FindPluginType(typeof (Convention)));
-            Assert.IsNull(new DefaultConventionScanner().FindPluginType(GetType()));
+            new DefaultConventionScanner().FindPluginType(typeof (Convention))
+                .ShouldBe(typeof(IConvention));
+
+            new DefaultConventionScanner().FindPluginType(GetType()).IsNull();
         }
 
 
@@ -58,11 +60,11 @@ namespace StructureMap.Testing.Graph
 
             registry.As<IPluginGraphConfiguration>().Configure(graph);
 
-            Assert.IsFalse(graph.Families.Has(typeof (IServer)));
-            Assert.IsTrue(graph.Families.Has(typeof (IConvention)));
+            graph.Families.Has(typeof (IServer)).IsFalse();
+            graph.Families.Has(typeof (IConvention)).IsTrue();
 
             var family = graph.Families[typeof (IConvention)];
-            Assert.AreEqual(1, family.Instances.Count());
+            family.Instances.Count().ShouldBe(1);
         }
 
         [Test]

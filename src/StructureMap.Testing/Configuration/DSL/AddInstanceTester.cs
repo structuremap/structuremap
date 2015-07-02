@@ -42,14 +42,14 @@ namespace StructureMap.Testing.Configuration.DSL
         public void AddAnInstanceWithANameAndAPropertySpecifyingConcreteKey()
         {
             var widget = (ColorWidget) container.GetInstance<IWidget>("Purple");
-            Assert.AreEqual("Purple", widget.Color);
+            widget.Color.ShouldBe("Purple");
         }
 
         [Test]
         public void AddAnInstanceWithANameAndAPropertySpecifyingConcreteType()
         {
             var widget = (ColorWidget) container.GetInstance<IWidget>("DarkGreen");
-            Assert.AreEqual("DarkGreen", widget.Color);
+            widget.Color.ShouldBe("DarkGreen");
         }
 
         [Test]
@@ -97,8 +97,7 @@ namespace StructureMap.Testing.Configuration.DSL
             container.GetInstance<Rule>("Alias").ShouldBeOfType<ARule>();
 
             var rule = (WidgetRule) container.GetInstance<Rule>("RuleThatUsesMyInstance");
-            var widget = (ColorWidget) rule.Widget;
-            Assert.AreEqual("Purple", widget.Color);
+            rule.Widget.As<ColorWidget>().Color.ShouldBe("Purple");
         }
 
         [Test]
@@ -110,12 +109,13 @@ namespace StructureMap.Testing.Configuration.DSL
             var theContainer = new Container(registry => {
                 registry.For<Rule>().Add<WidgetRule>().Named(instanceKey)
                     .Ctor<IWidget>().IsSpecial(
-                        i => { i.Type<ColorWidget>().Ctor<string>("color").Is("Orange").Named("Orange"); });
+                        i => i.Type<ColorWidget>().Ctor<string>("color").Is("Orange").Named("Orange"));
             });
 
-            var rule = (WidgetRule) theContainer.GetInstance<Rule>(instanceKey);
-            var widget = (ColorWidget) rule.Widget;
-            Assert.AreEqual("Orange", widget.Color);
+            theContainer.GetInstance<Rule>(instanceKey).As<WidgetRule>()
+                .Widget.As<ColorWidget>()
+                .Color.ShouldBe("Orange");
+
         }
 
 

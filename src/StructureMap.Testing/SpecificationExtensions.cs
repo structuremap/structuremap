@@ -37,8 +37,7 @@ namespace StructureMap.Testing
         public static void ShouldContain<T>(this IEnumerable<T> actual, Func<T, bool> expected)
         {
             actual.Count().ShouldBeGreaterThan(0);
-            T result = actual.FirstOrDefault(expected);
-            Assert.That(result, Is.Not.EqualTo(default(T)), "Expected item was not found in the actual sequence");
+            actual.Any(expected).ShouldBeTrue();
         }
 
 
@@ -105,7 +104,7 @@ namespace StructureMap.Testing
 
         public static object ShouldBeTheSameAs(this object actual, object expected)
         {
-            Assert.AreSame(expected, actual);
+            ReferenceEquals(actual, expected).ShouldBeTrue();
             return expected;
         }
 
@@ -117,7 +116,7 @@ namespace StructureMap.Testing
 
         public static object ShouldNotBeTheSameAs(this object actual, object expected)
         {
-            Assert.AreNotSame(expected, actual);
+            ReferenceEquals(actual, expected).ShouldBeFalse();
             return expected;
         }
 
@@ -128,37 +127,40 @@ namespace StructureMap.Testing
 
         public static void ShouldNotBeOfType(this object actual, Type expected)
         {
-            Assert.IsNotInstanceOf(expected, actual);
+            actual.GetType().ShouldNotBe(expected);
         }
 
 
         public static IComparable ShouldBeGreaterThan(this IComparable arg1, IComparable arg2)
         {
-            Assert.Greater(arg1, arg2);
+            (arg1.CompareTo(arg2) > 0).ShouldBeTrue();
+
             return arg2;
         }
 
         public static string ShouldNotBeEmpty(this string aString)
         {
-            Assert.IsNotEmpty(aString);
+            aString.IsNotEmpty().ShouldBeTrue();
+
             return aString;
         }
 
         public static void ShouldContain(this string actual, string expected)
         {
-            StringAssert.Contains(expected, actual);
+            actual.Contains(expected).ShouldBeTrue();
+
         }
 
         public static string ShouldNotContain(this string actual, string expected)
         {
-            Assert.IsTrue(!actual.Contains(expected));
+            actual.Contains(expected).ShouldBeFalse();
             return actual;
         }
 
 
         public static void ShouldStartWith(this string actual, string expected)
         {
-            StringAssert.StartsWith(expected, actual);
+            actual.StartsWith(expected).ShouldBeTrue();
         }
 
         public static Exception ShouldBeThrownBy(this Type exceptionType, MethodThatThrows method)
@@ -171,7 +173,7 @@ namespace StructureMap.Testing
             }
             catch (Exception e)
             {
-                Assert.AreEqual(exceptionType, e.GetType());
+                e.GetType().ShouldBe(exceptionType);
                 exception = e;
             }
 

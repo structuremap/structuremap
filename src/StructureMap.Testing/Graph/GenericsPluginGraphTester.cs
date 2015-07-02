@@ -60,8 +60,8 @@ namespace StructureMap.Testing.Graph
             var templatedFamily1 = family.CreateTemplatedClone(new[] {typeof (int)});
             var templatedFamily = templatedFamily1;
 
-            Assert.IsNotNull(templatedFamily);
-            Assert.AreEqual(typeof (IGenericService<int>), templatedFamily.PluginType);
+            templatedFamily.IsNotNull();
+            templatedFamily.PluginType.ShouldBe(typeof(IGenericService<int>));
         }
 
         [Test]

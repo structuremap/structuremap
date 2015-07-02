@@ -132,11 +132,11 @@ namespace StructureMap.Testing
             var result3 = session2.FindObject(typeof (ColorRule), instance);
             var result4 = session2.FindObject(typeof (ColorRule), instance);
 
-            Assert.AreEqual(2, count);
+            count.ShouldBe(2);
 
-            Assert.AreSame(result1, result2);
-            Assert.AreNotSame(result1, result3);
-            Assert.AreSame(result3, result4);
+            result1.AreSame(result2);
+            result1.AreNotSame(result3);
+            result3.AreSame(result4);
         }
 
         [Test]
@@ -151,7 +151,7 @@ namespace StructureMap.Testing
             });
 
             var holder = manager.GetInstance<WidgetHolder>();
-            Assert.AreEqual(3, holder.Widgets.Length);
+            holder.Widgets.Length.ShouldBe(3);
         }
 
         [Test]
@@ -170,11 +170,11 @@ namespace StructureMap.Testing
             var result3 = session.FindObject(typeof (ColorRule), instance);
             var result4 = session.FindObject(typeof (ColorRule), instance);
 
-            Assert.AreEqual(1, count);
+            count.ShouldBe(1);
 
-            Assert.AreSame(result1, result2);
-            Assert.AreSame(result1, result3);
-            Assert.AreSame(result1, result4);
+            result1.AreSame(result2);
+            result1.AreSame(result3);
+            result1.AreSame(result4);
         }
 
         [Test]
@@ -198,11 +198,11 @@ namespace StructureMap.Testing
             var result3 = session.GetInstance(typeof (ColorRule));
             var result4 = session.GetInstance(typeof (ColorRule));
 
-            Assert.AreEqual(1, count);
+            count.ShouldBe(1);
 
-            Assert.AreSame(result1, result2);
-            Assert.AreSame(result1, result3);
-            Assert.AreSame(result1, result4);
+            result1.AreSame(result2);
+            result1.AreSame(result3);
+            result1.AreSame(result4);
         }
 
         [Test]

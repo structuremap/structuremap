@@ -15,8 +15,11 @@ namespace StructureMap.Testing.Bugs
                 ce.Policies.SetAllProperties(sc => sc.OfType<PropertyType>());
             });
 
-            var x = Assert.Throws<StructureMapBuildException>(() => c.GetInstance<Root>());
-            x.InnerException.ShouldNotBeOfType<FormatException>();
+            Exception<StructureMapBuildException>.ShouldBeThrownBy(() =>
+            {
+                c.GetInstance<Root>();
+            })
+            .InnerException.ShouldNotBeOfType<FormatException>();
         }
     }
 

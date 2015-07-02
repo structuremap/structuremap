@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Testing.GenericWidgets;
 
 namespace StructureMap.Testing
@@ -69,18 +70,17 @@ namespace StructureMap.Testing
                 (IThing<int, string>) container.GetInstance(typeof (IThing<int, string>));
             var redThing = (ColorThing<int, string>) thing;
 
-            Assert.AreEqual("Red", redThing.Color);
+            redThing.Color.ShouldBe("Red");
         }
 
         [Test]
         public void SimpleInstanceManagerTestWithGenerics()
         {
             var intService = (Service<int>) container.GetInstance(typeof (IService<int>), "Default");
-            Assert.AreEqual(typeof (int), intService.GetT());
+            intService.GetT().ShouldBe(typeof (int));
 
-            var stringService =
-                (Service<string>) container.GetInstance(typeof (IService<string>), "Default");
-            Assert.AreEqual(typeof (string), stringService.GetT());
+            container.GetInstance(typeof (IService<string>), "Default")
+                .As<Service<string>>().GetT().ShouldBe(typeof(string));
         }
 
         [Test]
@@ -97,12 +97,12 @@ namespace StructureMap.Testing
             var object6 =
                 (AbstractClass<string>) container.GetInstance(typeof (AbstractClass<string>));
 
-            Assert.AreSame(object1, object2);
-            Assert.AreSame(object1, object3);
-            Assert.AreSame(object4, object5);
-            Assert.AreSame(object4, object6);
+            object1.AreSame(object2);
+            object1.AreSame(object3);
+            object4.AreSame(object5);
+            object4.AreSame(object6);
 
-            Assert.AreNotSame(object1, object4);
+            object1.AreNotSame(object4);
         }
     }
 }

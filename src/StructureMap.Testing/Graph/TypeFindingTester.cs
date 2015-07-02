@@ -69,7 +69,7 @@ namespace StructureMap.Testing.Graph
                 using (container)
                 {
                     var redType = container.GetInstance<IOpenGeneric<string>>();
-                    Assert.That(redType, Is.InstanceOfType(typeof (StringOpenGeneric)));
+                    redType.ShouldBeOfType<StringOpenGeneric>();
                 }
             }
         }

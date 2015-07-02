@@ -31,12 +31,10 @@ namespace StructureMap.Testing.Configuration.DSL
                 colors.Add(color.Color);
             }
 
-            Assert.Contains("Red", colors);
-            Assert.Contains("Green", colors);
-            Assert.Contains("Yellow", colors);
-            Assert.Contains("Blue", colors);
-            Assert.Contains("Brown", colors);
-            Assert.Contains("Black", colors);
+            colors.Sort();
+            colors.ShouldHaveTheSameElementsAs("Black", "Blue", "Brown", "Green", "Red", "Yellow");
+
+
         }
 
 
@@ -54,12 +52,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             family.Instances.Each(instance => colors.Add(instance.Name));
 
-            Assert.Contains("Red", colors);
-            Assert.Contains("Green", colors);
-            Assert.Contains("Yellow", colors);
-            Assert.Contains("Blue", colors);
-            Assert.Contains("Brown", colors);
-            Assert.Contains("Black", colors);
+            colors.Sort();
+            colors.ShouldHaveTheSameElementsAs("Black", "Blue", "Brown", "Green", "Red", "Yellow");
         }
     }
 }

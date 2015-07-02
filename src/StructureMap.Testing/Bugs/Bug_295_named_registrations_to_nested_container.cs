@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using NUnit.Framework;
 using System;
+using Shouldly;
 
 namespace StructureMap.Testing.Bugs
 {
@@ -33,11 +34,11 @@ namespace StructureMap.Testing.Bugs
 
 
 
-            var child2ContainerThing = child2.TryGetInstance<IThing>("A");
-            Assert.AreEqual(child2Thing, child2ContainerThing);
+            child2.TryGetInstance<IThing>("A")
+                .ShouldBeTheSameAs(child2Thing);
 
-            var parentContainerThing = container.TryGetInstance<IThing>("A");
-            parentContainerThing.ShouldBeNull();
+
+            container.TryGetInstance<IThing>("A").ShouldBeNull();
 
         }
 
@@ -54,7 +55,8 @@ namespace StructureMap.Testing.Bugs
             child2.Configure(_ => _.For<IThing>().Singleton().Add<Thing1>().Named("A"));
             var containerChild2Thing = child2.TryGetInstance<IThing>("A");
 
-            Assert.AreNotEqual(containerChild1Thing, containerChild2Thing);
+
+            containerChild2Thing.ShouldNotBe(containerChild1Thing);
 
             var parentContainerThing = container.TryGetInstance<IThing>("A");
             parentContainerThing.ShouldBeNull();
@@ -70,13 +72,14 @@ namespace StructureMap.Testing.Bugs
             var nested1Thing = Thing1.Build("child1");
             nested1.Configure(_ => _.For<IThing>().Add(nested1Thing).Named("A"));
             var containerNested1Thing = nested1.GetInstance<IThing>("A");
-            Assert.AreEqual(nested1Thing, containerNested1Thing);
+            containerNested1Thing.ShouldBe(nested1Thing);
 
             var nested2 = container.GetNestedContainer();
             var nested2Thing = Thing1.Build("child2");
             nested2.Configure(_ => _.For<IThing>().Add(nested2Thing).Named("A"));
             var nested2ContainerThing = nested2.TryGetInstance<IThing>("A");
-            Assert.AreEqual(nested2Thing, nested2ContainerThing);
+
+            nested2ContainerThing.ShouldBe(nested2Thing);
 
             var parentContainerThing = container.TryGetInstance<IThing>("A");
             parentContainerThing.ShouldBeNull();

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Testing.Widget2;
 
 namespace StructureMap.Testing.Graph
@@ -19,10 +20,10 @@ namespace StructureMap.Testing.Graph
 
             var angus = manager.GetInstance<Cow>("Angus");
 
-            Assert.IsNotNull(angus);
-            Assert.AreEqual("Bessie", angus.Name, "Name");
-            Assert.AreEqual(BreedEnum.Angus, angus.Breed, "Breed");
-            Assert.AreEqual(1200, angus.Weight, "Weight");
+            angus.IsNotNull();
+            angus.Name.ShouldBe("Bessie");
+            angus.Breed.ShouldBe(BreedEnum.Angus);
+            angus.Weight.ShouldBe(1200);
         }
     }
 }

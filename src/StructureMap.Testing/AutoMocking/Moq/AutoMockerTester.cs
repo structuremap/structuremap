@@ -12,11 +12,10 @@ namespace StructureMap.Testing.AutoMocking.Moq
         protected abstract AutoMocker<T> createAutoMocker<T>() where T : class;
 
         protected abstract void setExpectation<T, TResult>(T mock, Expression<Func<T, TResult>> functionCall,
-                                                           TResult expectedResult) where T : class;
+            TResult expectedResult) where T : class;
 
         public class ConcreteThingWithNoConstructor
         {
-
         }
 
         public class ConcreteThing
@@ -32,9 +31,15 @@ namespace StructureMap.Testing.AutoMocking.Moq
             }
 
 
-            public IMockedService Service { get { return _service; } }
+            public IMockedService Service
+            {
+                get { return _service; }
+            }
 
-            public IMockedService2 Service2 { get { return _service2; } }
+            public IMockedService2 Service2
+            {
+                get { return _service2; }
+            }
         }
 
         public class ConcreteClass
@@ -50,13 +55,25 @@ namespace StructureMap.Testing.AutoMocking.Moq
                 _service3 = service3;
             }
 
-            public virtual string Name { get { return _service.Name; } }
+            public virtual string Name
+            {
+                get { return _service.Name; }
+            }
 
-            public IMockedService Service { get { return _service; } }
+            public IMockedService Service
+            {
+                get { return _service; }
+            }
 
-            public IMockedService2 Service2 { get { return _service2; } }
+            public IMockedService2 Service2
+            {
+                get { return _service2; }
+            }
 
-            public IMockedService3 Service3 { get { return _service3; } }
+            public IMockedService3 Service3
+            {
+                get { return _service3; }
+            }
 
             public void CallService()
             {
@@ -96,7 +113,10 @@ namespace StructureMap.Testing.AutoMocking.Moq
 
             #region IMockedService Members
 
-            public string Name { get { return _name; } }
+            public string Name
+            {
+                get { return _name; }
+            }
 
             public void Go()
             {
@@ -115,7 +135,10 @@ namespace StructureMap.Testing.AutoMocking.Moq
                 _services = services;
             }
 
-            public IMockedService[] Services { get { return _services; } }
+            public IMockedService[] Services
+            {
+                get { return _services; }
+            }
         }
 
         public interface IAnotherService
@@ -147,16 +170,15 @@ namespace StructureMap.Testing.AutoMocking.Moq
         }
 
 
-
         [Test]
         public void GetTheSameConcreteClassTwiceFromCreate()
         {
             AutoMocker<ConcreteClass> autoMocker = createAutoMocker<ConcreteClass>();
             ConcreteClass concreteClass = autoMocker.ClassUnderTest;
 
-            Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
-            Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
-            Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
+            concreteClass.AreSame(autoMocker.ClassUnderTest);
+            concreteClass.AreSame(autoMocker.ClassUnderTest);
+            concreteClass.AreSame(autoMocker.ClassUnderTest);
         }
 
         [Test]
@@ -171,9 +193,9 @@ namespace StructureMap.Testing.AutoMocking.Moq
 
             ConcreteClass concreteClass = autoMocker.ClassUnderTest;
 
-            Assert.AreSame(stub, concreteClass.Service);
-            Assert.AreSame(service2, concreteClass.Service2);
-            Assert.AreSame(service3, concreteClass.Service3);
+            stub.AreSame(concreteClass.Service);
+            service2.AreSame(concreteClass.Service2);
+            service3.AreSame(concreteClass.Service3);
         }
 
         [Test]
@@ -188,9 +210,9 @@ namespace StructureMap.Testing.AutoMocking.Moq
             autoMocker.PartialMockTheClassUnderTest();
             ConcreteClass concreteClass = autoMocker.ClassUnderTest;
 
-            Assert.AreSame(service, concreteClass.Service);
-            Assert.AreSame(service2, concreteClass.Service2);
-            Assert.AreSame(service3, concreteClass.Service3);
+            service.AreSame(concreteClass.Service);
+            service2.AreSame(concreteClass.Service2);
+            service3.AreSame(concreteClass.Service3);
         }
 
         [Test]
@@ -202,8 +224,8 @@ namespace StructureMap.Testing.AutoMocking.Moq
             var thing = mocker.Get<ConcreteThing>();
             thing.ShouldBeOfType<ConcreteThing>();
 
-            Assert.AreSame(mocker.Get<IMockedService>(), thing.Service);
-            Assert.AreSame(mocker.Get<IMockedService2>(), thing.Service2);
+            mocker.Get<IMockedService>().AreSame(thing.Service);
+            mocker.Get<IMockedService2>().AreSame(thing.Service2);
         }
 
         [Test]
@@ -232,7 +254,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
 
             var thing = autoMocker.ClassUnderTest;
 
-            thing.GetType().ShouldBe(typeof(ConcreteThingWithNoConstructor));
+            thing.GetType().ShouldBe(typeof (ConcreteThingWithNoConstructor));
         }
     }
 }

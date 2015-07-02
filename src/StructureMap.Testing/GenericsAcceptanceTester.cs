@@ -118,7 +118,7 @@ namespace StructureMap.Testing
             var first = con.GetInstance<IService<string>>();
             var second = con.GetInstance<IService<string>>();
 
-            Assert.AreSame(first, second, "The objects are not the same instance");
+            first.AreSame(second);
         }
 
 
@@ -126,7 +126,7 @@ namespace StructureMap.Testing
         public void CanPlugGenericConcreteClassIntoGenericInterfaceWithNoGenericParametersSpecified()
         {
             var canPlug = typeof (GenericService<>).CanBeCastTo(typeof (IGenericService<>));
-            Assert.IsTrue(canPlug);
+            canPlug.IsTrue();
         }
 
         [Test]
@@ -142,9 +142,9 @@ namespace StructureMap.Testing
             var container = new Container(registry => {
                 registry.For(typeof (IHelper<>)).Use(typeof (Helper<>));
 
-                registry.Profile("1", x => { x.For(typeof (IService<>)).Use(typeof (Service<>)); });
+                registry.Profile("1", x => x.For(typeof (IService<>)).Use(typeof (Service<>)));
 
-                registry.Profile("2", x => { x.For(typeof (IService<>)).Use(typeof (Service2<>)); });
+                registry.Profile("2", x => x.For(typeof (IService<>)).Use(typeof (Service2<>)));
             });
 
             container.GetProfile("1").GetInstance<IService<string>>().ShouldBeOfType<Service<string>>();
@@ -160,9 +160,9 @@ namespace StructureMap.Testing
 
                 r.For(typeof (IHelper<>)).Use(typeof (Helper<>));
 
-                r.Profile("1", x => { x.For(typeof (IService<>)).Use("Service1"); });
+                r.Profile("1", x => x.For(typeof (IService<>)).Use("Service1"));
 
-                r.Profile("2", x => { x.For(typeof (IService<>)).Use("Service2"); });
+                r.Profile("2", x => x.For(typeof (IService<>)).Use("Service2"));
             });
 
             container.GetProfile("1").GetInstance<IService<string>>().ShouldBeOfType<Service<string>>();
@@ -200,15 +200,15 @@ namespace StructureMap.Testing
             var assem = Assembly.GetExecutingAssembly();
             var type = assem.GetType("StructureMap.Testing.ITarget`2");
 
-            var genericType = type.GetGenericTypeDefinition();
-            Assert.AreEqual(typeof (ITarget<,>), genericType);
+            type.GetGenericTypeDefinition()
+                .ShouldBe(typeof(ITarget<,>));
         }
 
 
         [Test]
         public void SmokeTestCanBeCaseWithImplementationOfANonGenericInterface()
         {
-            Assert.IsTrue(GenericsPluginGraph.CanBeCast(typeof (ITarget<,>), typeof (DisposableTarget<,>)));
+            GenericsPluginGraph.CanBeCast(typeof (ITarget<,>), typeof (DisposableTarget<,>)).IsTrue();
         }
     }
 

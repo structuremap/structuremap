@@ -1,5 +1,6 @@
 Castle.Core
-NUnit
 RhinoMocks
 Shouldly
 Moq
+Fixie
+FubuCore

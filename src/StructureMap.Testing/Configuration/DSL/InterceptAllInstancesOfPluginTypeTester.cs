@@ -87,16 +87,16 @@ namespace StructureMap.Testing.Configuration.DSL
 
 
             var red = getService("Red", action);
-            Assert.AreSame(red, _lastService);
+            red.AreSame(_lastService);
 
             var purple = getService("Purple", action);
-            Assert.AreSame(purple, _lastService);
+            purple.AreSame(_lastService);
 
             var green = getService("Green", action);
-            Assert.AreSame(green, _lastService);
+            green.AreSame(_lastService);
 
             var yellow = getService("Yellow", action);
-            Assert.AreEqual(yellow, _lastService);
+            _lastService.ShouldBe(yellow);
         }
     }
 
@@ -158,7 +158,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var decoratorService = (DecoratorService) green;
             var innerService = (ColorService) decoratorService.Inner;
-            Assert.AreEqual("Green", innerService.Color);
+            innerService.Color.ShouldBe("Green");
         }
 
         [Test]
@@ -166,20 +166,20 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Action<Registry> action = r => {
                 r.For<IService>().OnCreationForAll("setting the last service", s => _lastService = s)
-                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
+                    .AddInstances(x => x.ConstructedBy(() => new ColorService("Green")).Named("Green"));
             };
 
             var red = getService(action, "Red");
-            Assert.AreSame(red, _lastService);
+            red.AreSame(_lastService);
 
             var purple = getService(action, "Purple");
-            Assert.AreSame(purple, _lastService);
+            purple.AreSame(_lastService);
 
             var green = getService(action, "Green");
-            Assert.AreSame(green, _lastService);
+            green.AreSame(_lastService);
 
             var yellow = getService(action, "Yellow");
-            Assert.AreEqual(yellow, _lastService);
+            _lastService.ShouldBe(yellow);
         }
     }
 }

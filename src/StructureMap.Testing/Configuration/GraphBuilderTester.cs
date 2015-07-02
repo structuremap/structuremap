@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget3;
@@ -16,12 +17,13 @@ namespace StructureMap.Testing.Configuration
             var iWasCalled = false;
             var builder = new GraphBuilder(new PluginGraph());
             builder.ConfigureFamily(typePath, f => {
-                Assert.AreEqual(typeof (IGateway), f.PluginType);
+                f.PluginType.ShouldBe(typeof(IGateway));
+
                 iWasCalled = true;
             });
 
 
-            Assert.IsTrue(iWasCalled);
+            iWasCalled.IsTrue();
         }
 
 

@@ -277,13 +277,11 @@ namespace StructureMap.Testing.Configuration.DSL
                 new Container(
                     registry => registry.For<IWidget>().Use(aWidget));
 
-            Assert.AreSame(aWidget, manager.GetInstance<IWidget>());
+            aWidget.AreSame(manager.GetInstance<IWidget>());
         }
 
-        [Test(
-            Description =
-                "Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en"
-            )]
+        // Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en
+        [Test]
         public void TheDefaultInstanceIsALambdaForGuidNewGuid()
         {
             var manager =

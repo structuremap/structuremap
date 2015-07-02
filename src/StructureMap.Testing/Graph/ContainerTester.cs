@@ -161,16 +161,16 @@ namespace StructureMap.Testing.Graph
             addColorInstance("Blue");
 
             var rule = _container.GetInstance(typeof (Rule), "Blue") as ColorRule;
-            Assert.IsNotNull(rule);
-            Assert.AreEqual("Blue", rule.Color);
+            rule.IsNotNull();
+            rule.Color.ShouldBe("Blue");
 
             var widget = _container.GetInstance(typeof (IWidget), "Red") as ColorWidget;
-            Assert.IsNotNull(widget);
-            Assert.AreEqual("Red", widget.Color);
+            widget.IsNotNull();
+            widget.Color.ShouldBe("Red");
 
             var maker = _container.GetInstance(typeof (WidgetMaker), "Orange") as ColorWidgetMaker;
-            Assert.IsNotNull(maker);
-            Assert.AreEqual("Orange", maker.Color);
+            maker.IsNotNull();
+            maker.Color.ShouldBe("Orange");
         }
 
         [Test]

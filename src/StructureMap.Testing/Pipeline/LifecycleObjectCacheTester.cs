@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
@@ -30,7 +31,7 @@ namespace StructureMap.Testing.Pipeline
             
             var cachedWidget = cache.Get(typeof(IWidget), instance, new StubBuildSession());
 
-            Assert.AreEqual(aWidget, cachedWidget);
+            cachedWidget.ShouldBe(aWidget);
         }    
         
         [Test]
@@ -65,7 +66,7 @@ namespace StructureMap.Testing.Pipeline
             
             var cachedWidget = cache.Get(typeof(IWidget), instance, new StubBuildSession());
 
-            Assert.AreEqual(aWidget, cachedWidget);
+            cachedWidget.ShouldBe(aWidget);
         }     
         
         [Test]
@@ -85,8 +86,8 @@ namespace StructureMap.Testing.Pipeline
             // Allow 10ms for the thread to start and for Get call to complete
             thread.Join(10);
 
-            Assert.NotNull(cachedWidget, "Get did not return cachedWidget within allowed time. Is your thread being blocked?");
-            Assert.AreEqual(aWidget, cachedWidget);
+            cachedWidget.NotNull();
+            cachedWidget.ShouldBe(aWidget);
         }   
 
         [Test]

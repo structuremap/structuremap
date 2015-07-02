@@ -381,12 +381,12 @@ namespace StructureMap.Testing.Graph
         public void RegisterAndFindServicesOnTheExplicitArgument()
         {
             var args = new ExplicitArguments();
-            Assert.IsNull(args.Get<IProvider>());
+            args.Get<IProvider>().IsNull();
 
             var red = new RedProvider();
             args.Set<IProvider>(red);
 
-            Assert.AreSame(red, args.Get<IProvider>());
+            red.AreSame(args.Get<IProvider>());
 
             args.Set<IExplicitTarget>(new RedTarget());
             args.Get<IExplicitTarget>().ShouldBeOfType<RedTarget>();
@@ -396,13 +396,13 @@ namespace StructureMap.Testing.Graph
         public void RegisterAndRetrieveArgs()
         {
             var args = new ExplicitArguments();
-            Assert.IsNull(args.GetArg("name"));
+            args.GetArg("name").IsNull();
 
             args.SetArg("name", "Jeremy");
-            Assert.AreEqual("Jeremy", args.GetArg("name"));
+            args.GetArg("name").ShouldBe("Jeremy");
 
             args.SetArg("age", 34);
-            Assert.AreEqual(34, args.GetArg("age"));
+            args.GetArg("age").ShouldBe(34);
         }
 
         [Test]
@@ -417,7 +417,7 @@ namespace StructureMap.Testing.Graph
         public void use_explicit_type_arguments_with_custom_instance()
         {
             var container =
-                new Container(x => { x.For<ClassWithNoArgs>().UseInstance(new SpecialInstance()); });
+                new Container(x => x.For<ClassWithNoArgs>().UseInstance(new SpecialInstance()));
 
             var address = new Address();
 
