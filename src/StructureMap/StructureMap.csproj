@@ -112,8 +112,6 @@
     <Compile Include="Configuration\DSL\IRegistry.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
     <Compile Include="Configuration\DSL\SetterConvention.cs" />
-    <Compile Include="Configuration\GraphBuilder.cs" />
-    <Compile Include="Configuration\IGraphBuilder.cs" />
     <Compile Include="Configuration\IPluginGraphConfiguration.cs" />
     <Compile Include="Configuration\ITypeReader.cs" />
     <Compile Include="Configuration\MalformedAliasException.cs" />
@@ -175,7 +173,6 @@
     <Compile Include="Graph\PluginFamily.cs" />
     <Compile Include="Graph\PluginGraph.cs" />
     <Compile Include="Graph\SetterRules.cs" />
-    <Compile Include="Graph\TypePath.cs" />
     <Compile Include="Graph\TypePool.cs" />
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="IBuildSession.cs" />
