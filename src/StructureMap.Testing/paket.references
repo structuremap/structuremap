@@ -2,3 +2,4 @@ Castle.Core
 NUnit
 RhinoMocks
 Shouldly
+Moq

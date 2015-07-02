@@ -46,9 +46,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoMockerTester.cs" />
-    <Compile Include="MoqAutoMockerTester.cs" />
-    <Compile Include="MoqFactoryTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
