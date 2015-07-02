@@ -15,7 +15,7 @@ desc "Prepares the working directory for a new build"
 task :clean do
 	#TODO: do any other tasks required to clean/prepare the working directory
 	FileUtils.rm_rf RESULTS_DIR
-	FileUtils.rm_rf artifacts
+	FileUtils.rm_rf 'artifacts'
 
 end
 
