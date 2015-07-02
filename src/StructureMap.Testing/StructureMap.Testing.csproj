@@ -404,6 +404,12 @@
     <Compile Include="TypeExtensionsTester.cs" />
     <Compile Include="Util\Cache_multi_threading_basher.cs" />
     <Compile Include="Util\LightweightCacheTester.cs" />
+    <Compile Include="Web\EjectingWithHybridScoping.cs" />
+    <Compile Include="Web\Examples.cs" />
+    <Compile Include="Web\HttpSessionNullRefBug.cs" />
+    <Compile Include="Web\HybridBuildLifecycleTester.cs" />
+    <Compile Include="Web\PluginFamilyTester.cs" />
+    <Compile Include="Web\ThreadLocalStorageLifecycleTester_with_nested_containers.cs" />
     <Compile Include="WhatDoIHave_Smoke_Tester.cs" />
     <None Include="..\structuremap.snk">
       <Link>structuremap.snk</Link>
