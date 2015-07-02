@@ -56,16 +56,24 @@ task :version do
 	end
 end
 
+desc 'Compile the code'
 task :compile => [:clean, :version] do
 	sh "C:/Windows/Microsoft.NET/Framework/v4.0.30319/msbuild.exe src/StructureMap.sln   /property:Configuration=#{COMPILE_TARGET} /v:m /t:rebuild /nr:False /maxcpucount:2"
 end
 
+desc 'Run the unit tests'
 task :test => [:compile] do
 	Dir.mkdir RESULTS_DIR
 
 	sh "packages/Fixie/lib/net45/Fixie.Console.exe src/StructureMap.Testing/bin/#{COMPILE_TARGET}/StructureMap.Testing.dll --NUnitXml results/TestResult.xml"
 end
 
-task :pack do
+desc 'Compile the Signed Version of StructureMap'
+task :compile_signed => [:version, :clean] do
+  sh "C:/Windows/Microsoft.NET/Framework/v4.0.30319/msbuild.exe src/StructureMap.sln   /property:Configuration=ReleaseSign /v:m /t:rebuild /nr:False /maxcpucount:2"
+end
+
+desc 'Build Nuspec packages'
+task :pack => [:compile, :compile_signed] do
 	sh ".paket/paket.exe pack output artifacts version #{build_number}"
 end

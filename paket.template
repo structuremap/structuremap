@@ -1,0 +1,13 @@
+type file
+id structuremap-signed
+authors Jeremy Miller
+description
+    A strong named version of StructureMap for shops that require signing
+files
+    src/StructureMap/bin/ReleaseSign/StructureMap.* ==> lib/net40
+    src/StructureMap/bin/ReleaseSign/StructureMap.* ==> lib/wp80
+    src/StructureMap/bin/ReleaseSign/StructureMap.* ==> lib/wp81
+    src/StructureMap/bin/ReleaseSign/StructureMap.* ==> lib/portable-win+net40+wp8
+    src/StructureMap/bin/ReleaseSign/StructureMap.* ==> lib/portable-net45+win+wp81
+licenseUrl https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT
+projectUrl http://structuremap.github.io
