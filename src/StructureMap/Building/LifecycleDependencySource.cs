@@ -32,7 +32,7 @@ namespace StructureMap.Building
 
         public string Description
         {
-            get { return "Lifecyle resolution of " + _instance.Description; }
+            get { return "Lifecycle resolution of " + _instance.Description; }
         }
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)
