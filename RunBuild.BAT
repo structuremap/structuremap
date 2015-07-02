@@ -1,1 +1,2 @@
-rake
+bundle install
+bundle exec rake
