@@ -11,11 +11,6 @@ StructureMap is available via NuGet:
 Install-Package StructureMap
 ```
 
-or:
-
-```PowerShell
-ripple install StructureMap -p [your project name]
-```
 
 If you want to fix a bug or just want to tinker with an idea,
 we love receiving pull requests!
@@ -24,29 +19,15 @@ Building the Source
 -------------------
 
 1. Clone the repository: `git clone git://github.com/structuremap/structuremap.git`
-1. Make sure that you have got [Ruby][2] (>= 1.9.3) installed.
-1. If you are installing Ruby for the first time, run the following in command prompt at the root of the solution:
-    1. `gem install bundler`
-    2. `bundle install`
-1. In the root of the solution, run `rake` in the command prompt.
-1. Open `StructureMap.sln` in VS2012 (`rake sln` from the root as well).
+1. Open the solution at src/StructureMap.sln and go to town! Note that Paket is used for auto-restoring Nuget dependencies as part of the MSBuild compilation. Just compile through VS.Net to retrieve all the dependencies.
 
-A copy of the [StructureMap website and documentation][3] is
-in the `StructureMap.Docs` folder.  To run the documentation
-website, run `rake fubudocs:run` or `fubudocs run -o` in the
-command prompt.
+Note:
+
+The StructureMap team uses Rake internally and on the CI server, but **Rake is no longer necessary in any way for developing with the StructureMap codebase**.
 
 Please post any questions or bugs to the
-[StructureMap Users mailing list][4].
+[StructureMap Users mailing list](https://groups.google.com/forum/#!forum/structuremap-users).
 
-The latest code and documentation is available on the
-[main site][5] and on [Fubuworld][6].
+The latest documentation is available at [http://structuremap.github.io](http://structuremap.github.io).
 
 Thanks for trying StructureMap.
-
-[1]: http://docs.structuremap.net/InversionOfControl.htm
-[2]: http://www.ruby-lang.org/en/downloads/
-[3]: http://docs.structuremap.net/
-[4]: http://groups.google.com/group/structuremap-users
-[5]: http://structuremap.net/
-[6]: http://fubuworld.com/structuremap
