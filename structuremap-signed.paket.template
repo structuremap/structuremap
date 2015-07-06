@@ -5,7 +5,7 @@ description
     A strong named version of StructureMap for shops that require signing
 files
     src/StructureMap/bin/ReleaseSign/StructureMap.* ==> lib/net40
-    src/StructureMap/bin/ReleaseSign/StructureMap.Net4.* ==> lib/net40
+    src/StructureMap.Net4/bin/ReleaseSign/StructureMap.Net4.* ==> lib/net40
     src/StructureMap/bin/ReleaseSign/StructureMap.* ==> lib/wp80
     src/StructureMap/bin/ReleaseSign/StructureMap.* ==> lib/wp81
     src/StructureMap/bin/ReleaseSign/StructureMap.* ==> lib/portable-win+net40+wp8

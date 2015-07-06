@@ -5,7 +5,7 @@ description
     StructureMap is a Dependency Injection / Inversion of Control tool for .Net
 files
     bin/Release/StructureMap.* ==> lib/net40
-    bin/Release/StructureMap.Net4.* ==> lib/net40
+    ../StructureMap.Net4/bin/Release/StructureMap.Net4.* ==> lib/net40
     bin/Release/StructureMap.* ==> lib/wp80
     bin/Release/StructureMap.* ==> lib/wp81
     bin/Release/StructureMap.* ==> lib/portable-win+net40+wp8
