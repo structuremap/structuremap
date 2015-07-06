@@ -366,8 +366,8 @@ Global
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|.NET.ActiveCfg = Release|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|Any CPU.ActiveCfg = Release|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
-		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|Mixed Platforms.Build.0 = Release|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|Mixed Platforms.ActiveCfg = ReleaseSign|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|Mixed Platforms.Build.0 = ReleaseSign|Any CPU
 		{DCDB6C5F-8D8A-4542-8F50-1A72E4D883E8}.Build|.NET.ActiveCfg = Release|Any CPU
 		{DCDB6C5F-8D8A-4542-8F50-1A72E4D883E8}.Build|Any CPU.ActiveCfg = Release|Any CPU
 		{DCDB6C5F-8D8A-4542-8F50-1A72E4D883E8}.Build|Any CPU.Build.0 = Release|Any CPU
