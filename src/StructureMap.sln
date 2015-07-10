@@ -75,9 +75,9 @@ Global
 		{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}.ReleaseSign|.NET.ActiveCfg = Release|Any CPU
-		{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}.ReleaseSign|Any CPU.ActiveCfg = Release|Any CPU
-		{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
+		{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}.ReleaseSign|.NET.ActiveCfg = ReleaseSign|Any CPU
+		{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}.ReleaseSign|Any CPU.ActiveCfg = ReleaseSign|Any CPU
+		{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}.ReleaseSign|Any CPU.Build.0 = ReleaseSign|Any CPU
 		{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}.ReleaseSign|Mixed Platforms.ActiveCfg = ReleaseSign|Any CPU
 		{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}.ReleaseSign|Mixed Platforms.Build.0 = ReleaseSign|Any CPU
 		{63C2742D-B6E2-484F-AFDB-346873075C5E}.Build|.NET.ActiveCfg = Release|Any CPU
@@ -363,9 +363,9 @@ Global
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|.NET.ActiveCfg = Release|Any CPU
-		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|Any CPU.ActiveCfg = Release|Any CPU
-		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|.NET.ActiveCfg = ReleaseSign|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|Any CPU.ActiveCfg = ReleaseSign|Any CPU
+		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|Any CPU.Build.0 = ReleaseSign|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|Mixed Platforms.ActiveCfg = ReleaseSign|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.ReleaseSign|Mixed Platforms.Build.0 = ReleaseSign|Any CPU
 		{DCDB6C5F-8D8A-4542-8F50-1A72E4D883E8}.Build|.NET.ActiveCfg = Release|Any CPU
