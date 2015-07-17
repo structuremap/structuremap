@@ -48,7 +48,7 @@ StructureMap and StructureMap.AutoMocking use several `IFamilyPolicy` rules inte
 FubuMVC 2.0 (still unreleased to the public as of yet, but in production usage) uses a [custom family policy](https://github.com/DarthFubuMVC/fubumvc/blob/master/src/FubuMVC.StructureMap/Settings/SettingPolicy.cs) in its StructureMap
 integration to _auto-resolve_ concrete configuration types like the following type:
 
-<[sample:name="SomeSettings]>
+<[sample:SomeSettings]>
 
 Unless the system using this object has explicitly registered `SomeSettings`, we want StructureMap to resolve this object by
 using data from the basic .Net [appSettings collection](http://msdn.microsoft.com/en-us/library/aa903313(v=vs.71).aspx) to create a `SomeSettings` object.

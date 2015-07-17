@@ -41,7 +41,7 @@ from a Container or as a dependency to another object. The _AlwaysUnique_ lifecy
 <div class="alert alert-info" role="alert">The StructureMap team strongly feels that the default lifecycle is appropriate in most cases and that the <i>unique</i>
 lifecycle is mostly useful for logging services as demonstrated in the <a href="http://jeremydmiller.com/2014/08/12/structuremap-3-1/">StructureMap 3.1 announcement.</a></div>
 
-<[sample: how-always-unique]>
+<[sample:how-always-unique]>
 
 ## Singleton
 

@@ -4,5 +4,5 @@
 
 Requesting the default configured object of a plugin type is done through the `IContainer.GetInstance()` method shown below:
 
-<[linkto:GetInstance]>
+<[sample:GetInstance]>
 

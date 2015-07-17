@@ -46,7 +46,7 @@ We instruct the scanner to scan through the calling assembly with default conven
 
 Sometimes classes need to be suplied with some primitive value in its constructor. For example the `System.Data.SqlClient.SqlConnection` needs to be supplied with the connection string in its constructor. No problem, just set up the value of the constructor argument in the bootstrapping:
 
-<[linkto:quickstart-container-with-primitive-value]>
+<[sample:quickstart-container-with-primitive-value]>
 
 So far you have seen an couple of ways to work with the <linkto:registration/registry-dsl]> and configure an `Container` object or `ObjectFactory`. We have seen examples of configuration that allows us to build objects that doesn't depend on anything like the `Bar` class, or do depend on other types like the `Foo` class needs an instance of `IBar`. In our last example we have seen configuration for objects that needs some primitive types like strings in its constructor function.
 

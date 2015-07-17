@@ -79,7 +79,7 @@ In StructureMap terms, an "Instance" is a configured and named strategy to build
 
 Our warehouse system might have to interact with three types of shipping:  domestic, international, and intra-company or internal shipments.  The internal shipping service runs in process with the warehouse application, but domestic and international shipping is done by invoking external web services.  The registration of the IShippingService Instances might look like this:
 
-<[ShippingRegistry]>
+<[sample:ShippingRegistry]>
 
 In the registration code above, there are three "Instance's."  You can access the various IShippingService Instance's by name:
 

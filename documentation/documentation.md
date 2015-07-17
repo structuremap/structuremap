@@ -1,4 +1,4 @@
-
+The documentation may never be exhaustive, but here are the major sections so far:
 
 * <[linkto:roadmap]>
 * <[linkto:quickstart]>
@@ -13,12 +13,12 @@
 * <[linkto:interception-and-decorators]>
 * <[linkto:interpreting-exceptions]>
 * <[linkto:diagnostics]>
+* <[linkto:integrations]>
 * <[linkto:architecture]>
 * <[linkto:best-practices]>
-# <[linkto:faq]>
-# <[linkto:history]>
-# <[linkto:release-notes]>
-
+* <[linkto:faq]>
+* <[linkto:history]>
+* <[linkto:roadmap]>
 
 
 
