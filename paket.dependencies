@@ -9,3 +9,4 @@ nuget FubuMVC.Core ~> 1.2.0.1686
 nuget Moq 4.0.10827
 nuget RhinoMocks 3.6.1
 nuget Shouldly
+nuget Storyteller 3.0.0.237-alpha

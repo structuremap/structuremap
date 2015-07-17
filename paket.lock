@@ -12,6 +12,7 @@ NUGET
       FubuLocalization (>= 0.9.5.48)
       HtmlTags (>= 1.1.0.114)
     HtmlTags (2.0.0.181)
+    Storyteller (3.0.0.237-alpha)
   remote: http://nuget.org/api/v2
   specs:
     Castle.Core (3.1.0)

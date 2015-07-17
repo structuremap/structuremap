@@ -1,5 +1,4 @@
-
-src\ST\bin\debug\ST.exe doc-export z:\code\structuremap.github.com Website
+packages\storyteller\tools\ST.exe doc-export z:\code\structuremap.github.com Website
 
 
 cd \structuremap.github.com
