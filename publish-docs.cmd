@@ -1,7 +1,7 @@
-packages\storyteller\tools\ST.exe doc-export z:\code\structuremap.github.com Website
+packages\storyteller\tools\ST.exe doc-export z:\code\structuremap.github.com Website --version 3.1.6
 
 
-cd \structuremap.github.com
+cd \code\structuremap.github.com
 
 
 git add --all
