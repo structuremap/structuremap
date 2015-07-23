@@ -60,8 +60,6 @@ namespace StructureMap
 
         private void addCloseGenericPolicyTo(PluginGraph graph)
         {
-            
-
             var policy = new CloseGenericFamilyPolicy(graph);
             graph.AddFamilyPolicy(policy);
 
@@ -78,8 +76,7 @@ namespace StructureMap
                 x.Configure(_graph);
             });
 
-            var types = new TypePool();
-            _scanners.Each(x => x.ScanForTypes(types, _graph));
+            _scanners.Each(x => x.ScanForTypes(_graph));
 
             // Recursive scanning
             if (_graph.QueuedRegistries.Any())

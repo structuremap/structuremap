@@ -192,7 +192,6 @@
     <Compile Include="Graph\PluginFamily.cs" />
     <Compile Include="Graph\PluginGraph.cs" />
     <Compile Include="Graph\SetterRules.cs" />
-    <Compile Include="Graph\TypePool.cs" />
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="IBuildSession.cs" />
     <Compile Include="IContainer.cs" />

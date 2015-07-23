@@ -120,12 +120,15 @@ namespace StructureMap.Graph
             _conventions.Fill(convention);
         }
 
-        public void ScanForTypes(TypePool types, PluginGraph pluginGraph)
+        public void ScanForTypes(PluginGraph pluginGraph)
         {
             var registry = new Registry();
 
-            types.For(_assemblies, _filter).Each(
-                type => _conventions.Each(c => c.Process(type, registry)));
+            TypeRepository.FindTypes(_assemblies, TypeClassification.All, _filter.Matches)
+                .ContinueWith(t =>
+                {
+                    t.Result.Each(type => _conventions.Each(c => c.Process(type, registry)));
+                }).Wait();
 
             registry.As<IPluginGraphConfiguration>().Configure(pluginGraph);
             _postScanningActions.Each(x => x(pluginGraph));
