@@ -1,0 +1,180 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using FubuCore;
+using NUnit.Framework;
+using Shouldly;
+
+namespace StructureMap.Testing
+{
+    public static class TypeRepositoryTestExtensions
+    {
+        public static void ShouldHaveTypes(this IEnumerable<Type> expected, IEnumerable<Type> actual)
+        {
+            expected.OrderBy(x => x.FullName).ShouldHaveTheSameElementsAs(actual.OrderBy(x => x.FullName));
+        }
+
+        public static void ShouldHaveShelves(this IEnumerable<Type> expected, params IList<Type>[] shelves)
+        {
+            expected.ShouldHaveTypes(shelves.SelectMany(x => x).ToArray());
+        }
+    }
+
+    [TestFixture]
+    public class TypeRepositoryTester
+    {
+        private AssemblyTypes theTypes;
+        private Type[] theInners;
+
+        [SetUp]
+        public void SetUp()
+        {
+            theInners = GetType().GetNestedTypes();
+
+            theTypes = new AssemblyTypes(theInners);
+        }
+
+        [Test]
+        public void create_assembly_types_and_it_categorizes_stuff_for_you()
+        {
+            theTypes.ClosedTypes.Concretes.ShouldHaveTheSameElementsAs(typeof (Concrete1), typeof (Concrete2));
+            theTypes.ClosedTypes.Interfaces.ShouldHaveTheSameElementsAs(typeof(Interface1), typeof(Interface2));
+            theTypes.ClosedTypes.Abstracts.ShouldHaveTheSameElementsAs(typeof(Abstract1), typeof(Abstract2));
+            
+            theTypes.OpenTypes.Concretes.ShouldHaveTheSameElementsAs(typeof(OpenConcrete1<>), typeof(OpenConcrete2<>));
+            theTypes.OpenTypes.Abstracts.ShouldHaveTheSameElementsAs(typeof(OpenAbstract1<>), typeof(OpenAbstract2<>));
+            theTypes.OpenTypes.Interfaces.ShouldHaveTheSameElementsAs(typeof(OpenInterface1<>), typeof(OpenInterface2<>));
+        }
+
+        [Test]
+        public void assembly_shelf_select_lists()
+        {
+            var theShelf = theTypes.ClosedTypes;
+            theShelf.SelectLists(TypeClassification.All).ShouldHaveTheSameElementsAs(theShelf.Interfaces, theShelf.Concretes, theShelf.Abstracts);
+            theShelf.SelectLists(TypeClassification.Open).ShouldHaveTheSameElementsAs(theShelf.Interfaces, theShelf.Concretes, theShelf.Abstracts);
+            theShelf.SelectLists(TypeClassification.Closed).ShouldHaveTheSameElementsAs(theShelf.Interfaces, theShelf.Concretes, theShelf.Abstracts);
+
+            theShelf.SelectLists(TypeClassification.Interfaces).ShouldHaveTheSameElementsAs(theShelf.Interfaces);
+            theShelf.SelectLists(TypeClassification.Concretes).ShouldHaveTheSameElementsAs(theShelf.Concretes);
+            theShelf.SelectLists(TypeClassification.Abstracts).ShouldHaveTheSameElementsAs(theShelf.Abstracts);
+            theShelf.SelectLists(TypeClassification.Abstracts | TypeClassification.Interfaces).ShouldHaveTheSameElementsAs(theShelf.Interfaces, theShelf.Abstracts);
+            theShelf.SelectLists(TypeClassification.Abstracts | TypeClassification.Interfaces | TypeClassification.Concretes).ShouldHaveTheSameElementsAs(theShelf.Interfaces, theShelf.Concretes, theShelf.Abstracts);
+        }
+
+        [Test]
+        public void TypeRepository_mechanics()
+        {
+            var task = TypeRepository.FindTypes(GetType().Assembly, TypeClassification.Interfaces);
+            task.Wait();
+
+            task.Result.ShouldContain(typeof(Interface1));
+            task.Result.ShouldContain(typeof(Interface2));
+            task.Result.ShouldNotContain(typeof(Concrete1));
+
+
+        }
+
+
+
+        [Test]
+        public void find_all_types()
+        {
+            theTypes.FindTypes(TypeClassification.All).ShouldHaveTypes(theInners);
+        }
+
+        [Test]
+        public void find_all_interfaces()
+        {
+            theTypes.FindTypes(TypeClassification.Interfaces)
+                .ShouldHaveTypes(theInners.Where(x => x.IsInterface));
+        }
+
+        [Test]
+        public void find_all_concretes()
+        {
+            theTypes.FindTypes(TypeClassification.Concretes)
+                .ShouldHaveTypes(theInners.Where(x => x.IsClass && !x.IsAbstract));
+        }
+
+        [Test]
+        public void find_all_abstracts()
+        {
+            theTypes.FindTypes(TypeClassification.Abstracts)
+                .ShouldHaveShelves(theTypes.OpenTypes.Abstracts, theTypes.ClosedTypes.Abstracts);
+        }
+
+        [Test]
+        public void find_all_open_types()
+        {
+            theTypes.FindTypes(TypeClassification.Open)
+                .ShouldHaveTypes(theInners.Where(x => x.IsOpenGeneric()));
+        }
+
+        [Test]
+        public void find_all_closed_types()
+        {
+            theTypes.FindTypes(TypeClassification.Closed)
+                .ShouldHaveTypes(theInners.Where(x => !x.IsOpenGeneric()));
+        }
+
+        [Test]
+        public void find_closed_interfaces()
+        {
+            theTypes.FindTypes(TypeClassification.Closed | TypeClassification.Interfaces)
+                .ShouldHaveTypes(theTypes.ClosedTypes.Interfaces);
+        }
+
+        [Test]
+        public void find_open_interfaces()
+        {
+            theTypes.FindTypes(TypeClassification.Open  | TypeClassification.Interfaces)
+                .ShouldHaveTypes(theTypes.OpenTypes.Interfaces);
+        }
+
+        [Test]
+        public void find_open_and_closed_concretes()
+        {
+            theTypes.FindTypes(TypeClassification.Open | TypeClassification.Concretes)
+                .ShouldHaveTypes(theTypes.OpenTypes.Concretes);
+
+            theTypes.FindTypes(TypeClassification.Closed | TypeClassification.Concretes)
+                .ShouldHaveTypes(theTypes.ClosedTypes.Concretes);
+        }
+
+        [Test]
+        public void find_open_and_closed_abstracts()
+        {
+            theTypes.FindTypes(TypeClassification.Open | TypeClassification.Abstracts)
+                .ShouldHaveTypes(theTypes.OpenTypes.Abstracts);
+
+            theTypes.FindTypes(TypeClassification.Closed | TypeClassification.Abstracts)
+                .ShouldHaveTypes(theTypes.ClosedTypes.Abstracts);
+        }
+
+        [Test]
+        public void mixed_classification()
+        {
+            theTypes.FindTypes(TypeClassification.Closed | TypeClassification.Abstracts | TypeClassification.Interfaces)
+                .ShouldHaveShelves(theTypes.ClosedTypes.Abstracts, theTypes.ClosedTypes.Interfaces);
+
+            theTypes.FindTypes(TypeClassification.Abstracts | TypeClassification.Interfaces)
+                .ShouldHaveShelves(theTypes.ClosedTypes.Abstracts, theTypes.ClosedTypes.Interfaces, theTypes.OpenTypes.Abstracts, theTypes.OpenTypes.Interfaces);
+
+        }
+
+
+        public class Concrete1 { }
+        public class Concrete2 { }
+        public abstract class Abstract1 { }
+        public abstract class Abstract2 { }
+        public interface Interface1 { }
+        public interface Interface2 { }
+
+        public class OpenConcrete1<T> { }
+        public class OpenConcrete2<T> { }
+        public abstract class OpenAbstract1<T> { }
+        public abstract class OpenAbstract2<T> { }
+        public interface OpenInterface1<T> { }
+        public interface OpenInterface2<T> { }
+    }
+}
