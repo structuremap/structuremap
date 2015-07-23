@@ -232,5 +232,16 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             return instance;
         }
+
+        /// <summary>
+        /// Removes any and all previously registered instance from this
+        /// plugin type
+        /// </summary>
+        /// <returns></returns>
+        public GenericFamilyExpression ClearAll()
+        {
+            alterAndContinue(family => family.RemoveAll());
+            return this;
+        }
     }
 }

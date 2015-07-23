@@ -528,5 +528,17 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             set { _alterations.Add(value); }
         }
+
+        /// <summary>
+        /// Removes any and all previously registered Instances from this
+        /// plugin type
+        /// </summary>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<TPluginType> ClearAll()
+        {
+            alter = family => family.RemoveAll();
+
+            return this;
+        }
     }
 }
