@@ -724,18 +724,7 @@ namespace StructureMap
 
         #endregion
 
-        /// <summary>
-        /// Build a container using the lightweight ServiceRegistry configuration syntax
-        /// </summary>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
-        public static Container ForServices(Action<ServiceRegistry> configuration)
-        {
-            var registry = new ServiceRegistry();
-            configuration(registry);
 
-            return new Container(registry);
-        }
     }
 
 

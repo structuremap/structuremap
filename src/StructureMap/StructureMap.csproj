@@ -265,7 +265,6 @@
     <Compile Include="Query\Model.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="RootInstanceGraph.cs" />
-    <Compile Include="ServiceRegistry.cs" />
     <Compile Include="SessionCache.cs" />
     <Compile Include="TypeRepository.cs" />
     <Compile Include="Util\Cache.cs" />
