@@ -100,7 +100,11 @@ namespace StructureMap
         public object ResolveFromLifecycle(Type pluginType, Instance instance)
         {
             var cache = _pipelineGraph.DetermineLifecycle(pluginType, instance).FindCache(_pipelineGraph);
-            return cache.Get(pluginType, instance, this);
+
+	        var missingInstance = instance as Instance.MissingInstance;
+	        var buildSession = (missingInstance == null) ? this : new BuildSession(_pipelineGraph, missingInstance.RequestedName);
+
+            return cache.Get(pluginType, instance, buildSession);
         }
 
         public object BuildNewInSession(Type pluginType, Instance instance)
