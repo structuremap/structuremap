@@ -35,6 +35,15 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
+        /// Raw access to the underlying configuration model
+        /// </summary>
+        /// <param name="configuration"></param>
+        public void Configure(Action<PluginFamily> configuration)
+        {
+            _alterations.Add(configuration);
+        }
+
+        /// <summary>
         /// Specify the "on missing named instance" configuration for this
         /// PluginType
         /// </summary>
@@ -205,6 +214,19 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             var instance = new LambdaInstance<T, TPluginType>(func);
             registerFallBack(instance);
+            return instance;
+        }
+
+        /// <summary>
+        /// Register a specific object as the fallback for this plugin type
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public ObjectInstance UseIfNone(TPluginType value)
+        {
+            var instance = new ObjectInstance(value);
+            registerFallBack(instance);
+
             return instance;
         }
 

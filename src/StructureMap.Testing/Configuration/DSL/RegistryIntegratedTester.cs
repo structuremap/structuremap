@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget5;
@@ -95,6 +96,26 @@ namespace StructureMap.Testing.Configuration.DSL
             container.GetInstance<ColorRule>().Color.ShouldBe("Blue");
             container.GetAllInstances<ColorRule>().OrderBy(x => x.Color).Select(x => x.Color)
                 .ShouldHaveTheSameElementsAs("Blue", "Green", "Purple");
+        }
+
+        [Test]
+        public void configure_via_strong_typed_expression()
+        {
+            var registry = new Registry();
+            registry.For<ColorRule>().Configure(x => x.SetDefault(new ObjectInstance(new ColorRule("Blue"))));
+
+            new Container(registry).GetInstance<ColorRule>()
+                .Color.ShouldBe("Blue");
+        }
+
+        [Test]
+        public void configure_via_generic_type_expression()
+        {
+            var registry = new Registry();
+            registry.For(typeof(ColorRule)).Configure(x => x.SetDefault(new ObjectInstance(new ColorRule("Blue"))));
+
+            new Container(registry).GetInstance<ColorRule>()
+                .Color.ShouldBe("Blue");
         }
     }
 }

@@ -243,5 +243,15 @@ namespace StructureMap.Configuration.DSL.Expressions
             alterAndContinue(family => family.RemoveAll());
             return this;
         }
+
+        /// <summary>
+        /// A general purpose method to configure the underlying
+        /// PluginFamily for this type
+        /// </summary>
+        /// <param name="configure"></param>
+        public void Configure(Action<PluginFamily> configure)
+        {
+            alterAndContinue(configure);
+        }
     }
 }
