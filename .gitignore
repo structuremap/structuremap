@@ -30,3 +30,8 @@ src/StructureMap.Docs/snippets
 fubudocs-export
 .DS_Store
 packages
+
+.vs/
+*.nuget.props
+*.nuget.json
+project.lock.json
