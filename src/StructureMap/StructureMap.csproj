@@ -38,6 +38,7 @@
     <TargetFrameworkProfile>Profile5</TargetFrameworkProfile>
     <OutputPath>bin\NET45WP8\</OutputPath>
     <SignAssembly>false</SignAssembly>
+    <DefineConstants>NET45WP8</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
@@ -71,9 +72,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\structuremap.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
