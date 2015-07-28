@@ -184,15 +184,15 @@ namespace StructureMap
 
         public void Add(Type type)
         {
-            if (type.IsInterface)
+            if (type.GetTypeInfo().IsInterface)
             {
                 Interfaces.Add(type);
             }
-            else if (type.IsAbstract)
+            else if (type.GetTypeInfo().IsAbstract)
             {
                 Abstracts.Add(type);
             }
-            else if (type.IsClass)
+            else if (type.GetTypeInfo().IsClass)
             {
                 Concretes.Add(type);
             }

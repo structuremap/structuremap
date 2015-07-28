@@ -82,7 +82,8 @@ namespace StructureMap.TypeRules
                    origin.Select(pi => pi.ParameterType).SequenceEqual(parameterTypes);
         }
     }
-
+#endif
+#if NET45WP8 || NETCORE
     public static class AssemblyLoader
     {
         public static Assembly ByName(string assemblyName)
@@ -91,4 +92,5 @@ namespace StructureMap.TypeRules
         }
     }
 #endif
+
 }

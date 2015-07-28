@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 

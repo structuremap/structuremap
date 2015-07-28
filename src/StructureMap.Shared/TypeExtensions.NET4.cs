@@ -6,7 +6,7 @@ using StructureMap.Graph;
 
 namespace StructureMap.TypeRules
 {
-#if !NET45WP8
+#if !NET45WP8 && !NETCORE
     public static partial class TypeExtensions
     {
         /// <summary>
