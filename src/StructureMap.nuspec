@@ -10,7 +10,12 @@
     <description>StructureMap is a Dependency Injection / Inversion of Control tool for .Net</description>
     <dependencies>
       <group targetFramework="net4" />
-      <group targetFramework="portable-net40+wp8+win8" />
+      <group targetFramework="wp8" />
+      <group targetFramework="win8" />
+      <group targetFramework="wpa81" />
+      <group targetFramework="xamarin.ios" />
+      <group targetFramework="monotouch" />
+      <group targetFramework="monoandroid" />      
       <group targetFramework="dotnet">
         <dependency id="System.Collections" version="4.0.10" />
         <dependency id="System.Diagnostics.Debug" version="4.0.10" />
