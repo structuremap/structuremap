@@ -9,6 +9,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>StructureMap is a Dependency Injection / Inversion of Control tool for .Net</description>
     <dependencies>
+      <group targetFramework="net4" />
+      <group targetFramework="portable-net40+wp8+win8" />
       <group targetFramework="dotnet">
         <dependency id="System.Collections" version="4.0.10" />
         <dependency id="System.Diagnostics.Debug" version="4.0.10" />
