@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{93877CE0-BA48-4F28-B372-B8E802CEE085}"
 EndProject
@@ -36,7 +36,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NestedLibrary", "NestedLibr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.LegacyAttributeSupport", "StructureMap.LegacyAttributeSupport\StructureMap.LegacyAttributeSupport.csproj", "{840415D3-247D-449A-BC79-605D0A1C6F81}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StructureMap.Shared", "StructureMap.Shared\StructureMap.Shared.shproj", "{93A7D34E-B95E-4CFA-98AF-C66AFEB05ADA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Dotnet", "StructureMap.Dotnet\StructureMap.Dotnet.csproj", "{57144C5D-7614-45EA-8F8E-07C62709FEA9}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		StructureMap.Shared\StructureMap.Shared.projitems*{93a7d34e-b95e-4cfa-98af-c66afeb05ada}*SharedItemsImports = 13
+		StructureMap.Shared\StructureMap.Shared.projitems*{57144c5d-7614-45ea-8f8e-07c62709fea9}*SharedItemsImports = 4
+		StructureMap.Shared\StructureMap.Shared.projitems*{3f36ea80-2f9a-4dad-ba27-5ac6163a2ee3}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Build|.NET = Build|.NET
 		Build|Any CPU = Build|Any CPU
@@ -417,6 +426,36 @@ Global
 		{840415D3-247D-449A-BC79-605D0A1C6F81}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
 		{840415D3-247D-449A-BC79-605D0A1C6F81}.ReleaseSign|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{840415D3-247D-449A-BC79-605D0A1C6F81}.ReleaseSign|Mixed Platforms.Build.0 = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Build|.NET.ActiveCfg = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Build|.NET.Build.0 = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Build|Any CPU.ActiveCfg = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Build|Any CPU.Build.0 = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Build|Mixed Platforms.Build.0 = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Debug|.NET.Build.0 = Debug|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.NET45WP8|.NET.ActiveCfg = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.NET45WP8|.NET.Build.0 = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.NET45WP8|Any CPU.ActiveCfg = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.NET45WP8|Any CPU.Build.0 = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.NET45WP8|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.NET45WP8|Mixed Platforms.Build.0 = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Release|.NET.ActiveCfg = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Release|.NET.Build.0 = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.ReleaseSign|.NET.ActiveCfg = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.ReleaseSign|.NET.Build.0 = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.ReleaseSign|Any CPU.ActiveCfg = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.ReleaseSign|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.ReleaseSign|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
