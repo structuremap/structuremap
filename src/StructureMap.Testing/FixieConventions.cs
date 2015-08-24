@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Castle.Core.Internal;
 using Fixie;
-using FubuCore.Reflection;
 using NUnit.Framework;
-using StructureMap.Testing;
 
 namespace NUnit.Framework
 {
