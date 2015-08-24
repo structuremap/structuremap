@@ -75,5 +75,5 @@ end
 
 desc 'Build Nuspec packages'
 task :pack => [:compile, :compile_signed] do
-	sh ".paket/paket.exe pack output artifacts version #{build_number}"
+	sh ".paket/paket.exe pack output artifacts version #{build_number}-alpha"
 end
