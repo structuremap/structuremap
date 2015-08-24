@@ -15,6 +15,7 @@ namespace StructureMap
 {
     public class Container : IContainer
     {
+        private readonly IList<Container> _children = new List<Container>();
         private IPipelineGraph _pipelineGraph;
         private readonly object _syncLock = new object();
 
@@ -427,7 +428,10 @@ namespace StructureMap
         public IContainer CreateChildContainer()
         {
             var pipeline = _pipelineGraph.Profiles.NewChild(_pipelineGraph.Instances.ImmediatePluginGraph);
-            return new Container(pipeline);
+            var childContainer = new Container(pipeline);
+            _children.Add(childContainer);
+
+            return childContainer;
         }
 
         /// <summary>
@@ -583,6 +587,8 @@ namespace StructureMap
 
             _pipelineGraph.SafeDispose();
             _pipelineGraph = null;
+
+            _children.Each(x => x.Dispose());
         }
 
         /// <summary>

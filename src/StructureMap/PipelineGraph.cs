@@ -44,6 +44,7 @@ namespace StructureMap
         private readonly IObjectCache _singletons;
         private readonly ITransientTracking _transients;
         private readonly Profiles _profiles;
+        private bool _wasDisposed;
 
         public PipelineGraph(PluginGraph pluginGraph, IInstanceGraph instances, IPipelineGraph root, IObjectCache singletons, ITransientTracking transients)
         {
@@ -125,13 +126,24 @@ namespace StructureMap
 
         public void Dispose()
         {
+            if (_wasDisposed) return;
+            _wasDisposed = true;
+
             if (Role == ContainerRole.Root)
             {
                 _singletons.DisposeAndClear();
             }
+            
+            
+            if (Role == ContainerRole.ProfileOrChild)
+            {
+                ContainerCache.DisposeAndClear();
+            }
 
             _transients.DisposeAndClear();
             _pluginGraph.SafeDispose();
+
+            _profiles.AllProfiles().Each(x => x.Dispose());
         }
 
         public void RegisterContainer(IContainer container)

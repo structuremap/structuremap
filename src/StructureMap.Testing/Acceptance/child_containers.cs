@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using Shouldly;
 
 namespace StructureMap.Testing.Acceptance
@@ -53,6 +54,46 @@ namespace StructureMap.Testing.Acceptance
 
             // Resolved from parent configuration
             guy.Service.ShouldBeOfType<AService>();
+        }
+
+        [Test]
+        public void disposing_the_parent_container_also_disposes_child_containers()
+        {
+            child.Configure(x => x.ForSingletonOf<DisposableGuy>());
+            var guy = child.GetInstance<DisposableGuy>();
+
+            parent.Dispose();
+
+            guy.WasDisposed.ShouldBeTrue();
+        }
+
+        [Test]
+        public void disposing_child_does_not_dispose_singletons_created_by_parent()
+        {
+            parent.Configure(x => x.ForSingletonOf<DisposableGuy>());
+
+            child.Configure(x =>
+            {
+                x.For<DisposableGuy>().Use<DisposableGuy>().Singleton();
+            });
+
+            var guy1 = parent.GetInstance<DisposableGuy>();
+            var guy2 = child.GetInstance<DisposableGuy>();
+
+            child.Dispose();
+
+            guy1.WasDisposed.ShouldBeFalse();
+            guy2.WasDisposed.ShouldBeTrue();
+        }
+
+        public class DisposableGuy : IDisposable
+        {
+            public bool WasDisposed;
+
+            public void Dispose()
+            {
+                WasDisposed = true;
+            }
         }
     }
 }
