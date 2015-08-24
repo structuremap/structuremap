@@ -1,20 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace StructureMap.Pipeline
 {
     public abstract class Instance : HasLifecycle, IDescribed
     {
         private readonly string _originalName;
+        private readonly int _hashCode;
         private string _name;
 
         private readonly IList<IInterceptor> _interceptors = new List<IInterceptor>();
+
+        private readonly IDictionary<Type, int> _hashCodes = new Dictionary<Type, int>();
 
         /// <summary>
         /// Add an interceptor to only this Instance
@@ -36,6 +39,7 @@ namespace StructureMap.Pipeline
         {
             Id = Guid.NewGuid();
             _originalName = _name = Id.ToString();
+            _hashCode = _originalName.GetHashCode();
         }
 
         /// <summary>
@@ -49,7 +53,7 @@ namespace StructureMap.Pipeline
 
         /// <summary>
         /// Creates an IDependencySource that can be used to build the object
-        /// represented by this Instance 
+        /// represented by this Instance
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="policies"></param>
@@ -179,11 +183,25 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public int InstanceKey(Type pluginType)
         {
+            if (pluginType == null)
+            {
+                return _hashCode;
+            }
+
+            int instanceKey;
+            if (_hashCodes.TryGetValue(pluginType, out instanceKey))
+            {
+                return instanceKey;
+            }
+
             unchecked
             {
-                return ((_originalName != null ? _originalName.GetHashCode() : 0)*397) ^
-                       (pluginType != null ? pluginType.AssemblyQualifiedName.GetHashCode() : 0);
+                instanceKey = _hashCode * 397 ^ pluginType.AssemblyQualifiedName.GetHashCode();
             }
+
+            _hashCodes.Add(pluginType, instanceKey);
+
+            return instanceKey;
         }
 
         public ILifecycle DetermineLifecycle(ILifecycle parent)
@@ -201,12 +219,12 @@ namespace StructureMap.Pipeline
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Instance) obj);
+            return Equals((Instance)obj);
         }
 
         public override int GetHashCode()
         {
-            return (_originalName != null ? _originalName.GetHashCode() : 0);
+            return _hashCode;
         }
 
         public Guid Id { get; private set; }
