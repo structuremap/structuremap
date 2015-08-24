@@ -18,6 +18,12 @@ namespace StructureMap.Testing.Graph
             return new PluginGraphBuilder().Build();
         }
 
+        [Test]
+        public void default_tracking_style()
+        {
+            Empty().TransientTracking.ShouldBe(TransientTracking.DefaultNotTrackedAtRoot);
+        }
+
 
         [Test]
         public void add_type_adds_an_instance_for_type_once_and_only_once()

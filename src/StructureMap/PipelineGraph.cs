@@ -23,8 +23,12 @@ namespace StructureMap
 
         public static IPipelineGraph BuildRoot(PluginGraph pluginGraph)
         {
+            ITransientTracking transients = pluginGraph.TransientTracking == TransientTracking.DefaultNotTrackedAtRoot
+                ? (ITransientTracking) new NulloTransientCache()
+                : new TrackingTransientCache();
+
             return new PipelineGraph(pluginGraph, new RootInstanceGraph(pluginGraph), null, pluginGraph.SingletonCache,
-                new NulloTransientCache());
+                transients);
         }
 
         public static IPipelineGraph BuildEmpty()
@@ -38,11 +42,10 @@ namespace StructureMap
         private readonly IInstanceGraph _instances;
         private readonly IPipelineGraph _root;
         private readonly IObjectCache _singletons;
-        private readonly IObjectCache _transients;
+        private readonly ITransientTracking _transients;
         private readonly Profiles _profiles;
 
-        public PipelineGraph(PluginGraph pluginGraph, IInstanceGraph instances, IPipelineGraph root,
-            IObjectCache singletons, IObjectCache transients)
+        public PipelineGraph(PluginGraph pluginGraph, IInstanceGraph instances, IPipelineGraph root, IObjectCache singletons, ITransientTracking transients)
         {
             _pluginGraph = pluginGraph;
             _instances = instances;
@@ -87,7 +90,7 @@ namespace StructureMap
             get { return _singletons; }
         }
 
-        public IObjectCache Transients
+        public ITransientTracking Transients
         {
             get { return _transients; }
         }

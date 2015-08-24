@@ -6,7 +6,7 @@ namespace StructureMap
     public interface ILifecycleContext
     {
         IObjectCache Singletons { get; }
-        IObjectCache Transients { get; }
+        ITransientTracking Transients { get; }
         IObjectCache ContainerCache { get; }
 
         ILifecycle DetermineLifecycle(Type pluginType, Instance instance);

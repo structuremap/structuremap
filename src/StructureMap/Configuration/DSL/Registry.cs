@@ -240,6 +240,11 @@ namespace StructureMap.Configuration.DSL
             _builders.Each(x => x(builder));
         }
 
+        public TransientTracking TransientTracking
+        {
+            set { alter = graph => graph.TransientTracking = value; }
+        }
+
         internal static bool IsPublicRegistry(Type type)
         {
             var ti = type.GetTypeInfo();

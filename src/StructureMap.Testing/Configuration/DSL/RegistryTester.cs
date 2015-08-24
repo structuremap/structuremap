@@ -190,6 +190,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(new BasicActionRegistry());
             container.GetInstance<IGateway>().ShouldBeOfType<Fake3Gateway>();
         }
+
     }
 
     public class ConcreteWithNoConstructor

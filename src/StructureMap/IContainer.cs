@@ -324,6 +324,21 @@ namespace StructureMap
         /// </summary>
         /// <returns></returns>
         IContainer CreateChildContainer();
+
+
+        /// <summary>
+        /// Query or manipulate StructureMap's tracking of transient
+        /// objects created by this Container. Use with caution.
+        /// </summary>
+        ITransientTracking TransientTracking { get; }
+
+        /// <summary>
+        /// If explicit transient tracking is turned on, calling this method
+        /// will call Dispose() on a transient scoped object that was previously
+        /// created by this IContainer and remove it from its tracking.
+        /// </summary>
+        /// <param name="object"></param>
+        void Release(object @object);
     }
 
 

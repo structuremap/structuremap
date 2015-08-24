@@ -30,7 +30,8 @@ namespace StructureMap
 
             var instances = new ComplexInstanceGraph(_root, childGraph, ContainerRole.ProfileOrChild);
 
-            return new PipelineGraph(childGraph, instances, _root, _root.Singletons, _root.Transients);
+            var transientTracking = parent.TransientTracking == TransientTracking.DefaultNotTrackedAtRoot ? _root.Transients : new TrackingTransientCache();
+            return new PipelineGraph(childGraph, instances, _root, _root.Singletons, transientTracking);
         }
 
         public IEnumerable<IPipelineGraph> AllProfiles()

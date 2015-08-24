@@ -229,6 +229,7 @@
     <Compile Include="Pipeline\Instance.cs" />
     <Compile Include="Pipeline\InstanceMementoPropertyReader.cs" />
     <Compile Include="Pipeline\IObjectCache.cs" />
+    <Compile Include="Pipeline\ITransientTracking.cs" />
     <Compile Include="Pipeline\LambdaInstance.cs" />
     <Compile Include="Pipeline\Lazy\FuncWithArgInstance.cs" />
     <Compile Include="Pipeline\Lazy\FuncWithArgFactoryTemplate.cs" />
@@ -250,7 +251,9 @@
     <Compile Include="Pipeline\SingletonLifecycle.cs" />
     <Compile Include="Pipeline\SmartInstance.cs" />
     <Compile Include="Pipeline\ThreadLocalStorageLifecycle.cs" />
+    <Compile Include="Pipeline\TrackingTransientCache.cs" />
     <Compile Include="Pipeline\TransientLifecycle.cs" />
+    <Compile Include="Pipeline\TransientTracking.cs" />
     <Compile Include="Pipeline\UniquePerRequestLifecycle.cs" />
     <Compile Include="PluginGraphBuilder.cs" />
     <Compile Include="Policies.cs" />

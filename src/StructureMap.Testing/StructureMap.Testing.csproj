@@ -185,6 +185,7 @@
     <Compile Include="Acceptance\nested_registry_declarations.cs" />
     <Compile Include="Acceptance\setter_rules_are_reset_by_configure.cs" />
     <Compile Include="Acceptance\setting_lifecycle_scope.cs" />
+    <Compile Include="Acceptance\transient_tracking_mode_specs.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -352,6 +353,7 @@
     <Compile Include="InstanceExtensions.cs" />
     <Compile Include="ModelQueryTester.cs" />
     <Compile Include="ObjectFactoryInitializeTester.cs" />
+    <Compile Include="PipelineGraph_construction_specs.cs" />
     <Compile Include="Pipeline\ArgumentTester.cs" />
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
@@ -384,6 +386,7 @@
     <Compile Include="Pipeline\SmartInstanceTester.cs" />
     <Compile Include="Pipeline\StubBuildSession.cs" />
     <Compile Include="Pipeline\ThreadLocalStorageLifecycleTester.cs" />
+    <Compile Include="Pipeline\TrackingTransientCacheTester.cs" />
     <Compile Include="Pipeline\TransientLifecycleTester.cs" />
     <Compile Include="PoliciesTester.cs" />
     <Compile Include="PrimitiveArrayTester.cs" />
@@ -428,7 +431,6 @@
     <None Include="..\structuremap.snk">
       <Link>structuremap.snk</Link>
     </None>
-    <None Include="ripple.dependencies.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

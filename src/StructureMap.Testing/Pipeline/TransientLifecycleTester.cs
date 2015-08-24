@@ -9,7 +9,7 @@ namespace StructureMap.Testing.Pipeline
     {
         private ILifecycleContext theContext;
         private TransientLifecycle theLifecycle;
-        private IObjectCache theCache;
+        private ITransientTracking theCache;
 
         [SetUp]
         public void SetUp()
@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Pipeline
             theContext = MockRepository.GenerateMock<ILifecycleContext>();
             theLifecycle = new TransientLifecycle();
 
-            theCache = MockRepository.GenerateMock<IObjectCache>();
+            theCache = MockRepository.GenerateMock<ITransientTracking>();
             theContext.Stub(x => x.Transients).Return(theCache);
         }
 

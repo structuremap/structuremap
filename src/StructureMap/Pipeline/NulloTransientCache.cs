@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
 
 namespace StructureMap.Pipeline
 {
-    public class NulloTransientCache : IObjectCache
+    public class NulloTransientCache : ITransientTracking
     {
         public object Locker
         {
@@ -32,5 +33,16 @@ namespace StructureMap.Pipeline
         {
             // no-op
         }
+
+        public void Release(object o)
+        {
+            // no-op
+        }
+
+        public IEnumerable<object> Tracked
+        {
+            get { return new Object[0]; }
+        }
+
     }
 }

@@ -724,7 +724,15 @@ namespace StructureMap
 
         #endregion
 
+        public ITransientTracking TransientTracking
+        {
+            get { return _pipelineGraph.Transients; }
+        }
 
+        public void Release(object @object)
+        {
+            TransientTracking.Release(@object);
+        }
     }
 
 

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
@@ -22,6 +21,8 @@ namespace StructureMap.Graph
 
         private readonly LightweightCache<string, PluginGraph> _profiles;
 
+        public TransientTracking TransientTracking = TransientTracking.DefaultNotTrackedAtRoot;
+
         public string Name { get; set; }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace StructureMap.Graph
         /// Holds a cache of concrete types that can be considered for closing generic interface
         /// types
         /// </summary>
-        public readonly IList<Type> ConnectedConcretions = new List<Type>(); 
+        public readonly IList<Type> ConnectedConcretions = new List<Type>();
 
         public PluginGraph()
         {
@@ -43,9 +44,7 @@ namespace StructureMap.Graph
             ProfileName = "DEFAULT";
             _families =
                 new Cache<Type, PluginFamily>(
-                    type => {
-                        return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type);
-                    });
+                    type => { return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type); });
 
             _families.OnAddition = family => family.Owner = this;
         }
@@ -148,7 +147,7 @@ namespace StructureMap.Graph
         }
 
 
-        public readonly Queue<Registry> QueuedRegistries = new Queue<Registry>(); 
+        public readonly Queue<Registry> QueuedRegistries = new Queue<Registry>();
 
         /// <summary>
         /// Adds a Registry by type.  Requires that the Registry class have a no argument
@@ -166,10 +165,12 @@ namespace StructureMap.Graph
             }
             catch (Exception e)
             {
-                throw new StructureMapException("Unable to create an instance for Registry type '{0}'.  Please check the inner exception for details".ToFormat(type.GetFullName()), e);
+                throw new StructureMapException(
+                    "Unable to create an instance for Registry type '{0}'.  Please check the inner exception for details"
+                        .ToFormat(type.GetFullName()), e);
             }
-            
-            
+
+
             //registry.As<IPluginGraphConfiguration>().Configure(this);
         }
 
@@ -294,12 +295,12 @@ namespace StructureMap.Graph
 
         void IDisposable.Dispose()
         {
-            _families.Each(family => {
-                family.Instances.Each(instance => {
-                    _singletonCache.Eject(family.PluginType, instance);
+            _families.Each(
+                family =>
+                {
+                    family.Instances.Each(instance => { _singletonCache.Eject(family.PluginType, instance); });
                 });
-            });
-            
+
 
             _profiles.Each(x => x.SafeDispose());
             _profiles.Clear();
@@ -312,6 +313,4 @@ namespace StructureMap.Graph
             _families.ClearAll();
         }
     }
-
-
 }
