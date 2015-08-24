@@ -24,7 +24,7 @@ namespace StructureMap
 
         public void RemoveCompletely(Func<Type, bool> filter)
         {
-            _pluginGraph.Families.Where(x => filter(x.PluginType))
+            _pluginGraph.Families.ToArray().Where(x => filter(x.PluginType))
                 .Select(x => x.PluginType)
                 .ToArray()
                 .Each(RemoveCompletely);

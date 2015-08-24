@@ -38,7 +38,7 @@ namespace StructureMap
 
         public IEnumerable<Instance> GetAllInstances()
         {
-            return _pluginGraph.Families.SelectMany(x => x.Instances);
+            return _pluginGraph.Families.ToArray().SelectMany(x => x.Instances);
         }
 
         public IEnumerable<Instance> GetAllInstances(Type pluginType)

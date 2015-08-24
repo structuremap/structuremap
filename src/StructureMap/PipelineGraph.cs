@@ -172,6 +172,11 @@ namespace StructureMap
                 throw new StructureMapConfigurationException("Policy changes to a nested container are not allowed. Policies can only be applied to the root container");
             }
 
+            if (registry.HasPolicyChanges())
+            {
+                _pluginGraph.ClearTypeMisses();
+            }
+
             var builder = new PluginGraphBuilder(_pluginGraph);
             builder.Add(registry);
 
@@ -196,7 +201,7 @@ namespace StructureMap
         {
             var descriptions = new List<string>();
 
-            _pluginGraph.Families.Each(family => {
+            _pluginGraph.Families.ToArray().Each(family => {
                 family.Instances.Where(x => !(x is IValue)).Each(instance => {
                     var lifecycle = instance.DetermineLifecycle(family.Lifecycle);
                     if (!(lifecycle is IAppropriateForNestedContainer))

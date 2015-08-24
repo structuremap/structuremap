@@ -45,7 +45,7 @@ namespace StructureMap
 
         public IEnumerable<Instance> GetAllInstances()
         {
-            return _pluginGraph.Families.SelectMany(x => x.Instances).Union(_parent.Instances.GetAllInstances());
+            return _pluginGraph.Families.ToArray().SelectMany(x => x.Instances).Union(_parent.Instances.GetAllInstances());
         }
 
         public IEnumerable<Instance> GetAllInstances(Type pluginType)
@@ -86,7 +86,7 @@ namespace StructureMap
         public ContainerRole Role { get; private set; }
         public IEnumerable<Instance> ImmediateInstances()
         {
-            return _pluginGraph.Families.SelectMany(x => x.Instances);
+            return _pluginGraph.Families.ToArray().SelectMany(x => x.Instances);
         }
 
         public PluginGraph ImmediatePluginGraph

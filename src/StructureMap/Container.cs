@@ -397,7 +397,7 @@ namespace StructureMap
                     singletons
                         .Each(x => x.SetLifecycleTo<ContainerLifecycle>());
 
-                    _pipelineGraph.Instances.ImmediatePluginGraph.Families.Where(x => x.Lifecycle is SingletonLifecycle)
+                    _pipelineGraph.Instances.ImmediatePluginGraph.Families.ToArray().Where(x => x.Lifecycle is SingletonLifecycle)
                         .Each(x => x.SetLifecycleTo<ContainerLifecycle>());
                 }
 

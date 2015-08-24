@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using System.Reflection;
+using System.Threading;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
@@ -23,23 +23,40 @@ namespace StructureMap.Graph
 
             if (!_graph.Families.Has(basicType))
             {
-                // RIGHT HERE: do the connections thing HERE!
-                var connectingTypes = _graph.ConnectedConcretions.Where(x => x.CanBeCastTo(type)).ToArray();
-                if (connectingTypes.Any())
+                try
                 {
-                    var family = new PluginFamily(type);
-                    connectingTypes.Each(family.AddType);
-
-                    return family;
+                    return tryToConnect(type);
                 }
-
-                return _graph.Families.ToArray().FirstOrDefault(x => type.GetTypeInfo().IsAssignableFrom(x.PluginType.GetTypeInfo()));
+                catch (Exception)
+                {
+                    // TODO: HATE, HATE, HATE this. Beat later with the immutable types on
+                    // the PluginGraph.Families
+                    return tryToConnect(type);
+                }
+                
             }
 
             var basicFamily = _graph.Families[basicType];
             var templatedParameterTypes = type.GetGenericArguments();
 
             return basicFamily.CreateTemplatedClone(templatedParameterTypes.ToArray());
+        }
+
+        private PluginFamily tryToConnect(Type type)
+        {
+            // RIGHT HERE: do the connections thing HERE!
+            var connectingTypes = _graph.ConnectedConcretions.ToArray().Where(x => x.CanBeCastTo(type)).ToArray();
+            if (connectingTypes.Any())
+            {
+                var family = new PluginFamily(type);
+                connectingTypes.Each(family.AddType);
+
+                return family;
+            }
+
+            // This is a problem right here. Need this to be exposed
+            return _graph.Families.ToArray()
+                .FirstOrDefault(x => type.GetTypeInfo().IsAssignableFrom(x.PluginType.GetTypeInfo()));
         }
 
         public bool AppliesToHasFamilyChecks

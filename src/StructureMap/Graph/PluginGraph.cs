@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Configuration.DSL;
@@ -15,6 +16,8 @@ namespace StructureMap.Graph
     {
         private readonly Cache<Type, PluginFamily> _families;
         private readonly IList<IFamilyPolicy> _policies = new List<IFamilyPolicy>();
+
+        private readonly ConcurrentDictionary<Type, bool> _missingTypes = new ConcurrentDictionary<Type, bool>(); 
 
         private readonly List<Registry> _registries = new List<Registry>();
         private readonly LifecycleObjectCache _singletonCache = new LifecycleObjectCache();
@@ -215,10 +218,15 @@ namespace StructureMap.Graph
         {
             if (_families.Has(pluginType)) return true;
 
+            if (_missingTypes.ContainsKey(pluginType)) return false;
+
+
             if (_policies.Where(x => x.AppliesToHasFamilyChecks).ToArray().Any(x => x.Build(pluginType) != null))
             {
                 return true;
             }
+
+            _missingTypes.AddOrUpdate(pluginType, true, (type, b) => true);
 
             return false;
         }
@@ -309,8 +317,15 @@ namespace StructureMap.Graph
             _families.Remove(typeof (IContainer));
             containerFamily.RemoveAll();
 
+            _missingTypes.Clear();
+
             _families.Each(x => x.SafeDispose());
             _families.ClearAll();
+        }
+
+        internal void ClearTypeMisses()
+        {
+            _missingTypes.Clear();
         }
     }
 }
