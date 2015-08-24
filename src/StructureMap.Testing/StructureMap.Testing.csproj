@@ -219,6 +219,7 @@
     <Compile Include="Bugs\Bug_321_Singleton_exception_messages.cs" />
     <Compile Include="Bugs\Bug_322_class_with_multiple_constructors.cs" />
     <Compile Include="Bugs\Bug_338.cs" />
+    <Compile Include="Bugs\Bug_354_bidirectional_dep_bug_under_heavy_threading.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
     <Compile Include="Bugs\ChildContainer_Singleton_error_330.cs" />
     <Compile Include="Bugs\closed_type_generic_is_in_get_all.cs" />

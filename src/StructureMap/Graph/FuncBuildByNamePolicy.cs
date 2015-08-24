@@ -17,8 +17,10 @@ namespace StructureMap.Graph
             {
                 var family = new PluginFamily(type);
                 var typeToBeBuilt = type.GetGenericArguments().Last();
+                var templateType = typeof (FuncByNameInstance<>);
+
                 var @default =
-                    Activator.CreateInstance(typeof (FuncByNameInstance<>).MakeGenericType(typeToBeBuilt)) as Instance;
+                    Activator.CreateInstance(templateType.MakeGenericType(typeToBeBuilt)) as Instance;
 
                 family.SetDefault(@default);
 
@@ -30,16 +32,21 @@ namespace StructureMap.Graph
 
         public bool AppliesToHasFamilyChecks
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
     }
 
     public class FuncByNameInstance<T> : LambdaInstance<Func<string, T>>
     {
-        public FuncByNameInstance() : base("Builder by name for " + typeof(T).GetTypeName(), c => name => c.GetInstance<T>(name))
+        public FuncByNameInstance() : base("Builder by name for " + typeof (T).GetTypeName(), c => name =>
+        {
+            var container = c.GetInstance<IContainer>();
+            var instance = container.Model.Find<T>(name);
+
+            return instance.Lifecycle is UniquePerRequestLifecycle
+                ? container.GetInstance<T>(name)
+                : c.GetInstance<T>(name);
+        })
         {
         }
     }

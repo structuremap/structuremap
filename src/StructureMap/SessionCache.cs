@@ -67,7 +67,7 @@ namespace StructureMap
 
             var o = GetObject(pluginType, instance, lifecycle);
 
-            if (!(lifecycle is UniquePerRequestLifecycle))
+            if (!(lifecycle is UniquePerRequestLifecycle) && pluginType != typeof(IContainer))
             {
                 _defaults.Add(pluginType, o);
             }
