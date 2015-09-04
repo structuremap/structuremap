@@ -12,7 +12,10 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void show_the_workaround_for_generic_builders()
         {
-            var container = new Container(_ => { _.For(typeof (IRepository<,>)).Use(new RepositoryInstanceFactory()); });
+            var container = new Container(_ =>
+            {
+                _.For(typeof (IRepository<,>)).Use(new RepositoryInstanceFactory());
+            });
 
             container.GetInstance<IRepository<string, int>>()
                 .ShouldBeOfType<Repository<string, int>>();

@@ -29,8 +29,13 @@ namespace StructureMap.Query
 
         public bool HasBeenCreated(Instance instance)
         {
+            var lifecycle = _pipelineGraph.DetermineLifecycle(_family.PluginType, instance);
+
+            // Fixes GH-363
+            if (lifecycle is ObjectLifecycle) return true;
+
             return
-                _pipelineGraph.DetermineLifecycle(_family.PluginType, instance)
+                lifecycle
                     .FindCache(_pipelineGraph)
                     .Has(_family.PluginType, instance);
         }
