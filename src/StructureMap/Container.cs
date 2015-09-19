@@ -1,15 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.TypeRules;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace StructureMap
 {
@@ -73,7 +72,7 @@ namespace StructureMap
         /// <returns></returns>
         public T GetInstance<T>(string instanceKey)
         {
-            return (T) GetInstance(typeof (T), instanceKey);
+            return (T)GetInstance(typeof(T), instanceKey);
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace StructureMap
         /// <returns></returns>
         public T GetInstance<T>(Instance instance)
         {
-            return (T) GetInstance(typeof (T), instance);
+            return (T)GetInstance(typeof(T), instance);
         }
 
         /// <summary>
@@ -93,7 +92,7 @@ namespace StructureMap
         /// <returns></returns>
         public TPluginType GetInstance<TPluginType>(ExplicitArguments args)
         {
-            return (TPluginType) GetInstance(typeof (TPluginType), args);
+            return (TPluginType)GetInstance(typeof(TPluginType), args);
         }
 
         /// <summary>
@@ -106,7 +105,7 @@ namespace StructureMap
         /// <returns></returns>
         public T GetInstance<T>(ExplicitArguments args, string name)
         {
-            return (T) GetInstance(typeof (T), args, name);
+            return (T)GetInstance(typeof(T), args, name);
         }
 
         /// <summary>
@@ -153,6 +152,82 @@ namespace StructureMap
         }
 
         /// <summary>
+        /// Gets the default instance of <typeparamref name="T"/>, but built with the overridden arguments from
+        /// <paramref name="args"/>. Returns the default value of <typeparamref name="T"/> if it is not known to
+        /// the container.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        /// <exception cref="StructureMapException"></exception>
+        public T TryGetInstance<T>(ExplicitArguments args)
+        {
+            return (T)TryGetInstance(typeof(T), args);
+        }
+
+        /// <summary>
+        /// Gets the named instance of <typeparamref name="T"/> using the explicitly configured arguments from
+        /// <paramref name="args"/>. Returns the default value of <typeparamref name="T"/> if it is not known to
+        /// the container.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
+        /// <param name="instanceKey"></param>
+        /// <returns></returns>
+        /// <exception cref="StructureMapException"></exception>
+        public T TryGetInstance<T>(ExplicitArguments args, string instanceKey)
+        {
+            return (T)TryGetInstance(typeof(T), args, instanceKey);
+        }
+
+        /// <summary>
+        /// Gets the default instance of <paramref name="pluginType"/> using the explicitly configured arguments from
+        /// <paramref name="args"/>. Returns <c>null</c> if the named instance is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        /// <exception cref="StructureMapException"></exception>
+        public object TryGetInstance(Type pluginType, ExplicitArguments args)
+        {
+            try
+            {
+                return !_pipelineGraph.Instances.HasDefaultForPluginType(pluginType)
+                    ? null
+                    : GetInstance(pluginType, args);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.TryGetInstance<{0}>({1})", pluginType.GetFullName(), args);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Gets the named instance of <paramref name="pluginType"/> using the explicitly configured arguments from
+        /// <paramref name="args"/>. Returns null if the named instance is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="args"></param>
+        /// <param name="instanceKey"></param>
+        /// <returns></returns>
+        /// <exception cref="StructureMapException"></exception>
+        public object TryGetInstance(Type pluginType, ExplicitArguments args, string instanceKey)
+        {
+            try
+            {
+                return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
+                    ? null
+                    : GetInstance(pluginType, args, instanceKey);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.TryGetInstance<{0}>({1}, '{2}')", pluginType.GetFullName(), args, instanceKey);
+                throw;
+            }
+        }
+
+        /// <summary>
         ///     Gets all configured instances of type T using explicitly configured arguments from the "args"
         /// </summary>
         /// <param name="type"></param>
@@ -187,11 +262,10 @@ namespace StructureMap
             }
             catch (StructureMapException e)
             {
-                e.Push("Container.GetAllInstances<{0}>({1})", typeof (T).GetFullName(), args);
+                e.Push("Container.GetAllInstances<{0}>({1})", typeof(T).GetFullName(), args);
                 throw;
             }
         }
-
 
         /// <summary>
         ///     Creates or finds the default instance of type T
@@ -200,7 +274,7 @@ namespace StructureMap
         /// <returns></returns>
         public T GetInstance<T>()
         {
-            return (T) GetInstance(typeof (T));
+            return (T)GetInstance(typeof(T));
         }
 
         /// <summary>
@@ -217,7 +291,7 @@ namespace StructureMap
             }
             catch (StructureMapException e)
             {
-                e.Push("Container.GetAllInstances<{0}>()", typeof (T).GetFullName());
+                e.Push("Container.GetAllInstances<{0}>()", typeof(T).GetFullName());
                 throw;
             }
         }
@@ -289,7 +363,7 @@ namespace StructureMap
         /// <returns></returns>
         public T TryGetInstance<T>()
         {
-            return (T) (TryGetInstance(typeof (T)) ?? default(T));
+            return (T)(TryGetInstance(typeof(T)) ?? default(T));
         }
 
         /// <summary>
@@ -318,7 +392,7 @@ namespace StructureMap
         /// <returns></returns>
         public T TryGetInstance<T>(string instanceKey)
         {
-            return (T) (TryGetInstance(typeof (T), instanceKey) ?? default(T));
+            return (T)(TryGetInstance(typeof(T), instanceKey) ?? default(T));
         }
 
         /// <summary>
@@ -339,7 +413,6 @@ namespace StructureMap
             }
         }
 
-
         /// <summary>
         ///     Creates a new instance of the requested type using the supplied Instance.  Mostly used internally
         /// </summary>
@@ -350,7 +423,7 @@ namespace StructureMap
         {
             try
             {
-                var session = new BuildSession(_pipelineGraph, instance.Name) {RootType = instance.ReturnedType};
+                var session = new BuildSession(_pipelineGraph, instance.Name) { RootType = instance.ReturnedType };
                 return session.FindObject(pluginType, instance);
             }
             catch (StructureMapException e)
@@ -401,14 +474,12 @@ namespace StructureMap
                         .Each(x => x.SetLifecycleTo<ContainerLifecycle>());
                 }
 
-
                 if (Role == ContainerRole.Nested)
                 {
                     _pipelineGraph.ValidateValidNestedScoping();
                 }
             }
         }
-
 
         /// <summary>
         /// Get the child container for the named profile
@@ -496,7 +567,6 @@ namespace StructureMap
         {
             return new ExplicitArgsExpression(this).With(argName);
         }
-
 
         /// <summary>
         ///     Use with caution!  Does a full environment test of the configuration of this container.  Will try to create every configured
@@ -611,7 +681,6 @@ namespace StructureMap
             Configure(x => x.For<TPluginType>().Use(instance));
         }
 
-
         /// <summary>
         ///     Injects the given object into a Container as the default for the designated
         ///     pluginType.  Mostly used for temporarily setting up return values of the Container
@@ -645,8 +714,6 @@ namespace StructureMap
             {
                 RootType = instance.ReturnedType
             };
-
-            
 
             return session.FindObject(pluginType, instance);
         }
@@ -690,7 +757,7 @@ namespace StructureMap
             T GetInstanceAs<T>();
         }
 
-        #endregion
+        #endregion Nested type: GetInstanceAsExpression
 
         #region Nested type: OpenGenericTypeExpression
 
@@ -716,10 +783,10 @@ namespace StructureMap
 
             public T GetInstanceAs<T>()
             {
-                return (T) _container.GetInstance(_pluginType);
+                return (T)_container.GetInstance(_pluginType);
             }
 
-            #endregion
+            #endregion GetInstanceAsExpression Members
 
             public GetInstanceAsExpression WithParameters(params Type[] parameterTypes)
             {
@@ -728,7 +795,7 @@ namespace StructureMap
             }
         }
 
-        #endregion
+        #endregion Nested type: OpenGenericTypeExpression
 
         public ITransientTracking TransientTracking
         {
@@ -740,8 +807,4 @@ namespace StructureMap
             TransientTracking.Release(@object);
         }
     }
-
-
-
-
 }

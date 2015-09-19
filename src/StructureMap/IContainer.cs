@@ -157,6 +157,46 @@ namespace StructureMap
         object GetInstance(Type pluginType, ExplicitArguments args, string name);
 
         /// <summary>
+        /// Gets the default instance of <typeparamref name="T"/>, but built with the overridden arguments from
+        /// <paramref name="args"/>. Returns the default value of <typeparamref name="T"/> if it is not known to
+        /// the container.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        T TryGetInstance<T>(ExplicitArguments args);
+
+        /// <summary>
+        /// Gets the named instance of <typeparamref name="T"/> using the explicitly configured arguments from
+        /// <paramref name="args"/>. Returns the default value of <typeparamref name="T"/> if it is not known to
+        /// the container.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        T TryGetInstance<T>(ExplicitArguments args, string name);
+
+        /// <summary>
+        /// Gets the default instance of <paramref name="pluginType"/> using the explicitly configured arguments from
+        /// <paramref name="args"/>. Returns <c>null</c> if the named instance is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        object TryGetInstance(Type pluginType, ExplicitArguments args);
+
+        /// <summary>
+        /// Gets the named instance of <paramref name="pluginType"/> using the explicitly configured arguments from
+        /// <paramref name="args"/>. Returns null if the named instance is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="args"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        object TryGetInstance(Type pluginType, ExplicitArguments args, string name);
+
+        /// <summary>
         /// Removes all configured instances of type T from the Container.  Use with caution!
         /// </summary>
         /// <typeparam name="T"></typeparam>
