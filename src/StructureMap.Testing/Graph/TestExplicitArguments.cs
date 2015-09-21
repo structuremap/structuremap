@@ -1,7 +1,9 @@
-using System.Linq;
 using NUnit.Framework;
 using Shouldly;
+using StructureMap.Building;
 using StructureMap.Pipeline;
+using System;
+using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
@@ -30,7 +32,6 @@ namespace StructureMap.Testing.Graph
                 _name = name;
                 _provider = provider;
             }
-
 
             public string Name
             {
@@ -67,13 +68,11 @@ namespace StructureMap.Testing.Graph
         public class SpecialInstance : LambdaInstance<ClassWithNoArgs>
         {
             public SpecialInstance() : base("builds ClassWithNoArgs", session =>
-            {
-                return new ClassWithNoArgs
+                new ClassWithNoArgs
                 {
-                    TheAddress = (Address) session.GetInstance(typeof (Address))
-                };
-            }
-                )
+                    TheAddress = (Address)session.GetInstance(typeof(Address))
+                }
+            )
             {
             }
         }
@@ -111,7 +110,6 @@ namespace StructureMap.Testing.Graph
                     o.Type<ColorWithLump>().Ctor<string>("color").Is("blue").Named("blue");
                 });
             });
-
 
             var lump = new Lump();
 
@@ -184,7 +182,7 @@ namespace StructureMap.Testing.Graph
             var theTrade = new Trade();
 
             var command = container
-                .With(typeof (Node), theNode)
+                .With(typeof(Node), theNode)
                 .With(theTrade)
                 .GetInstance<Command>();
 
@@ -202,7 +200,7 @@ namespace StructureMap.Testing.Graph
             var theTrade = new Trade();
 
             var command = container
-                .With(typeof (Node), theNode)
+                .With(typeof(Node), theNode)
                 .With(theTrade)
                 .GetInstance<Command>();
 
@@ -300,13 +298,12 @@ namespace StructureMap.Testing.Graph
 
             var theTrade = new Trade();
 
-            var views = container.With(theTrade).GetAllInstances(typeof (TradeView))
+            var views = container.With(theTrade).GetAllInstances(typeof(TradeView))
                 .OfType<TradeView>();
 
             views.ElementAt(0).Trade.ShouldBeTheSameAs(theTrade);
             views.ElementAt(1).Trade.ShouldBeTheSameAs(theTrade);
         }
-
 
         [Test]
         public void Pass_in_arguments_as_dictionary()
@@ -327,7 +324,6 @@ namespace StructureMap.Testing.Graph
             theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
-
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterface()
         {
@@ -339,7 +335,7 @@ namespace StructureMap.Testing.Graph
             var theLump = new Lump();
             args.Set(theLump);
 
-            var instance = (LumpProvider) manager.GetInstance<IProvider>(args);
+            var instance = (LumpProvider)manager.GetInstance<IProvider>(args);
             theLump.ShouldBeTheSameAs(instance.Lump);
         }
 
@@ -348,10 +344,9 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container(x => x.For<IProvider>().Use<LumpProvider>());
 
-
             var theLump = new Lump();
 
-            var provider = (LumpProvider) container.With(theLump).GetInstance<IProvider>();
+            var provider = (LumpProvider)container.With(theLump).GetInstance<IProvider>();
             theLump.ShouldBeTheSameAs(provider.Lump);
         }
 
@@ -431,9 +426,124 @@ namespace StructureMap.Testing.Graph
 
             var address = new Address();
 
-
             container.With(address).GetInstance<ClassWithNoArgs>()
                 .TheAddress.ShouldBeTheSameAs(address);
+        }
+
+        [Test]
+        public void TryGetInstance_ReturnsNull_IfTypeNotFound()
+        {
+            var container = new Container();
+            container.TryGetInstance<IProvider>(new ExplicitArguments()).ShouldBeNull();
+        }
+
+        [Test]
+        public void TryGetInstance_ReturnsNull_IfUseWithAndTypeNotFound()
+        {
+            var container = new Container();
+            container
+                .With(new Lump())
+                .TryGetInstance<IProvider>()
+                .ShouldBeNull();
+        }
+
+        [Test]
+        public void TryGetInstance_ReturnsInstance_IfTypeFound()
+        {
+            var container = new Container(cfg => cfg.For<IProvider>().Use<LumpProvider>());
+
+            var theLump = new Lump();
+
+            var instance = (LumpProvider)container.TryGetInstance<IProvider>(new ExplicitArguments().Set(theLump));
+            theLump.ShouldBeTheSameAs(instance.Lump);
+        }
+
+        [Test]
+        public void TryGetInstance_ReturnsInstance_IfUseWithAndTypeFound()
+        {
+            var container = new Container(cfg => cfg.For<IProvider>().Use<LumpProvider>());
+
+            var theLump = new Lump();
+
+            var instance = (LumpProvider)container
+                .With(theLump)
+                .TryGetInstance<IProvider>();
+            theLump.ShouldBeTheSameAs(instance.Lump);
+        }
+
+        [Test]
+        public void TryGetInstance_ReturnsNull_IfNamedInstanceNotFound()
+        {
+            const string providerName = "lump";
+            var container = new Container(cfg => cfg.For<IProvider>().Use<LumpProvider>());
+            container.TryGetInstance<IProvider>(new ExplicitArguments(), providerName).ShouldBeNull();
+        }
+
+        [Test]
+        public void TryGetInstance_ReturnsNull_IfUseWithAndNamedInstanceNotFound()
+        {
+            const string providerName = "lump";
+            var container = new Container(cfg => cfg.For<IProvider>().Use<LumpProvider>());
+            container
+                .With(new Lump())
+                .TryGetInstance<IProvider>(providerName)
+                .ShouldBeNull();
+        }
+
+        [Test]
+        public void TryGetInstance_ReturnsInstance_IfNamedInstanceFound()
+        {
+            const string providerName = "lump";
+            var container = new Container(cfg =>
+            {
+                cfg.For<IProvider>().Use<RedProvider>();
+                cfg.For<IProvider>().Add<LumpProvider>().Named(providerName);
+            });
+
+            var theLump = new Lump();
+
+            var instance = (LumpProvider)container.TryGetInstance<IProvider>(new ExplicitArguments().Set(theLump), providerName);
+            theLump.ShouldBeTheSameAs(instance.Lump);
+        }
+
+        [Test]
+        public void TryGetInstance_ReturnsInstance_IfUseWithAndNamedInstanceFound()
+        {
+            const string providerName = "lump";
+            var container = new Container(cfg =>
+            {
+                cfg.For<IProvider>().Use<RedProvider>();
+                cfg.For<IProvider>().Add<LumpProvider>().Named(providerName);
+            });
+
+            var theLump = new Lump();
+
+            var instance = (LumpProvider)container
+                .With(theLump)
+                .TryGetInstance<IProvider>(providerName);
+            theLump.ShouldBeTheSameAs(instance.Lump);
+        }
+
+        [Test]
+        public void TryGetInstance_ThrowsException_IfInstanceConstructorThrows()
+        {
+            var container = new Container(cfg => cfg.For<IProvider>().Use<ExceptionalLumpProvider>());
+
+            Exception<StructureMapBuildException>.ShouldBeThrownBy(() =>
+            {
+                container.TryGetInstance<IProvider>(new ExplicitArguments().Set<Lump>(null));
+            });
+        }
+
+        private class ExceptionalLumpProvider : LumpProvider
+        {
+            public ExceptionalLumpProvider(Lump lump) : base(lump)
+            {
+                if (lump == null)
+                {
+                    throw new ArgumentNullException();
+                }
+            }
         }
     }
 
@@ -472,13 +582,11 @@ namespace StructureMap.Testing.Graph
             _lump = lump;
         }
 
-
         public Lump Lump
         {
             get { return _lump; }
         }
     }
-
 
     public class Trade
     {
