@@ -415,6 +415,7 @@
     <Compile Include="Samples\quickstart\configuring_the_container.cs" />
     <Compile Include="Samples\quickstart\resolving_instances.cs" />
     <Compile Include="Samples\registries.cs" />
+    <Compile Include="Samples\TalkSamples.cs" />
     <Compile Include="SessionCacheTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
