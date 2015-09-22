@@ -1,7 +1,7 @@
+using StructureMap.Pipeline;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -60,7 +60,7 @@ namespace StructureMap
             return this;
         }
 
-        #endregion
+        #endregion IExplicitProperty Members
 
         /// <summary>
         /// Pass in additional arguments by type T
@@ -136,7 +136,6 @@ namespace StructureMap
             return _container.GetInstance(type, _args, name);
         }
 
-
         /// <summary>
         /// Gets all configured instances of type T using explicitly configured arguments
         /// </summary>
@@ -150,6 +149,52 @@ namespace StructureMap
         public IEnumerable GetAllInstances(Type type)
         {
             return _container.GetAllInstances(type, _args);
+        }
+
+        /// <summary>
+        /// Gets the default instance of <typeparamref name="T"/> using explicitly configured arguments. Returns
+        /// the default value of <typeparamref name="T"/> if it is not known to the container.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T TryGetInstance<T>()
+        {
+            return _container.TryGetInstance<T>(_args);
+        }
+
+        /// <summary>
+        /// Gets the named instance of <typeparamref name="T"/> using the explicitly configured arguments. Returns
+        /// the default value of <typeparamref name="T"/> if it is not known to the container.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public T TryGetInstance<T>(string name)
+        {
+            return _container.TryGetInstance<T>(_args, name);
+        }
+
+        /// <summary>
+        /// Gets the default instance of <paramref name="pluginType"/> using the explicitly configured arguments.
+        /// Returns <c>null</c> if the named instance is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
+        public object TryGetInstance(Type pluginType)
+        {
+            return _container.TryGetInstance(pluginType, _args);
+        }
+
+        /// <summary>
+        /// Gets the named instance of <paramref name="pluginType"/> using the explicitly configured arguments.
+        /// Returns <c>null</c> if the named instance is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public object TryGetInstance(Type pluginType, string name)
+        {
+            return _container.TryGetInstance(pluginType, _args, name);
         }
     }
 }

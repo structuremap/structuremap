@@ -4,6 +4,7 @@ using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +18,7 @@ namespace StructureMap.Pipeline
 
         private readonly IList<IInterceptor> _interceptors = new List<IInterceptor>();
 
-        private readonly IDictionary<Type, int> _hashCodes = new Dictionary<Type, int>();
+        private readonly ConcurrentDictionary<Type, int> _hashCodes = new ConcurrentDictionary<Type, int>();
 
         /// <summary>
         /// Add an interceptor to only this Instance
@@ -188,20 +189,13 @@ namespace StructureMap.Pipeline
                 return _hashCode;
             }
 
-            int instanceKey;
-            if (_hashCodes.TryGetValue(pluginType, out instanceKey))
+            return _hashCodes.GetOrAdd(pluginType, t =>
             {
-                return instanceKey;
-            }
-
-            unchecked
-            {
-                instanceKey = _hashCode * 397 ^ pluginType.AssemblyQualifiedName.GetHashCode();
-            }
-
-            _hashCodes.Add(pluginType, instanceKey);
-
-            return instanceKey;
+                unchecked
+                {
+                    return _hashCode * 397 ^ pluginType.AssemblyQualifiedName.GetHashCode();
+                }
+            });
         }
 
         public ILifecycle DetermineLifecycle(ILifecycle parent)
