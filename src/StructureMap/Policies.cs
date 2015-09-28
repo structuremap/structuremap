@@ -20,7 +20,12 @@ namespace StructureMap
         private readonly IDictionary<Type, BuildUpPlan> _buildUpPlans
             = new Dictionary<Type, BuildUpPlan>();
 
-        private readonly IList<IInstancePolicy> _policies = new List<IInstancePolicy>(); 
+        private readonly IList<IInstancePolicy> _policies = new List<IInstancePolicy>();
+
+        public Policies()
+        {
+            _policies.Add(ConstructorSelector);
+        }
 
         public void Add(IInterceptorPolicy interception)
         {
@@ -121,6 +126,21 @@ namespace StructureMap
             get { return _inner; }
         }
     }
+
+    public abstract class ConfiguredInstancePolicy : IInstancePolicy
+    {
+        public void Apply(Type pluginType, Instance instance)
+        {
+            var configured = instance as IConfiguredInstance;
+            if (configured != null)
+            {
+                apply(pluginType, configured);
+            }
+        }
+
+        protected abstract void apply(Type pluginType, IConfiguredInstance instance);
+    }
+
 
     public interface IInstancePolicy
     {
