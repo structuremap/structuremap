@@ -228,7 +228,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             var instance = new ConfiguredInstance(decoratorType);
             var policy = new DecoratorPolicy(_pluginType, instance, filter);
 
-            _registry.alter = graph => graph.Policies.Interceptors.Add(policy);
+            _registry.alter = graph => graph.Policies.Add(policy);
 
             return instance;
         }

@@ -239,6 +239,7 @@
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
     <Compile Include="Bugs\MemoryLeak_bug_289.cs" />
     <Compile Include="Bugs\MixedConfigureAndInitializeMissingInstanceProblem.cs" />
+    <Compile Include="Bugs\OpenGenericDecorator_question.cs" />
     <Compile Include="Bugs\OpenGenericWithConstraints.cs" />
     <Compile Include="Bugs\Register_Lambda_against_Type_Bug_274.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
@@ -294,12 +295,14 @@
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\DSL\UseIfNoneTests.cs" />
     <Compile Include="Container_role_assignment_and_profile_name_Tester.cs" />
+    <Compile Include="CustomPolicyTester.cs" />
     <Compile Include="Diagnostics\AssertConfigurationIsValid_Smoke_Tester.cs" />
     <Compile Include="Diagnostics\BuildPlanVisualizationSmokeTester.cs" />
     <Compile Include="Diagnostics\BuildPlanVisualizerTester.cs" />
     <Compile Include="Diagnostics\TreeView\TreeWriter_Smoke_Tester.cs" />
     <Compile Include="Diagnostics\VisualizationRegistry.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
+    <Compile Include="disposed_container_message_tester.cs" />
     <Compile Include="Examples.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -415,6 +418,7 @@
     <Compile Include="Samples\quickstart\configuring_the_container.cs" />
     <Compile Include="Samples\quickstart\resolving_instances.cs" />
     <Compile Include="Samples\registries.cs" />
+    <Compile Include="Samples\TalkSamples.cs" />
     <Compile Include="SessionCacheTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />

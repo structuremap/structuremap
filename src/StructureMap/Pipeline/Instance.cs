@@ -12,6 +12,8 @@ namespace StructureMap.Pipeline
 {
     public abstract class Instance : HasLifecycle, IDescribed
     {
+        internal readonly IList<IInstancePolicy> AppliedPolicies = new List<IInstancePolicy>(); 
+
         private readonly string _originalName;
         private readonly int _hashCode;
         private string _name;
@@ -152,10 +154,11 @@ namespace StructureMap.Pipeline
         {
             try
             {
-                var builderSource = ToBuilder(pluginType, policies);
-                var interceptors = determineInterceptors(pluginType, policies);
+                policies.Apply(pluginType, this);
 
-                return new BuildPlan(pluginType, this, builderSource, policies, interceptors);
+                var builderSource = ToBuilder(pluginType, policies);
+
+                return new BuildPlan(pluginType, this, builderSource, policies, Interceptors);
             }
             catch (StructureMapException e)
             {
@@ -168,13 +171,6 @@ namespace StructureMap.Pipeline
                     "Error while trying to create the BuildPlan for {0}.\nPlease check the inner exception".ToFormat(
                         toDescription(pluginType)), e);
             }
-        }
-
-        protected IEnumerable<IInterceptor> determineInterceptors(Type pluginType, Policies policies)
-        {
-            var interceptors =
-                policies.Interceptors.SelectInterceptors(pluginType, this).Union(_interceptors);
-            return interceptors;
         }
 
         /// <summary>

@@ -131,7 +131,7 @@ namespace StructureMap.Testing.Building.Interception
                         plan.ToBuilder<ITarget>()(session, session);
                     });
 
-            ex.Title.ShouldBe(
+            ex.Title.Trim().ShouldBe(
                 "Activator interceptor failed during object creation.  See the inner exception for details.");
             ex.Message.ShouldContain(interceptor.Description);
         }

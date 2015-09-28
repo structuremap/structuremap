@@ -48,8 +48,26 @@ namespace StructureMap
         {
         }
 
+        private void assertNotDisposed()
+        {
+            if (!_disposedLatch) return;
+
+            switch (Role)
+            {
+                    case ContainerRole.Root:
+                        throw new ObjectDisposedException("StructureMap Application Root Container");
+
+                    case ContainerRole.Nested:
+                        throw new ObjectDisposedException("StructureMap Nested Container");
+
+                    case ContainerRole.ProfileOrChild:
+                        throw new ObjectDisposedException("StructureMap Child/Profile Container");
+            }
+        }
+
         internal Container(IPipelineGraph pipelineGraph)
         {
+            _role = pipelineGraph.Role;
             Name = Guid.NewGuid().ToString();
 
             _pipelineGraph = pipelineGraph;
@@ -61,7 +79,11 @@ namespace StructureMap
         /// </summary>
         public IModel Model
         {
-            get { return _pipelineGraph.ToModel(); }
+            get
+            {
+                assertNotDisposed();
+                return _pipelineGraph.ToModel();
+            }
         }
 
         /// <summary>
@@ -122,6 +144,8 @@ namespace StructureMap
         /// <returns>The created instance of <paramref name="pluginType"/>.</returns>
         public object GetInstance(Type pluginType, ExplicitArguments args)
         {
+            assertNotDisposed();
+
             try
             {
                 var defaultInstance = _pipelineGraph.Instances.GetDefault(pluginType);
@@ -146,6 +170,8 @@ namespace StructureMap
         /// <returns>The created instance of <paramref name="pluginType"/>.</returns>
         public object GetInstance(Type pluginType, ExplicitArguments args, string instanceKey)
         {
+            assertNotDisposed();
+
             try
             {
                 var namedInstance = _pipelineGraph.Instances.FindInstance(pluginType, instanceKey);
@@ -198,6 +224,8 @@ namespace StructureMap
         ///  otherwise.</returns>
         public object TryGetInstance(Type pluginType, ExplicitArguments args)
         {
+            assertNotDisposed();
+
             try
             {
                 return !_pipelineGraph.Instances.HasDefaultForPluginType(pluginType)
@@ -223,6 +251,8 @@ namespace StructureMap
         ///  otherwise.</returns>
         public object TryGetInstance(Type pluginType, ExplicitArguments args, string instanceKey)
         {
+            assertNotDisposed();
+
             try
             {
                 return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
@@ -245,6 +275,8 @@ namespace StructureMap
         /// <returns>All resolved instances of <paramref name="pluginType"/>.</returns>
         public IEnumerable GetAllInstances(Type pluginType, ExplicitArguments args)
         {
+            assertNotDisposed();
+
             try
             {
                 var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
@@ -266,6 +298,8 @@ namespace StructureMap
         /// <returns>All resolved instances of <typeparamref name="T"/>.</returns>
         public IEnumerable<T> GetAllInstances<T>(ExplicitArguments args)
         {
+            assertNotDisposed();
+
             try
             {
                 var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
@@ -295,6 +329,8 @@ namespace StructureMap
         /// <returns>All created or resolved instances of type <typeparamref name="T"/>.</returns>
         public IEnumerable<T> GetAllInstances<T>()
         {
+            assertNotDisposed();
+
             try
             {
                 var session = new BuildSession(_pipelineGraph);
@@ -315,6 +351,8 @@ namespace StructureMap
         /// <returns>The named instance of <paramref name="pluginType"/>.</returns>
         public object GetInstance(Type pluginType, string instanceKey)
         {
+            assertNotDisposed();
+
             try
             {
                 return new BuildSession(_pipelineGraph, instanceKey).CreateInstance(pluginType, instanceKey);
@@ -336,6 +374,8 @@ namespace StructureMap
         /// </returns>
         public object TryGetInstance(Type pluginType, string instanceKey)
         {
+            assertNotDisposed();
+
             try
             {
                 return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
@@ -358,6 +398,8 @@ namespace StructureMap
         /// </returns>
         public object TryGetInstance(Type pluginType)
         {
+            assertNotDisposed();
+
             try
             {
                 return !_pipelineGraph.Instances.HasDefaultForPluginType(pluginType)
@@ -390,6 +432,8 @@ namespace StructureMap
         /// <param name="target">The object to inject properties to.</param>
         public void BuildUp(object target)
         {
+            assertNotDisposed();
+
             try
             {
                 new BuildSession(_pipelineGraph).BuildUp(target);
@@ -421,6 +465,8 @@ namespace StructureMap
         /// <returns>The default instance of <paramref name="pluginType"/>.</returns>
         public object GetInstance(Type pluginType)
         {
+            assertNotDisposed();
+
             try
             {
                 return new BuildSession(_pipelineGraph).GetInstance(pluginType);
@@ -442,6 +488,8 @@ namespace StructureMap
         /// <returns>The created instance of <paramref name="pluginType"/>.</returns>
         public object GetInstance(Type pluginType, Instance instance)
         {
+            assertNotDisposed();
+
             try
             {
                 var session = new BuildSession(_pipelineGraph, instance.Name) { RootType = instance.ReturnedType };
@@ -461,6 +509,8 @@ namespace StructureMap
         /// <returns>All created or resolved instances of type <paramref name="pluginType"/>.</returns>
         public IEnumerable GetAllInstances(Type pluginType)
         {
+            assertNotDisposed();
+
             try
             {
                 return new BuildSession(_pipelineGraph).GetAllInstances(pluginType);
@@ -478,6 +528,8 @@ namespace StructureMap
         /// <param name="configure">Additional configuration.</param>
         public void Configure(Action<ConfigurationExpression> configure)
         {
+            assertNotDisposed();
+
             lock (_syncLock)
             {
                 _pipelineGraph.Configure(configure);
@@ -510,6 +562,8 @@ namespace StructureMap
         /// <returns>The created child container.</returns>
         public IContainer GetProfile(string profileName)
         {
+            assertNotDisposed();
+
             var pipeline = _pipelineGraph.Profiles.For(profileName);
             return new Container(pipeline);
         }
@@ -520,6 +574,8 @@ namespace StructureMap
         /// <returns>The created child container.</returns>
         public IContainer CreateChildContainer()
         {
+            assertNotDisposed();
+
             var pipeline = _pipelineGraph.Profiles.NewChild(_pipelineGraph.Instances.ImmediatePluginGraph);
             var childContainer = new Container(pipeline);
             _children.Add(childContainer);
@@ -549,6 +605,8 @@ namespace StructureMap
         public string WhatDoIHave(Type pluginType = null, Assembly assembly = null, string @namespace = null,
             string typeName = null)
         {
+            assertNotDisposed();
+
             var writer = new WhatDoIHaveWriter(_pipelineGraph);
             return writer.GetText(new ModelQuery
             {
@@ -569,6 +627,8 @@ namespace StructureMap
         /// configured arguments and use them for creating instances.</returns>
         public ExplicitArgsExpression With<T>(T arg)
         {
+            assertNotDisposed();
+
             return new ExplicitArgsExpression(this).With(arg);
         }
 
@@ -582,6 +642,8 @@ namespace StructureMap
         /// configured arguments and use them for creating instances.</returns>
         public ExplicitArgsExpression With(Type pluginType, object arg)
         {
+            assertNotDisposed();
+
             return new ExplicitArgsExpression(this).With(pluginType, arg);
         }
 
@@ -594,6 +656,8 @@ namespace StructureMap
         /// </returns>
         public IExplicitProperty With(string argName)
         {
+            assertNotDisposed();
+
             return new ExplicitArgsExpression(this).With(argName);
         }
 
@@ -604,6 +668,7 @@ namespace StructureMap
         /// </summary>
         public void AssertConfigurationIsValid()
         {
+            assertNotDisposed();
             PipelineGraphValidator.AssertNoErrors(_pipelineGraph);
         }
 
@@ -613,6 +678,7 @@ namespace StructureMap
         /// <typeparam name="T">The type which instance to be removed.</typeparam>
         public void EjectAllInstancesOf<T>()
         {
+            assertNotDisposed();
             _pipelineGraph.Ejector.EjectAllInstancesOf<T>();
         }
 
@@ -627,6 +693,7 @@ namespace StructureMap
         /// </example>
         public OpenGenericTypeExpression ForGenericType(Type templateType)
         {
+            assertNotDisposed();
             return new OpenGenericTypeExpression(templateType, this);
         }
 
@@ -643,6 +710,7 @@ namespace StructureMap
         /// <returns></returns>
         public CloseGenericTypeExpression ForObject(object subject)
         {
+            assertNotDisposed();
             return new CloseGenericTypeExpression(subject, this);
         }
 
@@ -652,6 +720,7 @@ namespace StructureMap
         /// <returns>The created nested container.</returns>
         public IContainer GetNestedContainer()
         {
+            assertNotDisposed();
             var pipeline = _pipelineGraph.ToNestedGraph();
             return GetNestedContainer(pipeline);
         }
@@ -663,6 +732,7 @@ namespace StructureMap
         /// <returns>The created nested container.</returns>
         public IContainer GetNestedContainer(string profileName)
         {
+            assertNotDisposed();
             var pipeline = _pipelineGraph.Profiles.For(profileName).ToNestedGraph();
             return GetNestedContainer(pipeline);
         }
@@ -678,6 +748,7 @@ namespace StructureMap
         }
 
         private bool _disposedLatch;
+        private ContainerRole _role;
 
         public void Dispose()
         {
@@ -755,6 +826,7 @@ namespace StructureMap
         /// configured arguments and use them for creating instances.</returns>
         public ExplicitArgsExpression With(Action<IExplicitArgsExpression> action)
         {
+            assertNotDisposed();
             var expression = new ExplicitArgsExpression(this);
             action(expression);
 
@@ -768,6 +840,7 @@ namespace StructureMap
         /// <param name="instance">The instance to inject.</param>
         public void Inject(Type pluginType, Instance instance)
         {
+            assertNotDisposed();
             Configure(x => x.For(pluginType).Use(instance));
         }
 
@@ -776,7 +849,7 @@ namespace StructureMap
         /// </summary>
         public ContainerRole Role
         {
-            get { return _pipelineGraph.Role; }
+            get { return _role; }
         }
 
         #region Nested type: GetInstanceAsExpression
@@ -833,6 +906,7 @@ namespace StructureMap
 
         public void Release(object @object)
         {
+            assertNotDisposed();
             TransientTracking.Release(@object);
         }
     }

@@ -14,12 +14,51 @@ namespace StructureMap
     {
         public readonly SetterRules SetterRules = new SetterRules();
         public readonly ConstructorSelector ConstructorSelector = new ConstructorSelector();
-        public readonly InterceptorPolicies Interceptors = new InterceptorPolicies();
 
         private readonly object _buildLock = new object();
 
         private readonly IDictionary<Type, BuildUpPlan> _buildUpPlans
             = new Dictionary<Type, BuildUpPlan>();
+
+        private readonly IList<IInstancePolicy> _policies = new List<IInstancePolicy>();
+
+        public Policies()
+        {
+            _policies.Add(ConstructorSelector);
+        }
+
+        public void Add(IInstancePolicy policy)
+        {
+            _policies.Fill(policy);
+        }
+
+        public void Add(IInterceptorPolicy interception)
+        {
+            if (Interception().Contains(interception)) return;
+
+            _policies.Add(new InterceptionPolicy(interception));
+        }
+
+        public IEnumerable<IInterceptorPolicy> Interception()
+        {
+            return _policies.OfType<InterceptionPolicy>().Select(x => x.Inner);
+        }
+
+        public void Apply(Type pluginType, Instance instance)
+        {
+            _policies.Where(x => !instance.AppliedPolicies.Contains(x))
+                .Each(policy =>
+                {
+                    try
+                    {
+                        policy.Apply(pluginType, instance);
+                    }
+                    finally
+                    {
+                        instance.AppliedPolicies.Add(policy);
+                    }
+                });
+        }
 
         public BuildUpPlan ToBuildUpPlan(Type pluggedType, Func<IConfiguredInstance> findInstance)
         {
@@ -72,4 +111,46 @@ namespace StructureMap
             return ConstructorSelector.Select(pluggedType);
         }
     }
+
+    internal class InterceptionPolicy : IInstancePolicy
+    {
+        private readonly IInterceptorPolicy _inner;
+
+        public InterceptionPolicy(IInterceptorPolicy inner)
+        {
+            _inner = inner;
+        }
+
+        public void Apply(Type pluginType, Instance instance)
+        {
+            _inner.DetermineInterceptors(pluginType, instance).Each(instance.AddInterceptor);
+        }
+
+        public IInterceptorPolicy Inner
+        {
+            get { return _inner; }
+        }
+    }
+
+    public abstract class ConfiguredInstancePolicy : IInstancePolicy
+    {
+        public void Apply(Type pluginType, Instance instance)
+        {
+            var configured = instance as IConfiguredInstance;
+            if (configured != null)
+            {
+                apply(pluginType, configured);
+            }
+        }
+
+        protected abstract void apply(Type pluginType, IConfiguredInstance instance);
+    }
+
+
+    public interface IInstancePolicy
+    {
+        void Apply(Type pluginType, Instance instance);
+    }
+
+
 }

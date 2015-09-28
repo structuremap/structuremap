@@ -109,7 +109,6 @@
     <Compile Include="Building\Interception\InterceptionPlan.cs" />
     <Compile Include="Building\Interception\InterceptorPolicy.cs" />
     <Compile Include="Building\Interception\InterceptorFactory.cs" />
-    <Compile Include="Building\Interception\InterceptorPolicies.cs" />
     <Compile Include="Building\Interception\InterceptorRole.cs" />
     <Compile Include="Building\Interception\ParameterRewriter.cs" />
     <Compile Include="Building\LifecycleDependencySource.cs" />
@@ -200,9 +199,7 @@
     <Compile Include="IInstanceGraph.cs" />
     <Compile Include="ILifecycleContext.cs" />
     <Compile Include="InitializationExpression.cs" />
-    <Compile Include="InstanceMemento.cs" />
     <Compile Include="IPipelineGraph.cs" />
-    <Compile Include="MemoryInstanceMemento.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="PipelineGraph.cs" />
     <Compile Include="Pipeline\Argument.cs" />
@@ -227,7 +224,6 @@
     <Compile Include="Pipeline\ILifecycle.cs" />
     <Compile Include="Pipeline\ILocationPolicy.cs" />
     <Compile Include="Pipeline\Instance.cs" />
-    <Compile Include="Pipeline\InstanceMementoPropertyReader.cs" />
     <Compile Include="Pipeline\IObjectCache.cs" />
     <Compile Include="Pipeline\ITransientTracking.cs" />
     <Compile Include="Pipeline\LambdaInstance.cs" />

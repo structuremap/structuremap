@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
 using StructureMap.Pipeline;

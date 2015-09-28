@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace StructureMap.Pipeline
 {
-    public class ConstructorSelector
+    public class ConstructorSelector : ConfiguredInstancePolicy
     {
         private readonly IList<IConstructorSelector> _selectors = new List<IConstructorSelector>();
 
@@ -15,8 +15,12 @@ namespace StructureMap.Pipeline
             new GreediestConstructorSelector()
         };
 
-        public ConstructorSelector()
+        protected override void apply(Type pluginType, IConfiguredInstance instance)
         {
+            if (instance.Constructor == null)
+            {
+                instance.Constructor = Select(instance.PluggedType);
+            }
         }
 
         public void Add(IConstructorSelector selector)

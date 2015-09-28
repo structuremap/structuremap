@@ -20,13 +20,13 @@ namespace StructureMap.Testing.Building.Interception
 
             policy1.ShouldBe(policy2);
 
-            var policies = new InterceptorPolicies();
+            var policies = new Policies();
             policies.Add(policy1);
             policies.Add(policy2);
             policies.Add(policy1);
             policies.Add(policy2);
 
-            policies.Policies.Single().ShouldBeTheSameAs(policy1);
+            policies.Interception().Single().ShouldBeTheSameAs(policy1);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Building.Interception
             var activator5 = new ActivatorInterceptor<IGateway>(x => x.DoSomething());
 
 
-            var policies = new InterceptorPolicies();
+            var policies = new Policies();
             policies.Add(activator1.ToPolicy());
             policies.Add(activator2.ToPolicy());
             policies.Add(activator3.ToPolicy());
@@ -47,14 +47,23 @@ namespace StructureMap.Testing.Building.Interception
             policies.Add(activator5.ToPolicy());
 
 
-            policies.SelectInterceptors(typeof (ITarget), new SmartInstance<Target>())
+            var instance1 = new SmartInstance<Target>();
+            policies.Apply(typeof(ITarget), instance1);
+            instance1.Interceptors
                 .ShouldHaveTheSameElementsAs(activator1, activator2, activator3, activator4);
 
-            policies.SelectInterceptors(typeof (ITarget), new SmartInstance<ATarget>())
+
+            var instance2 = new SmartInstance<ATarget>();
+            policies.Apply(typeof(ITarget), instance2);
+            instance2.Interceptors
                 .ShouldHaveTheSameElementsAs(activator1, activator4);
 
-            policies.SelectInterceptors(typeof (ITarget), new SmartInstance<StubbedGateway>())
+
+            var instance3 = new SmartInstance<StubbedGateway>();
+            policies.Apply(typeof(ITarget), instance3);
+            instance3.Interceptors
                 .ShouldHaveTheSameElementsAs(activator5);
+                
         }
 
         [Test]
