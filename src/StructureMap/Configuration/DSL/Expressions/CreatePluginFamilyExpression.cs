@@ -346,7 +346,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             _children.Add(
                 graph =>
                 {
-                    graph.Policies.Interceptors.Add<TPluginType>(interceptor, filter);
+                    graph.Policies.Add(new InterceptorPolicy<TPluginType>(interceptor, filter));
                 });
 
             return this;
@@ -362,7 +362,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             var interceptor = new DecoratorInterceptor(typeof (TPluginType), instance);
             var policy = new InterceptorPolicy<TPluginType>(interceptor, filter);
 
-            alter = graph => graph.Policies.Interceptors.Add(policy);
+            alter = graph => graph.Policies.Add(policy);
 
             return instance;
         }

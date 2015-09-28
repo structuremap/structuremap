@@ -84,8 +84,9 @@ namespace StructureMap.Pipeline
 
         protected override IBuildPlan buildPlan(Type pluginType, Policies policies)
         {
-            var interceptors = determineInterceptors(pluginType, policies);
-            if (!interceptors.Any())
+            policies.Apply(pluginType, this);
+
+            if (!Interceptors.Any())
             {
                 return this;
             }

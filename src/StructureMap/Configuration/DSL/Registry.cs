@@ -342,7 +342,7 @@ namespace StructureMap.Configuration.DSL
             /// <param name="policy"></param>
             public void Interceptors(IInterceptorPolicy policy)
             {
-                alter = graph => graph.Policies.Interceptors.Add(policy);
+                alter = graph => graph.Policies.Add(policy);
             }
 
             /// <summary>
