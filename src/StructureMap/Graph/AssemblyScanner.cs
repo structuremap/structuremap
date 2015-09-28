@@ -109,6 +109,7 @@ namespace StructureMap.Graph
             Exclude(type => type == typeof (T));
         }
 
+        [Obsolete("This can be eliminated")]
         public void ModifyGraphAfterScan(Action<PluginGraph> modifyGraph)
         {
             _postScanningActions.Add(modifyGraph);
@@ -170,6 +171,7 @@ namespace StructureMap.Graph
             ModifyGraphAfterScan(graph => {
                 convention.Apply(graph);
             });
+
             return new ConfigureConventionExpression(convention);
         }
 

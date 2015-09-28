@@ -25,7 +25,6 @@ namespace StructureMap.Configuration.DSL
     public class Registry : IRegistry, IPluginGraphConfiguration
     {
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
-        private readonly List<Action> _basicActions = new List<Action>();
         private readonly List<Action<PluginGraphBuilder>> _builders = new List<Action<PluginGraphBuilder>>();
 
         internal Action<PluginGraph> alter
@@ -220,16 +219,10 @@ namespace StructureMap.Configuration.DSL
             alter = configure;
         }
 
-        protected void registerAction(Action action)
-        {
-            _basicActions.Add(action);
-        }
-
         void IPluginGraphConfiguration.Configure(PluginGraph graph)
         {
             if (graph.Registries.Contains(this)) return;
 
-            _basicActions.Each(action => action());
             _actions.Each(action => action(graph));
 
             graph.Registries.Add(this);
