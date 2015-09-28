@@ -32,11 +32,6 @@ namespace StructureMap.Configuration.DSL
             set { _actions.Add(value); }
         }
 
-        private Action<PluginGraphBuilder> register
-        {
-            set { _builders.Add(value); }
-        }
-
         /// <summary>
         /// Adds the concreteType as an Instance of the pluginType.  Mostly useful
         /// for conventions
@@ -78,7 +73,7 @@ namespace StructureMap.Configuration.DSL
             var pluginGraphConfiguration = registry.As<IPluginGraphConfiguration>();
 
             alter = pluginGraphConfiguration.Configure;
-            register = pluginGraphConfiguration.Register;
+            _builders.Add(pluginGraphConfiguration.Register);
         }
 
         /// <summary>
@@ -141,7 +136,7 @@ namespace StructureMap.Configuration.DSL
             var scanner = new AssemblyScanner();
             action(scanner);
 
-            register = x => x.AddScanner(scanner);
+            _builders.Add(x => x.AddScanner(scanner));
         }
 
 
@@ -385,7 +380,7 @@ namespace StructureMap.Configuration.DSL
             public void Configure(IPluginGraphConfiguration pluginGraphConfig)
             {
                 alter = pluginGraphConfig.Configure;
-                _parent.register = pluginGraphConfig.Register;
+                _parent._builders.Add(pluginGraphConfig.Register);
             }
 
             /// <summary>
