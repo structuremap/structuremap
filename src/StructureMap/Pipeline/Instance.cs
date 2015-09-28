@@ -172,9 +172,7 @@ namespace StructureMap.Pipeline
 
         protected IEnumerable<IInterceptor> determineInterceptors(Type pluginType, Policies policies)
         {
-            var interceptors =
-                policies.Interceptors.SelectInterceptors(pluginType, this).Union(_interceptors);
-            return interceptors;
+            return policies.Interceptors.SelectInterceptors(pluginType, this).Union(Interceptors);
         }
 
         /// <summary>
