@@ -302,6 +302,7 @@
     <Compile Include="Diagnostics\TreeView\TreeWriter_Smoke_Tester.cs" />
     <Compile Include="Diagnostics\VisualizationRegistry.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
+    <Compile Include="disposed_container_message_tester.cs" />
     <Compile Include="Examples.cs">
       <SubType>Form</SubType>
     </Compile>
