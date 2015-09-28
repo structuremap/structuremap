@@ -295,6 +295,7 @@
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\DSL\UseIfNoneTests.cs" />
     <Compile Include="Container_role_assignment_and_profile_name_Tester.cs" />
+    <Compile Include="CustomPolicyTester.cs" />
     <Compile Include="Diagnostics\AssertConfigurationIsValid_Smoke_Tester.cs" />
     <Compile Include="Diagnostics\BuildPlanVisualizationSmokeTester.cs" />
     <Compile Include="Diagnostics\BuildPlanVisualizerTester.cs" />

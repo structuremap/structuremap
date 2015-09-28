@@ -337,6 +337,27 @@ namespace StructureMap.Configuration.DSL
             }
 
             /// <summary>
+            /// Adds a new instance policy to this container
+            /// that can apply to every object instance created
+            /// by this container
+            /// </summary>
+            /// <param name="policy"></param>
+            public void Add(IInstancePolicy policy)
+            {
+                alter = graph => graph.Policies.Add(policy);
+            }
+
+            /// <summary>
+            /// Adds a new instance policy to this container
+            /// that can apply to every object instance created
+            /// by this container
+            /// </summary>
+            public void Add<T>() where T : IInstancePolicy, new()
+            {
+                Add(new T());
+            }
+
+            /// <summary>
             /// Register an interception policy
             /// </summary>
             /// <param name="policy"></param>

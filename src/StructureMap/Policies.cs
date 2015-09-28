@@ -27,6 +27,11 @@ namespace StructureMap
             _policies.Add(ConstructorSelector);
         }
 
+        public void Add(IInstancePolicy policy)
+        {
+            _policies.Fill(policy);
+        }
+
         public void Add(IInterceptorPolicy interception)
         {
             if (Interception().Contains(interception)) return;
