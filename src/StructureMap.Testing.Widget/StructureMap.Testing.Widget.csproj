@@ -135,6 +135,7 @@
     <Compile Include="Rule.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Widget1Color.cs" />
     <Compile Include="WidgetMaker.cs">
       <SubType>Code</SubType>
     </Compile>

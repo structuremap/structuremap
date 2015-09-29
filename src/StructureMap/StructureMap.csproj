@@ -194,6 +194,7 @@
     <Compile Include="Graph\Scanning\AssemblyTypes.cs" />
     <Compile Include="Graph\Scanning\TypeClassification.cs" />
     <Compile Include="Graph\Scanning\TypeQuery.cs" />
+    <Compile Include="Graph\Scanning\TypeSet.cs" />
     <Compile Include="Graph\SetterRules.cs" />
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="IBuildSession.cs" />

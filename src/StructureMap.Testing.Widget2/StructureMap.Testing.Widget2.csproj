@@ -135,6 +135,7 @@
     <Compile Include="Rule1.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Widget2Color.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="structuremap.snk" />

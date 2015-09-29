@@ -19,6 +19,19 @@ namespace StructureMap.Graph.Scanning
             _assemblies.ClearAll();
         }
 
+        public static Task<AssemblyTypes> ForAssembly(Assembly assembly)
+        {
+            return _assemblies[assembly];
+        }
+
+        public static Task<TypeSet> FindTypes(IEnumerable<Assembly> assemblies, Func<Type, bool> filter = null)
+        {
+            var tasks = assemblies.Select(x => _assemblies[x]).ToArray();
+            return Task.Factory.ContinueWhenAll(tasks, assems =>
+            {
+                return new TypeSet(assems.Select(x => x.Result).ToArray(), filter);
+            });
+        }
 
 
         public static Task<IEnumerable<Type>> FindTypes(IEnumerable<Assembly> assemblies,

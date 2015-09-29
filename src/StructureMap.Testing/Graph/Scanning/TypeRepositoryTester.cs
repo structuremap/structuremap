@@ -4,6 +4,8 @@ using System.Linq;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Graph.Scanning;
+using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Graph.Scanning
@@ -75,7 +77,35 @@ namespace StructureMap.Testing.Graph.Scanning
 
         }
 
+        [Test]
+        public void find_type_set()
+        {
+            var widget1 = typeof (IWidget).Assembly;
+            var widget2 = typeof (StructureMap.Testing.Widget2.Rule1).Assembly;
+            var widget3 = typeof (StructureMap.Testing.Widget3.ColorService).Assembly;
 
+            var task = TypeRepository.FindTypes(new[] {widget1, widget2, widget3}, type => type.Name.Contains("Color"));
+            task.Wait();
+
+            var types = task.Result;
+
+            /*
+      ColorRule
+ColorService
+ColorWidget
+ColorWidgetMaker
+IColor
+Widget1Color
+Widget2Color
+             */
+
+            types.AllTypes().OrderBy(x => x.Name).Select(x => x.Name)
+                .ShouldHaveTheSameElementsAs("ColorRule", "ColorService", "ColorWidget", "ColorWidgetMaker", "IColor", "Widget1Color", "Widget2Color");
+
+            types.FindTypes(TypeClassification.Interfaces).OrderBy(x => x.Name)
+                .ShouldHaveTheSameElementsAs(typeof(IColor));
+
+        }
 
         [Test]
         public void find_all_types()

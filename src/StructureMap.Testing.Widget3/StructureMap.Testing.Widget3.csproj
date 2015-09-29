@@ -116,6 +116,7 @@
     <Compile Include="Gateways.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IColor.cs" />
     <Compile Include="IService.cs">
       <SubType>Code</SubType>
     </Compile>
