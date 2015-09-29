@@ -6,7 +6,7 @@ namespace StructureMap.Testing.Pipeline
 {
     public class StubBuildSession : BuildSession
     {
-        private static readonly PluginGraph _pluginGraph = new PluginGraph();
+        private static readonly PluginGraph _pluginGraph = PluginGraph.CreateRoot();
         private static readonly IPipelineGraph _pipeline;
 
         static StubBuildSession()

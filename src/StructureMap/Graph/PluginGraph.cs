@@ -39,7 +39,35 @@ namespace StructureMap.Graph
         /// </summary>
         public readonly IList<Type> ConnectedConcretions = new List<Type>();
 
-        public PluginGraph()
+        public static PluginGraph CreateRoot(string profile = null)
+        {
+            var graph = new PluginGraph();
+            graph.ProfileName = profile ?? "DEFAULT";
+
+            // TODO -- add default family policies
+
+            return graph;
+        }
+
+
+        public PluginGraph NewChild()
+        {
+            return new PluginGraph
+            {
+                Parent = this
+            };
+        }
+
+        public PluginGraph ToNestedGraph()
+        {
+            return new PluginGraph
+            {
+                Parent = this,
+                ProfileName = ProfileName + " - Nested"
+            };
+        }
+
+        private PluginGraph()
         {
             _profiles =
                 new LightweightCache<string, PluginGraph>(name => new PluginGraph {ProfileName = name, Parent = this});
@@ -52,13 +80,14 @@ namespace StructureMap.Graph
             _families.OnAddition = family => family.Owner = this;
         }
 
-        public PluginGraph Parent { get; set; }
-
+        public PluginGraph Parent { get; private set; }
+        /*
         public PluginGraph(string profileName) : this()
         {
             Name = profileName;
             ProfileName = profileName;
         }
+         */
 
         /// <summary>
         /// The profile name of this PluginGraph or "DEFAULT" if it is the top 

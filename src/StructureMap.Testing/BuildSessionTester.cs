@@ -254,7 +254,7 @@ namespace StructureMap.Testing
             var red = new ColorService("red");
             var green = new ColorService("green");
 
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             var family = graph.Families[typeof (IService)];
             family.AddInstance(new ObjectInstance(red).Named("red"));
             family.AddInstance(new ObjectInstance(green).Named("green"));
@@ -293,7 +293,7 @@ namespace StructureMap.Testing
             var red = new ColorService("red");
             var green = new ColorService("green");
 
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             var family = graph.Families[typeof (IService)];
             family.AddInstance(new ObjectInstance(red).Named("red"));
             family.AddInstance(new ObjectInstance(green).Named("green"));
@@ -376,14 +376,14 @@ namespace StructureMap.Testing
         [Test]
         public void parent_type_is_null_in_the_initial_state()
         {
-            var session = BuildSession.ForPluginGraph(new PluginGraph());
+            var session = BuildSession.ForPluginGraph(PluginGraph.CreateRoot());
             session.ParentType.ShouldBeNull();
         }
 
         [Test]
         public void push_an_instance_onto_a_session()
         {
-            var session = BuildSession.ForPluginGraph(new PluginGraph());
+            var session = BuildSession.ForPluginGraph(PluginGraph.CreateRoot());
             session.Push(new LambdaInstance<StubbedGateway>(c => new StubbedGateway()));
 
             session.ParentType.ShouldBeNull();
@@ -399,7 +399,7 @@ namespace StructureMap.Testing
         [Test]
         public void push_and_pop_an_instance_onto_a_session()
         {
-            var session = BuildSession.ForPluginGraph(new PluginGraph());
+            var session = BuildSession.ForPluginGraph(PluginGraph.CreateRoot());
 
             session.Push(new SmartInstance<AWidget>());
             session.Push(new LambdaInstance<StubbedGateway>(c => new StubbedGateway()));
@@ -414,7 +414,7 @@ namespace StructureMap.Testing
         [Test]
         public void pushing_the_same_instance_will_throw_a_bidirectional_dependency_exception()
         {
-            var session = BuildSession.ForPluginGraph(new PluginGraph());
+            var session = BuildSession.ForPluginGraph(PluginGraph.CreateRoot());
 
             var instance1 = new SmartInstance<StubbedGateway>();
             var instance2 = new SmartInstance<ARule>();

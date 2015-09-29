@@ -173,7 +173,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void Latch_on_a_PluginGraph()
         {
             var registry2 = new TestRegistry2();
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
 
             graph.Registries.Count.ShouldBe(0);
             registry2.As<IPluginGraphConfiguration>().Configure(graph);

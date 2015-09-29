@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void lifecycle_for_pluginType_explicitly_set()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             var profile = graph.Profile("Red");
             profile.Families[typeof (IGateway)].SetLifecycleTo<SingletonLifecycle>();
 
@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void lifecyle_for_pluginType_not_explicitly_set_falls_back_to_parent()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             graph.Families[typeof (IGateway)].SetLifecycleTo<SingletonLifecycle>();
 
             var pipeline = PipelineGraph.BuildRoot(graph).Profiles.For("Red");
@@ -35,7 +35,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void default_lifecycle_not_set_on_any_level()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
 
             var pipeline = PipelineGraph.BuildRoot(graph).Profiles.For("Red");
             pipeline.Instances.DefaultLifecycleFor(typeof (IGateway))

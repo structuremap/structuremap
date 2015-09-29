@@ -78,7 +78,7 @@ namespace StructureMap.Testing.Pipeline
             disposable1 = new StubDisposable();
             disposable2 = new StubDisposable();
 
-            pipeline = PipelineGraph.BuildRoot(new PluginGraph());
+            pipeline = PipelineGraph.BuildRoot(PluginGraph.CreateRoot());
 
             lifecycle.FindCache(pipeline)
                 .As<LifecycleObjectCache>()

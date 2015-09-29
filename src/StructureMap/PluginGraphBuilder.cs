@@ -20,7 +20,7 @@ namespace StructureMap
 
         public PluginGraphBuilder()
         {
-            _graph = new PluginGraph{Name = "Root"};
+            _graph = PluginGraph.CreateRoot();
         }
 
         public PluginGraphBuilder(PluginGraph graph)

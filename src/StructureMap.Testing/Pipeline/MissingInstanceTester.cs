@@ -90,7 +90,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void returns_missing_instance_if_it_exists_and_the_requested_instance_is_not_found()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             var family = graph.Families[typeof (IWidget)];
             var missing = new ObjectInstance(new AWidget());
             family.MissingInstance = missing;

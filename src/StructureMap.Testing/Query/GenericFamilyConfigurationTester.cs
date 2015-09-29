@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Query
         public void SetUp()
         {
             family = new PluginFamily(typeof (IService<>));
-            new PluginGraph("something").AddFamily(family);
+            PluginGraph.CreateRoot("something").AddFamily(family);
 
             configuration = new GenericFamilyConfiguration(family, PipelineGraph.BuildEmpty());
         }

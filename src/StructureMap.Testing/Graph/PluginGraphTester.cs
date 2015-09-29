@@ -28,7 +28,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void add_type_adds_an_instance_for_type_once_and_only_once()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
 
             graph.AddType(typeof (IThingy), typeof (BigThingy));
 
@@ -46,7 +46,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void all_instances_when_family_has_not_been_created()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             graph.AllInstances(typeof (BigThingy)).Any().ShouldBeFalse();
 
             graph.Families.Has(typeof (BigThingy)).ShouldBeFalse();
@@ -55,7 +55,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void all_instances_when_the_family_already_exists()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             graph.Families.FillDefault(typeof (BigThingy));
 
             graph.AllInstances(typeof (BigThingy)).Any().ShouldBeFalse();
@@ -68,7 +68,7 @@ namespace StructureMap.Testing.Graph
             var instance2 = new FakeInstance();
             var instance3 = new FakeInstance();
 
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             graph.Families[typeof (IThingy)].AddInstance(instance1);
             graph.Families[typeof (IThingy)].AddInstance(instance2);
             graph.Families[typeof (IThingy)].AddInstance(instance3);
@@ -104,7 +104,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void find_instance_negative_when_family_does_exist_but_instance_does_not()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             graph.Families[typeof (BigThingy)].AddInstance(new SmartInstance<BigThingy>().Named("red"));
 
             graph.FindInstance(typeof (BigThingy), "blue").ShouldBeNull();
@@ -113,7 +113,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void find_instance_negative_when_family_does_not_exist_does_not_create_family()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             graph.FindInstance(typeof (BigThingy), "blue").ShouldBeNull();
             graph.Families.Has(typeof (BigThingy)).ShouldBeFalse();
         }
@@ -121,7 +121,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void find_instance_positive()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             var instance = new SmartInstance<BigThingy>().Named("red");
             graph.Families[typeof (BigThingy)].AddInstance(instance);
 
@@ -131,7 +131,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void find_instance_can_use_missing_instance()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             var instance = new SmartInstance<BigThingy>().Named("red");
             graph.Families[typeof (BigThingy)].MissingInstance = instance;
 
@@ -143,7 +143,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void has_default_positive()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             graph.Families[typeof (IThingy)].SetDefault(new SmartInstance<BigThingy>());
 
             graph.HasDefaultForPluginType(typeof (IThingy));
@@ -152,14 +152,14 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void has_default_when_the_family_has_not_been_created()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             graph.HasDefaultForPluginType(typeof (IThingy)).ShouldBeFalse();
         }
 
         [Test]
         public void has_default_with_family_but_no_default()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             graph.Families[typeof (IThingy)].AddInstance(new SmartInstance<BigThingy>());
             graph.Families[typeof (IThingy)].AddInstance(new SmartInstance<BigThingy>());
 
@@ -170,7 +170,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void has_instance_negative_when_the_family_has_not_been_created()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
 
             graph.HasInstance(typeof (IThingy), "red")
                 .ShouldBeFalse();
@@ -179,7 +179,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void has_instance_negative_with_the_family_already_existing()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             graph.Families[typeof (IThingy)]
                 .AddInstance(new SmartInstance<BigThingy>().Named("blue"));
 
@@ -190,7 +190,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void has_instance_positive()
         {
-            var graph = new PluginGraph();
+            var graph = PluginGraph.CreateRoot();
             graph.Families[typeof (IThingy)]
                 .AddInstance(new SmartInstance<BigThingy>().Named("blue"));
 
@@ -226,7 +226,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void find_root()
         {
-            var top = new PluginGraph();
+            var top = PluginGraph.CreateRoot();
             var node = top.Profile("Foo");
             var leaf = node.Profile("Bar");
 

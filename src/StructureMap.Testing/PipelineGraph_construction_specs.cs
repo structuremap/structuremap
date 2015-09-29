@@ -11,7 +11,8 @@ namespace StructureMap.Testing
         [Test]
         public void build_root_for_default_tracking_style()
         {
-            var pluginGraph = new PluginGraph {TransientTracking = TransientTracking.DefaultNotTrackedAtRoot};
+            var pluginGraph = PluginGraph.CreateRoot();
+            pluginGraph.TransientTracking = TransientTracking.DefaultNotTrackedAtRoot;
             var graph = PipelineGraph.BuildRoot(pluginGraph);
 
             graph.Transients.ShouldBeOfType<NulloTransientCache>();
@@ -20,7 +21,8 @@ namespace StructureMap.Testing
         [Test]
         public void build_root_for_tracked_transients()
         {
-            var pluginGraph = new PluginGraph { TransientTracking = TransientTracking.ExplicitReleaseMode };
+            var pluginGraph = PluginGraph.CreateRoot();
+            pluginGraph.TransientTracking = TransientTracking.ExplicitReleaseMode;
             var graph = PipelineGraph.BuildRoot(pluginGraph);
 
             graph.Transients.ShouldBeOfType<TrackingTransientCache>();

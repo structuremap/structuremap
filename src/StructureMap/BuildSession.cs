@@ -144,7 +144,7 @@ namespace StructureMap
 
         public static BuildSession Empty(ExplicitArguments args = null)
         {
-            return ForPluginGraph(new PluginGraph(), args);
+            return ForPluginGraph(PluginGraph.CreateRoot(), args);
         }
 
         public virtual object CreateInstance(Type pluginType, string name)

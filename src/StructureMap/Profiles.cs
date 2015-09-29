@@ -23,10 +23,7 @@ namespace StructureMap
 
         public IPipelineGraph NewChild(PluginGraph parent)
         {
-            var childGraph = new PluginGraph
-            {
-                Parent = parent
-            };
+            var childGraph = parent.NewChild();
 
             var instances = new ComplexInstanceGraph(_root, childGraph, ContainerRole.ProfileOrChild);
 

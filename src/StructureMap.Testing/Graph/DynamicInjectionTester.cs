@@ -97,7 +97,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddInstanceToInstanceManagerWhenTheInstanceFactoryDoesNotExist()
         {
-            IContainer container = new Container(new PluginGraph());
+            IContainer container = new Container(PluginGraph.CreateRoot());
             container.Configure(r =>
             {
                 r.For<IService>().AddInstances(x =>
@@ -151,7 +151,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddPluginForTypeWhenThePluginDoesNotAlreadyExistsDoesNothing()
         {
-            var pluginGraph = new PluginGraph();
+            var pluginGraph = PluginGraph.CreateRoot();
             IContainer container = new Container(pluginGraph);
             container.Configure(
                 r => { r.For<ISomething>().Use<SomethingOne>(); });

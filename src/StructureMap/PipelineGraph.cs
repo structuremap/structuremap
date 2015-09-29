@@ -33,7 +33,7 @@ namespace StructureMap
 
         public static IPipelineGraph BuildEmpty()
         {
-            var pluginGraph = new PluginGraph();
+            var pluginGraph = PluginGraph.CreateRoot();
             return new PipelineGraph(pluginGraph, new RootInstanceGraph(pluginGraph), null, pluginGraph.SingletonCache,
                 new NulloTransientCache());
         }
@@ -155,7 +155,7 @@ namespace StructureMap
 
         public IPipelineGraph ToNestedGraph()
         {
-            var nestedPluginGraph = new PluginGraph(Profile + " - Nested") {Parent = _pluginGraph};
+            var nestedPluginGraph = _pluginGraph.ToNestedGraph();
 
             var instances = new ComplexInstanceGraph(this, nestedPluginGraph, ContainerRole.Nested);
             return new PipelineGraph(nestedPluginGraph, instances, this, _singletons,
