@@ -372,15 +372,6 @@ namespace StructureMap.Configuration.DSL
             }
 
             /// <summary>
-            /// Registers a new IPluginGraphConfiguration policy
-            /// </summary>
-            public void Configure(IPluginGraphConfiguration pluginGraphConfig)
-            {
-                alter = pluginGraphConfig.Configure;
-                _parent._builders.Add(pluginGraphConfig.Register);
-            }
-
-            /// <summary>
             /// Register a custom constructor selection policy
             /// </summary>
             /// <typeparam name="T"></typeparam>
@@ -397,18 +388,6 @@ namespace StructureMap.Configuration.DSL
             {
                 alter = x => x.Policies.ConstructorSelector.Add(constructorSelector);
             }
-
-            /// <summary>
-            /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the resulting <see cref="PluginGraph"/>,
-            /// i.e. as opposed to Register(), the PluginGraph is built, and the provided
-            /// PluginGraph config obtains access to said graph.
-            /// </summary>
-            /// <typeparam name="T"></typeparam>
-            public void Configure<T>() where T : IPluginGraphConfiguration, new()
-            {
-                Configure(new T());
-            }
-
 
             /// <summary>
             /// Creates automatic "policies" for which public setters are considered mandatory
