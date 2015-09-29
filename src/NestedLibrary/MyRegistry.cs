@@ -31,10 +31,8 @@ namespace NestedLibrary
             }
         }
 
-        public Registry ScanTypes(TypeSet types)
+        public void ScanTypes(TypeSet types, Registry registry)
         {
-            var registry = new Registry();
-
             var matches = types.FindTypes(TypeClassification.Concretes | TypeClassification.Closed)
                 .Where(type => type.CanBeCastTo<ITeam>());
 
@@ -42,8 +40,6 @@ namespace NestedLibrary
             {
                 registry.For(typeof (ITeam)).Add(type);
             }
-
-            return registry;
         }
     }
 

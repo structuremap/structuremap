@@ -41,19 +41,15 @@ namespace StructureMap.Testing.Acceptance
                 type.GetInterfaces().Each(@interface => { registry.For(@interface).Use(type); });
             }
 
-            public Registry ScanTypes(TypeSet types)
+            public void ScanTypes(TypeSet types, Registry registry)
             {
-                var registry = new Registry();
-
                 // Only work on concrete types
                 types.FindTypes(TypeClassification.Concretes | TypeClassification.Closed).Each(type =>
                 {
                     // Register against all the interfaces implemented
                     // by this concrete class
-                    type.GetInterfaces().Each(@interface => { registry.For(@interface).Use(type); });
+                    type.GetInterfaces().Each(@interface => registry.For(@interface).Use(type));
                 });
-
-                return registry;
             }
         }
 

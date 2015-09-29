@@ -87,13 +87,9 @@ namespace StructureMap.Testing.Graph
                 }
             }
 
-            public Registry ScanTypes(TypeSet types)
+            public void ScanTypes(TypeSet types, Registry registry)
             {
-                var registry = new Registry();
-
                 types.FindTypes(TypeClassification.Interfaces).Each(type => registry.For(type));
-
-                return registry;
             }
         }
 

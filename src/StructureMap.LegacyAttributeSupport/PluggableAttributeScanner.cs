@@ -17,7 +17,7 @@ namespace StructureMap.LegacyAttributeSupport
 //            }
         }
 
-        public Registry ScanTypes(TypeSet types)
+        public void ScanTypes(TypeSet types, Registry registry)
         {
             throw new NotImplementedException();
         }

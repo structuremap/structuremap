@@ -33,17 +33,13 @@ namespace StructureMap.Graph
             return type.CanBeCastTo(_pluginType) && type.HasConstructors();
         }
 
-        public Registry ScanTypes(TypeSet types)
+        public void ScanTypes(TypeSet types, Registry registry)
         {
-            var registry = new Registry();
-
             types.FindTypes(TypeClassification.Concretes).Where(Matches).Each(type =>
             {
                 var name = _getName(type);
                 registry.AddType(GetLeastSpecificButValidType(_pluginType, type), type, name);
             });
-
-            return registry;
         }
 
         private Type GetLeastSpecificButValidType(Type pluginType, Type type)

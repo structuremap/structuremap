@@ -19,12 +19,10 @@ namespace StructureMap.Graph
             RegisterType(type);
         }
 
-        public override Registry ScanTypes(TypeSet types)
+        public override void ScanTypes(TypeSet types, Registry registry)
         {
             var interfaces = types.FindTypes(TypeClassification.Interfaces);
             var concretes = types.FindTypes(TypeClassification.Concretes).Where(x => x.HasConstructors()).ToArray();
-
-            var registry = new Registry();
 
             interfaces.Each(@interface =>
             {
@@ -35,10 +33,6 @@ namespace StructureMap.Graph
                     ConfigureFamily(registry.For(@interface));
                 }
             });
-
-
-
-            return registry;
         }
 
         public void Register(Type interfaceType, Type concreteType)

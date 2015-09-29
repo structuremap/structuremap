@@ -12,7 +12,7 @@ namespace StructureMap.LegacyAttributeSupport
             throw new NotImplementedException("do something else");
         }
 
-        public Registry ScanTypes(TypeSet types)
+        public void ScanTypes(TypeSet types, Registry registry)
         {
             throw new NotImplementedException();
         }

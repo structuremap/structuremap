@@ -119,13 +119,14 @@ namespace StructureMap.Graph
             {
                 var types = t.Result;
 
-                return _conventions.Select(x => x.ScanTypes(types));
+                var registry = new Registry();
+                _conventions.Each(x => x.ScanTypes(types, registry));
 
-                
+                return registry;
             });
 
             task.Wait();
-            task.Result.Each(r => r.As<IPluginGraphConfiguration>().Configure(pluginGraph));
+            task.Result.As<IPluginGraphConfiguration>().Configure(pluginGraph);
         }
 
 

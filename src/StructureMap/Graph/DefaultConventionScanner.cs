@@ -20,10 +20,8 @@ namespace StructureMap.Graph
             }
         }
 
-        public override Registry ScanTypes(TypeSet types)
+        public override void ScanTypes(TypeSet types, Registry registry)
         {
-            var registry = new Registry();
-
             types.FindTypes(TypeClassification.Concretes).Where(type => type.HasConstructors()).Each(type =>
             {
                 var pluginType = FindPluginType(type);
@@ -33,8 +31,6 @@ namespace StructureMap.Graph
                     ConfigureFamily(registry.For(pluginType));
                 }
             });
-
-            return registry;
         }
 
         public virtual Type FindPluginType(Type concreteType)

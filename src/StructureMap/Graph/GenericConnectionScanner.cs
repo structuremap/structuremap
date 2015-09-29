@@ -41,10 +41,8 @@ namespace StructureMap.Graph
             }
         }
 
-        public override Registry ScanTypes(TypeSet types)
+        public override void ScanTypes(TypeSet types, Registry registry)
         {
-            var registry = new Registry();
-
             var concretions = types.FindTypes(TypeClassification.Concretes)
                 .Where(type => type.FindInterfacesThatClose(_openType).Any()).ToArray();
 
@@ -76,8 +74,6 @@ namespace StructureMap.Graph
             });
 
             concretions.Each(type => registry.Configure(graph => graph.ConnectedConcretions.Fill(type)));
-
-            return registry;
         }
 
         public void Apply(PluginGraph graph)

@@ -15,15 +15,12 @@ namespace StructureMap.Graph
             }
         }
 
-        public Registry ScanTypes(TypeSet types)
+        public void ScanTypes(TypeSet types, Registry registry)
         {
-            var registry = new Registry();
             types.FindTypes(TypeClassification.Closed | TypeClassification.Concretes)
                 .Where(Registry.IsPublicRegistry)
                 .Each(type => registry.Configure(x => x.ImportRegistry(type)));
 
-
-            return registry;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace StructureMap.Graph
         void Process(Type type, Registry registry);
 
 
-        Registry ScanTypes(TypeSet types);
+        void ScanTypes(TypeSet types, Registry registry);
     }
     // ENDSAMPLE
 
@@ -35,6 +35,6 @@ namespace StructureMap.Graph
 
         public abstract void Process(Type type, Registry registry);
 
-        public abstract Registry ScanTypes(TypeSet types);
+        public abstract void ScanTypes(TypeSet types, Registry registry);
     }
 }
