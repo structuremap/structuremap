@@ -31,7 +31,7 @@ namespace StructureMap.Pipeline
     }
 
 
-    public abstract class ConstructorInstance<TThis> : ExpressedInstance<TThis>, IConfiguredInstance
+    public abstract class ConstructorInstance<TThis> : ExpressedInstance<TThis>, IConfiguredInstance, IOverridableInstance
         where TThis : ConstructorInstance<TThis>
     {
         private readonly Type _pluggedType;

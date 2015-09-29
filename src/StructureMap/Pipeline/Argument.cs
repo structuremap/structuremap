@@ -3,6 +3,10 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
+    /// <summary>
+    /// Represents an explicitly configured constructor or setter dependency of a StructureMap Instance
+    /// that is built by calling a constructor function
+    /// </summary>
     public class Argument
     {
         /// <summary>

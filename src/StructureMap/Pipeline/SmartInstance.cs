@@ -19,7 +19,7 @@ namespace StructureMap.Pipeline
     /// </summary>
     /// <typeparam name="T">The concrete type constructed by SmartInstance</typeparam>
     /// <typeparam name="TPluginType">The "PluginType" that this instance satisfies</typeparam>
-    public class SmartInstance<T, TPluginType> : ExpressedInstance<SmartInstance<T, TPluginType>, T, TPluginType>, IConfiguredInstance where T : TPluginType
+    public class SmartInstance<T, TPluginType> : ExpressedInstance<SmartInstance<T, TPluginType>, T, TPluginType>, IConfiguredInstance, IOverridableInstance where T : TPluginType
     {
         private readonly ConstructorInstance _inner = new ConstructorInstance(typeof (T));
 
@@ -121,7 +121,7 @@ namespace StructureMap.Pipeline
             }
         }
 
-        ConstructorInstance IConfiguredInstance.Override(ExplicitArguments arguments)
+        ConstructorInstance IOverridableInstance.Override(ExplicitArguments arguments)
         {
             return _inner.Override(arguments);
         }

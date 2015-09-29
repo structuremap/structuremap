@@ -770,7 +770,7 @@ namespace StructureMap
                 defaultInstance = new ConfiguredInstance(pluginType);
             }
 
-            var basicInstance = defaultInstance as IConfiguredInstance;
+            var basicInstance = defaultInstance as IOverridableInstance;
 
             var instance = basicInstance == null
                 ? defaultInstance
