@@ -213,9 +213,18 @@ namespace StructureMap.Graph
                     "Unable to create an instance for Registry type '{0}'.  Please check the inner exception for details"
                         .ToFormat(type.GetFullName()), e);
             }
+        }
 
+        public void ImportRegistry(Registry registry)
+        {
+            var type = registry.GetType();
+            if (type != typeof (Registry))
+            {
+                if (Registries.Any(x => x.GetType() == type) || QueuedRegistries.Any(x => x.GetType() == type)) return;
+            }
 
-            //registry.As<IPluginGraphConfiguration>().Configure(this);
+            QueuedRegistries.Enqueue(registry);
+
         }
 
         public void AddFamily(PluginFamily family)
