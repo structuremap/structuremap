@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
@@ -15,9 +16,28 @@ namespace StructureMap.Pipeline
     {
         private readonly List<Argument> _dependencies = new List<Argument>();
 
+        /// <summary>
+        /// Add a dependency for a constructor parameter (either a valueOrInstance of the parameter type or an Instance)
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <param name="valueOrInstance"></param>
+        public void Add(ParameterInfo parameter, object valueOrInstance)
+        {
+            Add(parameter.Name, parameter.ParameterType, valueOrInstance);
+        }
 
         /// <summary>
-        /// Finds the argument value (an Instance or a value of the right type) for the given argument type and name
+        /// Add a dependency for a setter property
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="valueOrInstance"></param>
+        public void Add(PropertyInfo property, object valueOrInstance)
+        {
+            Add(property.Name, property.PropertyType, valueOrInstance);
+        }
+
+        /// <summary>
+        /// Finds the argument valueOrInstance (an Instance or a valueOrInstance of the right type) for the given argument type and name
         /// </summary>
         /// <param name="argumentType"></param>
         /// <param name="name"></param>
@@ -84,10 +104,10 @@ namespace StructureMap.Pipeline
         /// Add a dependency for the type T
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        public void Add<T>(T value)
+        /// <param name="valueOrInstance"></param>
+        public void Add<T>(T valueOrInstance)
         {
-            Add(null, typeof (T), value);
+            Add(null, typeof (T), valueOrInstance);
         }
 
         /// <summary>
@@ -101,7 +121,7 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        /// Add a dependency (value of "type" or Instance) for the given type
+        /// Add a dependency (valueOrInstance of "type" or Instance) for the given type
         /// </summary>
         /// <param name="type"></param>
         /// <param name="dependency"></param>
@@ -121,7 +141,7 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        /// Add a dependency value by parameter or property name
+        /// Add a dependency valueOrInstance by parameter or property name
         /// </summary>
         /// <param name="name"></param>
         /// <param name="dependency"></param>
@@ -160,7 +180,7 @@ namespace StructureMap.Pipeline
                 if (@dependency == null)
                 {
                     throw new ArgumentNullException("@dependency",
-                        "Dependency value cannot be null for a simple argument of type '{1}' with name: '{0}".ToFormat(
+                        "Dependency valueOrInstance cannot be null for a simple argument of type '{1}' with name: '{0}".ToFormat(
                             name, type));
                 }
 
@@ -169,7 +189,7 @@ namespace StructureMap.Pipeline
                     if (@dependency.As<LambdaInstance>().ReturnedType != type)
                     {
                         throw new StructureMapConfigurationException(
-                            "Invalid value '{0}' for parameter {1} of type {2}".ToFormat(@dependency, name,
+                            "Invalid valueOrInstance '{0}' for parameter {1} of type {2}".ToFormat(@dependency, name,
                                 type.GetFullName()));
                     }
                 }
@@ -182,7 +202,7 @@ namespace StructureMap.Pipeline
                     catch (Exception e)
                     {
                         throw new StructureMapConfigurationException(
-                            "Invalid value '{0}' for parameter {1} of type {2}".ToFormat(@dependency, name,
+                            "Invalid valueOrInstance '{0}' for parameter {1} of type {2}".ToFormat(@dependency, name,
                                 type.GetFullName()), e);
                     }
                 }
