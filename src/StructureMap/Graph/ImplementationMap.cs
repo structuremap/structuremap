@@ -21,7 +21,24 @@ namespace StructureMap.Graph
 
         public override Registry ScanTypes(TypeSet types)
         {
-            throw new NotImplementedException();
+            var interfaces = types.FindTypes(TypeClassification.Interfaces);
+            var concretes = types.FindTypes(TypeClassification.Concretes).Where(x => x.HasConstructors()).ToArray();
+
+            var registry = new Registry();
+
+            interfaces.Each(@interface =>
+            {
+                var implementors = concretes.Where(x => x.CanBeCastTo(@interface)).ToArray();
+                if (implementors.Count() == 1)
+                {
+                    registry.AddType(@interface, implementors.Single());
+                    ConfigureFamily(registry.For(@interface));
+                }
+            });
+
+
+
+            return registry;
         }
 
         public void Register(Type interfaceType, Type concreteType)
