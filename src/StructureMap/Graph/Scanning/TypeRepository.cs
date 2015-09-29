@@ -10,9 +10,8 @@ namespace StructureMap.Graph.Scanning
     // Really only tested in integration with other things
     public static class TypeRepository
     {
-        private static readonly Cache<Assembly, Task<AssemblyTypes>> _assemblies = new Cache
-            <Assembly, Task<AssemblyTypes>>(
-            assem => { return Task.Factory.StartNew(() => new AssemblyTypes(assem)); });
+        private static readonly Cache<Assembly, Task<AssemblyTypes>> _assemblies = new Cache<Assembly, Task<AssemblyTypes>>(
+            assem => Task.Factory.StartNew(() => new AssemblyTypes(assem)));
 
         public static void ClearAll()
         {

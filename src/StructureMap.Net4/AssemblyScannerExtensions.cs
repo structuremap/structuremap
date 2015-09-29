@@ -24,47 +24,44 @@ namespace StructureMap.Graph
             scanner.AssembliesFromApplicationBaseDirectory(a => true);
         }
 
-        public static void AssembliesFromApplicationBaseDirectory(this IAssemblyScanner scanner, Predicate<Assembly> assemblyFilter)
+        public static void AssembliesFromApplicationBaseDirectory(this IAssemblyScanner scanner, Func<Assembly, bool> assemblyFilter)
         {
-            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-            scanner.AssembliesFromPath(baseDirectory, assemblyFilter);
-            var binPath = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
-            if (Directory.Exists(binPath))
+            var assemblies = AssemblyFinder.FindAssemblies(assemblyFilter, txt =>
             {
-                scanner.AssembliesFromPath(binPath, assemblyFilter);
+                Console.WriteLine("StructureMap could not load assembly from file " + txt);
+            });
+
+            foreach (var assembly in assemblies)
+            {
+                scanner.Assembly(assembly);
             }
         }
 
         public static void AssembliesFromPath(this IAssemblyScanner scanner, string path)
         {
-            scanner.AssembliesFromPath(path, a => true);
+            var assemblies = AssemblyFinder.FindAssemblies(path, txt =>
+            {
+                Console.WriteLine("StructureMap could not load assembly from file " + txt);
+            });
+
+            foreach (var assembly in assemblies)
+            {
+                scanner.Assembly(assembly);
+            }
         }
 
         public static void AssembliesFromPath(this IAssemblyScanner scanner, string path,
-            Predicate<Assembly> assemblyFilter)
+            Func<Assembly, bool> assemblyFilter)
         {
-            var assemblyPaths = Directory.GetFiles(path)
-                .Where(file =>
-                    Path.GetExtension(file).Equals(
-                        ".exe",
-                        StringComparison.OrdinalIgnoreCase)
-                    ||
-                    Path.GetExtension(file).Equals(
-                        ".dll",
-                        StringComparison.OrdinalIgnoreCase));
-
-            foreach (var assemblyPath in assemblyPaths)
+            var assemblies = AssemblyFinder.FindAssemblies(path, txt =>
             {
-                Assembly assembly = null;
-                try
-                {
-                    assembly = Assembly.LoadFrom(assemblyPath);
-                }
-                catch
-                {
-                }
-                if (assembly != null && assemblyFilter(assembly)) scanner.Assembly(assembly);
+                Console.WriteLine("StructureMap could not load assembly from file " + txt);
+            }).Where(assemblyFilter);
+
+
+            foreach (var assembly in assemblies)
+            {
+                scanner.Assembly(assembly);
             }
         }
 
