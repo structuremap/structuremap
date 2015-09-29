@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
@@ -60,8 +58,6 @@ namespace StructureMap
                 scanning.AddRange(registry.Scanners.Select(x => x.ScanForTypes()));
 
                 registry.Configure(_graph);
-
-                
             }
 
             if (scanning.Any())
@@ -76,7 +72,6 @@ namespace StructureMap
             {
                 RunConfigurations();
             }
-
         }
     }
 }

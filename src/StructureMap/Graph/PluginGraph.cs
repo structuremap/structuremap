@@ -40,6 +40,11 @@ namespace StructureMap.Graph
         /// </summary>
         public readonly IList<Type> ConnectedConcretions = new List<Type>();
 
+        /// <summary>
+        /// Creates a top level PluginGraph with the default policies
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <returns></returns>
         public static PluginGraph CreateRoot(string profile = null)
         {
             var graph = new PluginGraph();
@@ -62,7 +67,7 @@ namespace StructureMap.Graph
         }
 
 
-        public PluginGraph NewChild()
+        internal PluginGraph NewChild()
         {
             return new PluginGraph
             {
@@ -70,7 +75,8 @@ namespace StructureMap.Graph
             };
         }
 
-        public PluginGraph ToNestedGraph()
+        
+        internal PluginGraph ToNestedGraph()
         {
             return new PluginGraph
             {
@@ -87,19 +93,13 @@ namespace StructureMap.Graph
             ProfileName = "DEFAULT";
             _families =
                 new Cache<Type, PluginFamily>(
-                    type => { return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type); });
-
-            _families.OnAddition = family => family.Owner = this;
+                    type => _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type))
+                {
+                    OnAddition = family => family.Owner = this
+                };
         }
 
         public PluginGraph Parent { get; private set; }
-        /*
-        public PluginGraph(string profileName) : this()
-        {
-            Name = profileName;
-            ProfileName = profileName;
-        }
-         */
 
         /// <summary>
         /// The profile name of this PluginGraph or "DEFAULT" if it is the top 
@@ -238,10 +238,6 @@ namespace StructureMap.Graph
             _families[family.PluginType] = family;
         }
 
-        public void RemoveFamily(Type pluginType)
-        {
-            _families.Remove(pluginType);
-        }
 
         public bool HasInstance(Type pluginType, string name)
         {
@@ -253,7 +249,7 @@ namespace StructureMap.Graph
             return _families[pluginType].GetInstance(name) != null;
         }
 
-        public PluginFamily FindExistingOrCreateFamily(Type pluginType)
+        internal PluginFamily FindExistingOrCreateFamily(Type pluginType)
         {
             if (_families.Has(pluginType)) return _families[pluginType];
 
