@@ -5,6 +5,7 @@ using System.Reflection;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
+using StructureMap.Graph.Scanning;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Graph

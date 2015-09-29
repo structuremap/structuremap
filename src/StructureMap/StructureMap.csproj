@@ -190,6 +190,10 @@
     <Compile Include="Graph\IRegistrationConvention.cs" />
     <Compile Include="Graph\PluginFamily.cs" />
     <Compile Include="Graph\PluginGraph.cs" />
+    <Compile Include="Graph\Scanning\AssemblyShelf.cs" />
+    <Compile Include="Graph\Scanning\AssemblyTypes.cs" />
+    <Compile Include="Graph\Scanning\TypeClassification.cs" />
+    <Compile Include="Graph\Scanning\TypeQuery.cs" />
     <Compile Include="Graph\SetterRules.cs" />
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="IBuildSession.cs" />
@@ -265,7 +269,7 @@
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="RootInstanceGraph.cs" />
     <Compile Include="SessionCache.cs" />
-    <Compile Include="TypeRepository.cs" />
+    <Compile Include="Graph\Scanning\TypeRepository.cs" />
     <Compile Include="Util\Cache.cs" />
     <Compile Include="Util\LightweightCache.cs" />
     <Compile Include="TypeExtensions.cs" />

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Shouldly;
+using StructureMap.Graph.Scanning;
 using StructureMap.TypeRules;
 
-namespace StructureMap.Testing
+namespace StructureMap.Testing.Graph.Scanning
 {
     public static class TypeRepositoryTestExtensions
     {
