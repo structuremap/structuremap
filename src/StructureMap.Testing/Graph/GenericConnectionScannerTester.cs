@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Graph;
@@ -63,6 +64,8 @@ namespace StructureMap.Testing.Graph
                 x.TheCallingAssembly();
                 x.ConnectImplementationsToTypesClosing(typeof (IFinder<>)).OnAddedPluginTypes(t => t.Singleton());
             }));
+
+            Debug.WriteLine(container.WhatDoIHave());
 
             var firstStringFinder = container.GetInstance<IFinder<string>>().ShouldBeOfType<StringFinder>();
             var secondStringFinder = container.GetInstance<IFinder<string>>().ShouldBeOfType<StringFinder>();

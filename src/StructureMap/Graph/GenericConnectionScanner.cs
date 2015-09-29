@@ -43,20 +43,30 @@ namespace StructureMap.Graph
 
         public override void ScanTypes(TypeSet types, Registry registry)
         {
-            var concretions = types.FindTypes(TypeClassification.Concretes)
-                .Where(type => type.FindInterfacesThatClose(_openType).Any()).ToArray();
+            types.AllTypes().Each(type =>
+            {
+                IEnumerable<Type> interfaceTypes = type.FindInterfacesThatClose(_openType);
+                if (!interfaceTypes.Any()) return;
 
-            var interfaces = types.FindTypes(TypeClassification.Interfaces)
-                .SelectMany(type => type.FindInterfacesThatClose(_openType))
-                .Distinct()
-                .ToArray();
+                if (type.IsConcrete())
+                {
+                    _concretions.Add(type);
+                }
 
-            interfaces.Each(@interface =>
+                foreach (Type interfaceType in interfaceTypes)
+                {
+                    _interfaces.Fill(interfaceType);
+                }
+            });
+
+
+
+            _interfaces.Each(@interface =>
             {
                 var expression = registry.For(@interface);
                 ConfigureFamily(expression);
 
-                var exactMatches = concretions.Where(x => x.CanBeCastTo(@interface)).ToArray();
+                var exactMatches = _concretions.Where(x => x.CanBeCastTo(@interface)).ToArray();
                 if (exactMatches.Length == 1)
                 {
                     expression.Use(exactMatches.Single());
@@ -73,7 +83,7 @@ namespace StructureMap.Graph
                 }
             });
 
-            concretions.Each(type => registry.Configure(graph => graph.ConnectedConcretions.Fill(type)));
+            _concretions.Each(type => registry.Configure(graph => graph.ConnectedConcretions.Fill(type)));
         }
 
         public void Apply(PluginGraph graph)
