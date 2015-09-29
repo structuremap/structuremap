@@ -19,12 +19,25 @@ namespace StructureMap.Testing
                 .ShouldBeTrue();
         }
 
+        [Test]
+        public void CanBeAutoFilled_if_simple_property_has_default_value()
+        {
+            new Policies().CanBeAutoFilled(typeof (GuyWithName)).ShouldBeTrue();
+        }
+
 
         [Test]
         public void cannot_be_auto_filled_with_no_contructors()
         {
             new Policies().CanBeAutoFilled(typeof (ClassWithNoConstructor))
                 .ShouldBeFalse();
+        }
+
+        public class GuyWithName
+        {
+            public GuyWithName(string name = "Jim Croce")
+            {
+            }
         }
 
         public interface IAutomobile

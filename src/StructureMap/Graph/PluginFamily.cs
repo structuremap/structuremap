@@ -115,12 +115,6 @@ namespace StructureMap.Graph
             }
         }
 
-        
-
-        public void SetDefault(Func<Instance> defaultInstance)
-        {
-            _defaultInstance = new Lazy<Instance>(defaultInstance);
-        }
 
         /// <summary>
         /// Sets the default Instance. 

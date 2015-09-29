@@ -109,6 +109,11 @@ namespace StructureMap.Building
                         ? dependencies.FindByTypeAndName(x.ParameterType, x.Name)
                         : dependencies.FindByTypeOrName(x.ParameterType, x.Name);
 
+                    if (dependency == null && ( (x.DefaultValue != null && x.DefaultValue.GetType().Name != "DBNull")))
+                    {
+                        dependency = x.DefaultValue;
+                    }
+
                     return SourceFor(ConstructorArgument, x.Name, x.ParameterType, dependency);
                 });
 

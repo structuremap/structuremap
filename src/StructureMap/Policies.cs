@@ -86,7 +86,7 @@ namespace StructureMap
 
             foreach (var parameter in ctor.GetParameters())
             {
-                if (!parameter.ParameterType.IsAutoFillable())
+                if (!parameter.ParameterType.IsAutoFillable() && (parameter.DefaultValue != null && parameter.DefaultValue.GetType().Name == "DBNull"))
                 {
                     return false;
                 }
