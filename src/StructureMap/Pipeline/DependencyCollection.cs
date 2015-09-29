@@ -16,6 +16,12 @@ namespace StructureMap.Pipeline
         private readonly List<Argument> _dependencies = new List<Argument>();
 
 
+        /// <summary>
+        /// Finds the argument value (an Instance or a value of the right type) for the given argument type and name
+        /// </summary>
+        /// <param name="argumentType"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public object FindByTypeOrName(Type argumentType, string name)
         {
             Argument argument = null;
@@ -74,26 +80,51 @@ namespace StructureMap.Pipeline
             return argument;
         }
 
+        /// <summary>
+        /// Add a dependency for the type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
         public void Add<T>(T value)
         {
             Add(null, typeof (T), value);
         }
 
+        /// <summary>
+        /// Add a dependency for the type "T" as an Instance
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="instance"></param>
         public void Add<T>(Instance instance)
         {
             Add(null, typeof (T), instance);
         }
 
+        /// <summary>
+        /// Add a dependency (value of "type" or Instance) for the given type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="dependency"></param>
         public void Add(Type type, object @dependency)
         {
             Add(null, type, dependency);
         }
 
+        /// <summary>
+        /// Add an enumerable of dependencies by parameter or property name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="items"></param>
         public void Add(string name, IEnumerable<Instance> items)
         {
             Add(name, null, new EnumerableInstance(items));
         }
 
+        /// <summary>
+        /// Add a dependency value by parameter or property name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="dependency"></param>
         public void Add(string name, object @dependency)
         {
             Type type = null;
@@ -105,12 +136,23 @@ namespace StructureMap.Pipeline
             Add(name, type, dependency);
         }
 
+        /// <summary>
+        /// Insert an Argument into this dependency collection that will take precedence over 
+        /// existing configuration
+        /// </summary>
+        /// <param name="argument"></param>
         public void Insert(Argument argument)
         {
             _dependencies.Insert(0, argument);
         }
 
 
+        /// <summary>
+        /// Add a dependency by parameter or property name and dependency type
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="dependency"></param>
         public void Add(string name, Type type, object @dependency)
         {
             if (type.IsSimple())
