@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
@@ -115,6 +116,14 @@ namespace StructureMap.Graph
 
         public void ScanForTypes(PluginGraph pluginGraph)
         {
+            var task = ScanForTypes();
+
+            task.Wait();
+            task.Result.As<IPluginGraphConfiguration>().Configure(pluginGraph);
+        }
+
+        public Task<Registry> ScanForTypes()
+        {
             var task = TypeRepository.FindTypes(_assemblies, type => _filter.Matches(type)).ContinueWith(t =>
             {
                 var types = t.Result;
@@ -124,9 +133,7 @@ namespace StructureMap.Graph
 
                 return registry;
             });
-
-            task.Wait();
-            task.Result.As<IPluginGraphConfiguration>().Configure(pluginGraph);
+            return task;
         }
 
 
