@@ -79,14 +79,6 @@ namespace StructureMap.Testing.Graph
 
         public class FakeConvention : IRegistrationConvention
         {
-            public void Process(Type type, Registry registry)
-            {
-                if (type.IsInterface)
-                {
-                    registry.For(type);
-                }
-            }
-
             public void ScanTypes(TypeSet types, Registry registry)
             {
                 types.FindTypes(TypeClassification.Interfaces).Each(type => registry.For(type));

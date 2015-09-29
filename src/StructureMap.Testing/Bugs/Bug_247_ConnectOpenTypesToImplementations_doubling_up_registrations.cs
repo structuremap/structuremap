@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using Shouldly;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
 namespace StructureMap.Testing.Bugs
@@ -12,18 +10,17 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void Scanner_apply_should_only_register_two_instances()
         {
-            var scanner = new GenericConnectionScanner(typeof (ISomeServiceOf<>));
-            var registry = new Registry();
-            var graph = new PluginGraph();
+            var container = new Container(_ =>
+            {
+                _.Scan(x =>
+                {
+                    x.TheCallingAssembly();
+                    x.ConnectImplementationsToTypesClosing(typeof (ISomeServiceOf<>));
+                });
+            });
 
-            scanner.Process(typeof (SomeService1), registry);
-            scanner.Process(typeof (SomeService2), registry);
-            scanner.Apply(graph);
-
-            graph
-                .AllInstances(typeof (ISomeServiceOf<string>))
-                .Count()
-                .ShouldBe(2);
+            container.GetAllInstances<ISomeServiceOf<string>>().OrderBy(x => x.GetType().Name).Select(x => x.GetType())
+                .ShouldHaveTheSameElementsAs(typeof (SomeService1), typeof (SomeService2));
         }
 
         public interface ISomeServiceOf<T>

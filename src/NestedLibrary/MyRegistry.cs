@@ -23,14 +23,6 @@ namespace NestedLibrary
 
     public class MyConvention : IRegistrationConvention
     {
-        public void Process(Type type, Registry registry)
-        {
-            if (type.CanBeCastTo<ITeam>() && type != typeof(ITeam))
-            {
-                registry.For(typeof(ITeam)).Add(type);
-            }
-        }
-
         public void ScanTypes(TypeSet types, Registry registry)
         {
             var matches = types.FindTypes(TypeClassification.Concretes | TypeClassification.Closed)

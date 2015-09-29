@@ -16,18 +16,6 @@ namespace StructureMap.Graph
             _pluginType = pluginType;
         }
 
-        public void Process(Type type, Registry registry)
-        {
-            if (type.IsAbstract) return;
-            if (type.IsInterface) return;
-
-            if (type.CanBeCastTo(_pluginType) && type.HasConstructors())
-            {
-                var name = _getName(type);
-                registry.AddType(GetLeastSpecificButValidType(_pluginType, type), type, name);
-            }
-        }
-
         public bool Matches(Type type)
         {
             return type.CanBeCastTo(_pluginType) && type.HasConstructors();

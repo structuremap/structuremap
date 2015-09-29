@@ -19,7 +19,10 @@ namespace StructureMap.Query
             _family = family;
         }
 
-        internal Instance Instance
+        /// <summary>
+        /// The underlying StructureMap model for building this configured Instance
+        /// </summary>
+        public Instance Instance
         {
             get { return _instance; }
         }

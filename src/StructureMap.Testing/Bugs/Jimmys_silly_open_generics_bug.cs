@@ -29,15 +29,6 @@ namespace StructureMap.Testing.Bugs
                 .ShouldHaveTheSameElementsAs(typeof (BirdImpl), typeof (BirdBaseImpl));
         }
 
-        [Test]
-        public void GenericConnectionScanner_can_match_on_it()
-        {
-            typeof (BirdBaseImpl).CanBeCastTo<IBird<Bird>>()
-                .ShouldBeTrue();
-
-            var scanner = new GenericConnectionScanner(typeof (IBird<>));
-            scanner.Process(typeof (BirdBaseImpl), new Registry());
-        }
     }
 
     public interface IBird<in T>

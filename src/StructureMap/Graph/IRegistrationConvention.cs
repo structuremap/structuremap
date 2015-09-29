@@ -8,10 +8,6 @@ namespace StructureMap.Graph
     // SAMPLE: IRegistrationConvention
     public interface IRegistrationConvention
     {
-        [Obsolete("Going to remove this")]
-        void Process(Type type, Registry registry);
-
-
         void ScanTypes(TypeSet types, Registry registry);
     }
     // ENDSAMPLE
@@ -32,8 +28,6 @@ namespace StructureMap.Graph
         {
             ConfigureFamily = configureFamily;
         }
-
-        public abstract void Process(Type type, Registry registry);
 
         public abstract void ScanTypes(TypeSet types, Registry registry);
     }

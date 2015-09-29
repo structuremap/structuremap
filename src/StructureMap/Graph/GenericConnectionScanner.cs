@@ -25,22 +25,6 @@ namespace StructureMap.Graph
             }
         }
 
-        public override void Process(Type type, Registry registry)
-        {
-            IEnumerable<Type> interfaceTypes = type.FindInterfacesThatClose(_openType);
-            if (!interfaceTypes.Any()) return;
-
-            if (type.IsConcrete())
-            {
-                _concretions.Add(type);
-            }
-
-            foreach (Type interfaceType in interfaceTypes)
-            {
-                _interfaces.Fill(interfaceType);
-            }
-        }
-
         public override void ScanTypes(TypeSet types, Registry registry)
         {
             types.AllTypes().Each(type =>

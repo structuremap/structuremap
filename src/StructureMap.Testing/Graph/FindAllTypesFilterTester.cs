@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using NUnit.Framework;
 using Shouldly;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Graph
 {
@@ -13,44 +11,50 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void it_registers_types_that_can_be_cast()
         {
-            var filter = new FindAllTypesFilter(typeof (IGeneric<>));
-            var registry = new Registry();
+            var container = new Container(_ =>
+            {
+                _.Scan(x =>
+                {
+                    x.TheCallingAssembly();
+                    x.AddAllTypesOf(typeof (IGeneric<>));
+                });
+            });
 
-            filter.Process(typeof (Generic<>), registry);
-
-            var graph = registry.Build();
-
-            graph.Families[typeof (IGeneric<>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldBe(typeof (Generic<>));
+            container.Model.For(typeof (IGeneric<>)).Instances.Any(x => x.ReturnedType == typeof (Generic<>))
+                .ShouldBeTrue();
         }
 
 
         [Test]
         public void it_registers_types_implementing_the_closed_generic_version()
         {
-            var filter = new FindAllTypesFilter(typeof (IGeneric<>));
-            var registry = new Registry();
+            var container = new Container(_ =>
+            {
+                _.Scan(x =>
+                {
+                    x.TheCallingAssembly();
+                    x.AddAllTypesOf(typeof (IGeneric<>));
+                });
+            });
 
-            filter.Process(typeof (StringGeneric), registry);
-
-            var graph = registry.Build();
-
-            graph.Families[typeof (IGeneric<string>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldBe(typeof (StringGeneric));
+            container.Model.For<IGeneric<string>>().Instances.Single()
+                .ReturnedType.ShouldBe(typeof (StringGeneric));
         }
 
         [Test]
         public void it_registers_open_types_which_can_be_cast()
         {
-            var filter = new FindAllTypesFilter(typeof (IGeneric<>));
-            var registry = new Registry();
+            var container = new Container(_ =>
+            {
+                _.Scan(x =>
+                {
+                    x.TheCallingAssembly();
+                    x.AddAllTypesOf(typeof (IGeneric<>));
+                });
+            });
 
-            filter.Process(typeof (ConcreteGeneric<>), registry);
-
-            var graph = registry.Build();
-
-            graph.Families[typeof (IGeneric<>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldBe(typeof (ConcreteGeneric<>));
+            container.Model.For(typeof (IGeneric<>)).Instances.Any(x => x.ReturnedType == typeof (ConcreteGeneric<>))
+                .ShouldBeTrue();
         }
 
 

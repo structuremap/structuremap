@@ -8,18 +8,6 @@ namespace StructureMap.Graph
 {
     public class DefaultConventionScanner : ConfigurableRegistrationConvention
     {
-        public override void Process(Type type, Registry registry)
-        {
-            if (!type.IsConcrete()) return;
-
-            var pluginType = FindPluginType(type);
-            if (pluginType != null && type.HasConstructors())
-            {
-                registry.AddType(pluginType, type);
-                ConfigureFamily(registry.For(pluginType));
-            }
-        }
-
         public override void ScanTypes(TypeSet types, Registry registry)
         {
             types.FindTypes(TypeClassification.Concretes).Where(type => type.HasConstructors()).Each(type =>

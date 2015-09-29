@@ -4,7 +4,6 @@ using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Graph.Scanning;
-using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Acceptance
 {
@@ -31,16 +30,6 @@ namespace StructureMap.Testing.Acceptance
         // Custom IRegistrationConvention
         public class AllInterfacesConvention : IRegistrationConvention
         {
-            public void Process(Type type, Registry registry)
-            {
-                // Only work on concrete types
-                if (!type.IsConcrete() || type.IsGenericType) return;
-
-                // Register against all the interfaces implemented
-                // by this concrete class
-                type.GetInterfaces().Each(@interface => { registry.For(@interface).Use(type); });
-            }
-
             public void ScanTypes(TypeSet types, Registry registry)
             {
                 // Only work on concrete types

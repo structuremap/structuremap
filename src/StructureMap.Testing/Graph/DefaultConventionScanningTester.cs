@@ -52,24 +52,6 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<IConvention>().ShouldBeOfType<Convention>();
         }
 
-        [Test]
-        public void Process_to_PluginGraph()
-        {
-            var graph = new PluginGraph();
-            var scanner = new DefaultConventionScanner();
-
-            var registry = new Registry();
-
-            scanner.Process(typeof (Convention), registry);
-
-            registry.As<IPluginGraphConfiguration>().Configure(graph);
-
-            graph.Families.Has(typeof (IServer)).ShouldBeFalse();
-            graph.Families.Has(typeof (IConvention)).ShouldBeTrue();
-
-            var family = graph.Families[typeof (IConvention)];
-            family.Instances.Count().ShouldBe(1);
-        }
 
         [Test]
         public void can_configure_plugin_families_via_dsl()
