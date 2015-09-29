@@ -46,16 +46,7 @@ namespace StructureMap
 
             addCloseGenericPolicyTo(_graph);
 
-            setupFuncAndLazyConstruction();
-
             return _graph;
-        }
-
-        private void setupFuncAndLazyConstruction()
-        {
-            _graph.Families[typeof (Func<>)].SetDefault(new FuncFactoryTemplate());
-            _graph.Families[typeof(Func<,>)].SetDefault(new FuncWithArgFactoryTemplate());
-            _graph.Families[typeof (Lazy<>)].SetDefault(new LazyFactoryTemplate());
         }
 
         private void addCloseGenericPolicyTo(PluginGraph graph)

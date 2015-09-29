@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
+using StructureMap.Pipeline.Lazy;
 using StructureMap.TypeRules;
 using StructureMap.Util;
 
@@ -44,7 +45,9 @@ namespace StructureMap.Graph
             var graph = new PluginGraph();
             graph.ProfileName = profile ?? "DEFAULT";
 
-            // TODO -- add default family policies
+            graph.Families[typeof(Func<>)].SetDefault(new FuncFactoryTemplate());
+            graph.Families[typeof(Func<,>)].SetDefault(new FuncWithArgFactoryTemplate());
+            graph.Families[typeof(Lazy<>)].SetDefault(new LazyFactoryTemplate());
 
             return graph;
         }
