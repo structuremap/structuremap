@@ -83,14 +83,17 @@ namespace StructureMap.Testing.Graph
             {
                 if (type.IsInterface)
                 {
-                    Debug.WriteLine(type.FullName);
                     registry.For(type);
                 }
             }
 
             public Registry ScanTypes(TypeSet types)
             {
-                throw new NotImplementedException();
+                var registry = new Registry();
+
+                types.FindTypes(TypeClassification.Interfaces).Each(type => registry.For(type));
+
+                return registry;
             }
         }
 

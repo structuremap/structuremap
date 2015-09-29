@@ -1,5 +1,5 @@
 using System;
-using System.Reflection;
+using System.Linq;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph.Scanning;
 using StructureMap.TypeRules;
@@ -28,9 +28,22 @@ namespace StructureMap.Graph
             }
         }
 
+        public bool Matches(Type type)
+        {
+            return type.CanBeCastTo(_pluginType) && type.HasConstructors();
+        }
+
         public Registry ScanTypes(TypeSet types)
         {
-            throw new NotImplementedException();
+            var registry = new Registry();
+
+            types.FindTypes(TypeClassification.Concretes).Where(Matches).Each(type =>
+            {
+                var name = _getName(type);
+                registry.AddType(GetLeastSpecificButValidType(_pluginType, type), type, name);
+            });
+
+            return registry;
         }
 
         private Type GetLeastSpecificButValidType(Type pluginType, Type type)
