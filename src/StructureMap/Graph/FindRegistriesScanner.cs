@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph.Scanning;
 
@@ -16,7 +17,13 @@ namespace StructureMap.Graph
 
         public Registry ScanTypes(TypeSet types)
         {
-            throw new NotImplementedException();
+            var registry = new Registry();
+            types.FindTypes(TypeClassification.Closed | TypeClassification.Concretes)
+                .Where(Registry.IsPublicRegistry)
+                .Each(type => registry.Configure(x => x.ImportRegistry(type)));
+
+
+            return registry;
         }
     }
 }
