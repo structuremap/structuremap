@@ -43,7 +43,17 @@ namespace StructureMap.Testing.Acceptance
 
             public Registry ScanTypes(TypeSet types)
             {
-                throw new NotImplementedException();
+                var registry = new Registry();
+
+                // Only work on concrete types
+                types.FindTypes(TypeClassification.Concretes | TypeClassification.Closed).Each(type =>
+                {
+                    // Register against all the interfaces implemented
+                    // by this concrete class
+                    type.GetInterfaces().Each(@interface => { registry.For(@interface).Use(type); });
+                });
+
+                return registry;
             }
         }
 

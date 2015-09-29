@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using StructureMap;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Graph.Scanning;
@@ -31,7 +33,17 @@ namespace NestedLibrary
 
         public Registry ScanTypes(TypeSet types)
         {
-            throw new NotImplementedException();
+            var registry = new Registry();
+
+            var matches = types.FindTypes(TypeClassification.Concretes | TypeClassification.Closed)
+                .Where(type => type.CanBeCastTo<ITeam>());
+
+            foreach (var type in matches)
+            {
+                registry.For(typeof (ITeam)).Add(type);
+            }
+
+            return registry;
         }
     }
 
