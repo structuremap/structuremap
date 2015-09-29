@@ -22,7 +22,19 @@ namespace StructureMap.Graph
 
         public override Registry ScanTypes(TypeSet types)
         {
-            throw new NotImplementedException();
+            var registry = new Registry();
+
+            types.FindTypes(TypeClassification.Concretes).Where(type => type.HasConstructors()).Each(type =>
+            {
+                var pluginType = FindPluginType(type);
+                if (pluginType != null)
+                {
+                    registry.AddType(pluginType, type);
+                    ConfigureFamily(registry.For(pluginType));
+                }
+            });
+
+            return registry;
         }
 
         public virtual Type FindPluginType(Type concreteType)
