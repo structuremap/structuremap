@@ -4,6 +4,7 @@ using System.Linq;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
+using StructureMap.Graph.Scanning;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
@@ -38,6 +39,11 @@ namespace StructureMap.Graph
             {
                 _interfaces.Fill(interfaceType);
             }
+        }
+
+        public override Registry ScanTypes(TypeSet types)
+        {
+            throw new NotImplementedException();
         }
 
         public void Apply(PluginGraph graph)

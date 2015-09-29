@@ -1,6 +1,7 @@
 using System;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Graph.Scanning;
 
 namespace StructureMap.LegacyAttributeSupport
 {
@@ -14,6 +15,11 @@ namespace StructureMap.LegacyAttributeSupport
 //            {
 //                //registry.AddType(type);
 //            }
+        }
+
+        public Registry ScanTypes(TypeSet types)
+        {
+            throw new NotImplementedException();
         }
     }
 }

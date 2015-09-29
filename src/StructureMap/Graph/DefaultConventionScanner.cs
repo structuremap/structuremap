@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using StructureMap.Configuration.DSL;
+using StructureMap.Graph.Scanning;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
@@ -17,6 +18,11 @@ namespace StructureMap.Graph
                 registry.AddType(pluginType, type);
                 ConfigureFamily(registry.For(pluginType));
             }
+        }
+
+        public override Registry ScanTypes(TypeSet types)
+        {
+            throw new NotImplementedException();
         }
 
         public virtual Type FindPluginType(Type concreteType)

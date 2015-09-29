@@ -16,8 +16,6 @@ namespace StructureMap.Graph
         private readonly List<IRegistrationConvention> _conventions = new List<IRegistrationConvention>();
         private readonly CompositeFilter<Type> _filter = new CompositeFilter<Type>();
 
-        private readonly List<Action<PluginGraph>> _postScanningActions = new List<Action<PluginGraph>>();
-
         public int Count
         {
             get { return _assemblies.Count; }
@@ -110,13 +108,6 @@ namespace StructureMap.Graph
             Exclude(type => type == typeof (T));
         }
 
-        [Obsolete("This can be eliminated")]
-        public void ModifyGraphAfterScan(Action<PluginGraph> modifyGraph)
-        {
-            _postScanningActions.Add(modifyGraph);
-        }
-
-
         public void With(IRegistrationConvention convention)
         {
             _conventions.Fill(convention);
@@ -124,16 +115,17 @@ namespace StructureMap.Graph
 
         public void ScanForTypes(PluginGraph pluginGraph)
         {
-            var registry = new Registry();
+            var task = TypeRepository.FindTypes(_assemblies, type => _filter.Matches(type)).ContinueWith(t =>
+            {
+                var types = t.Result;
 
-            TypeRepository.FindTypes(_assemblies, TypeClassification.All, _filter.Matches)
-                .ContinueWith(t =>
-                {
-                    t.Result.Each(type => _conventions.Each(c => c.Process(type, registry)));
-                }).Wait();
+                return _conventions.Select(x => x.ScanTypes(types));
 
-            registry.As<IPluginGraphConfiguration>().Configure(pluginGraph);
-            _postScanningActions.Each(x => x(pluginGraph));
+                
+            });
+
+            task.Wait();
+            task.Result.Each(r => r.As<IPluginGraphConfiguration>().Configure(pluginGraph));
         }
 
 
@@ -169,10 +161,6 @@ namespace StructureMap.Graph
             var convention = new GenericConnectionScanner(openGenericType);
             With(convention);
 
-            ModifyGraphAfterScan(graph => {
-                convention.Apply(graph);
-            });
-
             return new ConfigureConventionExpression(convention);
         }
 
@@ -196,7 +184,6 @@ namespace StructureMap.Graph
         {
             var convention = new ImplementationMap();
             With(convention);
-            ModifyGraphAfterScan(convention.RegisterSingleImplementations);
             return new ConfigureConventionExpression(convention);
         }
 

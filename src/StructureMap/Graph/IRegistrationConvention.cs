@@ -1,13 +1,18 @@
 using System;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
+using StructureMap.Graph.Scanning;
 
 namespace StructureMap.Graph
 {
     // SAMPLE: IRegistrationConvention
     public interface IRegistrationConvention
     {
+        [Obsolete("Going to remove this")]
         void Process(Type type, Registry registry);
+
+
+        Registry ScanTypes(TypeSet types);
     }
     // ENDSAMPLE
 
@@ -29,5 +34,7 @@ namespace StructureMap.Graph
         }
 
         public abstract void Process(Type type, Registry registry);
+
+        public abstract Registry ScanTypes(TypeSet types);
     }
 }

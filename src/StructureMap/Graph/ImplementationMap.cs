@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
+using StructureMap.Graph.Scanning;
 using StructureMap.TypeRules;
 using StructureMap.Util;
 
@@ -16,6 +17,11 @@ namespace StructureMap.Graph
         public override void Process(Type type, Registry registry)
         {
             RegisterType(type);
+        }
+
+        public override Registry ScanTypes(TypeSet types)
+        {
+            throw new NotImplementedException();
         }
 
         public void Register(Type interfaceType, Type concreteType)

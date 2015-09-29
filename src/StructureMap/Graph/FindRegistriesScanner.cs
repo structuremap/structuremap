@@ -1,5 +1,6 @@
 using System;
 using StructureMap.Configuration.DSL;
+using StructureMap.Graph.Scanning;
 
 namespace StructureMap.Graph
 {
@@ -11,6 +12,11 @@ namespace StructureMap.Graph
             {
                 registry.Configure(x => x.ImportRegistry(type));
             }
+        }
+
+        public Registry ScanTypes(TypeSet types)
+        {
+            throw new NotImplementedException();
         }
     }
 }

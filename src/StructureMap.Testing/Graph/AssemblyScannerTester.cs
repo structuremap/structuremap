@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Graph.Scanning;
 using StructureMap.Testing.DocumentationExamples;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
@@ -85,6 +86,11 @@ namespace StructureMap.Testing.Graph
                     Debug.WriteLine(type.FullName);
                     registry.For(type);
                 }
+            }
+
+            public Registry ScanTypes(TypeSet types)
+            {
+                throw new NotImplementedException();
             }
         }
 

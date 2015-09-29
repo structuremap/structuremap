@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Graph.Scanning;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Acceptance
@@ -38,6 +39,11 @@ namespace StructureMap.Testing.Acceptance
                 // Register against all the interfaces implemented
                 // by this concrete class
                 type.GetInterfaces().Each(@interface => { registry.For(@interface).Use(type); });
+            }
+
+            public Registry ScanTypes(TypeSet types)
+            {
+                throw new NotImplementedException();
             }
         }
 

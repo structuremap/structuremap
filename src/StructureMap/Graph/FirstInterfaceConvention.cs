@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using StructureMap.Configuration.DSL;
+using StructureMap.Graph.Scanning;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
@@ -20,6 +21,11 @@ namespace StructureMap.Graph
                 registry.AddType(interfaceType, type);
                 ConfigureFamily(registry.For(interfaceType));
             }
+        }
+
+        public override Registry ScanTypes(TypeSet types)
+        {
+            throw new NotImplementedException();
         }
     }
 }

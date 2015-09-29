@@ -1,6 +1,7 @@
 ﻿using System;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Graph.Scanning;
 using StructureMap.TypeRules;
 
 namespace NestedLibrary
@@ -26,6 +27,11 @@ namespace NestedLibrary
             {
                 registry.For(typeof(ITeam)).Add(type);
             }
+        }
+
+        public Registry ScanTypes(TypeSet types)
+        {
+            throw new NotImplementedException();
         }
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
+using StructureMap.Graph.Scanning;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
@@ -25,6 +26,11 @@ namespace StructureMap.Graph
                 var name = _getName(type);
                 registry.AddType(GetLeastSpecificButValidType(_pluginType, type), type, name);
             }
+        }
+
+        public Registry ScanTypes(TypeSet types)
+        {
+            throw new NotImplementedException();
         }
 
         private Type GetLeastSpecificButValidType(Type pluginType, Type type)

@@ -93,10 +93,6 @@ namespace StructureMap.Graph
         /// <typeparam name="T"></typeparam>
         void ExcludeType<T>();
 
-        // ... Other methods
-
-        // ... Other methods
-
         /// <summary>
         /// Adds a registration convention to be applied to all the types in this
         /// logical "scan" operation
@@ -109,8 +105,6 @@ namespace StructureMap.Graph
         /// logical "scan" operation
         /// </summary>
         void With(IRegistrationConvention convention);
-
-        void ModifyGraphAfterScan(Action<PluginGraph> modifyGraph);
 
         /// <summary>
         /// Adds the DefaultConventionScanner to the scanning operations.  I.e., a concrete
