@@ -52,6 +52,15 @@ namespace StructureMap.Graph
             return graph;
         }
 
+        internal void addCloseGenericPolicyTo()
+        {
+            var policy = new CloseGenericFamilyPolicy(this);
+            AddFamilyPolicy(policy);
+
+            AddFamilyPolicy(new FuncBuildByNamePolicy());
+            AddFamilyPolicy(new EnumerableFamilyPolicy());
+        }
+
 
         public PluginGraph NewChild()
         {

@@ -44,20 +44,11 @@ namespace StructureMap
         {
             RunConfigurations();
 
-            addCloseGenericPolicyTo(_graph);
+            // TEMP!
+            _graph.addCloseGenericPolicyTo();
+            _graph.Profiles.Each(x => x.addCloseGenericPolicyTo());
 
             return _graph;
-        }
-
-        private void addCloseGenericPolicyTo(PluginGraph graph)
-        {
-            var policy = new CloseGenericFamilyPolicy(graph);
-            graph.AddFamilyPolicy(policy);
-
-            graph.AddFamilyPolicy(new FuncBuildByNamePolicy());
-            graph.AddFamilyPolicy(new EnumerableFamilyPolicy());
-
-            graph.Profiles.Each(addCloseGenericPolicyTo);
         }
 
         public void RunConfigurations()
