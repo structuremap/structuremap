@@ -91,12 +91,12 @@ namespace StructureMap.Testing
         [Test]
         public void CanGetPluginFamilyFromPluginGraphWithNoParameters()
         {
-            var builder = new PluginGraphBuilder();
-            var scanner = new AssemblyScanner();
-            scanner.Assembly(GetType().Assembly);
+            //var builder = new PluginGraphBuilder();
+            //var scanner = new AssemblyScanner();
+            //scanner.Assembly(GetType().Assembly);
 
-            builder.AddScanner(scanner);
-            var graph = builder.Build();
+            //builder.AddScanner(scanner);
+            var graph = PluginGraph.CreateRoot();
 
             graph.Families[typeof (IGenericService<int>)].ShouldBeTheSameAs(
                 graph.Families[typeof (IGenericService<int>)]);

@@ -70,36 +70,6 @@ namespace StructureMap.Graph
             _concretions.Each(type => registry.Configure(graph => graph.ConnectedConcretions.Fill(type)));
         }
 
-        public void Apply(PluginGraph graph)
-        {
-            var registry = new Registry();
-
-            _interfaces.Each(@interface =>
-            {
-                var expression = registry.For(@interface);
-                ConfigureFamily(expression);
-
-                var exactMatches = _concretions.Where(x => x.CanBeCastTo(@interface)).ToArray();
-                if (exactMatches.Length == 1)
-                {
-                    expression.Use(exactMatches.Single());
-                }
-                else
-                {
-                    exactMatches.Each(type => expression.Add(type));
-                }
-
-
-                if (!@interface.IsOpenGeneric())
-                {
-                    addConcretionsThatCouldBeClosed(@interface, expression);
-                }
-            });
-
-            _concretions.Each(t => graph.ConnectedConcretions.Fill(t));
-            registry.As<IPluginGraphConfiguration>().Configure(graph);
-        }
-
         private void addConcretionsThatCouldBeClosed(Type @interface, GenericFamilyExpression expression)
         {
             _concretions.Where(x => x.IsOpenGeneric())
@@ -113,7 +83,7 @@ namespace StructureMap.Graph
                     }
                     catch (Exception)
                     {
-                        // Because I'm too lazy to fight with the fucking type constraints to "know"
+                        // Because I'm too lazy to fight with the bleeping type constraints to "know"
                         // if it's possible to make the generic type and this is just easier.
                     }
                 });

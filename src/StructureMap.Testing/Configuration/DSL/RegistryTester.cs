@@ -175,13 +175,13 @@ namespace StructureMap.Testing.Configuration.DSL
             var registry2 = new TestRegistry2();
             var graph = PluginGraph.CreateRoot();
 
-            graph.Registries.Count.ShouldBe(0);
-            registry2.As<IPluginGraphConfiguration>().Configure(graph);
+            graph.ImportRegistry(registry2);
 
-            graph.Registries.Contains(registry2).ShouldBeTrue();
+            graph.QueuedRegistries.Count.ShouldBe(1);
 
-            registry2.As<IPluginGraphConfiguration>().Configure(graph);
-            registry2.ExecutedCount.ShouldBe(1);
+
+            graph.ImportRegistry(registry2);
+            graph.QueuedRegistries.Count.ShouldBe(1);
         }
 
         [Test]

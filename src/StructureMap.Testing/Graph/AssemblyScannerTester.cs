@@ -64,16 +64,20 @@ namespace StructureMap.Testing.Graph
         private PluginGraph theGraph;
         private string assemblyScanningFolder;
 
-        private void Scan(Action<AssemblyScanner> action)
+        private void Scan(Action<IAssemblyScanner> action)
         {
-            var scanner = new AssemblyScanner();
-            action(scanner);
+            var registry = new Registry();
+            registry.Scan(scan =>
+            {
+                action(scan);
 
-            scanner.ExcludeNamespaceContainingType<ScanningRegistry>();
-            scanner.Convention<FakeConvention>();
+                scan.ExcludeNamespaceContainingType<ScanningRegistry>();
+                scan.Convention<FakeConvention>();
+            });
+
 
             var builder = new PluginGraphBuilder();
-            builder.AddScanner(scanner);
+            builder.Add(registry);
             theGraph = builder.Build();
         }
 

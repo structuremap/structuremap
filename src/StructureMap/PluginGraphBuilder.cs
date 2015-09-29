@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using StructureMap.Configuration;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Pipeline.Lazy;
 
 namespace StructureMap
 {
@@ -14,9 +14,7 @@ namespace StructureMap
     /// </summary>
     public class PluginGraphBuilder
     {
-        private readonly IList<IPluginGraphConfiguration> _configurations = new List<IPluginGraphConfiguration>();
         private readonly PluginGraph _graph;
-        private readonly IList<AssemblyScanner> _scanners = new List<AssemblyScanner>();
 
         public PluginGraphBuilder()
         {
@@ -28,9 +26,9 @@ namespace StructureMap
             _graph = graph;
         }
 
-        public PluginGraphBuilder Add(IPluginGraphConfiguration configuration)
+        public PluginGraphBuilder Add(Registry registry)
         {
-            _configurations.Add(configuration);
+            _graph.ImportRegistry(registry);
             return this;
         }
 
@@ -53,30 +51,30 @@ namespace StructureMap
 
         public void RunConfigurations()
         {
-            _configurations.Each(x => {
-                x.Register(this);
-                x.Configure(_graph);
-            });
-
-            _scanners.Each(x => x.ScanForTypes(_graph));
+            var scanning = new List<Task<Registry>>();
 
             // Recursive scanning
+            while (_graph.QueuedRegistries.Any())
+            {
+                var registry = _graph.QueuedRegistries.Dequeue();
+                registry.Configure(_graph);
+
+                scanning.AddRange(registry.Scanners.Select(x => x.ScanForTypes()));
+            }
+
+            if (scanning.Any())
+            {
+                Task.WaitAll(scanning.ToArray());
+
+                scanning.Each(x => _graph.ImportRegistry(x.Result));
+            }
+
+
             if (_graph.QueuedRegistries.Any())
             {
-                var builder = new PluginGraphBuilder(_graph);
-                while (_graph.QueuedRegistries.Any())
-                {
-                    var registry = _graph.QueuedRegistries.Dequeue();
-                    builder.Add(registry);
-                }
-
-                builder.Build();
+                RunConfigurations();
             }
-        }
 
-        public void AddScanner(AssemblyScanner scanner)
-        {
-            _scanners.Fill(scanner);
         }
     }
 }

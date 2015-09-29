@@ -114,14 +114,6 @@ namespace StructureMap.Graph
             _conventions.Fill(convention);
         }
 
-        public void ScanForTypes(PluginGraph pluginGraph)
-        {
-            var task = ScanForTypes();
-
-            task.Wait();
-            task.Result.As<IPluginGraphConfiguration>().Configure(pluginGraph);
-        }
-
         public Task<Registry> ScanForTypes()
         {
             var task = TypeRepository.FindTypes(_assemblies, type => _filter.Matches(type)).ContinueWith(t =>
@@ -193,13 +185,6 @@ namespace StructureMap.Graph
             var convention = new ImplementationMap();
             With(convention);
             return new ConfigureConventionExpression(convention);
-        }
-
-        public PluginGraph ToPluginGraph()
-        {
-            var builder = new PluginGraphBuilder();
-            builder.AddScanner(this);
-            return builder.Build();
         }
     }
 }

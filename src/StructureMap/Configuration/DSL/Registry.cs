@@ -22,10 +22,11 @@ namespace StructureMap.Configuration.DSL
     ///     }
     /// }
     /// </example>
-    public class Registry : IRegistry, IPluginGraphConfiguration
+    public class Registry : IRegistry
     {
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
-        private readonly List<Action<PluginGraphBuilder>> _builders = new List<Action<PluginGraphBuilder>>();
+
+        internal readonly IList<AssemblyScanner> Scanners = new List<AssemblyScanner>(); 
 
         internal Action<PluginGraph> alter
         {
@@ -119,7 +120,7 @@ namespace StructureMap.Configuration.DSL
             var registry = new Registry();
             action(registry);
 
-            alter = x => registry.As<IPluginGraphConfiguration>().Configure(x.Profile(profileName));
+            alter = x => registry.Configure(x.Profile(profileName));
         }
 
 
@@ -133,7 +134,7 @@ namespace StructureMap.Configuration.DSL
             var scanner = new AssemblyScanner();
             action(scanner);
 
-            _builders.Add(x => x.AddScanner(scanner));
+            Scanners.Add(scanner);
         }
 
 
@@ -211,18 +212,9 @@ namespace StructureMap.Configuration.DSL
             alter = configure;
         }
 
-        void IPluginGraphConfiguration.Configure(PluginGraph graph)
+        internal void Configure(PluginGraph graph)
         {
-            if (graph.Registries.Contains(this)) return;
-
             _actions.Each(action => action(graph));
-
-            graph.Registries.Add(this);
-        }
-
-        void IPluginGraphConfiguration.Register(PluginGraphBuilder builder)
-        {
-            _builders.Each(x => x(builder));
         }
 
         public TransientTracking TransientTracking

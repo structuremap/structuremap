@@ -200,7 +200,8 @@ namespace StructureMap.Graph
         /// <param name="type"></param>
         public void ImportRegistry(Type type)
         {
-            if (Registries.Any(x => x.GetType() == type) || QueuedRegistries.Any(x => x.GetType() == type)) return;
+            var all = Registries.Concat(QueuedRegistries);
+            if (all.Any(x => x.GetType() == type)) return;
 
             try
             {
@@ -217,10 +218,14 @@ namespace StructureMap.Graph
 
         public void ImportRegistry(Registry registry)
         {
+            var all = Registries.Concat(QueuedRegistries);
+
+            if (all.Contains(registry)) return;
+ 
             var type = registry.GetType();
             if (type != typeof (Registry))
             {
-                if (Registries.Any(x => x.GetType() == type) || QueuedRegistries.Any(x => x.GetType() == type)) return;
+                if (all.Any(x => x.GetType() == type)) return;
             }
 
             QueuedRegistries.Enqueue(registry);

@@ -46,19 +46,18 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void FindRegistriesWithinPluginGraphSeal()
         {
-            var scanner = new AssemblyScanner();
-            scanner.AssemblyContainingType(typeof (RedGreenRegistry));
-            scanner.LookForRegistries();
+            var container = new Container(_ =>
+            {
+                _.Scan(x =>
+                {
+                    x.AssemblyContainingType(typeof(RedGreenRegistry));
+                    x.LookForRegistries();
+                });
+            });
 
-            var graph = scanner.ToPluginGraph();
-
-            var colors = new List<string>();
-            var family = graph.Families[typeof (IWidget)];
-
-            family.Instances.Each(instance => colors.Add(instance.Name));
-
-            colors.Sort();
-            colors.ShouldHaveTheSameElementsAs("Black", "Blue", "Brown", "Green", "Red", "Yellow");
+            container.Model.For<IWidget>().Instances
+                .Select(x => x.Name).OrderBy(x => x)
+                .ShouldHaveTheSameElementsAs("Black", "Blue", "Brown", "Green", "Red", "Yellow");
         }
 
         [Test]

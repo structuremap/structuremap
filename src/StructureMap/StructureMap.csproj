@@ -130,7 +130,6 @@
     <Compile Include="Configuration\DSL\IRegistry.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
     <Compile Include="Configuration\DSL\SetterConvention.cs" />
-    <Compile Include="Configuration\IPluginGraphConfiguration.cs" />
     <Compile Include="Configuration\ITypeReader.cs" />
     <Compile Include="Configuration\MalformedAliasException.cs" />
     <Compile Include="Container.cs" />

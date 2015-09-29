@@ -180,7 +180,6 @@ namespace StructureMap
             var builder = new PluginGraphBuilder(_pluginGraph);
             builder.Add(registry);
 
-            registry.Registries.Each(x => x.As<IPluginGraphConfiguration>().Register(builder));
             registry.Registries.Each(x => builder.Add(x));
 
             builder.RunConfigurations();
