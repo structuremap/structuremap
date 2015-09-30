@@ -1,6 +1,8 @@
+using System.IO;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
+using StructureMap.Graph.Scanning;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.TypeRules;
@@ -888,6 +890,45 @@ namespace StructureMap
                 PluginType = pluginType,
                 TypeName = typeName
             });
+        }
+
+        /// <summary>
+        /// Returns a textual report of all the assembly scanners used to build up this Container
+        /// </summary>
+        /// <returns></returns>
+        public string WhatDidIScan()
+        {
+            var scanners = Model.Scanners;
+
+            var writer = new StringWriter();
+            writer.WriteLine("All Scanners");
+            writer.WriteLine("================================================================");
+
+
+            scanners.Each(scanner =>
+            {
+                scanner.Describe(writer);
+
+                writer.WriteLine();
+                writer.WriteLine();
+            });
+
+            var failed = TypeRepository.FailedAssemblies();
+            if (failed.Any())
+            {
+                writer.WriteLine();
+                writer.WriteLine("Assemblies that failed in the call to Assembly.GetExportedTypes()");
+                failed.Each(assem =>
+                {
+                    writer.WriteLine("* " + assem.Record.Name);
+                });
+            }
+            else
+            {
+                writer.WriteLine("No problems were encountered in exporting types from Assemblies");
+            }
+
+            return writer.ToString();
         }
 
         /// <summary>

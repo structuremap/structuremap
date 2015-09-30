@@ -26,5 +26,10 @@ namespace StructureMap.Graph
             var interfaceName = "I" + concreteType.Name;
             return concreteType.GetInterfaces().FirstOrDefault(t => t.Name == interfaceName);
         }
+
+        public override string ToString()
+        {
+            return "Default I[Name]/[Name] registration convention";
+        }
     }
 }

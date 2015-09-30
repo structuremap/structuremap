@@ -132,6 +132,16 @@ namespace StructureMap.Configuration.DSL
         public void Scan(Action<IAssemblyScanner> action)
         {
             var scanner = new AssemblyScanner();
+
+            if (GetType().Assembly == Assembly.GetExecutingAssembly())
+            {
+                scanner.Description = "Scanner #" + (Scanners.Count + 1);
+            }
+            else
+            {
+                scanner.Description = "{0} Scanner #{1}".ToFormat(GetType().Name, (Scanners.Count + 1));
+            }
+
             action(scanner);
 
             Scanners.Add(scanner);

@@ -22,5 +22,10 @@ namespace StructureMap.Graph
                 }
             });
         }
+
+        public override string ToString()
+        {
+            return "Register any single implementation of any interface against that interface";
+        }
     }
 }

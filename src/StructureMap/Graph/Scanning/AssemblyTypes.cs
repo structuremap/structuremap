@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using StructureMap.TypeRules;
@@ -10,6 +11,11 @@ namespace StructureMap.Graph.Scanning
     {
         public string Name;
         public Exception LoadException;
+
+        public override string ToString()
+        {
+            return LoadException == null ? Name : "{0} (Failed)".ToFormat(Name);
+        }
     }
 
     public class AssemblyTypes

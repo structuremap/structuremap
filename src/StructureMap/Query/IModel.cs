@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using StructureMap.Graph;
 
 namespace StructureMap.Query
 {
@@ -141,5 +142,12 @@ namespace StructureMap.Query
         /// <param name="name"></param>
         /// <returns></returns>
         InstanceRef Find<TPluginType>(string name);
+
+
+        /// <summary>
+        /// All of the assembly scanning operations that were used to build this
+        /// Container
+        /// </summary>
+        IEnumerable<AssemblyScanner> Scanners { get; }
     }
 }

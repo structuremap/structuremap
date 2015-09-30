@@ -23,17 +23,22 @@ namespace StructureMap.Graph.Scanning
         /// </summary>
         public static void AssertNoTypeScanningFailures()
         {
-            var tasks = _assemblies.Select(x => x.Value).ToArray();
-            Task.WaitAll(tasks);
-
             var exceptions =
-                tasks.Where(x => x.Result.Record.LoadException != null).Select(x => x.Result.Record.LoadException);
+                FailedAssemblies().Select(x => x.Record.LoadException);
 
 
             if (exceptions.Any())
             {
                 throw new AggregateException(exceptions);
             }
+        }
+
+        public static IEnumerable<AssemblyTypes> FailedAssemblies()
+        {
+            var tasks = _assemblies.Select(x => x.Value).ToArray();
+            Task.WaitAll(tasks);
+
+            return tasks.Where(x => x.Result.Record.LoadException != null).Select(x => x.Result);
         }
 
         public static Task<AssemblyTypes> ForAssembly(Assembly assembly)

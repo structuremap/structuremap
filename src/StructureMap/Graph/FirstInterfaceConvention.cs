@@ -22,5 +22,10 @@ namespace StructureMap.Graph
             });
 
         }
+
+        public override string ToString()
+        {
+            return "Register all concrete types against the first interface (if any) that they implement";
+        }
     }
 }

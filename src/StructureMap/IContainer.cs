@@ -342,6 +342,12 @@ namespace StructureMap
             string typeName = null);
 
         /// <summary>
+        /// Returns a textual report of all the assembly scanners used to build up this Container
+        /// </summary>
+        /// <returns></returns>
+        string WhatDidIScan();
+
+        /// <summary>
         /// Use with caution!  Does a full environment test of the configuration of this container.  Will try to create
         /// every configured instance and afterward calls any methods marked with
         /// <see cref="ValidationMethodAttribute"/>.

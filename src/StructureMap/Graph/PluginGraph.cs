@@ -175,7 +175,7 @@ namespace StructureMap.Graph
         /// <summary>
         /// The list of Registry objects used to create this container
         /// </summary>
-        public List<Registry> Registries
+        internal List<Registry> Registries
         {
             get { return _registries; }
         }
@@ -251,7 +251,7 @@ namespace StructureMap.Graph
             if (all.Contains(registry)) return;
  
             var type = registry.GetType();
-            if (type != typeof (Registry))
+            if (type != typeof (Registry) && type != typeof(ConfigurationExpression))
             {
                 if (all.Any(x => x.GetType() == type)) return;
             }

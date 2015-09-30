@@ -25,6 +25,11 @@ namespace StructureMap.Graph
             }
         }
 
+        public override string ToString()
+        {
+            return "Connect all implementations of open generic type " + _openType.GetTypeName();
+        }
+
         public override void ScanTypes(TypeSet types, Registry registry)
         {
             types.AllTypes().Each(type =>

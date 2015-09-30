@@ -142,6 +142,11 @@ namespace StructureMap.Query
             return For<TPluginType>().Find(name);
         }
 
+        public IEnumerable<AssemblyScanner> Scanners
+        {
+            get { return PluginGraph.Registries.SelectMany(x => x.Scanners).ToArray(); }
+        }
+
         public IEnumerable<InstanceRef> InstancesOf(Type pluginType)
         {
             return findForFamily(pluginType, x => x.Instances, new InstanceRef[0]);

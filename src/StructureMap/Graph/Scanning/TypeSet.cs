@@ -15,6 +15,11 @@ namespace StructureMap.Graph.Scanning
             _filter = filter ?? _filter;
         }
 
+        public IEnumerable<AssemblyScanRecord> Records
+        {
+            get { return _allTypes.Select(x => x.Record); }
+        }
+
         public IEnumerable<Type> FindTypes(TypeClassification classification)
         {
             return _allTypes.SelectMany(x => x.FindTypes(classification)).Where(_filter).ToArray();

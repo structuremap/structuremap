@@ -42,5 +42,10 @@ namespace StructureMap.Graph
         {
             _getName = getName;
         }
+
+        public override string ToString()
+        {
+            return "Find and register all types implementing " + _pluginType.FullName;
+        }
     }
 }

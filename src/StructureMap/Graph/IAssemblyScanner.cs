@@ -7,6 +7,11 @@ namespace StructureMap.Graph
     public interface IAssemblyScanner
     {
         /// <summary>
+        /// Optional user-supplied diagnostic description of this scanning operation
+        /// </summary>
+        string Description { get; set; }
+
+        /// <summary>
         /// Add an Assembly to the scanning operation
         /// </summary>
         /// <param name="assembly"></param>

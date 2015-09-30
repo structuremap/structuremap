@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
+using StructureMap.Diagnostics;
 using StructureMap.Graph.Scanning;
 using StructureMap.TypeRules;
 
@@ -17,11 +19,14 @@ namespace StructureMap.Graph
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly List<IRegistrationConvention> _conventions = new List<IRegistrationConvention>();
         private readonly CompositeFilter<Type> _filter = new CompositeFilter<Type>();
+        private readonly List<AssemblyScanRecord> _records = new List<AssemblyScanRecord>(); 
 
         public int Count
         {
             get { return _assemblies.Count; }
         }
+
+        public string Description { get; set; }
 
 
         public void Assembly(Assembly assembly)
@@ -35,6 +40,20 @@ namespace StructureMap.Graph
         public void Assembly(string assemblyName)
         {
             Assembly(AssemblyLoader.ByName(assemblyName));
+        }
+
+        public void Describe(StringWriter writer)
+        {
+            writer.WriteLine(Description);
+            writer.WriteLine("Assemblies");
+            writer.WriteLine("----------");
+
+            _records.OrderBy(x => x.Name).Each(x => writer.WriteLine("* " + x));
+            writer.WriteLine();
+
+            writer.WriteLine("Conventions");
+            writer.WriteLine("--------");
+            _conventions.Each(x => writer.WriteLine("* " + x));
         }
 
         public void Convention<T>() where T : IRegistrationConvention, new()
@@ -120,6 +139,8 @@ namespace StructureMap.Graph
             return TypeRepository.FindTypes(_assemblies, type => _filter.Matches(type)).ContinueWith(t =>
             {
                 var registry = new Registry();
+
+                _records.AddRange(t.Result.Records);
 
                 _conventions.Each(x => x.ScanTypes(t.Result, registry));
 

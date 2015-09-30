@@ -434,6 +434,7 @@
     <Compile Include="Web\HybridBuildLifecycleTester.cs" />
     <Compile Include="Web\PluginFamilyTester.cs" />
     <Compile Include="Web\ThreadLocalStorageLifecycleTester_with_nested_containers.cs" />
+    <Compile Include="WhatDidIScan_smoke_tester.cs" />
     <Compile Include="WhatDoIHave_Smoke_Tester.cs" />
     <None Include="..\structuremap.snk">
       <Link>structuremap.snk</Link>
