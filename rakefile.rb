@@ -77,3 +77,13 @@ desc 'Build Nuspec packages'
 task :pack => [:compile, :compile_signed] do
 	sh ".paket/paket.exe pack output artifacts version #{build_number}-alpha"
 end
+
+desc "Launches VS to the StructureMap solution file"
+task :sln do
+	sh "start src/StructureMap.sln"
+end
+
+"Launches the documentation project in editable mode"
+task :docs do
+	sh "packages/Storyteller/tools/st.exe doc-run -v #{BUILD_VERSION}"
+end
