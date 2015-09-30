@@ -17,6 +17,25 @@ namespace StructureMap.Graph.Scanning
             _assemblies.Clear();
         }
 
+        /// <summary>
+        /// Use to assert that there were no failures in type scanning when trying to find the exported types
+        /// from any Assembly
+        /// </summary>
+        public static void AssertNoTypeScanningFailures()
+        {
+            var tasks = _assemblies.Select(x => x.Value).ToArray();
+            Task.WaitAll(tasks);
+
+            var exceptions =
+                tasks.Where(x => x.Result.Record.LoadException != null).Select(x => x.Result.Record.LoadException);
+
+
+            if (exceptions.Any())
+            {
+                throw new AggregateException(exceptions);
+            }
+        }
+
         public static Task<AssemblyTypes> ForAssembly(Assembly assembly)
         {
             return _assemblies.GetOrAdd(assembly, assem => Task.Factory.StartNew(() => new AssemblyTypes(assem)));

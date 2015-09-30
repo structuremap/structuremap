@@ -38,6 +38,15 @@ namespace StructureMap.Testing.Graph.Scanning
         }
 
         [Test]
+        public void assert_no_type_scanning_failures_happy_path()
+        {
+            TypeRepository.ClearAll();
+            TypeRepository.FindTypes(GetType().Assembly, TypeClassification.All).Wait();
+
+            TypeRepository.AssertNoTypeScanningFailures();
+        }
+
+        [Test]
         public void successful_assembly_types()
         {
             var types = new AssemblyTypes(typeof (IContainer).Assembly);
