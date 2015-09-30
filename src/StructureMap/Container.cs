@@ -52,7 +52,7 @@ namespace StructureMap
         /// Asserts that this container is not disposed yet.
         /// </summary>
         /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
-        private void AssertNotDisposed()
+        private void assertNotDisposed()
         {
             if (!_disposedLatch) return;
 
@@ -86,7 +86,7 @@ namespace StructureMap
         {
             get
             {
-                AssertNotDisposed();
+                assertNotDisposed();
                 return _pipelineGraph.ToModel();
             }
         }
@@ -105,7 +105,7 @@ namespace StructureMap
         public T GetInstance<T>(string instanceKey)
         {
             ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -133,7 +133,7 @@ namespace StructureMap
         public T GetInstance<T>(Instance instance)
         {
             ArgumentChecker.ThrowIfNull("instance", instance);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -159,7 +159,7 @@ namespace StructureMap
         public T GetInstance<T>(ExplicitArguments args)
         {
             ArgumentChecker.ThrowIfNull("args", args);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -189,7 +189,7 @@ namespace StructureMap
         {
             ArgumentChecker.ThrowIfNull("args", args);
             ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -217,7 +217,7 @@ namespace StructureMap
         {
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
             ArgumentChecker.ThrowIfNull("args", args);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -256,7 +256,7 @@ namespace StructureMap
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
             ArgumentChecker.ThrowIfNull("args", args);
             ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -290,7 +290,7 @@ namespace StructureMap
         public T TryGetInstance<T>(ExplicitArguments args)
         {
             ArgumentChecker.ThrowIfNull("args", args);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -322,7 +322,7 @@ namespace StructureMap
         {
             ArgumentChecker.ThrowIfNull("args", args);
             ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -352,7 +352,7 @@ namespace StructureMap
         {
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
             ArgumentChecker.ThrowIfNull("args", args);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -392,7 +392,7 @@ namespace StructureMap
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
             ArgumentChecker.ThrowIfNull("args", args);
             ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -427,7 +427,7 @@ namespace StructureMap
         {
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
             ArgumentChecker.ThrowIfNull("args", args);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -454,7 +454,7 @@ namespace StructureMap
         public IEnumerable<T> GetAllInstances<T>(ExplicitArguments args)
         {
             ArgumentChecker.ThrowIfNull("args", args);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -477,7 +477,7 @@ namespace StructureMap
         /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public T GetInstance<T>()
         {
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -499,7 +499,7 @@ namespace StructureMap
         /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public IEnumerable<T> GetAllInstances<T>()
         {
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -528,7 +528,7 @@ namespace StructureMap
         {
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
             ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -563,7 +563,7 @@ namespace StructureMap
         {
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
             ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -597,7 +597,7 @@ namespace StructureMap
         public object TryGetInstance(Type pluginType)
         {
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -628,7 +628,7 @@ namespace StructureMap
         /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public T TryGetInstance<T>()
         {
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -652,7 +652,7 @@ namespace StructureMap
         public void BuildUp(object target)
         {
             ArgumentChecker.ThrowIfNull("target", target);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -681,7 +681,7 @@ namespace StructureMap
         public T TryGetInstance<T>(string instanceKey)
         {
             ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -706,7 +706,7 @@ namespace StructureMap
         public object GetInstance(Type pluginType)
         {
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -740,7 +740,7 @@ namespace StructureMap
         {
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
             ArgumentChecker.ThrowIfNull("instance", instance);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -771,7 +771,7 @@ namespace StructureMap
         public IEnumerable GetAllInstances(Type pluginType)
         {
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             try
             {
@@ -794,7 +794,7 @@ namespace StructureMap
         public void Configure(Action<ConfigurationExpression> configure)
         {
             ArgumentChecker.ThrowIfNull("configure", configure);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             lock (_syncLock)
             {
@@ -833,7 +833,7 @@ namespace StructureMap
         public IContainer GetProfile(string profileName)
         {
             ArgumentChecker.ThrowIfNullOrEmptyString("profileName", profileName);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             var pipeline = _pipelineGraph.Profiles.For(profileName);
             return new Container(pipeline);
@@ -846,7 +846,7 @@ namespace StructureMap
         /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public IContainer CreateChildContainer()
         {
-            AssertNotDisposed();
+            assertNotDisposed();
 
             var pipeline = _pipelineGraph.Profiles.NewChild(_pipelineGraph.Instances.ImmediatePluginGraph);
             var childContainer = new Container(pipeline);
@@ -878,7 +878,7 @@ namespace StructureMap
         public string WhatDoIHave(Type pluginType = null, Assembly assembly = null, string @namespace = null,
             string typeName = null)
         {
-            AssertNotDisposed();
+            assertNotDisposed();
 
             var writer = new WhatDoIHaveWriter(_pipelineGraph);
             return writer.GetText(new ModelQuery
@@ -901,7 +901,7 @@ namespace StructureMap
         /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public ExplicitArgsExpression With<T>(T arg)
         {
-            AssertNotDisposed();
+            assertNotDisposed();
 
             return new ExplicitArgsExpression(this).With(arg);
         }
@@ -920,7 +920,7 @@ namespace StructureMap
         public ExplicitArgsExpression With(Type pluginType, object arg)
         {
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             return new ExplicitArgsExpression(this).With(pluginType, arg);
         }
@@ -935,7 +935,7 @@ namespace StructureMap
         /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public IExplicitProperty With(string argName)
         {
-            AssertNotDisposed();
+            assertNotDisposed();
 
             return new ExplicitArgsExpression(this).With(argName);
         }
@@ -948,7 +948,7 @@ namespace StructureMap
         /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public void AssertConfigurationIsValid()
         {
-            AssertNotDisposed();
+            assertNotDisposed();
             PipelineGraphValidator.AssertNoErrors(_pipelineGraph);
         }
 
@@ -959,7 +959,7 @@ namespace StructureMap
         /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public void EjectAllInstancesOf<T>()
         {
-            AssertNotDisposed();
+            assertNotDisposed();
             _pipelineGraph.Ejector.EjectAllInstancesOf<T>();
         }
 
@@ -975,7 +975,7 @@ namespace StructureMap
         /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public OpenGenericTypeExpression ForGenericType(Type templateType)
         {
-            AssertNotDisposed();
+            assertNotDisposed();
             return new OpenGenericTypeExpression(templateType, this);
         }
 
@@ -993,7 +993,7 @@ namespace StructureMap
         /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public CloseGenericTypeExpression ForObject(object subject)
         {
-            AssertNotDisposed();
+            assertNotDisposed();
             return new CloseGenericTypeExpression(subject, this);
         }
 
@@ -1004,7 +1004,7 @@ namespace StructureMap
         /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public IContainer GetNestedContainer()
         {
-            AssertNotDisposed();
+            assertNotDisposed();
             var pipeline = _pipelineGraph.ToNestedGraph();
             return GetNestedContainer(pipeline);
         }
@@ -1021,7 +1021,7 @@ namespace StructureMap
         public IContainer GetNestedContainer(string profileName)
         {
             ArgumentChecker.ThrowIfNullOrEmptyString("profileName", profileName);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             var pipeline = _pipelineGraph.Profiles.For(profileName).ToNestedGraph();
             return GetNestedContainer(pipeline);
@@ -1125,7 +1125,7 @@ namespace StructureMap
         public ExplicitArgsExpression With(Action<IExplicitArgsExpression> action)
         {
             ArgumentChecker.ThrowIfNull("action", action);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             var expression = new ExplicitArgsExpression(this);
             action(expression);
@@ -1144,7 +1144,7 @@ namespace StructureMap
         public void Inject(Type pluginType, Instance instance)
         {
             ArgumentChecker.ThrowIfNull("pluginType", pluginType);
-            AssertNotDisposed();
+            assertNotDisposed();
 
             Configure(x => x.For(pluginType).Use(instance));
         }
@@ -1211,7 +1211,7 @@ namespace StructureMap
 
         public void Release(object @object)
         {
-            AssertNotDisposed();
+            assertNotDisposed();
             TransientTracking.Release(@object);
         }
     }
