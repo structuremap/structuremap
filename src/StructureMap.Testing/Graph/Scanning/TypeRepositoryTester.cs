@@ -34,7 +34,24 @@ namespace StructureMap.Testing.Graph.Scanning
         {
             theInners = GetType().GetNestedTypes();
 
-            theTypes = new AssemblyTypes(theInners);
+            theTypes = new AssemblyTypes("some name",() => theInners);
+        }
+
+        [Test]
+        public void successful_assembly_types()
+        {
+            var types = new AssemblyTypes(typeof (IContainer).Assembly);
+            types.Record.Name.ShouldBe(typeof(IContainer).Assembly.FullName);
+            types.Record.LoadException.ShouldBeNull();
+        }
+
+        [Test]
+        public void failed_assembly_types()
+        {
+            var types = new AssemblyTypes("FakeOne", () => { throw new DivideByZeroException(); });
+
+            types.Record.Name.ShouldBe("FakeOne");
+            types.Record.LoadException.ShouldBeOfType<DivideByZeroException>();
         }
 
         [Test]

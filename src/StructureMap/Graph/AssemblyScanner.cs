@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph.Scanning;
 using StructureMap.TypeRules;
+
+#pragma warning disable 1591
 
 namespace StructureMap.Graph
 {
@@ -116,16 +117,14 @@ namespace StructureMap.Graph
 
         public Task<Registry> ScanForTypes()
         {
-            var task = TypeRepository.FindTypes(_assemblies, type => _filter.Matches(type)).ContinueWith(t =>
+            return TypeRepository.FindTypes(_assemblies, type => _filter.Matches(type)).ContinueWith(t =>
             {
-                var types = t.Result;
-
                 var registry = new Registry();
-                _conventions.Each(x => x.ScanTypes(types, registry));
+
+                _conventions.Each(x => x.ScanTypes(t.Result, registry));
 
                 return registry;
             });
-            return task;
         }
 
 
@@ -136,12 +135,6 @@ namespace StructureMap.Graph
                 .Any(aName => aName.Name == assemblyName);
         }
 
-
-        /// <summary>
-        /// Adds the DefaultConventionScanner to the scanning operations.  I.e., a concrete
-        /// class named "Something" that implements "ISomething" will be automatically 
-        /// added to PluginType "ISomething"
-        /// </summary>
         public ConfigureConventionExpression WithDefaultConventions()
         {
             var convention = new DefaultConventionScanner();
@@ -149,13 +142,6 @@ namespace StructureMap.Graph
             return new ConfigureConventionExpression(convention);
         }
 
-        /// <summary>
-        /// Scans for PluginType's and Concrete Types that close the given open generic type
-        /// </summary>
-        /// <example>
-        /// 
-        /// </example>
-        /// <param name="openGenericType"></param>
         public ConfigureConventionExpression ConnectImplementationsToTypesClosing(Type openGenericType)
         {
             var convention = new GenericConnectionScanner(openGenericType);
@@ -164,10 +150,6 @@ namespace StructureMap.Graph
             return new ConfigureConventionExpression(convention);
         }
 
-        /// <summary>
-        /// Automatically registers all concrete types without primitive arguments
-        /// against its first interface, if any
-        /// </summary>
         public ConfigureConventionExpression RegisterConcreteTypesAgainstTheFirstInterface()
         {
             var convention = new FirstInterfaceConvention();
@@ -175,11 +157,6 @@ namespace StructureMap.Graph
             return new ConfigureConventionExpression(convention);
         }
 
-        /// <summary>
-        /// Directs the scanning to automatically register any type that is the single
-        /// implementation of an interface against that interface.
-        /// The filters apply
-        /// </summary>
         public ConfigureConventionExpression SingleImplementationsOfInterface()
         {
             var convention = new ImplementationMap();
@@ -187,4 +164,9 @@ namespace StructureMap.Graph
             return new ConfigureConventionExpression(convention);
         }
     }
+
+
 }
+
+
+#pragma warning restore 1591

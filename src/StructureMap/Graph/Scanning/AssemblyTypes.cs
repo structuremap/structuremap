@@ -6,20 +6,46 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Graph.Scanning
 {
+    public class AssemblyScanRecord
+    {
+        public string Name;
+        public Exception LoadException;
+    }
+
     public class AssemblyTypes
     {
-        public AssemblyTypes(Assembly assembly) : this(assembly.GetExportedTypes())
+        private readonly AssemblyScanRecord _record = new AssemblyScanRecord();
+
+        public AssemblyTypes(Assembly assembly) : this(assembly.FullName, assembly.GetExportedTypes)
         {
         }
 
-        public AssemblyTypes(IEnumerable<Type> types)
+        public AssemblyTypes(string name, Func<IEnumerable<Type>> typeSource)
         {
-            foreach (var type in types)
+            _record.Name = name;
+
+            try
             {
-                var shelf = type.IsOpenGeneric() ? OpenTypes : ClosedTypes;
-                shelf.Add(type);
+                var types = typeSource();
+                foreach (var type in types)
+                {
+                    var shelf = type.IsOpenGeneric() ? OpenTypes : ClosedTypes;
+                    shelf.Add(type);
+                }
             }
+            catch (Exception ex)
+            {
+                _record.LoadException = ex;
+            }
+
+
         }
+
+        public AssemblyScanRecord Record
+        {
+            get { return _record; }
+        }
+
 
         public readonly AssemblyShelf ClosedTypes = new AssemblyShelf();
         public readonly AssemblyShelf OpenTypes = new AssemblyShelf();
