@@ -48,20 +48,24 @@ namespace StructureMap
         {
         }
 
-        private void assertNotDisposed()
+        /// <summary>
+        /// Asserts that this container is not disposed yet.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        private void AssertNotDisposed()
         {
             if (!_disposedLatch) return;
 
             switch (Role)
             {
-                    case ContainerRole.Root:
-                        throw new ObjectDisposedException("StructureMap Application Root Container");
+                case ContainerRole.Root:
+                    throw new ObjectDisposedException("StructureMap Application Root Container");
 
-                    case ContainerRole.Nested:
-                        throw new ObjectDisposedException("StructureMap Nested Container");
+                case ContainerRole.Nested:
+                    throw new ObjectDisposedException("StructureMap Nested Container");
 
-                    case ContainerRole.ProfileOrChild:
-                        throw new ObjectDisposedException("StructureMap Child/Profile Container");
+                case ContainerRole.ProfileOrChild:
+                    throw new ObjectDisposedException("StructureMap Child/Profile Container");
             }
         }
 
@@ -75,120 +79,228 @@ namespace StructureMap
         }
 
         /// <summary>
-        ///     Provides queryable access to the configured PluginType's and Instances of this Container
+        /// Provides queryable access to the configured PluginType's and Instances of this Container.
         /// </summary>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public IModel Model
         {
             get
             {
-                assertNotDisposed();
+                AssertNotDisposed();
                 return _pipelineGraph.ToModel();
             }
         }
 
         /// <summary>
-        ///     Creates or finds the named instance of T
+        /// Creates or finds the named instance of <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="instanceKey"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type which instance is to be created or found.</typeparam>
+        /// <param name="instanceKey">The name of the instance.</param>
+        /// <returns>The named instance of <typeparamref name="T"/>.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="instanceKey"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">If <paramref name="instanceKey"/> is an empty string.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public T GetInstance<T>(string instanceKey)
         {
-            return (T)GetInstance(typeof(T), instanceKey);
-        }
-
-        /// <summary>
-        ///     Creates a new instance of the requested type T using the supplied Instance.  Mostly used internally
-        /// </summary>
-        /// <param name="instance"></param>
-        /// <returns></returns>
-        public T GetInstance<T>(Instance instance)
-        {
-            return (T)GetInstance(typeof(T), instance);
-        }
-
-        /// <summary>
-        ///     Gets the default instance of the pluginType using the explicitly configured arguments from the "args"
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public TPluginType GetInstance<TPluginType>(ExplicitArguments args)
-        {
-            return (TPluginType)GetInstance(typeof(TPluginType), args);
-        }
-
-        /// <summary>
-        /// Gets the default instance of T, but built with the overridden
-        /// arguments from args
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="args"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public T GetInstance<T>(ExplicitArguments args, string name)
-        {
-            return (T)GetInstance(typeof(T), args, name);
-        }
-
-        /// <summary>
-        ///     Gets the default instance of the pluginType using the explicitly configured arguments from the "args"
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public object GetInstance(Type pluginType, ExplicitArguments args)
-        {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
+            AssertNotDisposed();
 
             try
             {
-                var defaultInstance = _pipelineGraph.Instances.GetDefault(pluginType);
-                var requestedName = BuildSession.DEFAULT;
-
-                return buildInstanceWithArgs(pluginType, defaultInstance, args, requestedName);
+                return (T)DoGetInstance(typeof(T), instanceKey);
             }
             catch (StructureMapException e)
             {
-                e.Push("Container.GetInstance({0} ,{1})", pluginType.GetFullName(), args);
+                e.Push("Container.GetInstance<{0}>('{1}')", typeof(T).GetFullName(), instanceKey);
                 throw;
             }
         }
 
         /// <summary>
-        /// Gets the named instance of the pluginType using the explicitly configured arguments from the "args"
+        /// Creates a new instance of the requested type <typeparamref name="T"/> using the supplied
+        /// <see cref="Instance"/>. Mostly used internally.
         /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="args"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public object GetInstance(Type pluginType, ExplicitArguments args, string name)
+        /// <typeparam name="T">The type which instance is to be created or found.</typeparam>
+        /// <param name="instance">The instance of <see cref="Instance"/> used for creating of
+        /// a <typeparamref name="T"/> instance.</param>
+        /// <returns>The created instance of <typeparamref name="T"/>.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="instance"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
+        public T GetInstance<T>(Instance instance)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("instance", instance);
+            AssertNotDisposed();
 
             try
             {
-                var namedInstance = _pipelineGraph.Instances.FindInstance(pluginType, name);
-                return buildInstanceWithArgs(pluginType, namedInstance, args, name);
+                return (T)DoGetInstance(typeof(T), instance);
             }
             catch (StructureMapException e)
             {
-                e.Push("Container.GetInstance<{0}>({1}, '{2}')", pluginType.GetFullName(), args, name);
+                e.Push("Container.GetInstance<{0}>({1})", typeof(T).GetFullName(), instance.Description);
                 throw;
             }
         }
 
         /// <summary>
         /// Gets the default instance of <typeparamref name="T"/>, but built with the overridden arguments from
+        /// <paramref name="args"/>.
+        /// </summary>
+        /// <typeparam name="T">The type which instance is to be created.</typeparam>
+        /// <param name="args">The explicitly configured parameters to use for construction.</param>
+        /// <returns>The created instance of <typeparamref name="T"/>.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="args"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
+        public T GetInstance<T>(ExplicitArguments args)
+        {
+            ArgumentChecker.ThrowIfNull("args", args);
+            AssertNotDisposed();
+
+            try
+            {
+                return (T)DoGetInstance(typeof(T), args);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance<{0}>({1})", typeof(T).GetFullName(), args);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Gets the named instance of <typeparamref name="T"/> using the explicitly configured arguments from
+        /// <paramref name="args"/>.
+        /// </summary>
+        /// <typeparam name="T">The type which instance is to be created.</typeparam>
+        /// <param name="args">The explicitly configured parameters to use for construction.</param>
+        /// <param name="instanceKey">The name of the instance.</param>
+        /// <returns>The created instance of <typeparamref name="T"/>.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="args"/> or <paramref name="instanceKey"/> is
+        /// <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">If <paramref name="instanceKey"/> is an empty string.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
+        public T GetInstance<T>(ExplicitArguments args, string instanceKey)
+        {
+            ArgumentChecker.ThrowIfNull("args", args);
+            ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
+            AssertNotDisposed();
+
+            try
+            {
+                return (T)DoGetInstance(typeof(T), args, instanceKey);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance<{0}>({1}, '{2}')", typeof(T).GetFullName(), args, instanceKey);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Gets the default instance of <paramref name="pluginType"/> using the explicitly configured arguments from
+        /// <paramref name="args"/>.
+        /// </summary>
+        /// <param name="pluginType">The type which instance is to be created.</param>
+        /// <param name="args">The explicitly configured parameters to use for construction.</param>
+        /// <returns>The created instance of <paramref name="pluginType"/>.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/> or <paramref name="args"/>
+        /// is <see langword="null"/>.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
+        public object GetInstance(Type pluginType, ExplicitArguments args)
+        {
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            ArgumentChecker.ThrowIfNull("args", args);
+            AssertNotDisposed();
+
+            try
+            {
+                return DoGetInstance(pluginType, args);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance({0}, {1})", pluginType.GetFullName(), args);
+                throw;
+            }
+        }
+
+        private object DoGetInstance(Type pluginType, ExplicitArguments args)
+        {
+            var defaultInstance = _pipelineGraph.Instances.GetDefault(pluginType);
+            var requestedName = BuildSession.DEFAULT;
+
+            return BuildInstanceWithArgs(pluginType, defaultInstance, args, requestedName);
+        }
+
+        /// <summary>
+        /// Gets the named instance of <paramref name="pluginType"/> using the explicitly configured arguments from
+        /// <paramref name="args"/>.
+        /// </summary>
+        /// <param name="pluginType">The type which instance is to be created.</param>
+        /// <param name="args">The explicitly configured parameters to use for construction.</param>
+        /// <param name="instanceKey">The name of the instance.</param>
+        /// <returns>The created instance of <paramref name="pluginType"/>.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/>, <paramref name="args"/> or
+        /// <paramref name="instanceKey"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">If <paramref name="instanceKey"/> is an empty string.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
+        public object GetInstance(Type pluginType, ExplicitArguments args, string instanceKey)
+        {
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            ArgumentChecker.ThrowIfNull("args", args);
+            ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
+            AssertNotDisposed();
+
+            try
+            {
+                return DoGetInstance(pluginType, args, instanceKey);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance({0}, {1}, '{2}')", pluginType.GetFullName(), args, instanceKey);
+                throw;
+            }
+        }
+
+        private object DoGetInstance(Type pluginType, ExplicitArguments args, string instanceKey)
+        {
+            var namedInstance = _pipelineGraph.Instances.FindInstance(pluginType, instanceKey);
+            return BuildInstanceWithArgs(pluginType, namedInstance, args, instanceKey);
+        }
+
+        /// <summary>
+        /// Gets the default instance of <typeparamref name="T"/> using the explicitly configured arguments from
         /// <paramref name="args"/>. Returns the default value of <typeparamref name="T"/> if it is not known to
         /// the container.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        /// <exception cref="StructureMapException"></exception>
+        /// <typeparam name="T">The type which instance is to be created.</typeparam>
+        /// <param name="args">The explicitly configured parameters to use for construction.</param>
+        /// <returns>The default instance of <typeparamref name="T"/> if resolved; the default value of
+        /// <typeparamref name="T"/> otherwise.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="args"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public T TryGetInstance<T>(ExplicitArguments args)
         {
-            return (T)TryGetInstance(typeof(T), args);
+            ArgumentChecker.ThrowIfNull("args", args);
+            AssertNotDisposed();
+
+            try
+            {
+                return (T)DoTryGetInstance(typeof(T), args);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.TryGetInstance<{0}>({1})", typeof(T).GetFullName(), args);
+                throw;
+            }
         }
 
         /// <summary>
@@ -196,98 +308,153 @@ namespace StructureMap
         /// <paramref name="args"/>. Returns the default value of <typeparamref name="T"/> if it is not known to
         /// the container.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="args"></param>
-        /// <param name="instanceKey"></param>
-        /// <returns></returns>
-        /// <exception cref="StructureMapException"></exception>
+        /// <typeparam name="T">The type which instance is to be created.</typeparam>
+        /// <param name="args">The explicitly configured parameters to use for construction.</param>
+        /// <param name="instanceKey">The name of the instance.</param>
+        /// <returns>The named instance of <typeparamref name="T"/> if resolved; the default value of
+        /// <typeparamref name="T"/> otherwise.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="args"/> or <paramref name="instanceKey"/> is
+        /// <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">If <paramref name="instanceKey"/> is an empty string.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public T TryGetInstance<T>(ExplicitArguments args, string instanceKey)
         {
-            return (T)TryGetInstance(typeof(T), args, instanceKey);
+            ArgumentChecker.ThrowIfNull("args", args);
+            ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
+            AssertNotDisposed();
+
+            try
+            {
+                return (T)DoTryGetInstance(typeof(T), args, instanceKey);
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.TryGetInstance<{0}>({1}, '{2}')", typeof(T).GetFullName(), args, instanceKey);
+                throw;
+            }
         }
 
         /// <summary>
         /// Gets the default instance of <paramref name="pluginType"/> using the explicitly configured arguments from
-        /// <paramref name="args"/>. Returns <c>null</c> if the named instance is not known to the container.
+        /// <paramref name="args"/>. Returns <see langword="null"/> if the named instance is not known to
+        /// the container.
         /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        /// <exception cref="StructureMapException"></exception>
+        /// <param name="pluginType">The type which instance is to be created.</param>
+        /// <param name="args">The explicitly configured parameters to use for construction.</param>
+        /// <returns>The default instance of <paramref name="pluginType"/> if resolved; <see langword="null"/>
+        ///  otherwise.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/> or <paramref name="args"/>
+        /// is <see langword="null"/>.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public object TryGetInstance(Type pluginType, ExplicitArguments args)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            ArgumentChecker.ThrowIfNull("args", args);
+            AssertNotDisposed();
 
             try
             {
-                return !_pipelineGraph.Instances.HasDefaultForPluginType(pluginType)
-                    ? null
-                    : GetInstance(pluginType, args);
+                return DoTryGetInstance(pluginType, args);
             }
             catch (StructureMapException e)
             {
-                e.Push("Container.TryGetInstance<{0}>({1})", pluginType.GetFullName(), args);
+                e.Push("Container.TryGetInstance({0}, {1})", pluginType.GetFullName(), args);
                 throw;
             }
+        }
+
+        private object DoTryGetInstance(Type pluginType, ExplicitArguments args)
+        {
+            return !_pipelineGraph.Instances.HasDefaultForPluginType(pluginType)
+                ? null
+                : DoGetInstance(pluginType, args);
         }
 
         /// <summary>
         /// Gets the named instance of <paramref name="pluginType"/> using the explicitly configured arguments from
-        /// <paramref name="args"/>. Returns null if the named instance is not known to the container.
+        /// <paramref name="args"/>. Returns <see langword="null"/> if the named instance is not known to
+        /// the container.
         /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="args"></param>
-        /// <param name="instanceKey"></param>
-        /// <returns></returns>
-        /// <exception cref="StructureMapException"></exception>
+        /// <param name="pluginType">The type which instance is to be created.</param>
+        /// <param name="args">The explicitly configured parameters to use for construction.</param>
+        /// <param name="instanceKey">The name of the instance.</param>
+        /// <returns>The named instance of <paramref name="pluginType"/> if resolved; <see langword="null"/>
+        ///  otherwise.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/>, <paramref name="args"/> or
+        /// <paramref name="instanceKey"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">If <paramref name="instanceKey"/> is an empty string.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public object TryGetInstance(Type pluginType, ExplicitArguments args, string instanceKey)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            ArgumentChecker.ThrowIfNull("args", args);
+            ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
+            AssertNotDisposed();
 
             try
             {
-                return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
-                    ? null
-                    : GetInstance(pluginType, args, instanceKey);
+                return DoTryGetInstance(pluginType, args, instanceKey);
             }
             catch (StructureMapException e)
             {
-                e.Push("Container.TryGetInstance<{0}>({1}, '{2}')", pluginType.GetFullName(), args, instanceKey);
+                e.Push("Container.TryGetInstance({0}, {1}, '{2}')", pluginType.GetFullName(), args, instanceKey);
                 throw;
             }
         }
 
-        /// <summary>
-        ///     Gets all configured instances of type T using explicitly configured arguments from the "args"
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public IEnumerable GetAllInstances(Type type, ExplicitArguments args)
+        private object DoTryGetInstance(Type pluginType, ExplicitArguments args, string instanceKey)
         {
-            assertNotDisposed();
+            return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
+                ? null
+                : DoGetInstance(pluginType, args, instanceKey);
+        }
+
+        /// <summary>
+        /// Gets all configured instances of <paramref name="pluginType"/> using explicitly configured arguments from
+        /// <paramref name="args"/>.
+        /// </summary>
+        /// <param name="pluginType">The type which instances are to be resolved.</param>
+        /// <param name="args">The explicitly configured parameters to use for construction.</param>
+        /// <returns>All resolved instances of <paramref name="pluginType"/>.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/> or <paramref name="args"/> is
+        /// <see langword="null"/>.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
+        public IEnumerable GetAllInstances(Type pluginType, ExplicitArguments args)
+        {
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            ArgumentChecker.ThrowIfNull("args", args);
+            AssertNotDisposed();
 
             try
             {
                 var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
-                return session.GetAllInstances(type);
+                return session.GetAllInstances(pluginType);
             }
             catch (StructureMapException e)
             {
-                e.Push("Container.GetAllInstances({0}, {1})", type.GetFullName(), args);
+                e.Push("Container.GetAllInstances({0}, {1})", pluginType.GetFullName(), args);
                 throw;
             }
         }
 
         /// <summary>
-        /// Gets the default instance of type T using the explicitly configured arguments from the "args"
+        /// Gets all configured instances of <typeparamref name="T"/> using explicitly configured arguments from
+        /// <paramref name="args"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="args"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type which instances are to be resolved.</typeparam>
+        /// <param name="args">The explicitly configured parameters to use for construction.</param>
+        /// <returns>All resolved instances of <typeparamref name="T"/>.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="args"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public IEnumerable<T> GetAllInstances<T>(ExplicitArguments args)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("args", args);
+            AssertNotDisposed();
 
             try
             {
@@ -302,23 +469,37 @@ namespace StructureMap
         }
 
         /// <summary>
-        ///     Creates or finds the default instance of type T
+        /// Creates or finds the default instance of <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">The type which instance is to be created or found.</typeparam>
+        /// <returns>The default instance of <typeparamref name="T"/>.</returns>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public T GetInstance<T>()
         {
-            return (T)GetInstance(typeof(T));
+            AssertNotDisposed();
+
+            try
+            {
+                return (T)DoGetInstance(typeof(T));
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.GetInstance<{0}>()", typeof(T).GetFullName());
+                throw;
+            }
         }
 
         /// <summary>
-        ///     Creates or resolves all registered instances of type T
+        /// Creates or resolves all registered instances of type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">The type which instances are to be created or resolved.</typeparam>
+        /// <returns>All created or resolved instances of type <typeparamref name="T"/>.</returns>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public IEnumerable<T> GetAllInstances<T>()
         {
-            assertNotDisposed();
+            AssertNotDisposed();
 
             try
             {
@@ -333,18 +514,25 @@ namespace StructureMap
         }
 
         /// <summary>
-        ///     Creates or finds the named instance of the pluginType
+        /// Creates or finds the named instance of <paramref name="pluginType"/>.
         /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="instanceKey"></param>
-        /// <returns></returns>
+        /// <param name="pluginType">The type which instance is to be created or found.</param>
+        /// <param name="instanceKey">The name of the instance.</param>
+        /// <returns>The named instance of <paramref name="pluginType"/>.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/> or <paramref name="instanceKey"/>
+        /// is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">If <paramref name="instanceKey"/> is an empty string.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public object GetInstance(Type pluginType, string instanceKey)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
+            AssertNotDisposed();
 
             try
             {
-                return new BuildSession(_pipelineGraph, instanceKey).CreateInstance(pluginType, instanceKey);
+                return DoGetInstance(pluginType, instanceKey);
             }
             catch (StructureMapException e)
             {
@@ -353,21 +541,33 @@ namespace StructureMap
             }
         }
 
+        private object DoGetInstance(Type pluginType, string instanceKey)
+        {
+            return new BuildSession(_pipelineGraph, instanceKey).CreateInstance(pluginType, instanceKey);
+        }
+
         /// <summary>
-        ///     Creates or finds the named instance of the pluginType. Returns null if the named instance is not known to the container.
+        /// Creates or finds the named instance of <paramref name="pluginType"/>. Returns <see langword="null"/> if
+        /// the named instance is not known to the container.
         /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="instanceKey"></param>
-        /// <returns></returns>
+        /// <param name="pluginType">The type which instance is to be created or found.</param>
+        /// <param name="instanceKey">The name of the instance.</param>
+        /// <returns>The named instance of <paramref name="pluginType"/> if resolved; <see langword="null"/> otherwise.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/> or <paramref name="instanceKey"/>
+        /// is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">If <paramref name="instanceKey"/> is an empty string.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public object TryGetInstance(Type pluginType, string instanceKey)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
+            AssertNotDisposed();
 
             try
             {
-                return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
-                    ? null
-                    : GetInstance(pluginType, instanceKey);
+                return DoTryGetInstance(pluginType, instanceKey);
             }
             catch (StructureMapException e)
             {
@@ -376,20 +576,32 @@ namespace StructureMap
             }
         }
 
+        private object DoTryGetInstance(Type pluginType, string instanceKey)
+        {
+            return !_pipelineGraph.Instances.HasInstance(pluginType, instanceKey)
+                ? null
+                : GetInstance(pluginType, instanceKey);
+        }
+
         /// <summary>
-        ///     Creates or finds the default instance of the pluginType. Returns null if the pluginType is not known to the container.
+        /// Creates or finds the default instance of <paramref name="pluginType"/>. Returns <see langword="null"/> if
+        /// <paramref name="pluginType"/> is not known to the container.
         /// </summary>
-        /// <param name="pluginType"></param>
-        /// <returns></returns>
+        /// <param name="pluginType">The type which instance is to be created or found.</param>
+        /// <returns>The default instance of <paramref name="pluginType"/> if resolved; <see langword="null"/>
+        /// otherwise.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public object TryGetInstance(Type pluginType)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            AssertNotDisposed();
 
             try
             {
-                return !_pipelineGraph.Instances.HasDefaultForPluginType(pluginType)
-                    ? null
-                    : GetInstance(pluginType);
+                return DoTryGetInstance(pluginType);
             }
             catch (StructureMapException e)
             {
@@ -398,25 +610,49 @@ namespace StructureMap
             }
         }
 
-        /// <summary>
-        ///     Creates or finds the default instance of type T. Returns the default value of T if it is not known to the container.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T TryGetInstance<T>()
+        private object DoTryGetInstance(Type pluginType)
         {
-            return (T)(TryGetInstance(typeof(T)) ?? default(T));
+            return !_pipelineGraph.Instances.HasDefaultForPluginType(pluginType)
+                ? null
+                : GetInstance(pluginType);
         }
 
         /// <summary>
-        ///     The "BuildUp" method takes in an already constructed object
-        ///     and uses Setter Injection to push in configured dependencies
-        ///     of that object
+        /// Creates or finds the default instance of <typeparamref name="T"/>. Returns the default value of
+        /// <typeparamref name="T"/> if it is not known to the container.
         /// </summary>
-        /// <param name="target"></param>
+        /// <typeparam name="T">The type which instance is to be created or found.</typeparam>
+        /// <returns>The default instance of <typeparamref name="T"/> if resolved; the default value of
+        /// <typeparamref name="T"/> otherwise.</returns>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
+        public T TryGetInstance<T>()
+        {
+            AssertNotDisposed();
+
+            try
+            {
+                return (T)(DoTryGetInstance(typeof(T)) ?? default(T));
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.TryGetInstance<{0}>()", typeof(T).GetFullName());
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// The  <see cref="BuildUp"/> method takes in an already constructed object and uses Setter Injection to
+        /// push in configured dependencies of that object.
+        /// </summary>
+        /// <param name="target">The object to inject properties to.</param>
+        /// <exception cref="ArgumentNullException">If value is <see langword="null"/>.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public void BuildUp(object target)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("target", target);
+            AssertNotDisposed();
 
             try
             {
@@ -430,27 +666,51 @@ namespace StructureMap
         }
 
         /// <summary>
-        ///     Creates or finds the named instance of type T. Returns the default value of T if the named instance is not known to the container.
+        /// Creates or finds the named instance of <typeparamref name="T"/>. Returns the default value of
+        /// <typeparamref name="T"/> if the named instance is not known to the container.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">The type which instance is to be created or found.</typeparam>
+        /// <param name="instanceKey">The name of the instance.</param>
+        /// <returns>The named instance of <typeparamref name="T"/> if resolved; the default value of
+        /// <typeparamref name="T"/> otherwise.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="instanceKey"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">If <paramref name="instanceKey"/> is an empty string.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public T TryGetInstance<T>(string instanceKey)
         {
-            return (T)(TryGetInstance(typeof(T), instanceKey) ?? default(T));
-        }
-
-        /// <summary>
-        ///     Creates or finds the default instance of the pluginType
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <returns></returns>
-        public object GetInstance(Type pluginType)
-        {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
+            AssertNotDisposed();
 
             try
             {
-                return new BuildSession(_pipelineGraph).GetInstance(pluginType);
+                return (T)(DoTryGetInstance(typeof(T), instanceKey) ?? default(T));
+            }
+            catch (StructureMapException e)
+            {
+                e.Push("Container.TryGetInstance<{0}>('{1}')", typeof(T).GetFullName(), instanceKey);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Creates or finds the default instance of <paramref name="pluginType"/>.
+        /// </summary>
+        /// <param name="pluginType">The type which instance is to be created or found.</param>
+        /// <returns>The default instance of <paramref name="pluginType"/>.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
+        public object GetInstance(Type pluginType)
+        {
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            AssertNotDisposed();
+
+            try
+            {
+                return DoGetInstance(pluginType);
             }
             catch (StructureMapException e)
             {
@@ -459,20 +719,32 @@ namespace StructureMap
             }
         }
 
+        private object DoGetInstance(Type pluginType)
+        {
+            return new BuildSession(_pipelineGraph).GetInstance(pluginType);
+        }
+
         /// <summary>
-        ///     Creates a new instance of the requested type using the supplied Instance.  Mostly used internally
+        /// Creates a new instance of the requested type <paramref name="pluginType"/> using the supplied
+        /// <see cref="Instance"/>. Mostly used internally.
         /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="instance"></param>
-        /// <returns></returns>
+        /// <param name="pluginType">The type which instance is to be created or found.</param>
+        /// <param name="instance">The instance of <see cref="Instance"/> used for creating of
+        /// a <paramref name="pluginType"/> instance.</param>
+        /// <returns>The created instance of <paramref name="pluginType"/>.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/> or <paramref name="instance"/> is
+        /// <see langword="null"/>.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public object GetInstance(Type pluginType, Instance instance)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            ArgumentChecker.ThrowIfNull("instance", instance);
+            AssertNotDisposed();
 
             try
             {
-                var session = new BuildSession(_pipelineGraph, instance.Name) { RootType = instance.ReturnedType };
-                return session.FindObject(pluginType, instance);
+                return DoGetInstance(pluginType, instance);
             }
             catch (StructureMapException e)
             {
@@ -481,14 +753,25 @@ namespace StructureMap
             }
         }
 
+        private object DoGetInstance(Type pluginType, Instance instance)
+        {
+            var session = new BuildSession(_pipelineGraph, instance.Name) { RootType = instance.ReturnedType };
+            return session.FindObject(pluginType, instance);
+        }
+
         /// <summary>
-        ///     Creates or resolves all registered instances of the pluginType
+        /// Creates or resolves all registered instances of the <paramref name="pluginType"/>.
         /// </summary>
-        /// <param name="pluginType"></param>
-        /// <returns></returns>
+        /// <param name="pluginType">The type which instances are to be created or resolved.</param>
+        /// <returns>All created or resolved instances of type <paramref name="pluginType"/>.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        /// <exception cref="StructureMapException">If any other error occurs.</exception>
         public IEnumerable GetAllInstances(Type pluginType)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            AssertNotDisposed();
 
             try
             {
@@ -502,12 +785,16 @@ namespace StructureMap
         }
 
         /// <summary>
-        ///     Used to add additional configuration to a Container *after* the initialization.
+        /// Used to add additional configuration to a Container *after* the initialization.
         /// </summary>
-        /// <param name="configure"></param>
+        /// <param name="configure">Additional configuration.</param>
+        /// <exception cref="ArgumentNullException">If <paramref name="configure"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public void Configure(Action<ConfigurationExpression> configure)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("configure", configure);
+            AssertNotDisposed();
 
             lock (_syncLock)
             {
@@ -534,25 +821,32 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Get the child container for the named profile
+        /// Gets a new child container for the named profile using that profile's defaults with fallback to
+        /// the original parent.
         /// </summary>
-        /// <param name="profileName"></param>
-        /// <returns></returns>
+        /// <param name="profileName">The profile name.</param>
+        /// <returns>The created child container.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="profileName"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">If <paramref name="profileName"/> is an empty string.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public IContainer GetProfile(string profileName)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNullOrEmptyString("profileName", profileName);
+            AssertNotDisposed();
 
             var pipeline = _pipelineGraph.Profiles.For(profileName);
             return new Container(pipeline);
         }
 
         /// <summary>
-        /// Creates a new, anonymous child container
+        /// Creates a new, anonymous child container.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The created child container.</returns>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public IContainer CreateChildContainer()
         {
-            assertNotDisposed();
+            AssertNotDisposed();
 
             var pipeline = _pipelineGraph.Profiles.NewChild(_pipelineGraph.Instances.ImmediatePluginGraph);
             var childContainer = new Container(pipeline);
@@ -562,7 +856,7 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// The profile name of this container
+        /// The profile name of this container.
         /// </summary>
         public string ProfileName
         {
@@ -570,16 +864,21 @@ namespace StructureMap
         }
 
         /// <summary>
-        ///     Returns a report detailing the complete configuration of all PluginTypes and Instances
+        /// Returns a report detailing the complete configuration of all PluginTypes and Instances
         /// </summary>
-        /// <param name="pluginType">Optional parameter to filter the results down to just this plugin type</param>
-        /// <param name="assembly">Optional parameter to filter the results down to only plugin types from this Assembly</param>
-        /// <param name="@namespace">Optional parameter to filter the results down to only plugin types from this namespace</param>
-        /// <param name="typeName">Optional parameter to filter the results down to any plugin type whose name contains this text</param>
+        /// <param name="pluginType">Optional parameter to filter the results down to just this plugin type.</param>
+        /// <param name="assembly">Optional parameter to filter the results down to only plugin types from this
+        /// <see cref="Assembly"/>.</param>
+        /// <param name="namespace">Optional parameter to filter the results down to only plugin types from this
+        /// namespace.</param>
+        /// <param name="typeName">Optional parameter to filter the results down to any plugin type whose name contains
+        ///  this text.</param>
+        /// <returns>The detailed report of the configuration.</returns>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public string WhatDoIHave(Type pluginType = null, Assembly assembly = null, string @namespace = null,
             string typeName = null)
         {
-            assertNotDisposed();
+            AssertNotDisposed();
 
             var writer = new WhatDoIHaveWriter(_pipelineGraph);
             return writer.GetText(new ModelQuery
@@ -592,118 +891,138 @@ namespace StructureMap
         }
 
         /// <summary>
-        ///     Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
-        ///     of type T should be "arg"
+        /// Starts a request for an instance or instances with explicitly configured arguments. Specifies that any
+        /// dependency of <typeparamref name="T"/> should be <paramref name="arg"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="arg"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The argument type.</typeparam>
+        /// <param name="arg">The argument value.</param>
+        /// <returns>The <see cref="ExplicitArgsExpression"/> instance that could be used for setting more explicitly
+        /// configured arguments and use them for creating instances.</returns>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public ExplicitArgsExpression With<T>(T arg)
         {
-            assertNotDisposed();
+            AssertNotDisposed();
 
             return new ExplicitArgsExpression(this).With(arg);
         }
 
         /// <summary>
-        ///     Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
-        ///     of type T should be "arg"
+        /// Starts a request for an instance or instances with explicitly configured arguments. Specifies that any
+        /// dependency of <paramref name="pluginType"/> should be <paramref name="arg"/>.
         /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="arg"></param>
-        /// <returns></returns>
+        /// <param name="pluginType">The argument type.</param>
+        /// <param name="arg">The argument value.</param>
+        /// <returns>The <see cref="ExplicitArgsExpression"/> instance that could be used for setting more explicitly
+        /// configured arguments and use them for creating instances.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public ExplicitArgsExpression With(Type pluginType, object arg)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            AssertNotDisposed();
 
             return new ExplicitArgsExpression(this).With(pluginType, arg);
         }
 
         /// <summary>
-        ///     Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency or primitive argument
-        ///     with the designated name should be the next value.
+        /// Starts a request for an instance or instances with explicitly configured arguments. Specifies that any
+        /// dependency or primitive argument with the designated name should be the next value.
         /// </summary>
-        /// <param name="argName"></param>
-        /// <returns></returns>
+        /// <param name="argName">The argument name.</param>
+        /// <returns>The <see cref="IExplicitProperty"/> instance that could be used for setting the argument value.
+        /// </returns>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public IExplicitProperty With(string argName)
         {
-            assertNotDisposed();
+            AssertNotDisposed();
 
             return new ExplicitArgsExpression(this).With(argName);
         }
 
         /// <summary>
-        ///     Use with caution!  Does a full environment test of the configuration of this container.  Will try to create every configured
-        ///     instance and afterward calls any methods marked with the [ValidationMethod] attribute
+        /// Use with caution!  Does a full environment test of the configuration of this container.  Will try to create
+        /// every configured instance and afterward calls any methods marked with
+        /// <see cref="ValidationMethodAttribute"/>.
         /// </summary>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public void AssertConfigurationIsValid()
         {
-            assertNotDisposed();
+            AssertNotDisposed();
             PipelineGraphValidator.AssertNoErrors(_pipelineGraph);
         }
 
         /// <summary>
-        ///     Removes all configured instances of type T from the Container.  Use with caution!
+        /// Removes all configured instances of <typeparamref name="T"/> from the Container. Use with caution!
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">The type which instance to be removed.</typeparam>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public void EjectAllInstancesOf<T>()
         {
-            assertNotDisposed();
+            AssertNotDisposed();
             _pipelineGraph.Ejector.EjectAllInstancesOf<T>();
         }
 
         /// <summary>
-        ///     Convenience method to request an object using an Open Generic
-        ///     Type and its parameter Types
+        /// Convenience method to request an object using an Open Generic Type and its parameter Types
         /// </summary>
         /// <param name="templateType"></param>
         /// <returns></returns>
         /// <example>
-        ///     IFlattener flattener1 = container.ForGenericType(typeof (IFlattener&lt;&gt;))
+        /// IFlattener flattener1 = container.ForGenericType(typeof (IFlattener&lt;&gt;))
         ///     .WithParameters(typeof (Address)).GetInstanceAs&lt;IFlattener&gt;();
         /// </example>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public OpenGenericTypeExpression ForGenericType(Type templateType)
         {
-            assertNotDisposed();
+            AssertNotDisposed();
             return new OpenGenericTypeExpression(templateType, this);
         }
 
         /// <summary>
-        ///     Shortcut syntax for using an object to find a service that handles
-        ///     that type of object by using an open generic type
+        /// Shortcut syntax for using an object to find a service that handles that type of object by using
+        /// an open generic type.
         /// </summary>
         /// <example>
-        ///     IHandler handler = container.ForObject(shipment)
-        ///     .GetClosedTypeOf(typeof (IHandler<>))
-        ///     .As<IHandler>();
+        /// IHandler handler = container.ForObject(shipment)
+        ///                        .GetClosedTypeOf(typeof (IHandler&lt;&gt;))
+        ///                        .As&lt;IHandler&gt;();
         /// </example>
         /// <param name="subject"></param>
         /// <returns></returns>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public CloseGenericTypeExpression ForObject(object subject)
         {
-            assertNotDisposed();
+            AssertNotDisposed();
             return new CloseGenericTypeExpression(subject, this);
         }
 
         /// <summary>
-        ///     Starts a "Nested" Container for atomic, isolated access
+        /// Starts a "Nested" Container for atomic, isolated access.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The created nested container.</returns>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public IContainer GetNestedContainer()
         {
-            assertNotDisposed();
+            AssertNotDisposed();
             var pipeline = _pipelineGraph.ToNestedGraph();
             return GetNestedContainer(pipeline);
         }
 
         /// <summary>
-        ///     Starts a new "Nested" Container for atomic, isolated service location.  Opens
+        /// Starts a new "Nested" Container for atomic, isolated service location using that named profile's defaults.
         /// </summary>
-        /// <param name="profileName"></param>
-        /// <returns></returns>
+        /// <param name="profileName">The profile name.</param>
+        /// <returns>The created nested container.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="profileName"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">If <paramref name="profileName"/> is an empty string.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public IContainer GetNestedContainer(string profileName)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNullOrEmptyString("profileName", profileName);
+            AssertNotDisposed();
+
             var pipeline = _pipelineGraph.Profiles.For(profileName).ToNestedGraph();
             return GetNestedContainer(pipeline);
         }
@@ -719,7 +1038,7 @@ namespace StructureMap
         }
 
         private bool _disposedLatch;
-        private ContainerRole _role;
+        private readonly ContainerRole _role;
 
         public void Dispose()
         {
@@ -733,36 +1052,42 @@ namespace StructureMap
         }
 
         /// <summary>
-        ///     The name of the container. By default this is set to
-        ///     a random Guid. This is a convience property to
-        ///     assist with debugging. Feel free to set to anything,
-        ///     as this is not used in any logic.
+        /// The name of the container. By default this is set to a random <see cref="Guid"/>. This is a convenience
+        /// property to assist with debugging. Feel free to set to anything, as this is not used in any logic.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        ///     Injects the given object into a Container as the default for the designated
-        ///     TPluginType.  Mostly used for temporarily setting up return values of the Container
-        ///     to introduce mocks or stubs during automated testing scenarios
+        /// Injects the given object into a Container as the default for the designated
+        /// <typeparamref name="T"/>. Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios.
         /// </summary>
-        /// <typeparam name="TPluginType"></typeparam>
-        /// <param name="instance"></param>
-        public void Inject<TPluginType>(TPluginType instance) where TPluginType : class
+        /// <typeparam name="T">The type of the instance to inject.</typeparam>
+        /// <param name="instance">The instance to inject.</param>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        public void Inject<T>(T instance) where T : class
         {
-            Configure(x => x.For<TPluginType>().Use(instance));
+            Configure(x => x.For<T>().Use(instance));
         }
 
         /// <summary>
-        ///     Injects the given object into a Container as the default for the designated
-        ///     pluginType.  Mostly used for temporarily setting up return values of the Container
-        ///     to introduce mocks or stubs during automated testing scenarios
+        /// Injects the given object into a Container as the default for the designated <paramref name="pluginType"/>.
+        /// Mostly used for temporarily setting up return values of the Container to introduce mocks or stubs during
+        /// automated testing scenarios.
         /// </summary>
-        public void Inject(Type pluginType, object @object)
+        /// <param name="pluginType">The type of the instance to inject.</param>
+        /// <param name="instance">The instance to inject.</param>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
+        public void Inject(Type pluginType, object instance)
         {
-            Configure(x => x.For(pluginType).Use(@object));
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+
+            Configure(x => x.For(pluginType).Use(instance));
         }
 
-        private object buildInstanceWithArgs(Type pluginType, Instance defaultInstance, ExplicitArguments args,
+        private object BuildInstanceWithArgs(Type pluginType, Instance defaultInstance, ExplicitArguments args,
             string requestedName)
         {
             if (defaultInstance == null && pluginType.IsConcrete())
@@ -790,14 +1115,18 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Starts a request for an instance or instances with explicitly configured
-        /// arguments
+        /// Starts a request for an instance or instances with explicitly configured arguments.
         /// </summary>
         /// <param name="action"></param>
-        /// <returns></returns>
+        /// <returns>The <see cref="ExplicitArgsExpression"/> instance that could be used for setting more explicitly
+        /// configured arguments and use them for creating instances.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="action"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public ExplicitArgsExpression With(Action<IExplicitArgsExpression> action)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("action", action);
+            AssertNotDisposed();
+
             var expression = new ExplicitArgsExpression(this);
             action(expression);
 
@@ -805,13 +1134,18 @@ namespace StructureMap
         }
 
         /// <summary>
-        ///     Sets the default instance for the PluginType
+        /// Sets the default instance for <paramref name="pluginType"/>.
         /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="instance"></param>
+        /// <param name="pluginType">The type of the instance to inject.</param>
+        /// <param name="instance">The instance to inject.</param>
+        /// <exception cref="ArgumentNullException">If <paramref name="pluginType"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">If the container is disposed.</exception>
         public void Inject(Type pluginType, Instance instance)
         {
-            assertNotDisposed();
+            ArgumentChecker.ThrowIfNull("pluginType", pluginType);
+            AssertNotDisposed();
+
             Configure(x => x.For(pluginType).Use(instance));
         }
 
@@ -877,7 +1211,7 @@ namespace StructureMap
 
         public void Release(object @object)
         {
-            assertNotDisposed();
+            AssertNotDisposed();
             TransientTracking.Release(@object);
         }
     }

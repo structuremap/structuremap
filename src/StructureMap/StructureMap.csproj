@@ -75,6 +75,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ArgumentChecker.cs" />
     <Compile Include="Attributes\DefaultConstructorAttribute.cs" />
     <Compile Include="Attributes\SetterPropertyAttribute.cs" />
     <Compile Include="Attributes\ValidationMethodAttribute.cs" />
