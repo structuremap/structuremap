@@ -427,7 +427,6 @@
     <Compile Include="TypeExtensionsTester.cs" />
     <Compile Include="Graph\Scanning\TypeRepositoryTester.cs" />
     <Compile Include="using_default_values_on_constructor_function_if_no_explicit_value.cs" />
-    <Compile Include="Util\Cache_multi_threading_basher.cs" />
     <Compile Include="Util\LightweightCacheTester.cs" />
     <Compile Include="Web\EjectingWithHybridScoping.cs" />
     <Compile Include="Web\Examples.cs" />
