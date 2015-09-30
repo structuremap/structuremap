@@ -16,7 +16,7 @@ namespace StructureMap.Graph
     /// </summary>
     public class PluginGraph : IPluginGraph, IFamilyCollection, IDisposable
     {
-        private readonly Cache<Type, PluginFamily> _families;
+        private readonly ConcurrentDictionary<Type, PluginFamily> _families = new ConcurrentDictionary<Type, PluginFamily>();
         private readonly IList<IFamilyPolicy> _policies = new List<IFamilyPolicy>();
 
         private readonly ConcurrentDictionary<Type, bool> _missingTypes = new ConcurrentDictionary<Type, bool>(); 
@@ -92,12 +92,7 @@ namespace StructureMap.Graph
                 new LightweightCache<string, PluginGraph>(name => new PluginGraph {ProfileName = name, Parent = this});
 
             ProfileName = "DEFAULT";
-            _families =
-                new Cache<Type, PluginFamily>(
-                    type => _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type))
-                {
-                    OnAddition = family => family.Owner = this
-                };
+
         }
 
         public PluginGraph Parent { get; private set; }
@@ -137,23 +132,32 @@ namespace StructureMap.Graph
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.As<IFamilyCollection>().GetEnumerator();
+            return _families.Select(x => x.Value).ToArray().GetEnumerator();
         }
 
         IEnumerator<PluginFamily> IEnumerable<PluginFamily>.GetEnumerator()
         {
-            return _families.GetEnumerator();
+            return _families.Select(x => x.Value).ToArray().As<IEnumerable<PluginFamily>>().GetEnumerator();
         }
 
         PluginFamily IFamilyCollection.this[Type pluginType]
         {
-            get { return _families[pluginType]; }
+            get
+            {
+                return _families.GetOrAdd(pluginType, type =>
+                {
+                    var family = _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type);
+                    family.Owner = this;
+
+                    return family;
+                });
+            }
             set { _families[pluginType] = value; }
         }
 
         bool IFamilyCollection.Has(Type pluginType)
         {
-            return _families.Has(pluginType);
+            return _families.ContainsKey(pluginType);
         }
 
 
@@ -200,7 +204,7 @@ namespace StructureMap.Graph
         /// <param name = "concreteType"></param>
         public virtual void AddType(Type pluginType, Type concreteType)
         {
-            _families[pluginType].AddType(concreteType);
+            Families[pluginType].AddType(concreteType);
         }
 
         /// <summary>
@@ -211,7 +215,7 @@ namespace StructureMap.Graph
         /// <param name = "name"></param>
         public virtual void AddType(Type pluginType, Type concreteType, string name)
         {
-            _families[pluginType].AddType(concreteType, name);
+            Families[pluginType].AddType(concreteType, name);
         }
 
 
@@ -270,12 +274,12 @@ namespace StructureMap.Graph
                 return false;
             }
 
-            return _families[pluginType].GetInstance(name) != null;
+            return Families[pluginType].GetInstance(name) != null;
         }
 
         internal PluginFamily FindExistingOrCreateFamily(Type pluginType)
         {
-            if (_families.Has(pluginType)) return _families[pluginType];
+            if (_families.ContainsKey(pluginType)) return _families[pluginType];
 
             var family = new PluginFamily(pluginType);
             _families[pluginType] = family;
@@ -291,7 +295,7 @@ namespace StructureMap.Graph
         /// <returns></returns>
         public bool HasFamily(Type pluginType)
         {
-            if (_families.Has(pluginType)) return true;
+            if (_families.ContainsKey(pluginType)) return true;
 
             if (_missingTypes.ContainsKey(pluginType)) return false;
 
@@ -329,23 +333,19 @@ namespace StructureMap.Graph
         /// <param name="pluginType"></param>
         public void EjectFamily(Type pluginType)
         {
-            if (_families.Has(pluginType))
+            if (_families.ContainsKey(pluginType))
             {
-                var family = _families[pluginType];
-
-                family.SafeDispose();
-
-                _families.Remove(pluginType);
+                PluginFamily family = null;
+                if (_families.TryRemove(pluginType, out family))
+                {
+                    family.SafeDispose();
+                }
             }
         }
 
-        /// <summary>
-        /// Use to iterate through each and every Instance held by this PluginGraph
-        /// </summary>
-        /// <param name="action"></param>
-        public void EachInstance(Action<Type, Instance> action)
+        internal void EachInstance(Action<Type, Instance> action)
         {
-            _families.Each(family => family.Instances.Each(i => action(family.PluginType, i)));
+            _families.Each(family => family.Value.Instances.Each(i => action(family.Value.PluginType, i)));
         }
 
         /// <summary>
@@ -358,7 +358,7 @@ namespace StructureMap.Graph
         {
             if (!HasFamily(pluginType)) return null;
 
-            return _families[pluginType].GetInstance(name) ?? _families[pluginType].MissingInstance;
+            return Families[pluginType].GetInstance(name) ?? _families[pluginType].MissingInstance;
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace StructureMap.Graph
         {
             if (HasFamily(pluginType))
             {
-                return _families[pluginType].Instances;
+                return Families[pluginType].Instances;
             }
 
             return Enumerable.Empty<Instance>();
@@ -381,7 +381,14 @@ namespace StructureMap.Graph
             _families.Each(
                 family =>
                 {
-                    family.Instances.Each(instance => { _singletonCache.Eject(family.PluginType, instance); });
+                    family.Value.Instances.Each(instance =>
+                    {
+                        _singletonCache.Eject(family.Value.PluginType, instance);
+                        if (instance is IDisposable)
+                        {
+                            instance.SafeDispose();
+                        }
+                    });
                 });
 
 
@@ -389,13 +396,15 @@ namespace StructureMap.Graph
             _profiles.Clear();
 
             var containerFamily = _families[typeof (IContainer)];
-            _families.Remove(typeof (IContainer));
+
+            PluginFamily c;
+            _families.TryRemove(typeof (IContainer), out c);
             containerFamily.RemoveAll();
 
             _missingTypes.Clear();
 
             _families.Each(x => x.SafeDispose());
-            _families.ClearAll();
+            _families.Clear();
         }
 
         internal void ClearTypeMisses()
