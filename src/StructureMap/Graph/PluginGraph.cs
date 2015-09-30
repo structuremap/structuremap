@@ -127,7 +127,7 @@ namespace StructureMap.Graph
         /// </summary>
         public IEnumerable<PluginGraph> Profiles
         {
-            get { return _profiles; }
+            get { return _profiles.ToArray(); }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
