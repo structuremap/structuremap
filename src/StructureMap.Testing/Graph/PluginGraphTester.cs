@@ -56,7 +56,9 @@ namespace StructureMap.Testing.Graph
         public void all_instances_when_the_family_already_exists()
         {
             var graph = PluginGraph.CreateRoot();
-            graph.Families.FillDefault(typeof (BigThingy));
+
+            // just forcing the family to be created
+            graph.Families[typeof (BigThingy)].ShouldNotBeNull();
 
             graph.AllInstances(typeof (BigThingy)).Any().ShouldBeFalse();
         }

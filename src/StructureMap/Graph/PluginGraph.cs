@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace StructureMap.Graph
     /// <summary>
     ///   Models the runtime configuration of a StructureMap Container
     /// </summary>
-    public class PluginGraph : IPluginGraph, IDisposable
+    public class PluginGraph : IPluginGraph, IFamilyCollection, IDisposable
     {
         private readonly Cache<Type, PluginFamily> _families;
         private readonly IList<IFamilyPolicy> _policies = new List<IFamilyPolicy>();
@@ -134,6 +135,29 @@ namespace StructureMap.Graph
             get { return _profiles; }
         }
 
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.As<IFamilyCollection>().GetEnumerator();
+        }
+
+        IEnumerator<PluginFamily> IEnumerable<PluginFamily>.GetEnumerator()
+        {
+            return _families.GetEnumerator();
+        }
+
+        PluginFamily IFamilyCollection.this[Type pluginType]
+        {
+            get { return _families[pluginType]; }
+            set { _families[pluginType] = value; }
+        }
+
+        bool IFamilyCollection.Has(Type pluginType)
+        {
+            return _families.Has(pluginType);
+        }
+
+
+
         /// <summary>
         /// Add a new family policy that can create new PluginFamily's on demand
         /// when there is no pre-existing family
@@ -155,9 +179,9 @@ namespace StructureMap.Graph
         /// <summary>
         /// Access to all the known PluginFamily members
         /// </summary>
-        public Cache<Type, PluginFamily> Families
+        public IFamilyCollection Families
         {
-            get { return _families; }
+            get { return this; }
         }
 
         /// <summary>
@@ -378,5 +402,11 @@ namespace StructureMap.Graph
         {
             _missingTypes.Clear();
         }
+    }
+
+    public interface IFamilyCollection : IEnumerable<PluginFamily>
+    {
+        PluginFamily this[Type pluginType] { get; set; }
+        bool Has(Type pluginType);
     }
 }
