@@ -6,4 +6,4 @@ nuget Fixie
 nuget Moq 4.0.10827
 nuget RhinoMocks 3.6.1
 nuget Shouldly
-nuget Storyteller 3.0.0.263-alpha
+nuget Storyteller 3.0.0.274-alpha
