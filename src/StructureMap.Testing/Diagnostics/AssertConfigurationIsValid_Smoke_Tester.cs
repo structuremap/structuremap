@@ -11,19 +11,21 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void happy_path_with_build_plans_all_good()
         {
-            var container = new Container(x => { x.For<IWidget>().Use<NamedWidget>().Ctor<string>().Is("Marshall"); });
+            var container = new Container(x => x.For<IWidget>().Use<NamedWidget>().Ctor<string>().Is("Marshall"));
 
+            // SAMPLE: container.AssertConfigurationIsValid
             container.AssertConfigurationIsValid();
+            // ENDSAMPLE
         }
 
         [Test]
         public void sad_path_with_an_invalid_build_plan()
         {
-            var container = new Container(x => { x.For<IWidget>().Use<NamedWidget>(); });
+            var container = new Container(x => x.For<IWidget>().Use<NamedWidget>());
 
             var ex =
                 Exception<StructureMapConfigurationException>.ShouldBeThrownBy(
-                    () => { container.AssertConfigurationIsValid(); });
+                    container.AssertConfigurationIsValid);
 
             ex.Title.ShouldBe("StructureMap Failures:  1 Build/Configuration Failures and 0 Validation Errors");
             ex.Context.ShouldContain(
