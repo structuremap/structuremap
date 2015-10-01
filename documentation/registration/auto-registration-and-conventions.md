@@ -6,6 +6,8 @@ StructureMap has rich support for registering types by scanning assemblies.
 Between scanning and default conventions, configurations are often just a few
 lines.
 
+Also see <[linkto:diagnostics/type-scanning]> for help in understanding the assembly scanning behavior in your system.
+
 ## Scan the Calling Assembly
 
 One of the easiest ways to register types is by scanning the assembly your

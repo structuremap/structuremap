@@ -312,6 +312,7 @@
     <Compile Include="Examples\MultiTenancy\missing_instance_rule_overrides.cs" />
     <Compile Include="Examples\Resolving\OptionalDependencies.cs" />
     <Compile Include="Examples\Resolving\SimpleScenarios.cs" />
+    <Compile Include="Examples\UsingContainerModel.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FixieConventions.cs" />
     <Compile Include="Graph\AssemblyScannerTester.cs" />

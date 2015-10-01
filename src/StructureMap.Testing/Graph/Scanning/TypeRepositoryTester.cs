@@ -43,7 +43,9 @@ namespace StructureMap.Testing.Graph.Scanning
             TypeRepository.ClearAll();
             TypeRepository.FindTypes(GetType().Assembly, TypeClassification.All).Wait();
 
+            // SAMPLE: assert-no-type-scanning-failures
             TypeRepository.AssertNoTypeScanningFailures();
+            // ENDSAMPLE
         }
 
         [Test]

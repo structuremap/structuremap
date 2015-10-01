@@ -16,7 +16,7 @@ namespace StructureMap.Query
         IEnumerable<IPluginTypeConfiguration> PluginTypes { get; }
 
         /// <summary>
-        ///     Direct access to the configuration model of this container
+        /// Direct access to the configuration model of this container, use with caution
         /// </summary>
         IPipelineGraph Pipeline { get; }
 
