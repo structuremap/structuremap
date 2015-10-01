@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 using StructureMap.Attributes;
@@ -12,6 +13,7 @@ namespace StructureMap.Testing.DocumentationExamples
     {
     }
 
+    // SAMPLE: setter-injection-with-SetterProperty
     public class Repository
     {
         private IDataProvider _provider;
@@ -27,6 +29,23 @@ namespace StructureMap.Testing.DocumentationExamples
 
         [SetterProperty]
         public bool ShouldCache { get; set; }
+    }
+    // ENDSAMPLE
+
+    public class DataProvider : IDataProvider { }
+
+    public class BuildPlans
+    {
+        public void ShowRepositoryBuildPlan()
+        {
+            var container = new Container(_ =>
+            {
+                _.For<IDataProvider>().Use<DataProvider>();
+                _.ForConcreteType<Repository>().Configure.Setter<bool>().Is(false);
+            });
+
+            Debug.WriteLine(container.Model.For<Repository>().Default.DescribeBuildPlan());
+        }
     }
 
     // SAMPLE: IShippingService

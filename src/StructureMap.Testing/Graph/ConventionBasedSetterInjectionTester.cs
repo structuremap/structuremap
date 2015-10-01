@@ -8,6 +8,7 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class ConventionBasedSetterInjectionTester
     {
+        // SAMPLE: using-setter-policy
         public class ClassWithNamedProperties
         {
             public int Age { get; set; }
@@ -31,7 +32,7 @@ namespace StructureMap.Testing.Graph
                 x.ForConcreteType<ClassWithNamedProperties>().Configure.Setter<int>().Is(5);
 
                 x.Policies.SetAllProperties(
-                    policy => { policy.WithAnyTypeFromNamespace("StructureMap.Testing.Widget3"); });
+                    policy => policy.WithAnyTypeFromNamespace("StructureMap.Testing.Widget3"));
             });
 
             var description = container.Model.For<ClassWithNamedProperties>().Default.DescribeBuildPlan();
@@ -41,6 +42,7 @@ namespace StructureMap.Testing.Graph
             target.Service.ShouldBeTheSameAs(theService);
             target.Gateway.ShouldBeOfType<DefaultGateway>();
         }
+        // ENDSAMPLE
 
 
         [Test]

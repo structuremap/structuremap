@@ -12,7 +12,7 @@ programming to point out missing data.
 
 On all but the smallest systems, the main unit of configuration will probably be 
 the `Registry` class.  Typically, you would subclass the `Registry` class, then 
-use the Fluent Interface methods exposed by the Registry class to create Container 
+use the [fluent interface](https://en.wikipedia.org/wiki/Fluent_interface) methods exposed by the Registry class to create Container 
 configuration. Here's a sample `Registry` class below used to configure an 
 instance of an `IWidget` interface:
 
@@ -22,7 +22,7 @@ instance of an `IWidget` interface:
 
 The next question is "how does my new `Registry` class get used?" 
 
-When you set up a `Container` or `ObjectFactory`, you need to simply direct the 
+When you set up a `Container`, you need to simply direct the 
 `Container` to use the configuration in that `Registry` class:
 
 <[sample:including-registries]>
