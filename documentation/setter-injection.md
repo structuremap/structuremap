@@ -55,6 +55,13 @@ Lastly, you can give StructureMap some criteria for determining which setters sh
 
 All calls to `Registry.Policies.SetAllProperties()` are additive, meaning you can use as many criteria as possible for setter injection.
 
+## Filling Setter's of an Object
 
+You can run into situations where you'll want StructureMap to fill the setter dependencies of an object that is built outside of your own code and cannot be built by StructureMap itself. Action filter attributes from ASP.Net MVC are an obvious example.
 
+You're still in luck because StructureMap has the `BuildUp(object)` method for just this scenario as shown in this example from the unit tests:
+
+<[sample:using-buildup]>
+
+The normal rules for what setters should be filled as described above apply to `BuildUp()`.
 

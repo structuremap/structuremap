@@ -6,14 +6,22 @@ namespace StructureMap.Testing
     [TestFixture]
     public class BuildUpIntegratedTester
     {
+        // SAMPLE: using-buildup
+        public class BuildUpTarget1
+        {
+            public IGateway Gateway { get; set; }
+            public IService Service { get; set; }
+        }
+
         [Test]
         public void create_a_setter_rule_and_see_it_applied_in_BuildUp()
         {
+            
             var theGateway = new DefaultGateway();
             var container = new Container(x =>
             {
                 x.For<IGateway>().Use(theGateway);
-                x.Policies.SetAllProperties(y => { y.OfType<IGateway>(); });
+                x.Policies.SetAllProperties(y => y.OfType<IGateway>());
             });
 
             var target = new BuildUpTarget1();
@@ -22,6 +30,7 @@ namespace StructureMap.Testing
             target.Gateway.ShouldBeTheSameAs(theGateway);
             target.Service.ShouldBeNull();
         }
+        // ENDSAMPLE
 
         [Test]
         public void create_a_setter_rule_and_see_it_applied_in_BuildUp_through_ObjectFactory()
@@ -64,9 +73,5 @@ namespace StructureMap.Testing
         }
     }
 
-    public class BuildUpTarget1
-    {
-        public IGateway Gateway { get; set; }
-        public IService Service { get; set; }
-    }
+
 }
