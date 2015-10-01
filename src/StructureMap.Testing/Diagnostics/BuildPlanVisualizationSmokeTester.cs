@@ -29,6 +29,25 @@ namespace StructureMap.Testing.Diagnostics
         {
             theDescription.ShouldContain("Lifecycle: Transient");
         }
+
+
+    }
+
+    [TestFixture]
+    public class Examples
+    {
+        [Test]
+        public void deep_build_plan_for_default_of_type()
+        {
+            // SAMPLE: build-plan-deep-for-default
+            var container = Container.For<VisualizationRegistry>();
+
+            var description = container.Model.For<IDevice>().Default
+                .DescribeBuildPlan(); 
+
+            Debug.WriteLine(description);
+            // ENDSAMPLE
+        }
     }
 
 
@@ -51,10 +70,11 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void simple_build_by_lambda()
         {
+            // SAMPLE: build-plan-by-name
             var description = theContainer.Model.For<IDevice>()
                 .Find("A")
                 .DescribeBuildPlan();
-
+            // ENDSAMPLE
 
             Debug.WriteLine(description);
 
@@ -79,6 +99,7 @@ namespace StructureMap.Testing.Diagnostics
                 .Find<Rule>("Red")
                 .DescribeBuildPlan();
 
+            Debug.WriteLine(description);
             description.ShouldContain("┗ String color = Value: Red");
         }
 
