@@ -105,10 +105,15 @@ namespace StructureMap.Testing.Query
             var startable1 = container.GetInstance<Startable1>();
             startable1.WasStarted.ShouldBeFalse();
 
-            container.Model.GetAllPossible<IStartable>()
-                .ToArray()
-                .Each(x => x.Start())
-                .Each(x => x.WasStarted.ShouldBeTrue());
+            // SAMPLE: calling-startable-start
+            var allStartables = container.Model.GetAllPossible<IStartable>();
+            allStartables.ToArray()
+                .Each(x => x.Start());
+            // ENDSAMPLE
+
+
+
+            allStartables.Each(x => x.WasStarted.ShouldBeTrue());
 
             startable1.WasStarted.ShouldBeTrue();
         }
@@ -188,12 +193,13 @@ namespace StructureMap.Testing.Query
         }
     }
 
-
+    // SAMPLE: istartable
     public interface IStartable
     {
         bool WasStarted { get; }
         void Start();
     }
+    // ENDSAMPLE
 
     public class Startable : IStartable
     {

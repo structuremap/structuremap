@@ -263,6 +263,7 @@
     <Compile Include="Query\ClosedPluginTypeConfiguration.cs" />
     <Compile Include="Query\EmptyConfiguration.cs" />
     <Compile Include="Query\GenericFamilyConfiguration.cs" />
+    <Compile Include="Query\IFamily.cs" />
     <Compile Include="Query\IModel.cs" />
     <Compile Include="Query\InstanceRef.cs" />
     <Compile Include="Query\IPluginTypeConfiguration.cs" />

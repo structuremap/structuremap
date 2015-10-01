@@ -20,7 +20,7 @@ namespace StructureMap.Query
         }
 
         /// <summary>
-        /// The underlying StructureMap model for building this configured Instance
+        /// The underlying StructureMap model for building this configured Instance. ACCESS THIS WITH CAUTION!
         /// </summary>
         public Instance Instance
         {
