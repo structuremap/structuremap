@@ -41,14 +41,12 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void TryToFillDependenciesOnClassWithPrimitiveArgumentsThrowsException()
         {
-            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
+            Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() =>
             {
                 var container = new Container();
                 container.GetInstance(typeof (CannotBeFilledConcreteClass));
             });
 
-            ex.Title.ShouldBe(
-                "No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.CannotBeFilledConcreteClass'");
         }
     }
 

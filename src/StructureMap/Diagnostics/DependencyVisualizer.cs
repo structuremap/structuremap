@@ -64,7 +64,7 @@ namespace StructureMap.Diagnostics
         public void Lifecycled(LifecycleDependencySource source)
         {
             _writer.Line(source.Description);
-            _buildPlanVisitor.Instance(null, source.Instance);
+            _buildPlanVisitor.Instance(source.PluginType, source.Instance);
         }
 
         public void Dependency(IDependencySource source)

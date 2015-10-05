@@ -138,6 +138,15 @@ namespace StructureMap.Pipeline
             }
         }
 
+        /// <summary>
+        /// Has a build plan already been created for this instance?
+        /// </summary>
+        /// <returns></returns>
+        public bool HasBuildPlan()
+        {
+            return _plan != null;
+        }
+
         private string toDescription(Type pluginType)
         {
             var typeName = (pluginType ?? ReturnedType).GetFullName();

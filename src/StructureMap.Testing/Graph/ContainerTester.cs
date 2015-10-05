@@ -179,10 +179,8 @@ namespace StructureMap.Testing.Graph
         public void GetMissingType()
         {
             var ex =
-                Exception<StructureMapConfigurationException>.ShouldBeThrownBy(
-                    () => { _container.GetInstance(typeof (string)); });
-
-            ex.Title.ShouldContain("No default");
+                Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(
+                    () => _container.GetInstance(typeof (string)));
         }
 
         [Test]

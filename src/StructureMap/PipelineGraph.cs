@@ -221,6 +221,12 @@ namespace StructureMap
 
         public ILifecycle DetermineLifecycle(Type pluginType, Instance instance)
         {
+            // Need to force the build plan to be created here.
+            if (!instance.HasBuildPlan())
+            {
+                Policies.Apply(pluginType, instance);
+            }
+
             return instance.DetermineLifecycle(_instances.DefaultLifecycleFor(pluginType));
         }
     }

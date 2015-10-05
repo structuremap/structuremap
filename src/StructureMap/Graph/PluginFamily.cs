@@ -162,7 +162,7 @@ namespace StructureMap.Graph
             }
 
             // ONLY decide on a default Instance if there is none
-            if (_instances.Count == 0 && _pluginType.IsConcrete() && Policies.CanBeAutoFilled(_pluginType))
+            if (_instances.Count == 0 && _pluginType.IsConcrete())
             {
                 var instance = new ConstructorInstance(_pluginType);
                 AddInstance(instance);
