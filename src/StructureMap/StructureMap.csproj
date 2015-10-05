@@ -133,6 +133,7 @@
     <Compile Include="Configuration\DSL\SetterConvention.cs" />
     <Compile Include="Configuration\ITypeReader.cs" />
     <Compile Include="Configuration\MalformedAliasException.cs" />
+    <Compile Include="ConfiguredInstancePolicy.cs" />
     <Compile Include="Container.cs" />
     <Compile Include="ContainerRole.cs" />
     <Compile Include="Diagnostics\BuildError.cs" />
@@ -202,8 +203,10 @@
     <Compile Include="IContext.cs" />
     <Compile Include="IGraphEjector.cs" />
     <Compile Include="IInstanceGraph.cs" />
+    <Compile Include="IInstancePolicy.cs" />
     <Compile Include="ILifecycleContext.cs" />
     <Compile Include="InitializationExpression.cs" />
+    <Compile Include="InterceptionPolicy.cs" />
     <Compile Include="IPipelineGraph.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="PipelineGraph.cs" />

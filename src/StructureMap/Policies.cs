@@ -111,46 +111,4 @@ namespace StructureMap
             return ConstructorSelector.Select(pluggedType);
         }
     }
-
-    internal class InterceptionPolicy : IInstancePolicy
-    {
-        private readonly IInterceptorPolicy _inner;
-
-        public InterceptionPolicy(IInterceptorPolicy inner)
-        {
-            _inner = inner;
-        }
-
-        public void Apply(Type pluginType, Instance instance)
-        {
-            _inner.DetermineInterceptors(pluginType, instance).Each(instance.AddInterceptor);
-        }
-
-        public IInterceptorPolicy Inner
-        {
-            get { return _inner; }
-        }
-    }
-
-    public abstract class ConfiguredInstancePolicy : IInstancePolicy
-    {
-        public void Apply(Type pluginType, Instance instance)
-        {
-            var configured = instance as IConfiguredInstance;
-            if (configured != null)
-            {
-                apply(pluginType, configured);
-            }
-        }
-
-        protected abstract void apply(Type pluginType, IConfiguredInstance instance);
-    }
-
-
-    public interface IInstancePolicy
-    {
-        void Apply(Type pluginType, Instance instance);
-    }
-
-
 }
