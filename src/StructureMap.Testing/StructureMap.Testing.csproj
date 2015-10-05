@@ -178,6 +178,7 @@
     <Compile Include="Acceptance\enumerable_instances.cs" />
     <Compile Include="Acceptance\explicit_arguments.cs" />
     <Compile Include="Acceptance\full_stack_container_usage.cs" />
+    <Compile Include="Acceptance\iconfigured_instance_behavior.cs" />
     <Compile Include="Acceptance\inline_dependencies.cs" />
     <Compile Include="Acceptance\interception_acceptance_tests.cs" />
     <Compile Include="Acceptance\lifecycle_creation.cs" />
@@ -313,6 +314,7 @@
     <Compile Include="Examples\Resolving\OptionalDependencies.cs" />
     <Compile Include="Examples\Resolving\SimpleScenarios.cs" />
     <Compile Include="Examples\UsingContainerModel.cs" />
+    <Compile Include="Examples\UsingIConfiguredInstance.cs" />
     <Compile Include="Examples\ValidationMethod.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FixieConventions.cs" />

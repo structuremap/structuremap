@@ -230,6 +230,7 @@
     <Compile Include="Pipeline\ILocationPolicy.cs" />
     <Compile Include="Pipeline\Instance.cs" />
     <Compile Include="Pipeline\IObjectCache.cs" />
+    <Compile Include="Pipeline\IOverridableInstance.cs" />
     <Compile Include="Pipeline\ITransientTracking.cs" />
     <Compile Include="Pipeline\LambdaInstance.cs" />
     <Compile Include="Pipeline\Lazy\FuncWithArgInstance.cs" />

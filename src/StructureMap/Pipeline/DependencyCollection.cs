@@ -21,7 +21,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="parameter"></param>
         /// <param name="valueOrInstance"></param>
-        public void Add(ParameterInfo parameter, object valueOrInstance)
+        public void AddForConstructorParameter(ParameterInfo parameter, object valueOrInstance)
         {
             Add(parameter.Name, parameter.ParameterType, valueOrInstance);
         }
@@ -31,7 +31,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="property"></param>
         /// <param name="valueOrInstance"></param>
-        public void Add(PropertyInfo property, object valueOrInstance)
+        public void AddForProperty(PropertyInfo property, object valueOrInstance)
         {
             Add(property.Name, property.PropertyType, valueOrInstance);
         }

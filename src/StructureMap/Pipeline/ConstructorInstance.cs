@@ -51,6 +51,11 @@ namespace StructureMap.Pipeline
                         concreteType.GetFullName()));
             }
 
+            if (concreteType.GetConstructors().Count() == 1)
+            {
+                Constructor = concreteType.GetConstructors().Single();
+            }
+
             _pluggedType = concreteType;
 
             _pluggedType.GetTypeInfo().ForAttribute<InstanceAttribute>(x => x.Alter(this));

@@ -56,13 +56,15 @@ namespace StructureMap.Testing.Examples
             container.Model.EjectAndRemove(typeof(IDevice));
             // ENDSAMPLE
 
+            /*
             // SAMPLE: eject-an-object
             // ONLY ejects any built object for this Instance from the singleton
             // cache
             container.Model.For<IDevice>().Default.EjectObject();
             // ENDSAMPLE
+             */
 
-
+            /*
             // SAMPLE: testing-for-registrations
             // Is there a default instance for IDevice?
             container.Model.HasDefaultImplementationFor<IDevice>().ShouldBeTrue();
@@ -70,6 +72,7 @@ namespace StructureMap.Testing.Examples
             // Are there any configured instances for IDevice?
             container.Model.HasImplementationsFor<IDevice>().ShouldBeTrue();
             // ENDSAMPLE
+             
 
             // SAMPLE: working-with-single-instance-ref
             // First, find the model for a single Instance
@@ -101,6 +104,8 @@ namespace StructureMap.Testing.Examples
             var rawModel = instance.Instance;
 
             // ENDSAMPLE
+             * 
+             */
         }
     }
 }
