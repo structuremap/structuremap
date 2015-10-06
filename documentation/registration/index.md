@@ -5,8 +5,6 @@
 As of the 3.0 release, StructureMap provides a streamlined fluent interface called the _Registry DSL_ to configure a StructureMap
 Container with both explicit registrations and conventional auto-registrations. StructureMap no longer supports Xml configuration or MEF-style attribute configuration -- but there is some facility for rolling your own attribute-based configuration support.  
 
-<div class="alert alert-info" role="alert">The static <code>ObjectFactory</code> wrapper for Container is still available in 3.0, but we strongly recommend against using it for new applications.  It only exists for easier compatibility with older installations.</div>
-
 The first step in using StructureMap is configuring a <code>Container</code> object. The following examples are based on the usage of the <[linkto:registration/registry-dsl]>.
 
 Let's say that you have a simple set of services like this:
@@ -48,5 +46,5 @@ Sometimes classes need to be suplied with some primitive value in its constructo
 
 <[sample:quickstart-container-with-primitive-value]>
 
-So far you have seen an couple of ways to work with the <linkto:registration/registry-dsl]> and configure an `Container` object or `ObjectFactory`. We have seen examples of configuration that allows us to build objects that doesn't depend on anything like the `Bar` class, or do depend on other types like the `Foo` class needs an instance of `IBar`. In our last example we have seen configuration for objects that needs some primitive types like strings in its constructor function.
+So far you have seen an couple of ways to work with the <linkto:registration/registry-dsl]> and configure an `Container` object. We have seen examples of configuration that allows us to build objects that doesn't depend on anything like the `Bar` class, or do depend on other types like the `Foo` class needs an instance of `IBar`. In our last example we have seen configuration for objects that needs some primitive types like strings in its constructor function.
 

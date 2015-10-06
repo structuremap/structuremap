@@ -280,8 +280,8 @@ namespace StructureMap.Testing.DocumentationExamples
     {
         public void ActivateScreenFor<T>() where T : IPresenter
         {
-            IPresenter presenter = ObjectFactory.GetInstance<T>();
-            presenter.Activate();
+            //IPresenter presenter = ObjectFactory.GetInstance<T>();
+            //presenter.Activate();
         }
 
         public void ActivateScreen(IPresenter presenter)
@@ -294,8 +294,8 @@ namespace StructureMap.Testing.DocumentationExamples
         public Navigates()
         {
             // You most certainly do NOT just new() up an ApplicationController
-            var controller = ObjectFactory.GetInstance<ApplicationController>();
-            controller.ActivateScreenFor<ShippingScreenPresenter>();
+            //var controller = ObjectFactory.GetInstance<ApplicationController>();
+            //controller.ActivateScreenFor<ShippingScreenPresenter>();
         }
     }
 
@@ -327,8 +327,8 @@ namespace StructureMap.Testing.DocumentationExamples
 
         private void editInvoice(Invoice invoice, ApplicationController controller)
         {
-            var presenter = ObjectFactory.Container.With(invoice).GetInstance<EditInvoicePresenter>();
-            controller.ActivateScreen(presenter);
+            //var presenter = ObjectFactory.Container.With(invoice).GetInstance<EditInvoicePresenter>();
+            //controller.ActivateScreen(presenter);
         }
     }
 
@@ -381,43 +381,12 @@ namespace StructureMap.Testing.DocumentationExamples
             // Put the main form, and some of its children into StructureMap
             // where other Controllers and Commands can get to them
             // without being coupled to the main form
-            ObjectFactory.Container.Inject<IApplicationShell>(shell);
-            ObjectFactory.Container.Inject(shell.QueryToolBar);
-            ObjectFactory.Container.Inject(shell.ExplorerPane);
+            //ObjectFactory.Container.Inject<IApplicationShell>(shell);
+            //ObjectFactory.Container.Inject(shell.QueryToolBar);
+            //ObjectFactory.Container.Inject(shell.ExplorerPane);
 
 
             Application.Run(shell);
-        }
-    }
-
-    public class Bootstrapper : IBootstrapper
-    {
-        private static bool _hasStarted;
-
-        public void BootstrapStructureMap()
-        {
-            ObjectFactory.Initialize(x =>
-            {
-                // initialization
-            });
-        }
-
-        public static void Restart()
-        {
-            if (_hasStarted)
-            {
-                ObjectFactory.Initialize(_ => { });
-            }
-            else
-            {
-                Bootstrap();
-                _hasStarted = true;
-            }
-        }
-
-        public static void Bootstrap()
-        {
-            new Bootstrapper().BootstrapStructureMap();
         }
     }
 

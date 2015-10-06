@@ -13,7 +13,7 @@ Let's say we have the following object model, which represents the weather condi
 
 <[sample:concrete-weather-model]>
 
-Before we can resolve the concrete `Weather` type, we need an instance of an `Container` object or `ObjectFactory`. As mentioned earlier, these objects defines a generic `GetInstance` method which can build us an instance of the `Weather` type.
+Before we can resolve the concrete `Weather` type, we need an instance of an `Container` object. As mentioned earlier, these objects defines a generic `GetInstance` method which can build us an instance of the `Weather` type.
 
 You can create a container yourself or use the statically accessed container.
 

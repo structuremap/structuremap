@@ -366,7 +366,6 @@
     </Compile>
     <Compile Include="InstanceExtensions.cs" />
     <Compile Include="ModelQueryTester.cs" />
-    <Compile Include="ObjectFactoryInitializeTester.cs" />
     <Compile Include="PipelineGraph_construction_specs.cs" />
     <Compile Include="Pipeline\ArgumentTester.cs" />
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />

@@ -205,10 +205,8 @@
     <Compile Include="IInstanceGraph.cs" />
     <Compile Include="IInstancePolicy.cs" />
     <Compile Include="ILifecycleContext.cs" />
-    <Compile Include="InitializationExpression.cs" />
     <Compile Include="InterceptionPolicy.cs" />
     <Compile Include="IPipelineGraph.cs" />
-    <Compile Include="ObjectFactory.cs" />
     <Compile Include="PipelineGraph.cs" />
     <Compile Include="Pipeline\Argument.cs" />
     <Compile Include="Pipeline\ArrayCoercion.cs" />

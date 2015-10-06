@@ -25,15 +25,6 @@ namespace StructureMap.Docs.samples.quickstart
                 c.For<IBar>().Use<Bar>();
             });
 
-// Example #3 - Initialize the static ObjectFactory container.
-// NOTE: ObjectFactory has been deprecated and will be removed
-// in a future 4.0 release
-            ObjectFactory.Initialize(i =>
-            {
-                i.For<IFoo>().Use<Foo>();
-                i.For<IBar>().Use<Bar>();
-            });
-// ENDSAMPLE
         }
 
         public void configure_the_container_using_a_registry()
