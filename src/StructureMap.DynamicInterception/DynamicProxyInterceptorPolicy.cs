@@ -1,7 +1,9 @@
 ﻿using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StructureMap.DynamicInterception
 {
@@ -47,7 +49,8 @@ namespace StructureMap.DynamicInterception
         {
             get
             {
-                return "Decorate with dynamic proxy class implementing '{0}' using the following interception behaviors";
+                return string.Format("Decorate with dynamic proxy classes using the following interception behaviors: {0}",
+                    string.Join(", ", _interceptionBehaviors.Select(b => b.GetType().GetFullName())));
             }
         }
     }

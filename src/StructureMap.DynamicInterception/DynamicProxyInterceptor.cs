@@ -61,7 +61,21 @@ namespace StructureMap.DynamicInterception
 
         private static Castle.DynamicProxy.IInterceptor WrapInterceptorBehavior(IInterceptionBehavior behavior)
         {
-            return new CastleWrapperInterceptor(behavior);
+            var syncBehavior = behavior as ISyncInterceptionBehavior;
+            if (syncBehavior != null)
+            {
+                return new SyncWrapperInterceptor(syncBehavior);
+            }
+
+            var asyncBehavior = behavior as IAsyncInterceptionBehavior;
+            if (asyncBehavior != null)
+            {
+                return new AsyncWrapperInterceptor(asyncBehavior);
+            }
+
+            throw new StructureMapException(string.Format(
+                    "{0} does not implement neither ISyncInterceptionBehavior nor IAsyncInterceptionBehavior",
+                    behavior.GetType().GetFullName()));
         }
 
         public override string Description

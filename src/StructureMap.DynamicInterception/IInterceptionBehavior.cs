@@ -2,6 +2,5 @@
 {
     public interface IInterceptionBehavior
     {
-        IMethodInvocationResult Intercept(IMethodInvocation methodInvocation);
     }
 }

@@ -12,7 +12,7 @@ namespace StructureMap.DynamicInterception
 
         MethodInfo MethodInfo { get; }
 
-        IMethodInvocationResult InvokeNext();
+        Type ActualReturnType { get; }
 
         IMethodInvocationResult CreateResult(object value);
 
