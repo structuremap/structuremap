@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Acceptance
         [TestCase(111, 10)]
         [TestCase(16, 4444)]
         [TestCase(-16, 4444)]
-        public void CallAllSuccesfulInterceptors(int value, int expectedResult)
+        public void CallAllSuccessfulInterceptors(int value, int expectedResult)
         {
             var container = new Container(x =>
             {

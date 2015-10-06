@@ -1,5 +1,6 @@
 ﻿using Castle.DynamicProxy;
 using StructureMap.Building.Interception;
+using StructureMap.TypeRules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,24 @@ namespace StructureMap.DynamicInterception
     {
         private static readonly ProxyGenerator proxyGenerator = new ProxyGenerator();
 
-        public DynamicProxyInterceptor(IEnumerable<Type> interceptionBehaviorTypes) : base(buildExpression(interceptionBehaviorTypes))
+        private readonly string _description;
+
+        public DynamicProxyInterceptor(IEnumerable<Type> interceptionBehaviorTypes) : this(interceptionBehaviorTypes.ToArray())
         {
         }
 
-        public DynamicProxyInterceptor(params Type[] interceptionBehaviorTypes) : this((IEnumerable<Type>)interceptionBehaviorTypes)
+        public DynamicProxyInterceptor(params Type[] interceptionBehaviorTypes) : base(buildExpression(interceptionBehaviorTypes))
+        {
+            _description = buildDescription(interceptionBehaviorTypes);
+        }
+
+        public DynamicProxyInterceptor(IEnumerable<IInterceptionBehavior> interceptionBehaviors) : this(interceptionBehaviors.ToArray())
         {
         }
 
-        public DynamicProxyInterceptor(IEnumerable<IInterceptionBehavior> interceptionBehaviors) : base(buildExpression(interceptionBehaviors))
+        private DynamicProxyInterceptor(IInterceptionBehavior[] interceptionBehaviors) : base(buildExpression(interceptionBehaviors))
         {
+            _description = buildDescription(interceptionBehaviors.Select(b => b.GetType()));
         }
 
         private static Expression<Func<IContext, TPluginType, TPluginType>> buildExpression(IEnumerable<Type> interceptionBehaviorTypes)
@@ -43,9 +52,21 @@ namespace StructureMap.DynamicInterception
             );
         }
 
+        private static string buildDescription(IEnumerable<Type> interceptionBehaviorTypes)
+        {
+            return string.Format("DynamicProxyInterceptor of {0} with interception behaviors: {1}",
+                typeof(TPluginType).GetFullName(),
+                string.Join(", ", interceptionBehaviorTypes.Select(t => t.GetFullName())));
+        }
+
         private static Castle.DynamicProxy.IInterceptor WrapInterceptorBehavior(IInterceptionBehavior behavior)
         {
             return new CastleWrapperInterceptor(behavior);
+        }
+
+        public override string Description
+        {
+            get { return _description; }
         }
     }
 }
