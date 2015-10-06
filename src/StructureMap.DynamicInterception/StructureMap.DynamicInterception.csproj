@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="Argument.cs" />
     <Compile Include="DynamicProxyInterceptor.cs" />
+    <Compile Include="DynamicProxyInterceptorPolicy.cs" />
     <Compile Include="IArgument.cs" />
     <Compile Include="IInterceptionBehavior.cs" />
     <Compile Include="CastleWrapperInterceptor.cs" />

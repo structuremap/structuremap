@@ -25,6 +25,21 @@ namespace StructureMap.Testing.Acceptance
             service.GetSquareRoot(value).ShouldBe(expectedResult);
         }
 
+        [Test]
+        public void UseInterceptionPolicy()
+        {
+            var container = new Container(x =>
+            {
+                x.Policies.Interceptors(new DynamicProxyInterceptorPolicy(new NegatingInterceptor(), new CachingInterceptor()));
+
+                x.For<IMathService>().Use<MathService>();
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            service.GetSquareRoot(-10).ShouldBe(5555);
+        }
+
         public interface IMathService
         {
             int GetSquareRoot(int value);
