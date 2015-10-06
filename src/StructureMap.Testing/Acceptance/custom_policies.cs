@@ -90,7 +90,7 @@ namespace StructureMap.Testing.Acceptance
         }
         // ENDSAMPLE
 
-        // SAMPLE: database-users
+        // SAMPLE: database-users-2
         public class BigService
         {
             public BigService(IDatabase green)

@@ -33,7 +33,7 @@ StructureMap and StructureMap.AutoMocking use several `IFamilyPolicy` rules inte
 
 1. [CloseGenericFamilyPolicy](https://github.com/structuremap/structuremap/blob/master/src/StructureMap/Graph/CloseGenericFamilyPolicy.cs) - 
    uses the registration for an open type as a template to create the registrations for a closed type the first time StructureMap encounters
-   that closed type. See <[linkto:the-container/working-with-generic-types]> for more information.
+   that closed type. See <[linkto:generics]> for more information.
 1. [FuncBuildByNamePolicy](https://github.com/structuremap/structuremap/blob/master/src/StructureMap/Graph/FuncBuildByNamePolicy.cs) - 
    Used internally to create registrations for `Func&lt;string, T&gt;` builders.
 1. [EnumerableFamilyPolicy](https://github.com/structuremap/structuremap/blob/master/src/StructureMap/Graph/EnumerableFamilyPolicy.cs) - 

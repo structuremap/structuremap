@@ -16,10 +16,12 @@ setter-injection
 registration
 
 resolving
+
 the-container
 
 object-lifecycle
 
+generics
 interception-and-decorators
 
 interpreting-exceptions

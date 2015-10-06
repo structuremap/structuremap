@@ -38,10 +38,6 @@ For more information, see:
 
 
 
-## A Quick Note on Using Policies Sanely
-
-
-
 ## Example 1: Constructor arguments
 
 So let me say upfront that I don't like this approach, but other folks have asked for this ability
@@ -95,7 +91,7 @@ our databases are named "red" and "green" with this container registration below
 For more context, the classes that use `IDatabase` would need to have constructor functions like
 these below:
 
-<[sample:database-users]>
+<[sample:database-users-2]>
 
 
 Finally, we can exercise our new policy and see it in action:

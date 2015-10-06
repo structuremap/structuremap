@@ -41,7 +41,7 @@ namespace StructureMap.Pipeline
         {
             if (!concreteType.IsConcrete())
             {
-                throw new ArgumentOutOfRangeException("concreteType","Only concrete types can be built by ConstructorInstance");
+                throw new ArgumentOutOfRangeException("concreteType", concreteType,"Only concrete types can be built by ConstructorInstance.");
             }
 
             if (!concreteType.GetConstructors().Any())

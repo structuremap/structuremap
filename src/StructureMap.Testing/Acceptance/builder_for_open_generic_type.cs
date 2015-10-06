@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
@@ -9,6 +11,7 @@ namespace StructureMap.Testing.Acceptance
     [TestFixture]
     public class builder_for_open_generic_type
     {
+        // SAMPLE: generic-builders-in-action
         [Test]
         public void show_the_workaround_for_generic_builders()
         {
@@ -19,11 +22,33 @@ namespace StructureMap.Testing.Acceptance
 
             container.GetInstance<IRepository<string, int>>()
                 .ShouldBeOfType<Repository<string, int>>();
+
+            Debug.WriteLine(container.WhatDoIHave(assembly:Assembly.GetExecutingAssembly()));
+        }
+        // ENDSAMPLE
+
+        [Test]
+        public void using_repository_instance()
+        {
+            // SAMPLE: using-repository-instance
+            var container = new Container(_ =>
+            {
+                _.For<IRepository<string, int>>().UseInstance(new RepositoryInstance<string, int>());
+
+                // or skip the custom Instance with:
+
+                _.For<IRepository<string, int>>().Use(() => RepositoryBuilder.Build<string, int>());
+            });
+            // ENDSAMPLE
         }
     }
 
+    // SAMPLE: RepositoryInstanceFactory
     public class RepositoryInstanceFactory : Instance
     {
+        // This is the key part here. This method is called by
+        // StructureMap to "find" an Instance for a closed
+        // type of IRepository<,>
         public override Instance CloseType(Type[] types)
         {
             // StructureMap will cache the object built out of this,
@@ -33,6 +58,7 @@ namespace StructureMap.Testing.Acceptance
             return Activator.CreateInstance(instanceType).As<Instance>();
         }
 
+        // Don't worry about this one, never gets called
         public override IDependencySource ToDependencySource(Type pluginType)
         {
             throw new NotSupportedException();
@@ -48,25 +74,46 @@ namespace StructureMap.Testing.Acceptance
             get { return typeof (Repository<,>); }
         }
     }
+    // ENDSAMPLE
 
-    public class RepositoryInstance<T, T1> : LambdaInstance<IRepository<T, T1>>
+    // SAMPLE: RepositoryInstance
+    public class RepositoryInstance<TDocument, TQuery> : LambdaInstance<IRepository<TDocument, TQuery>>
     {
-        public RepositoryInstance() : base(() => RepositoryBuilder.Build<T, T1>())
+        public RepositoryInstance() : base(() => RepositoryBuilder.Build<TDocument, TQuery>())
         {
         }
-    }
 
+        // This is purely to make the diagnostic views prettier
+        public override string Description
+        {
+            get
+            {
+                return "RepositoryBuilder.Build<{0}, {1}>()"
+                    .ToFormat(typeof(TDocument).Name, typeof(TQuery).Name);
+            }
+        }
+    }
+    // ENDSAMPLE
+
+    // SAMPLE: IRepository<T,T1>
+    public interface IRepository<TDocument, TQuery>
+    {
+
+    }
+    // ENDSAMPLE
+
+    // SAMPLE: RepositoryBuilder
     public static class RepositoryBuilder
     {
-        public static IRepository<T, T1> Build<T, T1>()
+        public static IRepository<TDocument, TQuery> Build<TDocument, TQuery>()
         {
-            return new Repository<T, T1>();
+            return new Repository<TDocument, TQuery>();
         }
     }
+    // ENDSAMPLE
 
-    public interface IRepository<T, T1>
-    {
-    }
+    
+
 
     public class Repository<T, T1> : IRepository<T, T1>
     {

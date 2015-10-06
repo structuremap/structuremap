@@ -179,6 +179,7 @@
     <Compile Include="Acceptance\enumerable_instances.cs" />
     <Compile Include="Acceptance\explicit_arguments.cs" />
     <Compile Include="Acceptance\full_stack_container_usage.cs" />
+    <Compile Include="Acceptance\generic_types.cs" />
     <Compile Include="Acceptance\iconfigured_instance_behavior.cs" />
     <Compile Include="Acceptance\inline_dependencies.cs" />
     <Compile Include="Acceptance\interception_acceptance_tests.cs" />
@@ -189,6 +190,7 @@
     <Compile Include="Acceptance\setting_lifecycle_scope.cs" />
     <Compile Include="Acceptance\transient_tracking_mode_specs.cs" />
     <Compile Include="Acceptance\try_get_instance.cs" />
+    <Compile Include="Acceptance\Visualization\VisualizationClasses.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
