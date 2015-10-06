@@ -1,6 +1,6 @@
 type project
 id structuremap
-authors Jeremy Miller
+authors Jeremy Miller Dmytro Dziuma
 description
     StructureMap is a Dependency Injection / Inversion of Control tool for .Net
 files
