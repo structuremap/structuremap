@@ -11,6 +11,7 @@ namespace StructureMap.Testing.Acceptance
     [TestFixture]
     public class interception_acceptance_tests
     {
+        // SAMPLE: activate_by_action
         [Test]
         public void activate_by_action()
         {
@@ -25,6 +26,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<AWidget>()
                 .Activated.ShouldBeTrue();
         }
+        // ENDSAMPLE
 
         [Test]
         public void activate_by_expression_action()
@@ -271,6 +273,7 @@ namespace StructureMap.Testing.Acceptance
         }
     }
 
+    // SAMPLE: Activateable
     public abstract class Activateable
     {
         public bool Activated { get; set; }
@@ -280,6 +283,7 @@ namespace StructureMap.Testing.Acceptance
             Activated = true;
         }
     }
+    // ENDSAMPLE
 
     public class WidgetKeeper
     {
@@ -300,9 +304,11 @@ namespace StructureMap.Testing.Acceptance
     {
     }
 
+    // SAMPLE: AWidget-is-Activateable
     public class AWidget : Activateable, IWidget
     {
     }
+    // ENDSAMPLE
 
     public class BWidget : Activateable, IWidget
     {

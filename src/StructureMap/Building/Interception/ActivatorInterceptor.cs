@@ -9,17 +9,21 @@ namespace StructureMap.Building.Interception
         private readonly LambdaExpression _action;
         private readonly string _description;
 
+        // SAMPLE: ActivatorInterceptor-by-action-T
         public ActivatorInterceptor(Expression<Action<T>> action, string description = null)
+        // ENDSAMPLE
         {
             _action = action;
             _description = description;
         }
 
+        // SAMPLE: Activator-by-action-T-and-IContext
         public ActivatorInterceptor(Expression<Action<IContext, T>> action, string description = null)
         {
             _action = action;
             _description = description;
         }
+        // ENDSAMPLE
 
         public IInterceptorPolicy ToPolicy()
         {

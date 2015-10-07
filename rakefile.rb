@@ -85,5 +85,6 @@ end
 
 "Launches the documentation project in editable mode"
 task :docs do
+	sh ".paket/paket.exe install"
 	sh "packages/Storyteller/tools/st.exe doc-run -v #{BUILD_VERSION}"
 end
