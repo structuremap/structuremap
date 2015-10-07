@@ -1,8 +1,16 @@
 structuremap-assumptions
+
 auto-wiring
+lambdas
+
 working-with-the-icontext-at-build-time
+
 forwarding-requests-for-a-type-to-another-type
+
 profiles-and-child-containers
+
 nested-containers
+
 working-with-enumerable-types
+
 handling-missing-named-instances

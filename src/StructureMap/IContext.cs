@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace StructureMap
 {
+    // SAMPLE: IContext
+    /// <summary>
+    /// Access to the state and type resolution of the current "build session"
+    /// during a request to a StructureMap container
+    /// </summary>
     public interface IContext
     {
         /// <summary>
@@ -32,6 +37,11 @@ namespace StructureMap
         /// <returns></returns>
         T GetInstance<T>(string name);
 
+        /// <summary>
+        /// Get a service from the current build session by type
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
         object GetInstance(Type pluginType);
 
         /// <summary>
@@ -109,4 +119,5 @@ namespace StructureMap
         /// </summary>
         Type RootType { get; }
     }
+    // ENDSAMPLE
 }

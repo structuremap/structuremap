@@ -49,19 +49,43 @@ namespace StructureMap.Testing.Samples
         }
     }
 
-
+    // SAMPLE: nhibernate-isession-factory
     public interface ISession { }
 
     public interface ISessionFactory
     {
         ISession Build();
     }
+    // ENDSAMPLE
 
-    public class LambdaRegistry : Registry
+    // SAMPLE: SessionFactoryRegistry
+    public class SessionFactoryRegistry : Registry
     {
-        public LambdaRegistry()
+        // Let's not worry about how ISessionFactory is built
+        // in this example
+        public SessionFactoryRegistry(ISessionFactory factory)
         {
-            For<ISession>().Use(c => c.GetInstance<ISessionFactory>().Build());
+            For<ISessionFactory>().Use(factory);
+
+
+            For<ISession>().Use("Build ISession from ISessionFactory", c =>
+            {
+                // To resolve ISession, I first pull out
+                // ISessionFactory from the IContext and use that
+                // to build a new ISession. 
+                return c.GetInstance<ISessionFactory>().Build();
+            });
+        }
+    }
+    // ENDSAMPLE
+
+
+
+    public class SessionFactory : ISessionFactory
+    {
+        public ISession Build()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
