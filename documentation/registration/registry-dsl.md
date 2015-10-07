@@ -27,6 +27,49 @@ When you set up a `Container`, you need to simply direct the
 
 <[sample:including-registries]>
 
+
+## _Use_ versus _Add_
+
+Registrations in the Registry DSL can be done with either `Add()` or `Use()` methods, but they have
+a different semantic meaning to StructureMap. `Add()` means _add another Instance to this plugin type_
+while `Use()` means _this one is the default_.
+
+One of the things that is different about StructureMap is that if it has multiple registrations of any
+given plugin type, one of these registrations has to be explicitly marked as **the** default usage for that plugin type
+or StructureMap will blow up in the call to `Container.GetInstance()`. Other IoC tools will magically use
+the first registration or the last registration (and some even allow you to configure that behavior). We chose to 
+make that determination be explicit. 
+
+As of StructureMap 3.0, the <[linkto:diagnostics/whatdoihave;title=WhatDoIHave()]> output is part of any exception thrown by StructureMap when
+it cannot determine a default registration for a requested type if there is more than one registration for that
+type.
+
+If there are multiple calls to `Use()` for the same plugin type, the last one wins. For more control over this behavior in
+modularity scenarios, see <[linkto:registration/fallback-services]> and <[linkto:registration/clear-or-replace]>.
+
+
+
+
+## For().Use()
+
+To register the default `Instance` of a type, the syntax is one of the `Registry.For().Use()` overloads shown below:
+
+<[sample:SettingDefaults]>
+
+## For().Add()
+
+To register additional `Instance's` for a plugin type, use one of the overloads of `For().Add()`:
+
+<[sample:AdditionalRegistrations]>
+
+## Add Many Registrations with For().AddInstances()
+
+If you need to add several `Instance's` to a single plugin type, the `AddInstances()` syntax
+shown below may be quicker and easier to use:
+
+<[sample:Using-AddInstances]>
+
+
 ## Named Instances
 
 When you have multiple implementations of an interface, it can often be useful to

@@ -34,12 +34,11 @@
 
 The following things are features that are not uncommon in other IoC tools or were present in previous versions of StructureMap.
 
-* Any kind of Aspect Oriented Programming hooks out of the box, but it's perfectly possible to utilize the interception capabilities to integrate the 
-  runtime AOP tool of your choice into StructureMap
+
 * Xml configuration was removed for the 3.0 release. 
 * Comprehensive attribute based configuration was also removed for the 3.0 release, but there is some very rudimentary support for attibute based
   configuration
-* Complex Auto Factory support (this feature is planned for StructureMap 4.0)
+* Complex Auto Factory support (this feature may be part of the StructureMap 4.0 release)
 
 <div class="alert alert-info" role="alert"><strong>Note!</strong> The StructureMap team strongly feels that Xml configuration is both undesirable and unnecessary. Please feel free to use the <a href="https://groups.google.com/forum/#!forum/structuremap-users">Google user group</a> to ask for advice on how to move away from Xml configuration in existing applications.
 </div>

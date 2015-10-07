@@ -33,16 +33,24 @@ namespace StructureMap.Testing.Configuration.DSL
                 //        EqualTo("Orange")
                 //    );
 
+                // SAMPLE: Using-AddInstances
+
+                // registry is a StructureMap Registry object
                 registry.For<IService>().AddInstances(x =>
                 {
+                    // Equivalent to For<IService>().Add<ColorService>().....
                     x.Type<ColorService>().Named("Red").Ctor<string>("color").Is("Red");
 
+                    // Equivalent to For<IService>().Add(new ColorService("Yellow"))......
                     x.Object(new ColorService("Yellow")).Named("Yellow");
 
+                    // Equivalent to For<IService>().Use(() => new ColorService("Purple"))....
                     x.ConstructedBy(() => new ColorService("Purple")).Named("Purple");
 
                     x.Type<ColorService>().Named("Decorated").Ctor<string>("color").Is("Orange");
                 });
+
+                // ENDSAMPLE
             });
         }
 
