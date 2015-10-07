@@ -35,6 +35,19 @@ namespace StructureMap.Testing.Building.Interception
             });
         }
 
+        public class ATarget : ITarget
+        {
+            public void Activate()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void Debug()
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
 
         [Test]
         public void intercept_happy_path_with_a_single_activation()

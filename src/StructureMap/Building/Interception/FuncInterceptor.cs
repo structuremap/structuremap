@@ -10,17 +10,22 @@ namespace StructureMap.Building.Interception
         private readonly LambdaExpression _expression;
         private readonly string _description;
 
+        // SAMPLE: FuncInterceptor-by-expression
         public FuncInterceptor(Expression<Func<T, T>> expression, string description = null)
+        // ENDSAMPLE
         {
             _expression = expression;
             _description = description;
         }
 
+        // SAMPLE: FuncInterceptor-by-expression-and-icontext
         public FuncInterceptor(Expression<Func<IContext, T, T>> expression, string description = null)
+        // ENDSAMPLE
         {
             _expression = expression;
             _description = description;
         }
+        
 
         public string Description
         {

@@ -18,18 +18,22 @@ namespace StructureMap.Testing.Configuration.DSL
             _lastService = null;
             recorder = new ContextRecorder();
 
+            // SAMPLE: interceptors-by-instance
             _container = new Container(r =>
             {
                 r.For<ContextRecorder>().Use(recorder);
 
+
                 r.For<IService>().AddInstances(x =>
                 {
                     x.Type<ColorService>()
+                        // Registers an activation action on this Instance
                         .OnCreation("last service", s => _lastService = s)
                         .Named("Intercepted")
                         .Ctor<string>("color").Is("Red");
 
                     x.Type<ColorService>()
+                        // Activation using IContext
                         .OnCreation("last touched", (c, s) => c.GetInstance<ContextRecorder>().WasTouched = true)
                         .Named("InterceptedWithContext")
                         .Ctor<string>("color").Is("Red");
@@ -43,9 +47,12 @@ namespace StructureMap.Testing.Configuration.DSL
                         .OnCreation("set the last service", s => _lastService = s);
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("Purple")
+                        // Applies a decorator to this instance. Not sure *why*
+                        // you'd want to do it this way
                         .DecorateWith(s => new DecoratorService(s));
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("DecoratedWithContext")
+                        // Fancier decorator
                         .DecorateWith("decorated with context", (c, s) =>
                         {
                             c.GetInstance<ContextRecorder>().WasTouched = true;
@@ -59,6 +66,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     x.Object(new ColorService("Yellow")).Named("Bad")
                         .OnCreation("throw exception", obj => { throw new ApplicationException("Bad!"); });
                 });
+                // ENDSAMPLE
             });
         }
 

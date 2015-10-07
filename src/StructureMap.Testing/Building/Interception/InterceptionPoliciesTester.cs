@@ -66,6 +66,7 @@ namespace StructureMap.Testing.Building.Interception
                 
         }
 
+        // SAMPLE: InterceptorPolicy<T>-in-action
         [Test]
         public void apply_policy_selectively_with_a_func()
         {
@@ -93,32 +94,35 @@ namespace StructureMap.Testing.Building.Interception
             container.GetInstance<ITarget>("C").ShouldBeOfType<ATarget>().WasActivated.ShouldBeFalse();
             container.GetInstance<ITarget>("D").ShouldBeOfType<ATarget>().WasActivated.ShouldBeFalse();
         }
-    }
 
-    public class ATarget : ITarget
-    {
-        public void Activate()
+        public class ATarget : ITarget
         {
-            WasActivated = true;
+            public void Activate()
+            {
+                WasActivated = true;
+            }
+
+            public bool WasActivated { get; set; }
+
+            public void Debug()
+            {
+                throw new NotImplementedException();
+            }
+        }
+        // ENDSAMPLE
+
+        public class BTarget : ATarget
+        {
         }
 
-        public bool WasActivated { get; set; }
-
-        public void Debug()
+        public class CTarget : ATarget
         {
-            throw new NotImplementedException();
+        }
+
+        public class DTarget : ATarget
+        {
         }
     }
 
-    public class BTarget : ATarget
-    {
-    }
 
-    public class CTarget : ATarget
-    {
-    }
-
-    public class DTarget : ATarget
-    {
-    }
 }

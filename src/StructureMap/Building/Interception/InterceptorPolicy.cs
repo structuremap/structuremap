@@ -10,7 +10,9 @@ namespace StructureMap.Building.Interception
         private readonly IInterceptor _interceptor;
         private Func<Instance, bool> _filter;
 
+        // SAMPLE: InterceptorPolicy<T>
         public InterceptorPolicy(IInterceptor interceptor, Func<Instance, bool> filter = null)
+        // ENDSAMPLE
         {
             if (!interceptor.Accepts.CanBeCastTo<T>())
             {
