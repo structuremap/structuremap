@@ -24,7 +24,7 @@ namespace StructureMap.Docs.samples.quickstart
                 c.For<IFoo>().Use<Foo>();
                 c.For<IBar>().Use<Bar>();
             });
-
+// ENDSAMPLE
         }
 
         public void configure_the_container_using_a_registry()
