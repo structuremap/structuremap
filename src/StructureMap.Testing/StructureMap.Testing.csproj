@@ -179,6 +179,7 @@
     <Compile Include="Acceptance\ejecting_instances.cs" />
     <Compile Include="Acceptance\enumerable_instances.cs" />
     <Compile Include="Acceptance\explicit_arguments.cs" />
+    <Compile Include="Acceptance\fallback_registrations.cs" />
     <Compile Include="Acceptance\full_stack_container_usage.cs" />
     <Compile Include="Acceptance\generic_types.cs" />
     <Compile Include="Acceptance\iconfigured_instance_behavior.cs" />

@@ -56,7 +56,7 @@ namespace StructureMap
             {
                 var registry = _graph.QueuedRegistries.Dequeue();
                 _graph.Registries.Add(registry);
-                scanning.AddRange(registry.Scanners.Select(x => x.ScanForTypes()));
+                scanning.AddRange(registry.Scanners.Where(x => x.HasAssemblies()).Select(x => x.ScanForTypes()));
 
                 registry.Configure(_graph);
             }

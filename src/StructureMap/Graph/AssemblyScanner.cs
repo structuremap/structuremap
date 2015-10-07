@@ -184,6 +184,11 @@ namespace StructureMap.Graph
             With(convention);
             return new ConfigureConventionExpression(convention);
         }
+
+        public bool HasAssemblies()
+        {
+            return _assemblies.Any();
+        }
     }
 
 

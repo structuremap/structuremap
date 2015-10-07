@@ -6,5 +6,4 @@ policies
 changing-configuration-at-runtime
 on-missing-family-policies
 constructor-selection
-configuring-the-raw-model
 fallback-services

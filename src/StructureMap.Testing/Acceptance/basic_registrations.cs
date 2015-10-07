@@ -3,6 +3,7 @@ using NUnit.Framework;
 using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
+using StructureMap.Pipeline.Lazy;
 using StructureMap.Testing.GenericWidgets;
 
 namespace StructureMap.Testing.Acceptance
@@ -21,7 +22,7 @@ namespace StructureMap.Testing.Acceptance
             });
         }
     }
-
+    /*
     // SAMPLE: SettingDefaults
     public class SettingDefaults : Registry
     {
@@ -55,7 +56,6 @@ namespace StructureMap.Testing.Acceptance
         }
     }
     // ENDSAMPLE
-
     // SAMPLE: AdditionalRegistrations
     public class AdditionalRegistrations : Registry
     {
@@ -71,11 +71,6 @@ namespace StructureMap.Testing.Acceptance
             // Pre-existing object
             For<IWidget>().Add(new AWidget());
 
-            // This is rare now, but still valid
-            For<IWidget>().Add<AWidget>().Named("A");
-            For<IWidget>().Add<BWidget>().Named("B");
-            For<IWidget>().Add("A"); // makes AWidget the default
-
             // Also rare, but you can supply an Instance object
             // yourself for special needs
             For<IWidget>().AddInstance(new MySpecialInstance());
@@ -89,23 +84,27 @@ namespace StructureMap.Testing.Acceptance
         }
     }
     // ENDSAMPLE
+    */
 
-
-    public class MySpecialInstance : Instance
+    public class MySpecialInstance : LambdaInstance<IWidget>
     {
-        public override IDependencySource ToDependencySource(Type pluginType)
+        public MySpecialInstance() : base(() => new SpecialWidget())
         {
-            throw new NotImplementedException();
         }
 
         public override string Description
         {
-            get { throw new NotImplementedException(); }
+            get { return "My Special Instance"; }
         }
 
         public override Type ReturnedType
         {
-            get { throw new NotImplementedException(); }
+            get { return typeof(SpecialWidget); }
         }
+    }
+
+    public class SpecialWidget : IWidget
+    {
+        
     }
 }
