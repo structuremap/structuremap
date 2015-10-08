@@ -61,6 +61,17 @@ namespace StructureMap.Pipeline
         /// Explicitly choose a constructor
         /// </summary>
         ConstructorInfo Constructor { get; set; }
+
+        /// <summary>
+        /// Has a build plan already been created for this instance?
+        /// </summary>
+        /// <returns></returns>
+        bool HasBuildPlan();
+
+        /// <summary>
+        /// Clears out any cached IBuildPlan for this Instance.
+        /// </summary>
+        void ClearBuildPlan();
     }
     // ENDSAMPLE
 
