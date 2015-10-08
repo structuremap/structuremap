@@ -67,7 +67,7 @@ namespace StructureMap.Testing.Samples
         {
             For<ISessionFactory>().Use(factory);
 
-
+            // Build ISession with a lambda:
             For<ISession>().Use("Build ISession from ISessionFactory", c =>
             {
                 // To resolve ISession, I first pull out
