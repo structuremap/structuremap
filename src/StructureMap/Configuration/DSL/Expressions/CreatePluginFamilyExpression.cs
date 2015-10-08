@@ -69,19 +69,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
-
-        /// <summary>
-        /// Access to all of the uncommon Instance types
-        /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> UseSpecial(Action<IInstanceExpression<TPluginType>> configure)
-        {
-            var expression = new InstanceExpression<TPluginType>(UseInstance);
-            configure(expression);
-
-            return this;
-        }
-
-
         /// <summary>
         /// Access to all of the uncommon Instance types
         /// </summary>
