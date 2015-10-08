@@ -13,6 +13,7 @@ namespace StructureMap.Testing.Samples.Interception
     [TestFixture]
     public class Event_Aggregator_Registration
     {
+        // SAMPLE: use_the_event_listener_registration
         [Test]
         public void use_the_event_listener_registration()
         {
@@ -31,6 +32,7 @@ namespace StructureMap.Testing.Samples.Interception
 
             listener.Messages.Single().ShouldBeTheSameAs(message);
         }
+        // ENDSAMPLE
     }
 
     public class BooMessage
@@ -47,6 +49,7 @@ namespace StructureMap.Testing.Samples.Interception
         }
     }
 
+    // SAMPLE: EventListenerRegistration
     public class EventListenerRegistration : IInterceptorPolicy
     {
         public string Description
@@ -64,16 +67,20 @@ namespace StructureMap.Testing.Samples.Interception
             }
         }
     }
+    // ENDSAMPLE
 
     public interface IListener
     {
     }
 
+    // SAMPLE: IListener<T>
     public interface IListener<T>
     {
         void Handle(T message);
     }
+    // ENDSAMPLE
 
+    // SAMPLE: IEventAggregator
     public interface IEventAggregator
     {
         // Sending messages
@@ -83,15 +90,8 @@ namespace StructureMap.Testing.Samples.Interception
         // Explicit registration
         void AddListener(object listener);
         void RemoveListener(object listener);
-
-        // Filtered registration, experimental
-        If<T> If<T>(Func<T, bool> filter);
     }
-
-    public interface If<T>
-    {
-        object PublishTo(Action<T> action);
-    }
+    // ENDSAMPLE
 
     public class EventAggregator : IEventAggregator
     {
@@ -128,11 +128,6 @@ namespace StructureMap.Testing.Samples.Interception
         public void RemoveListener(object listener)
         {
             withinLock(() => _listeners.Remove(listener));
-        }
-
-        public If<T> If<T>(Func<T, bool> filter)
-        {
-            return new IfExpression<T>(filter, this);
         }
 
         #endregion
@@ -181,33 +176,6 @@ namespace StructureMap.Testing.Samples.Interception
             _listeners.RemoveAll(filter);
         }
 
-        #region Nested type: IfExpression
-
-        internal class IfExpression<T> : If<T>
-        {
-            private readonly EventAggregator _aggregator;
-            private readonly Func<T, bool> _filter;
-
-            public IfExpression(Func<T, bool> filter, EventAggregator aggregator)
-            {
-                _filter = filter;
-                _aggregator = aggregator;
-            }
-
-            #region If<T> Members
-
-            public object PublishTo(Action<T> action)
-            {
-                var listener = new FilteredListener<T>(_filter, action);
-                _aggregator.AddListener(listener);
-
-                return listener;
-            }
-
-            #endregion
-        }
-
-        #endregion
     }
 
     public class FilteredListener<T> : IListener<T>

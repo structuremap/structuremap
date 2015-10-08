@@ -1,7 +1,8 @@
 <!--Title: Interception and Decorators-->
 <!--Url: interception-and-decorators-->
 
-All of the samples from this topic are part of the [user acceptance tests](https://github.com/structuremap/structuremap/blob/master/src/StructureMap.Testing/Acceptance/interception_acceptance_tests.cs) in the main codebase.
+All of the samples from this topic are part of the [user acceptance tests](https://github.com/structuremap/structuremap/blob/master/src/StructureMap.Testing/Acceptance/interception_acceptance_tests.cs) in the main codebase. There is also another example of using an interception policy with 
+open generic types at the bottom of <[linkto:generics]>
 
 Improving the interception facilities and the means of applying [decorators](https://en.wikipedia.org/wiki/Decorator_pattern) during object construction was one of the primary
 goals of the big 3.0 release and is significantly different than the older 2.5/2.6 model. 

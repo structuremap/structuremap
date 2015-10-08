@@ -220,3 +220,32 @@ IRepository&lt;TDocument, TQuery&gt;     StructureMap.Testing.Acceptance     Tra
 ===================================================================================================================================================
 </pre>
 
+
+
+## Example 3: Interception Policy against Generic Types
+
+Several years ago I described an approach for [using an Event Aggregator in a WPF application](http://codebetter.com/jeremymiller/2009/07/24/how-i-m-using-the-event-aggregator-pattern-in-storyteller/) that relied on StructureMap interception to register any object that
+StructureMap built with the active [EventAggregator](http://martinfowler.com/eaaDev/EventAggregator.html) for the system *if that object was recognized as a listener to the event aggregator*. I thought that approach worked out quite well, so let's talk about how you could implement
+that same design with the improved interception model introduced by StructureMap 3.0 (the event aggregator and StructureMap interception worked out well,
+but I'm very happy now that I ditched the old WPF client and replaced it with a web application using React.js instead).
+
+First off, let's say that we're going to have this interface for our event aggregator:
+
+<[sample:IEventAggregator]>
+
+To register a listener for a particular type of event notification, you would implement an interface called `IListener<T>` shown below
+and directly add that object to the `IEventAggregator`:
+
+<[sample:IListener<T>]>
+
+In the application I'm describing, all of the listener objects were presenters or screen controls that were created by StructureMap, so it was convenient to allow StructureMap to register newly created objects with the `IEventAggregator` in an activation interceptor.
+
+What we want to do though is have an interception policy that only applies to any concrete type that implements some interface that 
+closes `IListener<T>`:
+
+<[sample:EventListenerRegistration]>
+
+To see our new interception policy in action, see [this unit test from GitHub](https://github.com/structuremap/structuremap/blob/master/src/StructureMap.Testing/Samples/Interception/Event_Aggregator_Registration.cs):
+
+<[sample:use_the_event_listener_registration]>
+
