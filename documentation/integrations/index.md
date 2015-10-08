@@ -40,3 +40,6 @@ binding redirects, and the fusion log viewer. See the [MassTransit documentation
 
 The best example is [this blog post from Jimmy Bogard](https://lostechies.com/jimmybogard/2013/12/20/proper-sessiondbcontext-lifecycle-management/).
 
+## AutoMapper
+
+See [My AutoMapper setup for StructureMap](http://www.martijnburgers.net/post/2013/12/20/My-AutoMapper-setup-for-StructureMap.aspx) from Martijn Burgers.
