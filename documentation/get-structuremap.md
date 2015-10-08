@@ -20,6 +20,12 @@ Binaries of StructureMap are available via [NuGet](http://www.nuget.org/packages
 
     PM> Install-Package StructureMap
 
+or if you need a strong named version of StructureMap:
+
+    PM> Install-Package structuremap-signed
+
+**The StructureMap team believes strong naming to be a blight upon the .Net land and we really wish folks would quit using it, but we understand that some circumstances absolutely require it.**
+
 ## Source
 
 StructureMap's source is hosted on [GitHub](https://github.com/structuremap/structuremap/). If you want to fix a bug or just want to tinker with an idea, we love receiving pull requests! Start by creating your own [fork](https://github.com/structuremap/structuremap/fork) on Github.
