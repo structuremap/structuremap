@@ -235,17 +235,22 @@ namespace StructureMap.Testing.DocumentationExamples
     {
     }
 
+    public class SimpleRepository : IRepository { }
+
     public interface IPresenter
     {
         void Activate();
     }
+
+ 
+
 
     public class ShippingScreenPresenter : IPresenter
     {
         private readonly IRepository _repository;
         private readonly IShippingService _service;
 
-
+        // SAMPLE: ShippingScreenPresenter-with-ctor-injection
         // This is the way to write a Constructor Function with an IoC tool
         // Let the IoC container "inject" services from outside, and keep
         // ShippingScreenPresenter ignorant of the IoC infrastructure
@@ -254,8 +259,9 @@ namespace StructureMap.Testing.DocumentationExamples
             _service = service;
             _repository = repository;
         }
+        // ENDSAMPLE
 
-        // FAIL!
+        // SAMPLE: ShippingScreenPresenter-anti-pattern
         // This is the wrong way to use an IoC container.  Do NOT invoke the container from
         // the constructor function.  This tightly couples the ShippingScreenPresenter to
         // the IoC container in a harmful way.  This class cannot be used in either
@@ -263,9 +269,14 @@ namespace StructureMap.Testing.DocumentationExamples
         // code
         public ShippingScreenPresenter(IContainer container)
         {
+            // It's even worse if you use a static facade to retrieve
+            // a service locator!
             _service = container.GetInstance<IShippingService>();
             _repository = container.GetInstance<IRepository>();
         }
+        // ENDSAMPLE
+
+
 
         #region IPresenter Members
 
@@ -274,6 +285,27 @@ namespace StructureMap.Testing.DocumentationExamples
         }
 
         #endregion
+    }
+
+    public class ShowBuildPlanOfShippingPresenter
+    {
+        // SAMPLE: ShippingScreenPresenter-build-plan
+        public void ShowBuildPlan()
+        {
+            var container = new Container(_ =>
+            {
+                _.For<IShippingService>().Use<InternalShippingService>();
+                _.For<IRepository>().Use<SimpleRepository>();
+            });
+
+            // Just proving that we can build ShippingScreenPresenter;)
+            container.GetInstance<ShippingScreenPresenter>().ShouldNotBeNull();
+
+            var buildPlan = container.Model.For<ShippingScreenPresenter>().Default.DescribeBuildPlan(1);
+
+            Debug.WriteLine(buildPlan);
+        }
+        // ENDSAMPLE
     }
 
     public class ApplicationController
