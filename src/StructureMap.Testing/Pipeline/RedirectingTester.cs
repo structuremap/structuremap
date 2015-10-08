@@ -15,7 +15,11 @@ namespace StructureMap.Testing.Pipeline
                 x.Forward<IOne, ITwo>();
             });
 
-            container.GetInstance<IOne>().ShouldBeOfType<OneAndTwo>();
+            container.GetInstance<IOne>()
+                .ShouldBeOfType<OneAndTwo>();
+
+            container.GetInstance<ITwo>()
+                .ShouldBeOfType<OneAndTwo>();
         }
 
         [Test]
@@ -30,7 +34,8 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<IBase>().ShouldBeOfType<Service>();
             container.GetInstance<IDerived>().ShouldBeOfType<Service>();
 
-            container.GetInstance<IBase>().ShouldBeTheSameAs(container.GetInstance<IDerived>());
+            container.GetInstance<IBase>()
+                .ShouldBeTheSameAs(container.GetInstance<IDerived>());
         }
     }
 
