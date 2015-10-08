@@ -1,5 +1,3 @@
-structuremap-assumptions
-
 auto-wiring
 lambdas
 
