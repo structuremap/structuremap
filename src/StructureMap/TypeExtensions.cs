@@ -34,6 +34,15 @@ namespace StructureMap.TypeRules
             }
         }
 
+        internal static void ForAttribute<T>(this ParameterInfo provider, Action<T> action)
+            where T : Attribute
+        {
+            foreach (T attribute in provider.GetCustomAttributes(typeof(T), true))
+            {
+                action(attribute);
+            }
+        }
+
         internal static T GetAttribute<T>(this MemberInfo provider)
             where T : Attribute
         {

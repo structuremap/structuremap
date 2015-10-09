@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Reflection;
+using NUnit.Framework;
 using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -70,6 +71,61 @@ namespace StructureMap.Testing.Acceptance
             container.Model.For<ILogger>()
                 .Default.Lifecycle
                 .ShouldBeOfType<UniquePerRequestLifecycle>();
+        }
+
+
+
+        public class AppSettingAttribute : StructureMapAttribute
+        {
+            private readonly string _key;
+
+            public AppSettingAttribute(string key)
+            {
+                _key = key;
+            }
+
+            public override void Alter(IConfiguredInstance instance, PropertyInfo property)
+            {
+                var value = System.Configuration.ConfigurationManager.AppSettings[_key];
+
+                instance.Dependencies.AddForProperty(property, value);
+            }
+
+            public override void Alter(IConfiguredInstance instance, ParameterInfo parameter)
+            {
+                var value = System.Configuration.ConfigurationManager.AppSettings[_key];
+
+                instance.Dependencies.AddForConstructorParameter(parameter, value);
+            }
+        }
+
+        public class AppSettingTarget
+        {
+            public string Name { get; set; }
+
+            [AppSetting("homestate")]
+            public string HomeState { get; set; }
+
+            public AppSettingTarget([AppSetting("name")]string name)
+            {
+                Name = name;
+            }
+        }
+
+        [Test]
+        public void using_parameter_and_property_attibutes()
+        {
+            System.Configuration.ConfigurationManager.AppSettings["name"] = "Jeremy";
+            System.Configuration.ConfigurationManager.AppSettings["homestate"] = "Missouri";
+
+            System.Configuration.ConfigurationManager.AppSettings["name"].ShouldBe("Jeremy");
+
+            var container = new Container();
+
+            var target = container.GetInstance<AppSettingTarget>();
+
+            target.Name.ShouldBe("Jeremy");
+            target.HomeState.ShouldBe("Missouri");
         }
     }
 

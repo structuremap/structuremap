@@ -58,6 +58,18 @@ namespace StructureMap
                         instance.AppliedPolicies.Add(policy);
                     }
                 });
+
+            var configured = instance.As<IConfiguredInstance>();
+            if (configured != null)
+            {
+                configured.Constructor.GetParameters()
+                    .Each(param => param.ForAttribute<StructureMapAttribute>(att => att.Alter(configured, param)));
+
+                configured.SettableProperties()
+                    .Each(prop => prop.ForAttribute<StructureMapAttribute>(att => att.Alter(configured, prop)));
+            }
+
+
         }
 
         public BuildUpPlan ToBuildUpPlan(Type pluggedType, Func<IConfiguredInstance> findInstance)
