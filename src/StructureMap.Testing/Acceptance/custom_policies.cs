@@ -213,7 +213,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeTheSameAs(container.GetInstance<IWidgets>());
 
             // Now that the policy has executed, we 
-            // can verify that WidgetCache is a singleton
+            // can verify that WidgetCache is a SingletonThing
             container.Model.For<IWidgets>().Default
                 .Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }

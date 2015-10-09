@@ -17,10 +17,10 @@ namespace StructureMap.Testing.Bugs
                 {
                     x.AssemblyContainingType<IMyFactory>();
                     x.Include(t => t == typeof (MyFactory));
-                    x.WithDefaultConventions(); // Remove this to get Singleton() to work.
+                    x.WithDefaultConventions(); // Remove this to get SingletonThing() to work.
                 });
 
-                //o.For<IMyFactory>().Use<MyFactory>().SetLifecycleTo(Lifecycles.Singleton);
+                //o.For<IMyFactory>().Use<MyFactory>().SetLifecycleTo(Lifecycles.SingletonThing);
                 o.For<IMyFactory>().Singleton().Use<MyFactory>();
             });
 

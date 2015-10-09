@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void set_to_singleton()
         {
-            // SAMPLE: set-iconfigured-instance-to-singleton
+            // SAMPLE: set-iconfigured-instance-to-SingletonThing
             IConfiguredInstance instance 
                 = new ConfiguredInstance(typeof (WidgetHolder));
 
@@ -34,7 +34,7 @@ namespace StructureMap.Testing.Acceptance
             IConfiguredInstance instance
                 = new ConfiguredInstance(typeof(WidgetHolder));
 
-            // Use the singleton lifecycle
+            // Use the SingletonThing lifecycle
             instance.Singleton();
 
             // or supply an ILifecycle type

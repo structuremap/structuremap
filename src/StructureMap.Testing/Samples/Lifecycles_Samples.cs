@@ -7,7 +7,7 @@ namespace StructureMap.Testing.Samples
     [TestFixture]
     public class Lifecycles_Samples
     {
-        // SAMPLE: singleton-in-action
+        // SAMPLE: SingletonThing-in-action
         [Test]
         public void singletons()
         {

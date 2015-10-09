@@ -100,7 +100,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void get_all_possibles()
         {
-            // Startable1 is a singleton
+            // Startable1 is a SingletonThing
 
             var startable1 = container.GetInstance<Startable1>();
             startable1.WasStarted.ShouldBeFalse();

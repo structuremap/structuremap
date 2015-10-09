@@ -216,7 +216,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(r =>
             {
-                // Had to be a singleton for this to work
+                // Had to be a SingletonThing for this to work
                 r.ForSingletonOf<SomethingElseEntirely>().Use<OrangeSomething>();
                 r.For<SomethingElse>().Use(context =>
                     // If the return is cast to OrangeSomething, this works.

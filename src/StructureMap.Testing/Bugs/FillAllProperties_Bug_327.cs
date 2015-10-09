@@ -11,7 +11,7 @@ namespace StructureMap.Testing.Bugs
             var container =
                 new Container(_ => { _.Policies.FillAllPropertiesOfType<ISettings>().Singleton().Use<Settings>(); });
 
-            // They'd be the same object because Settings is singleton scope
+            // They'd be the same object because Settings is SingletonThing scope
             var controller = container.GetInstance<HomeController>();
             controller.Settings.ShouldNotBeNull();
             controller.FromConstructor.ShouldNotBeNull();

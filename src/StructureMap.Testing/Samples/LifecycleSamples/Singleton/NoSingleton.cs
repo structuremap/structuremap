@@ -2,7 +2,7 @@
 
 namespace StructureMap.Testing.Samples.LifecycleSamples.Singleton
 {
-    // SAMPLE: no-singleton
+    // SAMPLE: no-SingletonThing
     public interface ISingletonDependency
     {
         void DoSomething();

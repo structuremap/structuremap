@@ -175,7 +175,7 @@
     <Compile Include="Graph\CompositePredicate.cs" />
     <Compile Include="Graph\DefaultConventionScanner.cs" />
     <Compile Include="Graph\EnumerableFamilyPolicy.cs" />
-    <Compile Include="Graph\StructureMapAttribute.cs" />
+    <Compile Include="StructureMapAttribute.cs" />
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />
     <Compile Include="Graph\FirstInterfaceConvention.cs" />

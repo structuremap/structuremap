@@ -24,14 +24,14 @@ namespace StructureMap.Testing.Acceptance
                 });
             });
 
-            // Fetch all the singleton objects
+            // Fetch all the SingletonThing objects
             var guyA = container.GetInstance<DisposedGuy>("A");
             var guyB = container.GetInstance<DisposedGuy>("B");
             var guyC = container.GetInstance<DisposedGuy>("C");
 
             container.Model.EjectAndRemove<DisposedGuy>();
 
-            // All the singleton instances should be disposed
+            // All the SingletonThing instances should be disposed
             // as they are removed from the Container
             guyA.WasDisposed.ShouldBeTrue();
             guyB.WasDisposed.ShouldBeTrue();
@@ -56,7 +56,7 @@ namespace StructureMap.Testing.Acceptance
                 });
             });
 
-            // Fetch all the singleton objects
+            // Fetch all the SingletonThing objects
             var guyA = container.GetInstance<DisposedGuy>("A");
             var guyB = container.GetInstance<DisposedGuy>("B");
             var guyC = container.GetInstance<DisposedGuy>("C");
@@ -87,7 +87,7 @@ namespace StructureMap.Testing.Acceptance
                 });
             });
 
-            // Fetch all the singleton objects
+            // Fetch all the SingletonThing objects
             var guyA = container.GetInstance<DisposedGuy>("A");
             var guyB = container.GetInstance<DisposedGuy>("B");
             var guyC = container.GetInstance<DisposedGuy>("C");
@@ -140,7 +140,7 @@ namespace StructureMap.Testing.Acceptance
                 });
             });
 
-            // Fetch all the singleton objects
+            // Fetch all the SingletonThing objects
             var guyA = container.GetInstance<DisposedGuy>("A");
             var guyB = container.GetInstance<DisposedGuy>("B");
             var guyC = container.GetInstance<DisposedGuy>("C");

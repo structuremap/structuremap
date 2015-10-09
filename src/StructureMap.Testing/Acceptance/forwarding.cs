@@ -22,7 +22,7 @@ namespace StructureMap.Testing.Acceptance
         {
             var container = new Container(_ =>
             {
-                // Let's make StatefulCache a singleton in the container
+                // Let's make StatefulCache a SingletonThing in the container
                 _.ForConcreteType<StatefulCache>().Configure.Singleton();
 
                 _.Forward<StatefulCache, IReader>();
@@ -41,7 +41,7 @@ namespace StructureMap.Testing.Acceptance
         {
             var container = new Container(_ =>
             {
-                // Let's make StatefulCache a singleton in the container
+                // Let's make StatefulCache a SingletonThing in the container
                 _.ForConcreteType<StatefulCache>().Configure.Singleton();
 
                 _.For<IReader>().Use(c => c.GetInstance<StatefulCache>());

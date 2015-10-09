@@ -51,7 +51,7 @@ namespace StructureMap.Testing.Acceptance
 
             var singleton = container.GetInstance<IColorCache>();
 
-            // Singleton's are resolved from the parent container
+            // SingletonThing's are resolved from the parent container
             using (var nested = container.GetNestedContainer())
             {
                 nested.GetInstance<IColorCache>()
@@ -121,7 +121,7 @@ namespace StructureMap.Testing.Acceptance
         {
             var container = new Container(_ =>
             {
-                // A singleton scoped service
+                // A SingletonThing scoped service
                 _.ForSingletonOf<IColorCache>().Use<ColorCache>();
 
                 // A transient scoped service
@@ -134,7 +134,7 @@ namespace StructureMap.Testing.Acceptance
 
             using (var nested = container.GetNestedContainer())
             {
-                // Singleton's are really built by the parent
+                // SingletonThing's are really built by the parent
                 singleton = nested.GetInstance<IColorCache>()
                     .ShouldBeOfType<ColorCache>();
 

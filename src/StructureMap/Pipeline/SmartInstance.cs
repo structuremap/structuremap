@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
@@ -30,7 +31,7 @@ namespace StructureMap.Pipeline
                 SelectConstructor(constructorSelection);
             }
 
-            
+            typeof(T).GetTypeInfo().ForAttribute<StructureMapAttribute>(x => x.Alter(this));
         }
 
         public SmartInstance<T, TPluginType> SelectConstructor(Expression<Func<T>> constructor)

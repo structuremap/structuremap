@@ -47,7 +47,7 @@ namespace StructureMap.Testing.Acceptance
             container.Model.For<Rule>().Lifecycle.ShouldBeOfType<SingletonLifecycle>();
             container.Model.For<Rule>().Find("C").Lifecycle.ShouldBeOfType<SingletonLifecycle>();
 
-            // 'C' is the default lifecycle for Rule (Singleton)
+            // 'C' is the default lifecycle for Rule (SingletonThing)
             container.GetInstance<Rule>("C")
                 .ShouldBeTheSameAs(container.GetInstance<Rule>("C"));
 

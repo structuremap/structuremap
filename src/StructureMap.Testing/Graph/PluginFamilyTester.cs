@@ -241,7 +241,7 @@ namespace StructureMap.Testing.Graph
 
     /// <summary>
     ///     Specifying the default instance is "Default" and marking the PluginFamily
-    ///     as an injected Singleton
+    ///     as an injected SingletonThing
     /// </summary>
     //[PluginFamily("Default", IsSingleton = true)]
     public interface ISingletonRepository

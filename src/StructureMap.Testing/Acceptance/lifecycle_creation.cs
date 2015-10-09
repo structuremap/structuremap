@@ -7,7 +7,7 @@ namespace StructureMap.Testing.Acceptance
     [TestFixture]
     public class lifecycle_creation
     {
-        // SAMPLE: singleton-disposed-on-container-dispose
+        // SAMPLE: SingletonThing-disposed-on-container-dispose
         public class DisposableSingleton : IDisposable
         {
             public void Dispose()
@@ -29,7 +29,7 @@ namespace StructureMap.Testing.Acceptance
             // now, dispose the Container
             container.Dispose();
 
-            // the singleton scoped object should be disposed
+            // the SingletonThing scoped object should be disposed
             singleton.WasDisposed.ShouldBeTrue();
         }
 
@@ -40,7 +40,7 @@ namespace StructureMap.Testing.Acceptance
         {
             var container = new Container(x =>
             {
-                x.ForSingletonOf<ISingleton>().Use<Singleton>();
+                x.ForSingletonOf<ISingletonThing>().Use<SingletonThing>();
                 x.For<ITransient>().Use<Transient>();
             });
 
@@ -53,14 +53,14 @@ namespace StructureMap.Testing.Acceptance
             // The transient object on Thing should be disposed
             thing.Transient.ShouldBeOfType<Transient>().WasDisposed.ShouldBeTrue();
 
-            // Singleton should be created in the master scope and therefore,
+            // SingletonThing should be created in the master scope and therefore,
             // not disposed by the nested container closing
-            thing.Singleton.ShouldBeOfType<Singleton>()
+            thing.SingletonThing.ShouldBeOfType<SingletonThing>()
                 .Transient.ShouldBeOfType<Transient>()
                 .WasDisposed.ShouldBeFalse();
 
-            // The singleton should not be sharing any children services with the transient
-            thing.Transient.ShouldNotBeTheSameAs(thing.Singleton.ShouldBeOfType<Singleton>().Transient);
+            // The SingletonThing should not be sharing any children services with the transient
+            thing.Transient.ShouldNotBeTheSameAs(thing.SingletonThing.ShouldBeOfType<SingletonThing>().Transient);
         }
 
         // SAMPLE: transient-are-shared-within-a-graph
@@ -129,15 +129,15 @@ namespace StructureMap.Testing.Acceptance
         // ENDSAMPLE
     }
 
-    public interface ISingleton
+    public interface ISingletonThing
     {
     }
 
-    public class Singleton : ISingleton
+    public class SingletonThing : ISingletonThing
     {
         private readonly ITransient _transient;
 
-        public Singleton(ITransient transient)
+        public SingletonThing(ITransient transient)
         {
             _transient = transient;
         }
@@ -169,12 +169,12 @@ namespace StructureMap.Testing.Acceptance
     public class Thing : IThing
     {
         private readonly ITransient _transient;
-        private readonly ISingleton _singleton;
+        private readonly ISingletonThing _singletonThing;
 
-        public Thing(ITransient transient, ISingleton singleton)
+        public Thing(ITransient transient, ISingletonThing singletonThing)
         {
             _transient = transient;
-            _singleton = singleton;
+            _singletonThing = singletonThing;
         }
 
         public ITransient Transient
@@ -182,9 +182,9 @@ namespace StructureMap.Testing.Acceptance
             get { return _transient; }
         }
 
-        public ISingleton Singleton
+        public ISingletonThing SingletonThing
         {
-            get { return _singleton; }
+            get { return _singletonThing; }
         }
     }
 }

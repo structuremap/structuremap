@@ -86,7 +86,7 @@ namespace StructureMap.Testing.Bugs
 
         // ******** THIS ONE IS NOT VALID. SINGLETON MAKE NO SENSE IN THIS CONTEXT ************
         // As of now, I've tightened the validation logic to make Configure() blow up
-        // if you try to register a singleton to a nested container
+        // if you try to register a SingletonThing to a nested container
         /*
         [Test]
         public void named_registrations_with_singleton_should_be_isolated_on_nested_containers()
@@ -94,11 +94,11 @@ namespace StructureMap.Testing.Bugs
             var container = new Container(_ => { }); //Parent Container doesnt contain the named instance
 
             var nested1 = container.GetNestedContainer();
-            nested1.Configure(_ => _.For<IThing>().Singleton().Add<Thing1>().Named("A"));
+            nested1.Configure(_ => _.For<IThing>().SingletonThing().Add<Thing1>().Named("A"));
             var containerNested1Thing = nested1.GetInstance<IThing>("A");
 
             var nested2 = container.GetNestedContainer();
-            nested2.Configure(_ => _.For<IThing>().Singleton().Add<Thing1>().Named("A"));
+            nested2.Configure(_ => _.For<IThing>().SingletonThing().Add<Thing1>().Named("A"));
             var containerNested2Thing = nested2.TryGetInstance<IThing>("A");
 
             Assert.AreNotEqual(containerNested1Thing, containerNested2Thing);

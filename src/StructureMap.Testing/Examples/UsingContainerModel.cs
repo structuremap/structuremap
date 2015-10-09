@@ -58,7 +58,7 @@ namespace StructureMap.Testing.Examples
 
             /*
             // SAMPLE: eject-an-object
-            // ONLY ejects any built object for this Instance from the singleton
+            // ONLY ejects any built object for this Instance from the SingletonThing
             // cache
             container.Model.For<IDevice>().Default.EjectObject();
             // ENDSAMPLE
@@ -82,13 +82,13 @@ namespace StructureMap.Testing.Examples
             // the type specified to the Get() method
             instance.Get<IDevice>().ShouldBeOfType<DefaultDevice>();
 
-            // if the instance is configured as a singleton, test
-            // if the singleton object has already been created
+            // if the instance is configured as a SingletonThing, test
+            // if the SingletonThing object has already been created
             var hasSingletonBeenCreated = instance.ObjectHasBeenCreated();
 
             if (hasSingletonBeenCreated)
             {
-                // remove the singleton object from the cache so that
+                // remove the SingletonThing object from the cache so that
                 // StructureMap will be forced to rebuild this object
                 instance.EjectObject();
             }
