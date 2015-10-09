@@ -5,7 +5,6 @@ namespace StructureMap.Pipeline.Lazy
 #pragma warning disable 1591
 
     // SAMPLE: FuncInstance
-
     public class FuncInstance<T> : LambdaInstance<Func<T>>
     {
         // Pass a Func<IContext, T> into the base constructor
