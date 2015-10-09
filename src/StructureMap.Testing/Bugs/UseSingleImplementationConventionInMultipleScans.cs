@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using StructureMap;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMapBugRepo.NS1;
