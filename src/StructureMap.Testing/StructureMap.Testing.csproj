@@ -191,6 +191,7 @@
     <Compile Include="Acceptance\lifecycle_creation.cs" />
     <Compile Include="Acceptance\nested_containers.cs" />
     <Compile Include="Acceptance\nested_registry_declarations.cs" />
+    <Compile Include="Acceptance\scanning_samples.cs" />
     <Compile Include="Acceptance\setter_rules_are_reset_by_configure.cs" />
     <Compile Include="Acceptance\setting_lifecycle_scope.cs" />
     <Compile Include="Acceptance\transient_tracking_mode_specs.cs" />

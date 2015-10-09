@@ -5,7 +5,10 @@ using System.Windows.Forms;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Graph.Scanning;
+using StructureMap.Testing.Acceptance;
 using StructureMap.Testing.Widget3;
+using IService = StructureMap.Testing.Widget3.IService;
 
 namespace StructureMap.Testing.DocumentationExamples
 {
@@ -224,6 +227,39 @@ namespace StructureMap.Testing.DocumentationExamples
 
                 x.LookForRegistries();
             });
+        }
+    }
+
+    // SAMPLE: BasicScanning
+    public class BasicScanning : Registry
+    {
+        public BasicScanning()
+        {
+            Scan(_ =>
+            {
+                // Declare which assemblies to scan
+                _.Assembly("StructureMap.Testing");
+                _.AssemblyContainingType<IWidget>();
+
+                // Filter types
+                _.Exclude(type => type.Name.Contains("Bad"));
+
+                // A custom registration convention
+                _.Convention<MySpecialRegistrationConvention>();
+
+                // Built in registration conventions
+                _.AddAllTypesOf<IWidget>().NameBy(x => x.Name.Replace("Widget", ""));
+                _.WithDefaultConventions();
+            });
+        }
+    }
+    // ENDSAMPLE
+
+    public class MySpecialRegistrationConvention : IRegistrationConvention
+    {
+        public void ScanTypes(TypeSet types, Registry registry)
+        {
+            throw new NotImplementedException();
         }
     }
 

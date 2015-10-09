@@ -12,6 +12,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
+            // SAMPLE: using-RegisterConcreteTypesAgainstTheFirstInterface
             container = new Container(x =>
             {
                 x.Scan(o =>
@@ -22,6 +23,7 @@ namespace StructureMap.Testing.Graph
                     o.Exclude(t => t.CanBeCastTo(typeof (IGateway)));
                 });
             });
+            // ENDSAMPLE
         }
 
         private Container container;
