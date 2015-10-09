@@ -5,8 +5,9 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
+    // SAMPLE: StructureMapAttribute
     /// <summary>
-    /// Base 
+    /// Base class for custom configuration attributes
     /// </summary>
     public abstract class StructureMapAttribute : Attribute
     {
@@ -17,7 +18,6 @@ namespace StructureMap
         /// <param name="family"></param>
         public virtual void Alter(PluginFamily family)
         {
-            // Nothing
         }
 
         /// <summary>
@@ -26,7 +26,6 @@ namespace StructureMap
         /// <param name="instance"></param>
         public virtual void Alter(IConfiguredInstance instance)
         {
-            // Nothing
         }
 
         /// <summary>
@@ -36,7 +35,6 @@ namespace StructureMap
         /// <param name="property"></param>
         public virtual void Alter(IConfiguredInstance instance, PropertyInfo property)
         {
-            
         }
 
         /// <summary>
@@ -46,43 +44,7 @@ namespace StructureMap
         /// <param name="parameter"></param>
         public virtual void Alter(IConfiguredInstance instance, ParameterInfo parameter)
         {
-            
         }
     }
-
-
-    /// <summary>
-    /// Makes StructureMap treat a Type as a singleton in the lifecycle scoping
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class SingletonAttribute : StructureMapAttribute
-    {
-        public override void Alter(PluginFamily family)
-        {
-            family.SetLifecycleTo<SingletonLifecycle>();
-        }
-
-        public override void Alter(IConfiguredInstance instance)
-        {
-            instance.SetLifecycleTo<SingletonLifecycle>();
-        }
-    }
-
-    /// <summary>
-    /// Makes StructureMap treat a Type with the AlwaysUnique lifecycle
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class AlwaysUniqueAttribute : StructureMapAttribute
-    {
-        public override void Alter(PluginFamily family)
-        {
-            family.SetLifecycleTo<UniquePerRequestLifecycle>();
-        }
-
-        public override void Alter(IConfiguredInstance instance)
-        {
-            instance.SetLifecycleTo<UniquePerRequestLifecycle>();
-        }
-    }
-
+    // ENDSAMPLE
 }

@@ -75,6 +75,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AlwaysUniqueAttribute.cs" />
     <Compile Include="ArgumentChecker.cs" />
     <Compile Include="Attributes\DefaultConstructorAttribute.cs" />
     <Compile Include="Attributes\SetterPropertyAttribute.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Graph\CompositePredicate.cs" />
     <Compile Include="Graph\DefaultConventionScanner.cs" />
     <Compile Include="Graph\EnumerableFamilyPolicy.cs" />
+    <Compile Include="SingletonAttribute.cs" />
     <Compile Include="StructureMapAttribute.cs" />
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />

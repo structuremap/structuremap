@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.Graph;
@@ -15,12 +16,22 @@ namespace StructureMap.Testing.Acceptance
             var container = new Container(_ =>
             {
                 _.For<ITeamCache>().Use<TeamCache>();
+                
+                // additional ITeamCache
+                _.For<ITeamCache>().Add<OtherTeamCache>();
+
                 _.For<ITeam>().Use<Chargers>();
             });
 
-            // ITeamCache is marked with [Singleton]
-            container.Model.For<ITeamCache>().Lifecycle
-                .ShouldBeOfType<SingletonLifecycle>();
+            // ITeamCache is marked with [Singleton], so all instances
+            // should be singletons
+            container.Model.For<ITeamCache>()
+                .Instances.Each(instance =>
+                {
+                    instance.Lifecycle
+                        .ShouldBeOfType<SingletonLifecycle>();
+                });
+                
 
             // ITeam is NOT marked with [Singleton]
             container.Model.For<ITeam>().Lifecycle
@@ -41,17 +52,20 @@ namespace StructureMap.Testing.Acceptance
                 .Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
-        [Singleton]
+        // SAMPLE: [Singleton]-usage
+        [Singleton] // ALL Instance's of ITeamCache will be singletons by default
         public interface ITeamCache { }
+
         public class TeamCache : ITeamCache { }
+        public class OtherTeamCache : ITeamCache { }
 
         public interface ITeam { }
 
         public class Chargers : ITeam { }
 
-        [Singleton]
+        [Singleton] // This specific type will be a singleton
         public class Chiefs : ITeam { }
-
+        // ENDSAMPLE
 
 
 
@@ -74,7 +88,7 @@ namespace StructureMap.Testing.Acceptance
         }
 
 
-
+        // SAMPLE: AppSettingAttribute
         public class AppSettingAttribute : StructureMapAttribute
         {
             private readonly string _key;
@@ -98,7 +112,9 @@ namespace StructureMap.Testing.Acceptance
                 instance.Dependencies.AddForConstructorParameter(parameter, value);
             }
         }
+        // ENDSAMPLE
 
+        // SAMPLE: AppSettingTarget
         public class AppSettingTarget
         {
             public string Name { get; set; }
@@ -111,7 +127,9 @@ namespace StructureMap.Testing.Acceptance
                 Name = name;
             }
         }
+        // ENDSAMPLE
 
+        // SAMPLE: using_parameter_and_property_attibutes
         [Test]
         public void using_parameter_and_property_attibutes()
         {
@@ -126,8 +144,19 @@ namespace StructureMap.Testing.Acceptance
 
             target.Name.ShouldBe("Jeremy");
             target.HomeState.ShouldBe("Missouri");
+
+            Debug.WriteLine(container.Model.For<AppSettingTarget>().Default.DescribeBuildPlan());
         }
+        // ENDSAMPLE
     }
+
+    // SAMPLE: using-lifecycle-attributes
+    [AlwaysUnique]
+    public interface IShouldBeUnique { }
+
+    [Singleton] // because the most wonderful thing about Tiggers is that I'm the only one....
+    public class Tigger { }
+    // ENDSAMPLE
 
     
 }

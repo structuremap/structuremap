@@ -14,3 +14,14 @@ The resolution of the lifecycle for any given _Instance_ is to check:
 The lifecycle precedence rules and the syntax for configuring object lifecycles are shown below:
 
 <[sample:lifecycle-rules]>
+
+## Using Attributes
+
+New in StructureMap 4.0 are some simple attributes to mark either a complete _Plugin Type_ or a single _Instance_ as either
+a singleton or using the always unique lifecycle:
+
+The usage is shown below:
+
+<[sample:using-lifecycle-attributes]>
+
+See <[linkto:registration/attributes]> for information about adding your own custom attibutes for other lifecycles.
