@@ -28,8 +28,6 @@ interpreting-exceptions
 
 diagnostics
 
-architecture
-
 best-practices
 
 history
