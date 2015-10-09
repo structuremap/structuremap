@@ -15,6 +15,7 @@ namespace StructureMap.Testing.Bugs
 
         #endregion
 
+        // SAMPLE: injecting-pre-built-object
         [Test]
         public void should_be_able_to_resolve_from_the_generic_family_expression()
         {
@@ -23,5 +24,6 @@ namespace StructureMap.Testing.Bugs
 
             container.GetInstance<IWidget>("mine").ShouldBeTheSameAs(widget);
         }
+        // ENDSAMPLE
     }
 }
