@@ -130,3 +130,5 @@ The last built in registration convention is a mechanism to register all concret
 that implement at least one interface against the first interface that they implement.
 
 <[sample:using-RegisterConcreteTypesAgainstTheFirstInterface]>
+
+
