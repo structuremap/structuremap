@@ -32,8 +32,6 @@ architecture
 
 best-practices
 
-faq
-
 history
 
 release-notes

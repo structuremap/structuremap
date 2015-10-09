@@ -26,7 +26,7 @@ namespace StructureMap.Graph
             _pluginType = pluginType;
 
             resetDefault();
-            _pluginType.GetTypeInfo().ForAttribute<FamilyAttribute>(a => a.Alter(this));
+            _pluginType.GetTypeInfo().ForAttribute<StructureMapAttribute>(a => a.Alter(this));
 
         }
 

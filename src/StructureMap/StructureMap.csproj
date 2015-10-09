@@ -175,7 +175,7 @@
     <Compile Include="Graph\CompositePredicate.cs" />
     <Compile Include="Graph\DefaultConventionScanner.cs" />
     <Compile Include="Graph\EnumerableFamilyPolicy.cs" />
-    <Compile Include="Graph\FamilyAttribute.cs" />
+    <Compile Include="Graph\StructureMapAttribute.cs" />
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />
     <Compile Include="Graph\FirstInterfaceConvention.cs" />
@@ -186,7 +186,6 @@
     <Compile Include="Graph\IAssemblyScanner.cs" />
     <Compile Include="Graph\IFamilyPolicy.cs" />
     <Compile Include="Graph\ImplementationMap.cs" />
-    <Compile Include="Graph\InstanceAttribute.cs" />
     <Compile Include="Graph\IPluginGraph.cs" />
     <Compile Include="Graph\IRegistrationConvention.cs" />
     <Compile Include="Graph\PluginFamily.cs" />

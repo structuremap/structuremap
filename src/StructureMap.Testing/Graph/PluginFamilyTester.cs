@@ -59,7 +59,7 @@ namespace StructureMap.Testing.Graph
         }
 
 
-        public class LoggingFamilyAttribute : FamilyAttribute
+        public class LoggingFamilyAttribute : StructureMapAttribute
         {
             public static bool Called { get; set; }
 

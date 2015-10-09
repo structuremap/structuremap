@@ -44,7 +44,7 @@ namespace StructureMap.Testing.Bugs
         }
     }
 
-    public class PluggableAttribute : InstanceAttribute
+    public class PluggableAttribute : StructureMapAttribute
     {
         public string ConcreteKey { get; set; }
 

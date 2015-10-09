@@ -58,7 +58,7 @@ namespace StructureMap.Pipeline
 
             _pluggedType = concreteType;
 
-            _pluggedType.GetTypeInfo().ForAttribute<InstanceAttribute>(x => x.Alter(this));
+            _pluggedType.GetTypeInfo().ForAttribute<StructureMapAttribute>(x => x.Alter(this));
         }
 
         public ConstructorInstance(Type pluggedType, string name)

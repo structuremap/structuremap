@@ -8,7 +8,7 @@ namespace StructureMap.LegacyAttributeSupport
     /// Used to implicitly mark a class as a Plugin candidate for StructureMap
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class PluggableAttribute : InstanceAttribute
+    public class PluggableAttribute : StructureMapAttribute
     {
         public PluggableAttribute(string concreteKey)
         {

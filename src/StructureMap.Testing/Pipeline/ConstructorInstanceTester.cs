@@ -77,7 +77,7 @@ namespace StructureMap.Testing.Pipeline
         }
     }
 
-    public class TurnOnAttribute : InstanceAttribute
+    public class TurnOnAttribute : StructureMapAttribute
     {
         public override void Alter(IConfiguredInstance instance)
         {
@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Pipeline
         }
     }
 
-    public class InstanceNameAttribute : InstanceAttribute
+    public class InstanceNameAttribute : StructureMapAttribute
     {
         private readonly string _name;
 
