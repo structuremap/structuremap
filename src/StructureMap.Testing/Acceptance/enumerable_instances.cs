@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 
 namespace StructureMap.Testing.Acceptance
 {
@@ -36,6 +37,56 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
         }
 
+        // ENDSAMPLE
+
+        // SAMPLE: explicit-enumeration-behavior
+        [Test]
+        public void override_enumeration_behavior()
+        {
+            var container = new Container(_ =>
+            {
+                _.For<IWidget>().Add<AWidget>();
+                _.For<IWidget>().Add<BWidget>();
+                _.For<IWidget>().Add<CWidget>();
+
+                // Explicit registration should have precedence over the default
+                // behavior
+                _.For<IWidget[]>().Use(new IWidget[] {new DefaultWidget()});
+            });
+
+            container.GetInstance<IWidget[]>()
+                .Single().ShouldBeOfType<DefaultWidget>();
+        }
+        // ENDSAMPLE
+
+
+        // SAMPLE: IWidgetValidator-enumerable
+        public interface IWidgetValidator
+        {
+            IEnumerable<string> Validate(IWidget widget);
+        }
+
+        public class WidgetProcessor
+        {
+            private readonly IEnumerable<IWidgetValidator> _validators;
+
+            public WidgetProcessor(IEnumerable<IWidgetValidator> validators)
+            {
+                _validators = validators;
+            }
+
+            public void Process(IWidget widget)
+            {
+                var validationMessages = _validators.SelectMany(x => x.Validate(widget))
+                    .ToArray();
+
+
+                if (validationMessages.Any())
+                {
+                    // don't process the widget
+                }
+            }
+        }
         // ENDSAMPLE
     }
 }
