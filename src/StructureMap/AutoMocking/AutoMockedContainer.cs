@@ -1,17 +1,23 @@
 using System;
-using System.Linq;
-using System.Reflection;
 using StructureMap.Graph;
-using StructureMap.TypeRules;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap.AutoMocking
 {
+    /// <summary>
+    /// Special version of a StructureMap Container that is typically
+    /// used for "auto mocked" tests
+    /// </summary>
     public class AutoMockedContainer : Container, IFamilyPolicy
     {
         private readonly ServiceLocator _locator;
 
 
+        /// <summary>
+        /// Creates a new AutoMockedContainer using the supplied ServiceLocator
+        /// </summary>
+        /// <param name="locator"></param>
         public AutoMockedContainer(ServiceLocator locator)
         {
             nameContainer(this);
@@ -26,7 +32,7 @@ namespace StructureMap.AutoMocking
             container.Name = "AutoMocking-" + container.Name;
         }
 
-        public PluginFamily Build(Type pluginType)
+        PluginFamily IFamilyPolicy.Build(Type pluginType)
         {
             if (pluginType.IsConcrete())
             {
@@ -44,7 +50,7 @@ namespace StructureMap.AutoMocking
             return family;
         }
 
-        public bool AppliesToHasFamilyChecks
+        bool IFamilyPolicy.AppliesToHasFamilyChecks
         {
             get { return true; }
         }

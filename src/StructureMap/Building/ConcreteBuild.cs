@@ -9,6 +9,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
+#pragma warning disable 1591
     public class ConcreteBuild : IHasSetters, IDependencySource, IBuildPlanVisitable
     {
         private readonly Type _concreteType;
@@ -189,4 +190,5 @@ namespace StructureMap.Building
             return this;
         }
     }
+#pragma warning restore 1591
 }

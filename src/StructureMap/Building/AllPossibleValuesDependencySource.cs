@@ -9,6 +9,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
+#pragma warning disable 1591
     public class AllPossibleValuesDependencySource : IDependencySource
     {
         public static readonly MethodInfo ContextMethod = typeof (IContext).GetMethod("GetAllInstances", new Type[0]);
@@ -83,4 +84,5 @@ namespace StructureMap.Building
             }
         }
     }
+#pragma warning restore 1591
 }

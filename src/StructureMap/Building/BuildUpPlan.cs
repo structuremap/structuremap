@@ -6,6 +6,7 @@ using System.Reflection;
 
 namespace StructureMap.Building
 {
+#pragma warning disable 1591
     public class BuildUpPlan : IHasSetters
     {
         private readonly Type _concreteType;
@@ -103,4 +104,5 @@ namespace StructureMap.Building
             Add(new Setter(property.PropertyType, property, step));
         }
     }
+#pragma warning restore 1591
 }

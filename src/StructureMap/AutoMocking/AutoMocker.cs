@@ -275,12 +275,12 @@ namespace StructureMap.AutoMocking
         }
     }
 
-    public interface IEnumerableBuilder
+    internal interface IEnumerableBuilder
     {
         object ToEnumerable();
     }
 
-    public class ArrayBuilder<T> : IEnumerableBuilder
+    internal class ArrayBuilder<T> : IEnumerableBuilder
     {
         private readonly IContainer _container;
 
@@ -295,7 +295,7 @@ namespace StructureMap.AutoMocking
         }
     }
 
-    public class EnumerableBuilder<T> : IEnumerableBuilder
+    internal class EnumerableBuilder<T> : IEnumerableBuilder
     {
         private readonly IContainer _container;
 

@@ -9,6 +9,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
+#pragma warning disable 1591
     public class BuildPlan : IBuildPlan
     {
         private readonly Type _pluginType;
@@ -157,4 +158,5 @@ namespace StructureMap.Building
         }
 
     }
+#pragma warning restore 1591
 }

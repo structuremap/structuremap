@@ -10,6 +10,11 @@ namespace StructureMap
     // SAMPLE: ConfiguredInstancePolicy
     public abstract class ConfiguredInstancePolicy : IInstancePolicy
     {
+        /// <summary>
+        /// Applies explicit configuration to an IConfiguredInstance
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instance"></param>
         public void Apply(Type pluginType, Instance instance)
         {
             var configured = instance as IConfiguredInstance;
@@ -19,8 +24,12 @@ namespace StructureMap
             }
         }
 
-        // This method is called against any Instance that implements 
-        // the IConfiguredInstance interface
+        /// <summary>
+        /// This method is called against any Instance that implements the
+        /// IConfiguredInstance interface
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instance"></param>
         protected abstract void apply(Type pluginType, IConfiguredInstance instance);
     }
     // ENDSAMPLE

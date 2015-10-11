@@ -7,6 +7,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
+#pragma warning disable 1591
     public class ArrayDependencySource : IDependencySource, IEnumerableDependencySource
     {
         private readonly Type _itemType;
@@ -53,4 +54,5 @@ namespace StructureMap.Building
             visitor.InlineEnumerable(this);
         }
     }
+#pragma warning restore 1591
 }
