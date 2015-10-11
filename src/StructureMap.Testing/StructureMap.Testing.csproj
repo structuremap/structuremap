@@ -319,6 +319,7 @@
     <Compile Include="Examples\BuildUp.cs" />
     <Compile Include="Examples\DependencyInjection.cs" />
     <Compile Include="Examples\FamilyPolicies\custom_policy_for_configuration.cs" />
+    <Compile Include="Examples\LifecycleSamples.cs" />
     <Compile Include="Examples\MultiTenancy\missing_instance_rule_overrides.cs" />
     <Compile Include="Examples\Resolving\OptionalDependencies.cs" />
     <Compile Include="Examples\Resolving\SimpleScenarios.cs" />
