@@ -317,6 +317,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Examples\BuildUp.cs" />
+    <Compile Include="Examples\ChildContainers.cs" />
     <Compile Include="Examples\DependencyInjection.cs" />
     <Compile Include="Examples\FamilyPolicies\custom_policy_for_configuration.cs" />
     <Compile Include="Examples\LifecycleSamples.cs" />

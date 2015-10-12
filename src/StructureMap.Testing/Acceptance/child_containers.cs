@@ -95,5 +95,7 @@ namespace StructureMap.Testing.Acceptance
                 WasDisposed = true;
             }
         }
+
+
     }
 }

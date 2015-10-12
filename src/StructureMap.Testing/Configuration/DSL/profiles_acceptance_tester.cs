@@ -61,26 +61,25 @@ namespace StructureMap.Testing.Configuration.DSL
             profile.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
         }
 
-
+        // SAMPLE: profile-in-action
         [Test]
         public void Add_default_instance_with_concrete_type()
         {
-            var theProfileName = "something";
-
             IContainer container = new Container(registry =>
             {
-                registry.Profile(theProfileName, p =>
+                registry.Profile("something", p =>
                 {
                     p.For<IWidget>().Use<AWidget>();
                     p.For<Rule>().Use<DefaultRule>();
                 });
             });
 
-            var profile = container.GetProfile(theProfileName);
+            var profile = container.GetProfile("something");
 
             profile.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
             profile.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
         }
+        // ENDSAMPLE
 
         [Test]
         public void Add_default_instance_with_concrete_type_with_a_non_transient_lifecycle()
