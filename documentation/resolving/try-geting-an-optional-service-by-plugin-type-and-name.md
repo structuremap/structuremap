@@ -2,6 +2,8 @@
 <!--Url: try-geting-an-optional-service-by-plugin-type-and-name-->
 
 
-TODO(Write some content!)
+Just use the `IContainer.TryGetInstance<T>(name)` or `IContainer.TryGetInstance(Type pluginType, string name)` method as shown below:
+
+<[sample:TryGetInstanceViaNameAndGeneric_ReturnsInstance_WhenTypeFound]>
 
 
