@@ -17,13 +17,25 @@ namespace StructureMap.Testing.Acceptance
 
             public bool WasDisposed { get; set; }
         }
+        // ENDSAMPLE
 
+        // SAMPLE: singleton-in-action
         [Test]
         public void singletons_are_disposed_when_the_container_is_disposed()
         {
-            var container = new Container(_ => { _.ForSingletonOf<DisposableSingleton>(); });
+            var container = new Container(_ =>
+            {
+                _.ForSingletonOf<DisposableSingleton>();
+            });
 
+            // As a singleton-scoped object, every request for DisposableSingleton
+            // will return the same object
             var singleton = container.GetInstance<DisposableSingleton>();
+            singleton.ShouldBeSameAs(container.GetInstance<DisposableSingleton>());
+            singleton.ShouldBeSameAs(container.GetInstance<DisposableSingleton>());
+            singleton.ShouldBeSameAs(container.GetInstance<DisposableSingleton>());
+            singleton.ShouldBeSameAs(container.GetInstance<DisposableSingleton>());
+
             singleton.WasDisposed.ShouldBeFalse();
 
             // now, dispose the Container
@@ -32,7 +44,6 @@ namespace StructureMap.Testing.Acceptance
             // the SingletonThing scoped object should be disposed
             singleton.WasDisposed.ShouldBeTrue();
         }
-
         // ENDSAMPLE
 
         [Test]

@@ -6,7 +6,7 @@ using StructureMap.Pipeline;
 namespace StructureMap
 {
     // Tested w/ integration tests through Container.Model
-    public class GraphEjector : IGraphEjector
+    internal class GraphEjector : IGraphEjector
     {
         private readonly PluginGraph _pluginGraph;
         private readonly ILifecycleContext _lifecycles;

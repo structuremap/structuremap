@@ -29,6 +29,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DocumentationFile>bin\Debug\StructureMap.xml</DocumentationFile>
     <SignAssembly>false</SignAssembly>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'NET45WP8' ">
     <DebugType>pdbonly</DebugType>

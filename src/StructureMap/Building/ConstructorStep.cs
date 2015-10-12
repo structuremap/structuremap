@@ -7,6 +7,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
+#pragma warning disable 1591
     public class ConstructorStep
     {
         private readonly ConstructorInfo _constructor;
@@ -117,4 +118,5 @@ namespace StructureMap.Building
             return Description();
         }
     }
+#pragma warning restore 1591
 }

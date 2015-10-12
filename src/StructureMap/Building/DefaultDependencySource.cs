@@ -7,6 +7,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Building
 {
+#pragma warning disable 1591
     public class DefaultDependencySource : IDependencySource
     {
         private readonly Type _dependencyType;
@@ -46,4 +47,5 @@ namespace StructureMap.Building
             return Expression.Call(context, ContextMethod.MakeGenericMethod(_dependencyType));
         }
     }
+#pragma warning restore 1591
 }
