@@ -9,6 +9,7 @@ namespace StructureMap.Testing.Acceptance
     [TestFixture]
     public class transient_tracking_mode_specs
     {
+        // SAMPLE: transient_tracking_mode
         [Test]
         public void release_transient_created_by_root_container()
         {
@@ -52,6 +53,7 @@ namespace StructureMap.Testing.Acceptance
             transient1.WasDisposed.ShouldBeTrue();
             transient2.WasDisposed.ShouldBeTrue();
         }
+        // ENDSAMPLE
 
         [Test]
         public void tracks_transients_built_as_dependencies_in_graph()

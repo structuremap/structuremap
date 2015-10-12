@@ -16,10 +16,7 @@ causes some confusion with ASP.Net HTTP scoping.  The easiest way to think of _T
 call to `Container.GetInstance()` (or any other object resolution method on the `IContainer` interface). _Transient_ objects resolved from a nested container, _Transient's_ are scoped to the lifecycle
 of the nested container itself. See <[linkto:the-container/nested-containers]> for more information.
 
-<div class="alert alert-info" role="alert">Transient lifecycle objects are <b>only</b> tracked and disposed if created by nested containers. If you resolve a transient object from the main application container,
-it will not track the object created. While that behavior avoids the manual <i>Release()</i> method and potential memory leak found in other IoC containers like Windsor, it
-puts the onus for disposing those objects on the user. The StructureMap team strongly recommends using nested containers for short
-lived operations if disposing transient objects created by the Container is important.</div>
+**StructureMap's behavior for transient objects that implement `IDisposable` changed in 4.0 to introduce an "opt-in" tracking mode.** Please see <[linkto:the-container/disposing]> for the details.
 
 The following unit test demonstrates how _Transient_ lifecycles work in both root and nested containers. 
 

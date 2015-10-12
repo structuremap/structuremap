@@ -15,7 +15,7 @@ The easiest way to explain a child container is to just show it in action:
 <[sample:show_a_child_container_in_action]>
 
 _Child Container's_ are a mechanism to make a completely new `Container` that can override some of the parent `Container's` registrations but still
-fall back to the parent `Container` to fulfil any request that is not explicitly configured to the child container. The behavior of a child container
+fall back to the parent `Container` to fulfill any request that is not explicitly configured to the child container. The behavior of a child container
 in how it resolves services and allows you to override the parent container is very similar to a <[linkto:the-container/nested-containers;title=nested container]>, but the crucial difference is in how the two concepts handle lifecycles and <[linkto:the-container/disposing;title=calling IDisposable.Dispose()]>.
 
 A couple salient facts about child containers that **should** (knock on wood) dispel the confusion about when and why to use them versus a nested container:
