@@ -4,7 +4,8 @@
 Out of the box, the core StructureMap assembly supports these lifecycles:
 
 * Transient -- The default lifecycle.  A new object is created for each logical request to resolve an object graph from the container.  
-* Singleton -- Only one object instance will be created for the main Container 
+* Singleton -- Only one object instance will be created for the container and any children or nested containers created by that container 
+* ContainerScoped -- Only one object instance will be created for unique root, child, or nested container
 * AlwaysUnique -- A new object instance is created every time, even within the same object graph
 * ThreadLocal -- Only one object instance will be created for the currently executing Thread
 
