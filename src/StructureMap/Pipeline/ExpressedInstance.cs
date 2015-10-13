@@ -48,6 +48,16 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
+        /// Makes this and only this Instance scoped to the Container
+        /// </summary>
+        /// <returns></returns>
+        public T ContainerScoped()
+        {
+            SetLifecycleTo<ContainerLifecycle>();
+            return thisInstance;
+        }
+
+        /// <summary>
         /// Makes this and only this Instance "always unique"
         /// </summary>
         /// <returns></returns>

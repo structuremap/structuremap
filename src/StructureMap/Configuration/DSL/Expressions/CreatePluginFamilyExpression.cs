@@ -270,6 +270,14 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
+        /// Convenience method to mark a PluginFamily as Container scoped
+        /// </summary>
+        public CreatePluginFamilyExpression<TPluginType> ContainerScoped()
+        {
+            return lifecycleIs(Lifecycles.Container);
+        }
+
+        /// <summary>
         /// Convenience method to mark a PluginFamily as a Transient
         /// </summary>
         public CreatePluginFamilyExpression<TPluginType> Transient()

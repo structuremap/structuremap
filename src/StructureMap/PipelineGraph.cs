@@ -133,12 +133,9 @@ namespace StructureMap
             {
                 _singletons.DisposeAndClear();
             }
+
+            ContainerCache.DisposeAndClear();
             
-            
-            if (Role == ContainerRole.ProfileOrChild)
-            {
-                ContainerCache.DisposeAndClear();
-            }
 
             _transients.DisposeAndClear();
             _pluginGraph.SafeDispose();

@@ -175,6 +175,7 @@
     <Compile Include="Acceptance\child_containers.cs" />
     <Compile Include="Acceptance\clear_all.cs" />
     <Compile Include="Acceptance\constructor_selection.cs" />
+    <Compile Include="Acceptance\container_scoping.cs" />
     <Compile Include="Acceptance\contextual_building.cs" />
     <Compile Include="Acceptance\custom_policies.cs" />
     <Compile Include="Acceptance\custom_registration_convention.cs" />

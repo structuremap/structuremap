@@ -51,6 +51,17 @@ implement the `IDisposable` interface:
 
 <[sample:transient-are-shared-within-a-graph]>
 
+
+## ContainerScoped
+
+New in StructureMap 4.0 is the _ContainerScoped_ lifecycle that was designed specifically for compliance with the new ASP.Net DNX adapter model.
+_ContainerScoped_ in this case means that a registration will be built once per `Container`, such that the root container, any child or profile
+container, and every single nested container will build its own object instance.
+
+The acceptance test for `ContainerScoped` is shown below:
+
+<[sample:container-scoped-in-action]>
+
 ## ThreadLocal
 
 The ThreadLocalStorage based lifecycle is seldom used, but the easiest example of using it and explanation is the integration test:

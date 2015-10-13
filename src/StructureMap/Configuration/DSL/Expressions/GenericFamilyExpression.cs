@@ -218,6 +218,15 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
+        /// Convenience method to mark a PluginFamily as a Singleton
+        /// </summary>
+        /// <returns></returns>
+        public GenericFamilyExpression ContainerScoped()
+        {
+            return LifecycleIs(Lifecycles.Container);
+        }
+
+        /// <summary>
         /// Applies a decorator type to all Instances that return a type that can be cast to this PluginType
         /// </summary>
         /// <param name="decoratorType"></param>
