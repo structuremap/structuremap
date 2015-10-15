@@ -65,7 +65,7 @@ See <linkto:object-lifecycle]> for more information on supported object lifecycl
 ## Overriding Services from the Parent
 
 A nested container is a new Container object that still retains access to the parent container that created it so that it can
-efficiently share registrations, policies, and cached _build plan's_. You can, however, register register services into the nested container that override the parent container.
+efficiently share registrations, policies, and cached _build plan's_. You can, however, register services into the nested container that override the parent container.
 
 <div class="alert alert-info" role="alert">There is no need to recreate registrations from the parent container
 into the nested container and doing so makes StructureMap work less efficiently.</div>
