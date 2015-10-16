@@ -56,6 +56,11 @@ namespace StructureMap.Testing.Building
         {
         }
 
+        public object BuildUnique(Type pluginType, Instance instance)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Describe()
         {
             throw new NotImplementedException();

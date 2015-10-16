@@ -84,7 +84,7 @@ namespace StructureMap
             
             if (lifecycle is UniquePerRequestLifecycle)
             {
-                return _resolver.BuildNewInSession(pluginType, instance);
+                return _resolver.BuildUnique(pluginType, instance);
             }
 
             var key = instance.InstanceKey(pluginType);

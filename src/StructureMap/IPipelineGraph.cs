@@ -31,5 +31,6 @@ namespace StructureMap
 
         void Configure(Action<ConfigurationExpression> configure);
         void ValidateValidNestedScoping();
+        void TrackDisposable(IDisposable disposable);
     }
 }

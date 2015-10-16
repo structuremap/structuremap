@@ -45,6 +45,7 @@ namespace StructureMap
         private readonly ITransientTracking _transients;
         private readonly Profiles _profiles;
         private bool _wasDisposed;
+        private readonly IList<IDisposable> _trackedDisposables = new List<IDisposable>(); 
 
         public PipelineGraph(PluginGraph pluginGraph, IInstanceGraph instances, IPipelineGraph root, IObjectCache singletons, ITransientTracking transients)
         {
@@ -141,6 +142,8 @@ namespace StructureMap
             _pluginGraph.SafeDispose();
 
             _profiles.AllProfiles().Each(x => x.Dispose());
+
+            _trackedDisposables.Each(x => x.Dispose());
         }
 
         public void RegisterContainer(IContainer container)
@@ -214,6 +217,11 @@ namespace StructureMap
             message += string.Join("\n", descriptions);
 
             throw new InvalidOperationException(message);
+        }
+
+        public void TrackDisposable(IDisposable disposable)
+        {
+            _trackedDisposables.Add(disposable);
         }
 
         public ILifecycle DetermineLifecycle(Type pluginType, Instance instance)

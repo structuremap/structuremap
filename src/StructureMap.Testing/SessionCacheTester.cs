@@ -50,8 +50,8 @@ namespace StructureMap.Testing
             var foo = new Foo();
             var foo2 = new Foo();
 
-            theResolver.Stub(x => x.BuildNewInSession(typeof (IFoo), instance)).Return(foo).Repeat.Once();
-            theResolver.Stub(x => x.BuildNewInSession(typeof (IFoo), instance)).Return(foo2).Repeat.Once();
+            theResolver.Stub(x => x.BuildUnique(typeof (IFoo), instance)).Return(foo).Repeat.Once();
+            theResolver.Stub(x => x.BuildUnique(typeof (IFoo), instance)).Return(foo2).Repeat.Once();
 
             theCache.GetObject(typeof (IFoo), instance, new UniquePerRequestLifecycle()).ShouldBeTheSameAs(foo);
             theCache.GetObject(typeof (IFoo), instance, new UniquePerRequestLifecycle()).ShouldBeTheSameAs(foo2);

@@ -114,6 +114,18 @@ namespace StructureMap
             return plan.Build(this, this);
         }
 
+
+        public object BuildUnique(Type pluginType, Instance instance)
+        {
+            var @object = BuildNewInSession(pluginType, instance);
+            if (@object is IDisposable && _pipelineGraph.Role == ContainerRole.Nested)
+            {
+                _pipelineGraph.TrackDisposable((IDisposable) @object);
+            }
+
+            return @object;
+        }
+
         public object BuildNewInOriginalContext(Type pluginType, Instance instance)
         {
             var session = new BuildSession(pipelineGraph.Root(), requestedName: instance.Name);
@@ -186,6 +198,7 @@ namespace StructureMap
                 _instances.Pop();
             }
         }
+
 
         public Type ParentType
         {

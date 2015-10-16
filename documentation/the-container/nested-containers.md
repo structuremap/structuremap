@@ -53,7 +53,7 @@ In the context of a Nested Container however, the `Transient` scoping now applie
 
 <[sample:nested-transients]>
 
-`Instance's` scoped to anything but `Transient` are resolved as normal, but **through the parent container**:
+`Instance's` scoped to anything but `Transient` or `AlwaysUnique` are resolved as normal, but **through the parent container**:
 
 <[sample:nested-singletons]>
 

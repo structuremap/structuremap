@@ -141,5 +141,10 @@ namespace StructureMap.Testing.Pipeline
         {
             throw new NotImplementedException();
         }
+
+        public object BuildUnique(Type pluginType, Instance instance)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

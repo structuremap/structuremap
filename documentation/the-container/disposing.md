@@ -15,7 +15,7 @@ from a running `Container`.
 
 ## Nested Containers
 
-As discussed in <[linkto:the-container/nested-containers]>, any transient or container-scoped object that implements `IDisposable` and is created
+As discussed in <[linkto:the-container/nested-containers]>, any transient, _AlwaysUnique_ (as of 4.0), or container-scoped object that implements `IDisposable` and is created
 by a nested container will be disposed as the nested container is disposed:
 
 <[sample:nested-disposal]>

@@ -13,5 +13,6 @@ namespace StructureMap
 
         void Push(Instance instance);
         void Pop();
+        object BuildUnique(Type pluginType, Instance instance);
     }
 }
