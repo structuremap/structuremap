@@ -1,31 +1,45 @@
-using System;
 using Castle.DynamicProxy;
+using StructureMap.Pipeline;
+using System.Linq;
 
 namespace StructureMap.AutoFactory
 {
     public class FactoryInterceptor : IInterceptor
     {
-        private readonly IContext _context;
+        private readonly IContainer _container;
+        private readonly IAutoFactoryConventionProvider _conventionProvider;
 
-        public FactoryInterceptor(IContext context)
+        public FactoryInterceptor(IContainer container, IAutoFactoryConventionProvider conventionProvider)
         {
-            _context = context;
+            _container = container;
+            _conventionProvider = conventionProvider;
         }
 
         public void Intercept(IInvocation invocation)
         {
-            Type pluginType;
+            var methodDefinition = _conventionProvider.GetMethodDefinition(invocation.Method, invocation.Arguments);
 
-            if ((invocation.Arguments.Length > 0) && (invocation.Arguments[0] is Type))
+            if (methodDefinition == null)
             {
-                pluginType = (Type) invocation.Arguments[0];
-            }
-            else
-            {
-                pluginType = invocation.Method.ReturnType;                
+                return;
             }
 
-            invocation.ReturnValue = _context.GetInstance(pluginType);
+            switch (methodDefinition.MethodType)
+            {
+                case AutoFactoryMethodType.GetInstance:
+                    var explicitArguments = methodDefinition.ExplicitArguments ?? new ExplicitArguments();
+                    invocation.ReturnValue = !string.IsNullOrEmpty(methodDefinition.InstanceName)
+                        ? _container.TryGetInstance(methodDefinition.InstanceType, explicitArguments, methodDefinition.InstanceName)
+                        : _container.TryGetInstance(methodDefinition.InstanceType, explicitArguments);
+                    break;
+
+                case AutoFactoryMethodType.GetNames:
+                    invocation.ReturnValue = _container.Model.AllInstances
+                        .Where(x => x.PluginType == methodDefinition.InstanceType)
+                        .Select(x => x.Instance.HasExplicitName() ? x.Name : string.Empty)
+                        .ToList();
+                    break;
+            }
         }
     }
 }

@@ -6,13 +6,12 @@ using StructureMap.TypeRules;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace StructureMap.Pipeline
 {
     public abstract class Instance : HasLifecycle, IDescribed
     {
-        internal readonly IList<IInstancePolicy> AppliedPolicies = new List<IInstancePolicy>(); 
+        internal readonly IList<IInstancePolicy> AppliedPolicies = new List<IInstancePolicy>();
 
         private readonly string _originalName;
         private readonly int _hashCode;
@@ -93,7 +92,7 @@ namespace StructureMap.Pipeline
         /// Does this Instance have a user-defined name?
         /// </summary>
         /// <returns></returns>
-        public bool HasExplicitName()
+        public virtual bool HasExplicitName()
         {
             return _name != _originalName;
         }
