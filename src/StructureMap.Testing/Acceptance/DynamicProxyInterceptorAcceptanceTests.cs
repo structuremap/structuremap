@@ -313,6 +313,478 @@ namespace StructureMap.Testing.Acceptance
             await service.DoNothingAsync().ConfigureAwait(false);
         }
 
+        [TestCase(-13)]
+        public void CallSyncMethodWithFailingSyncInterceptor(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new ValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            Should.Throw<ArgumentException>(
+                () => { service.GetSquareRoot(value); }
+            );
+        }
+
+        [TestCase(-13)]
+        public void CallSyncMethodWithFailingAsyncInterceptor(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new AsyncValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            Should.Throw<ArgumentException>(
+                () => { service.GetSquareRoot(value); }
+            );
+        }
+
+        [TestCase(-13)]
+        public void CallAsyncMethodWithFailingSyncInterceptor(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new ValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            var task = service.GetSquareRootAsync(value);
+
+            Should.Throw<ArgumentException>(() => task);
+        }
+
+        [TestCase(-13)]
+        public void CallAsyncMethodWithFailingAsyncInterceptor(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new AsyncValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            var task = service.GetSquareRootAsync(value);
+
+            Should.Throw<ArgumentException>(() => task);
+        }
+
+        [TestCase(-13)]
+        public void CallSyncMethodWithThrowingSyncInterceptor(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new ThrowingValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            Should.Throw<ArgumentException>(
+                () => { service.GetSquareRoot(value); }
+            );
+        }
+
+        [TestCase(-13)]
+        public void CallSyncMethodWithThrowingAsyncInterceptor(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new AsyncThrowingValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            Should.Throw<ArgumentException>(
+                () => { service.GetSquareRoot(value); }
+            );
+        }
+
+        [TestCase(-13)]
+        public void CallAsyncMethodWithThrowingSyncInterceptor(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new ThrowingValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            var task = service.GetSquareRootAsync(value);
+
+            Should.Throw<ArgumentException>(() => task);
+        }
+
+        [TestCase(-13)]
+        public void CallAsyncMethodWithThrowingAsyncInterceptor(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new AsyncThrowingValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            var task = service.GetSquareRootAsync(value);
+
+            Should.Throw<ArgumentException>(() => task);
+        }
+
+        [TestCase(-13)]
+        public void CallSyncMethodWithSyncThenFailingSyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new CachingInterceptor(),
+                        new ValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            Should.Throw<ArgumentException>(
+                () => { service.GetSquareRoot(value); }
+            );
+        }
+
+        [TestCase(-13)]
+        public void CallSyncMethodWithSyncThenFailingAsyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new CachingInterceptor(),
+                        new AsyncValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            Should.Throw<ArgumentException>(
+                () => { service.GetSquareRoot(value); }
+            );
+        }
+
+        [TestCase(-13)]
+        public void CallSyncMethodWithAsyncThenFailingSyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new AsyncCachingInterceptor(),
+                        new ValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            Should.Throw<ArgumentException>(
+                () => { service.GetSquareRoot(value); }
+            );
+        }
+
+        [TestCase(-13)]
+        public void CallSyncMethodWithAsyncThenFailingAsyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new AsyncCachingInterceptor(),
+                        new AsyncValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            Should.Throw<ArgumentException>(
+                () => { service.GetSquareRoot(value); }
+            );
+        }
+
+        [TestCase(-13)]
+        public void CallAsyncMethodWithSyncThenFailingSyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new CachingInterceptor(),
+                        new ValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            var task = service.GetSquareRootAsync(value);
+
+            Should.Throw<ArgumentException>(() => task);
+        }
+
+        [TestCase(-13)]
+        public void CallAsyncMethodWithSyncThenFailingAsyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new CachingInterceptor(),
+                        new AsyncValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            var task = service.GetSquareRootAsync(value);
+
+            Should.Throw<ArgumentException>(() => task);
+        }
+
+        [TestCase(-13)]
+        public void CallAsyncMethodWithAsyncThenFailingSyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new AsyncCachingInterceptor(),
+                        new ValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            var task = service.GetSquareRootAsync(value);
+
+            Should.Throw<ArgumentException>(() => task);
+        }
+
+        [TestCase(-13)]
+        public void CallAsyncMethodWithAsyncThenFailingAsyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new AsyncCachingInterceptor(),
+                        new AsyncValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            var task = service.GetSquareRootAsync(value);
+
+            Should.Throw<ArgumentException>(() => task);
+        }
+
+        [TestCase(-13)]
+        public void CallSyncMethodWithSyncThenThrowingSyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new CachingInterceptor(),
+                        new ThrowingValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            Should.Throw<ArgumentException>(
+                () => { service.GetSquareRoot(value); }
+            );
+        }
+
+        [TestCase(-13)]
+        public void CallSyncMethodWithSyncThenThrowingAsyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new CachingInterceptor(),
+                        new AsyncThrowingValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            Should.Throw<ArgumentException>(
+                () => { service.GetSquareRoot(value); }
+            );
+        }
+
+        [TestCase(-13)]
+        public void CallSyncMethodWithAsyncThenThrowingSyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new AsyncCachingInterceptor(),
+                        new ThrowingValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            Should.Throw<ArgumentException>(
+                () => { service.GetSquareRoot(value); }
+            );
+        }
+
+        [TestCase(-13)]
+        public void CallSyncMethodWithAsyncThenThrowingAsyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new AsyncCachingInterceptor(),
+                        new AsyncThrowingValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            Should.Throw<ArgumentException>(
+                () => { service.GetSquareRoot(value); }
+            );
+        }
+
+        [TestCase(-13)]
+        public void CallAsyncMethodWithSyncThenThrowingSyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new CachingInterceptor(),
+                        new ThrowingValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            var task = service.GetSquareRootAsync(value);
+
+            Should.Throw<ArgumentException>(() => task);
+        }
+
+        [TestCase(-13)]
+        public void CallAsyncMethodWithSyncThenThrowingAsyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new CachingInterceptor(),
+                        new AsyncThrowingValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            var task = service.GetSquareRootAsync(value);
+
+            Should.Throw<ArgumentException>(() => task);
+        }
+
+        [TestCase(-13)]
+        public void CallAsyncMethodWithAsyncThenThrowingSyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new AsyncCachingInterceptor(),
+                        new ThrowingValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            var task = service.GetSquareRootAsync(value);
+
+            Should.Throw<ArgumentException>(() => task);
+        }
+
+        [TestCase(-13)]
+        public void CallAsyncMethodWithAsyncThenThrowingAsyncInterceptors(int value)
+        {
+            var container = new Container(x =>
+            {
+                x.For<IMathService>().Use<MathService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IMathService>(new IInterceptionBehavior[]
+                    {
+                        new AsyncCachingInterceptor(),
+                        new AsyncThrowingValidationInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IMathService>();
+
+            var task = service.GetSquareRootAsync(value);
+
+            Should.Throw<ArgumentException>(() => task);
+        }
+
         [Test]
         public void UseInterceptionPolicy()
         {
@@ -346,6 +818,64 @@ namespace StructureMap.Testing.Acceptance
             {
                 await Task.Delay(10).ConfigureAwait(false);
                 return (int)Math.Sqrt(value);
+            }
+        }
+
+        private class ValidationInterceptor : ISyncInterceptionBehavior
+        {
+            public IMethodInvocationResult Intercept(ISyncMethodInvocation methodInvocation)
+            {
+                var argument = methodInvocation.GetArgument("value");
+                var argumentValue = (int)argument.Value;
+                if (argumentValue < 0)
+                {
+                    return methodInvocation.CreateExceptionResult(new ArgumentException());
+                }
+                return methodInvocation.InvokeNext();
+            }
+        }
+
+        private class AsyncValidationInterceptor : IAsyncInterceptionBehavior
+        {
+            public async Task<IMethodInvocationResult> InterceptAsync(IAsyncMethodInvocation methodInvocation)
+            {
+                var argument = methodInvocation.GetArgument("value");
+                var argumentValue = (int)argument.Value;
+                if (argumentValue < 0)
+                {
+                    return methodInvocation.CreateExceptionResult(new ArgumentException());
+                }
+
+                return await methodInvocation.InvokeNextAsync().ConfigureAwait(false);
+            }
+        }
+
+        private class ThrowingValidationInterceptor : ISyncInterceptionBehavior
+        {
+            public IMethodInvocationResult Intercept(ISyncMethodInvocation methodInvocation)
+            {
+                var argument = methodInvocation.GetArgument("value");
+                var argumentValue = (int)argument.Value;
+                if (argumentValue < 0)
+                {
+                    throw new ArgumentException();
+                }
+                return methodInvocation.InvokeNext();
+            }
+        }
+
+        private class AsyncThrowingValidationInterceptor : IAsyncInterceptionBehavior
+        {
+            public async Task<IMethodInvocationResult> InterceptAsync(IAsyncMethodInvocation methodInvocation)
+            {
+                var argument = methodInvocation.GetArgument("value");
+                var argumentValue = (int)argument.Value;
+                if (argumentValue < 0)
+                {
+                    throw new ArgumentException();
+                }
+
+                return await methodInvocation.InvokeNextAsync().ConfigureAwait(false);
             }
         }
 

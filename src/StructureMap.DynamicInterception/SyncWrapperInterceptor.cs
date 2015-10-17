@@ -1,5 +1,5 @@
 ﻿using Castle.DynamicProxy;
-using System.Threading.Tasks;
+using System;
 
 namespace StructureMap.DynamicInterception
 {
@@ -15,36 +15,28 @@ namespace StructureMap.DynamicInterception
         public void Intercept(IInvocation invocation)
         {
             var methodInvocation = new MethodInvocation(invocation);
-            var methodInvocationResult = _interceptionBehavior.Intercept(methodInvocation);
-            if (!methodInvocationResult.Successful)
+            IMethodInvocationResult methodInvocationResult;
+            try
             {
-                throw methodInvocationResult.Exception;
+                methodInvocationResult = _interceptionBehavior.Intercept(methodInvocation);
+            }
+            catch (Exception e)
+            {
+                methodInvocationResult = methodInvocation.CreateExceptionResult(e);
             }
 
             if (ReflectionHelper.IsTask(methodInvocation.MethodInfo.ReturnType))
             {
                 var actualType = methodInvocation.ActualReturnType;
-                if (actualType == typeof(void))
-                {
-                    invocation.ReturnValue = Task.FromResult(true);
-                }
-                else
-                {
-                    var task = GetType().CallPrivateStaticGenericMethod("wrapInTask", actualType,
-                        methodInvocationResult.ReturnValue);
 
-                    invocation.ReturnValue = task;
-                }
+                invocation.ReturnValue = actualType == typeof(void)
+                    ? ReflectionHelper.ConvertInvocationResultToTask(methodInvocationResult)
+                    : ReflectionHelper.ConvertInvocationResultToTask(actualType, methodInvocationResult);
             }
             else
             {
-                invocation.ReturnValue = methodInvocationResult.ReturnValue;
+                invocation.ReturnValue = methodInvocationResult.GetReturnValueOrThrow();
             }
-        }
-
-        private static object wrapInTask<T>(object value)
-        {
-            return Task.FromResult<T>((T)value);
         }
     }
 }

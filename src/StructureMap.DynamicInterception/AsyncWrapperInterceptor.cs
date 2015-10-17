@@ -1,5 +1,4 @@
 ﻿using Castle.DynamicProxy;
-using System.Threading.Tasks;
 
 namespace StructureMap.DynamicInterception
 {
@@ -19,47 +18,18 @@ namespace StructureMap.DynamicInterception
 
             if (!ReflectionHelper.IsTask(methodInvocation.MethodInfo.ReturnType))
             {
-                var methodInvocationResult = methodInvocationResultTask.Result;
-                if (!methodInvocationResult.Successful)
-                {
-                    throw methodInvocationResult.Exception;
-                }
+                var methodInvocationResult = ReflectionHelper.GetTaskResult(methodInvocationResultTask);
 
-                invocation.ReturnValue = methodInvocationResult.ReturnValue;
+                invocation.ReturnValue = methodInvocationResult.GetReturnValueOrThrow();
             }
             else
             {
                 var actualReturnType = methodInvocation.ActualReturnType;
-                if (actualReturnType == typeof(void))
-                {
-                    invocation.ReturnValue = interceptNonGeneric(methodInvocationResultTask);
-                }
-                else
-                {
-                    invocation.ReturnValue = GetType().CallPrivateStaticGenericMethod("interceptGeneric",
-                        actualReturnType, methodInvocationResultTask);
-                }
+                invocation.ReturnValue = actualReturnType == typeof(void)
+                    ? ReflectionHelper.ConvertInvocationResultToTask(methodInvocationResultTask)
+                    : ReflectionHelper.ConvertInvocationResultToTask(actualReturnType,
+                        methodInvocationResultTask);
             }
-        }
-
-        private static async Task interceptNonGeneric(Task<IMethodInvocationResult> methodInvocationResultTask)
-        {
-            var methodInvocationResult = await methodInvocationResultTask.ConfigureAwait(false);
-            if (!methodInvocationResult.Successful)
-            {
-                throw methodInvocationResult.Exception;
-            }
-        }
-
-        private static async Task<T> interceptGeneric<T>(Task<IMethodInvocationResult> methodInvocationResultTask)
-        {
-            var methodInvocationResult = await methodInvocationResultTask.ConfigureAwait(false);
-            if (!methodInvocationResult.Successful)
-            {
-                throw methodInvocationResult.Exception;
-            }
-
-            return (T)methodInvocationResult.ReturnValue;
         }
     }
 }

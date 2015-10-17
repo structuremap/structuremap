@@ -9,5 +9,7 @@ namespace StructureMap.DynamicInterception
         object ReturnValue { get; }
 
         Exception Exception { get; }
+
+        object GetReturnValueOrThrow();
     }
 }

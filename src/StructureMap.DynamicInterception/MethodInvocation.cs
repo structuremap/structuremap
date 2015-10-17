@@ -59,7 +59,8 @@ namespace StructureMap.DynamicInterception
 
                 if (ReflectionHelper.IsGenericTask(returnType))
                 {
-                    var result = GetType().CallPrivateStaticGenericMethod("getTaskResult", ReflectionHelper.GetTypeFromGenericTask(returnType), _invocation.ReturnValue);
+                    var result = ReflectionHelper.GetTaskResult(ReflectionHelper.GetTypeFromGenericTask(returnType),
+                        _invocation.ReturnValue);
 
                     return CreateResult(result);
                 }
@@ -70,11 +71,6 @@ namespace StructureMap.DynamicInterception
             {
                 return CreateExceptionResult(e);
             }
-        }
-
-        private static T getTaskResult<T>(Task<T> task)
-        {
-            return task.Result;
         }
 
         public async Task<IMethodInvocationResult> InvokeNextAsync()
@@ -93,14 +89,12 @@ namespace StructureMap.DynamicInterception
                 if (ReflectionHelper.IsNonGenericTask(returnType))
                 {
                     await ((Task)_invocation.ReturnValue).ConfigureAwait(false);
-                    return CreateResult(true);
+                    return CreateResult(null);
                 }
 
                 if (ReflectionHelper.IsGenericTask(returnType))
                 {
-                    var task = (Task<object>)GetType().CallPrivateStaticGenericMethod("toObjectTask", ReflectionHelper.GetTypeFromGenericTask(returnType), _invocation.ReturnValue);
-
-                    var result = await task.ConfigureAwait(false);
+                    var result = await ReflectionHelper.GetTaskResultAsync(ReflectionHelper.GetTypeFromGenericTask(returnType), _invocation.ReturnValue).ConfigureAwait(false);
                     return CreateResult(result);
                 }
 
@@ -110,11 +104,6 @@ namespace StructureMap.DynamicInterception
             {
                 return CreateExceptionResult(e);
             }
-        }
-
-        private static async Task<object> toObjectTask<T>(object task)
-        {
-            return await ((Task<T>)task).ConfigureAwait(false);
         }
 
         public IMethodInvocationResult CreateResult(object value)
