@@ -2,6 +2,8 @@ using Castle.DynamicProxy;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.AutoFactory;
+using StructureMap.Pipeline;
+using System;
 
 namespace StructureMap.Testing.AutoFactories
 {
@@ -32,7 +34,7 @@ namespace StructureMap.Testing.AutoFactories
             var proxyGenerator = new ProxyGenerator();
             var context = Stub<IContext>();
 
-            var proxyFactory = new ProxyFactory<IFactory>(proxyGenerator, context);
+            var proxyFactory = new ProxyFactory<IFactory>(proxyGenerator, context, new DefaultAutoFactoryConventionProvider());
 
             var factory = proxyFactory.Create();
 
@@ -44,12 +46,14 @@ namespace StructureMap.Testing.AutoFactories
         {
             var proxyGenerator = new ProxyGenerator();
             var context = Stub<IContext>();
+            var container = Stub<IContainer>();
 
             var service = new Service();
 
-            context.Stub(x => x.GetInstance(typeof (IService))).Return(service);
+            context.Stub(x => x.GetInstance<IContainer>()).Return(container);
+            container.Stub(x => x.TryGetInstance(Arg<Type>.Is.Same(typeof(IService)), Arg<ExplicitArguments>.Is.Anything)).Return(service);
 
-            var proxyFactory = new ProxyFactory<IFactory>(proxyGenerator, context);
+            var proxyFactory = new ProxyFactory<IFactory>(proxyGenerator, context, new DefaultAutoFactoryConventionProvider());
 
             var factory = proxyFactory.Create();
 

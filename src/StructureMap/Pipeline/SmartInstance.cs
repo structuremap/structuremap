@@ -1,13 +1,12 @@
-using System;
-using System.Linq.Expressions;
-using System.Reflection;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.TypeRules;
+using System;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace StructureMap.Pipeline
 {
-
     public class SmartInstance<T> : SmartInstance<T, T>
     {
         public SmartInstance(Expression<Func<T>> constructorSelection = null) : base(constructorSelection)
@@ -22,7 +21,7 @@ namespace StructureMap.Pipeline
     /// <typeparam name="TPluginType">The "PluginType" that this instance satisfies</typeparam>
     public class SmartInstance<T, TPluginType> : ExpressedInstance<SmartInstance<T, TPluginType>, T, TPluginType>, IConfiguredInstance, IOverridableInstance where T : TPluginType
     {
-        private readonly ConstructorInstance _inner = new ConstructorInstance(typeof (T));
+        private readonly ConstructorInstance _inner = new ConstructorInstance(typeof(T));
 
         public SmartInstance(Expression<Func<T>> constructorSelection = null)
         {
@@ -61,6 +60,11 @@ namespace StructureMap.Pipeline
             }
         }
 
+        public override bool HasExplicitName()
+        {
+            return _inner.HasExplicitName();
+        }
+
         /// <summary>
         ///     Set simple setter properties
         /// </summary>
@@ -71,7 +75,6 @@ namespace StructureMap.Pipeline
             AddInterceptor(InterceptorFactory.ForAction("Setting property", action));
             return this;
         }
-
 
         /// <summary>
         ///     Inline definition of a setter dependency.  The property name is specified with an Expression
@@ -110,7 +113,7 @@ namespace StructureMap.Pipeline
         {
             get
             {
-                return typeof (T);
+                return typeof(T);
             }
         }
 
@@ -139,9 +142,6 @@ namespace StructureMap.Pipeline
             }
         }
 
-
-
-
         /// <summary>
         ///     Inline definition of a constructor dependency.  Select the constructor argument by type.  Do not
         ///     use this method if there is more than one constructor arguments of the same type
@@ -164,7 +164,6 @@ namespace StructureMap.Pipeline
         {
             return new DependencyExpression<SmartInstance<T, TPluginType>, TCtorType>(this, constructorArg);
         }
-
 
         /// <summary>
         ///     Inline definition of a setter dependency.  Only use this method if there
@@ -217,5 +216,4 @@ namespace StructureMap.Pipeline
             return new ArrayDefinitionExpression<SmartInstance<T, TPluginType>, TElement>(this, ctorOrPropertyName);
         }
     }
-
 }

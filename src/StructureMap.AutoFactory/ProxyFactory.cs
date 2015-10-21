@@ -6,16 +6,20 @@ namespace StructureMap.AutoFactory
     {
         private readonly ProxyGenerator _proxyGenerator;
         private readonly IContext _context;
+        private readonly IAutoFactoryConventionProvider _conventionProvider;
 
-        public ProxyFactory(ProxyGenerator proxyGenerator, IContext context)
+        public ProxyFactory(ProxyGenerator proxyGenerator, IContext context, IAutoFactoryConventionProvider conventionProvider)
         {
             _proxyGenerator = proxyGenerator;
             _context = context;
+            _conventionProvider = conventionProvider;
         }
 
         public TPluginType Create()
         {
-            var interceptor = new FactoryInterceptor(_context);
+            var container = _context.GetInstance<IContainer>();
+
+            var interceptor = new FactoryInterceptor(container, _conventionProvider);
 
             return _proxyGenerator.CreateInterfaceProxyWithoutTarget<TPluginType>(interceptor);
         }

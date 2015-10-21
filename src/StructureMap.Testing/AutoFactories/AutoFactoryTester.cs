@@ -1,31 +1,32 @@
-using System;
 using NUnit.Framework;
 using Shouldly;
 using StructureMap.AutoFactory;
+using System;
+using System.Collections.Generic;
 
 namespace StructureMap.Testing.AutoFactories
 {
     [TestFixture]
     public class AutoFactoryTester
     {
-        private Container container;
+        private Container _container;
 
         [SetUp]
         public void SetUp()
         {
-            container = new Container();
+            _container = new Container();
         }
 
         [Test]
         public void Can_build_the_factory()
         {
-            container.Configure(cfg =>
+            _container.Configure(cfg =>
             {
-                cfg.For<IDummyService>().Use<Dummy1>();
+                cfg.For<IDummyService>().Use<DummyService>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = container.GetInstance<IDummyFactory>();
+            var factory = _container.GetInstance<IDummyFactory>();
 
             factory.ShouldNotBeNull();
         }
@@ -33,69 +34,150 @@ namespace StructureMap.Testing.AutoFactories
         [Test]
         public void Can_resolve_component()
         {
-            container.Configure(cfg =>
+            _container.Configure(cfg =>
             {
-                cfg.For<IDummyService>().Use<Dummy1>();
+                cfg.For<IDummyService>().Use<DummyService>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = container.GetInstance<IDummyFactory>();
+            var factory = _container.GetInstance<IDummyFactory>();
 
             var component = factory.CreateDummyService();
 
             component.ShouldNotBeNull();
-            component.ShouldBeOfType<Dummy1>();
+            component.ShouldBeOfType<DummyService>();
         }
 
         [Test]
         public void Can_resolve_generic_components_via_a_generic_method()
         {
-            container.Configure(cfg =>
+            _container.Configure(cfg =>
             {
-                cfg.For<IDummyService>().Use<Dummy1>();
+                cfg.For<IDummyService>().Use<DummyService>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = container.GetInstance<IDummyFactory>();
+            var factory = _container.GetInstance<IDummyFactory>();
 
             var component = factory.CreateService<IDummyService>();
 
             component.ShouldNotBeNull();
-            component.ShouldBeOfType<Dummy1>();
-        }
-
-        [Test]
-        public void Can_resolve_components_via_a_non_generic_type_based_factory_method()
-        {
-            container.Configure(cfg =>
-            {
-                cfg.For<IDummyService>().Use<Dummy1>();
-                cfg.For<IDummyFactory>().CreateFactory();
-            });
-
-            var factory = container.GetInstance<IDummyFactory>();
-
-            var component = factory.CreateService(typeof (IDummyService));
-
-            component.ShouldNotBeNull();
-            component.ShouldBeOfType<Dummy1>();
+            component.ShouldBeOfType<DummyService>();
         }
 
         [Test]
         public void Can_resolve_a_closed_generic_return_type()
         {
-            container.Configure(cfg =>
+            _container.Configure(cfg =>
             {
                 cfg.For<IHandler<Message>>().Use<MessageHandler>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = container.GetInstance<IDummyFactory>();
+            var factory = _container.GetInstance<IDummyFactory>();
 
             var component = factory.CreateHandler<Message>();
 
             component.ShouldNotBeNull();
             component.ShouldBeOfType<MessageHandler>();
+        }
+
+        [Test]
+        public void ResolveServiceWithExplicitArguments()
+        {
+            _container.Configure(cfg =>
+            {
+                cfg.For<IDummyService>().Use<DummyServiceWithName>();
+                cfg.For<IDummyFactory>().CreateFactory();
+            });
+
+            var factory = _container.GetInstance<IDummyFactory>();
+
+            var component = factory.CreateDummyService("John", "Smith");
+
+            component.ShouldSatisfyAllConditions(
+                () => component.ShouldNotBeNull(),
+                () => component.ShouldBeOfType<DummyServiceWithName>(),
+                () => component.Name.ShouldBe("John Smith")
+            );
+        }
+
+        [Test]
+        public void ResolveServiceWithRedundantExplicitArguments()
+        {
+            _container.Configure(cfg =>
+            {
+                cfg.For<IDummyService>().Use<DummyService>();
+                cfg.For<IDummyFactory>().CreateFactory();
+            });
+
+            var factory = _container.GetInstance<IDummyFactory>();
+
+            var component = factory.CreateDummyService("John", "Smith");
+
+            component.ShouldSatisfyAllConditions(
+                () => component.ShouldNotBeNull(),
+                () => component.ShouldBeOfType<DummyService>(),
+                () => component.Name.ShouldBeNull()
+            );
+        }
+
+        [Test]
+        public void ResolveNamedServiceWithExplicitArguments()
+        {
+            _container.Configure(cfg =>
+            {
+                cfg.For<IDummyService>().Use<DummyService>();
+                cfg.For<IDummyService>().Add<DummyServiceWithName>().Named("direct");
+                cfg.For<IDummyService>().Add<DummyServiceWithReversedName>().Named("reversed");
+                cfg.For<IDummyFactory>().CreateFactory();
+            });
+
+            var factory = _container.GetInstance<IDummyFactory>();
+
+            var component = factory.GetNamedDummyService("reversed", "John", "Smith");
+
+            component.ShouldSatisfyAllConditions(
+                () => component.ShouldNotBeNull(),
+                () => component.ShouldBeOfType<DummyServiceWithReversedName>(),
+                () => component.Name.ShouldBe("Smith John")
+            );
+        }
+
+        [Test]
+        public void TryToResolveNotRegisteredNamedService()
+        {
+            _container.Configure(cfg =>
+            {
+                cfg.For<IDummyService>().Use<DummyService>();
+                cfg.For<IDummyService>().Add<DummyServiceWithName>().Named("direct");
+                cfg.For<IDummyService>().Add<DummyServiceWithReversedName>().Named("reversed");
+                cfg.For<IDummyFactory>().CreateFactory();
+            });
+
+            var factory = _container.GetInstance<IDummyFactory>();
+
+            var component = factory.GetNamedDummyService("unknown", "John", "Smith");
+
+            component.ShouldBeNull();
+        }
+
+        [Test]
+        public void ResolveServiceNames()
+        {
+            _container.Configure(cfg =>
+            {
+                cfg.For<IDummyService>().Use<DummyService>();
+                cfg.For<IDummyService>().Add<DummyServiceWithName>().Named("direct");
+                cfg.For<IDummyService>().Add<DummyServiceWithReversedName>().Named("reversed");
+                cfg.For<IDummyFactory>().CreateFactory();
+            });
+
+            var factory = _container.GetInstance<IDummyFactory>();
+
+            var names = factory.GetNames<IDummyService>();
+
+            names.ShouldBe(new[] { string.Empty, "direct", "reversed" }, true);
         }
     }
 
@@ -120,16 +202,43 @@ namespace StructureMap.Testing.AutoFactories
         string Name { get; set; }
     }
 
-    public class Dummy1 : IDummyService
+    public class DummyService : IDummyService
     {
+        public string Name { get; set; }
+    }
+
+    public class DummyServiceWithName : IDummyService
+    {
+        public DummyServiceWithName(string namePart1, string namePart2)
+        {
+            Name = string.Format("{0} {1}", namePart1, namePart2);
+        }
+
+        public string Name { get; set; }
+    }
+
+    public class DummyServiceWithReversedName : IDummyService
+    {
+        public DummyServiceWithReversedName(string namePart1, string namePart2)
+        {
+            Name = string.Format("{0} {1}", namePart2, namePart1);
+        }
+
         public string Name { get; set; }
     }
 
     public interface IDummyFactory
     {
         IDummyService CreateDummyService();
+
+        IDummyService CreateDummyService(string namePart1, string namePart2);
+
+        IDummyService GetNamedDummyService(string serviceName, string namePart1, string namePart2);
+
+        IList<string> GetNames<TService>();
+
         TService CreateService<TService>();
+
         IHandler<TMessage> CreateHandler<TMessage>();
-        object CreateService(Type pluginType);
     }
 }

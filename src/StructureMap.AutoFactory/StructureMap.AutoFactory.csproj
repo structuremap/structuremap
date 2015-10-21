@@ -63,7 +63,12 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AutoFactoryExtensions.cs" />
+    <Compile Include="AutoFactoryMethodDefinition.cs" />
+    <Compile Include="AutoFactoryMethodType.cs" />
+    <Compile Include="DefaultAutoFactoryConventionProvider.cs" />
     <Compile Include="FactoryInterceptor.cs" />
+    <Compile Include="IAutoFactoryConventionProvider.cs" />
+    <Compile Include="IAutoFactoryMethodDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProxyFactory.cs" />
   </ItemGroup>
