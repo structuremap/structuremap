@@ -48,6 +48,11 @@ namespace StructureMap.Pipeline
             get { return this; }
         }
 
+        public override Instance ToNamedClone(string name)
+        {
+            return _inner.ToNamedClone(name);
+        }
+
         public override string Name
         {
             get

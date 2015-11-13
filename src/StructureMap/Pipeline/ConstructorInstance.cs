@@ -67,6 +67,11 @@ namespace StructureMap.Pipeline
             Name = name;
         }
 
+        public override Instance ToNamedClone(string name)
+        {
+            return new ConfiguredInstance(_pluggedType, name, _dependencies, Interceptors, Constructor);
+        }
+
         /// <summary>
         /// Explicitly select a constructor
         /// </summary>

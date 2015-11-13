@@ -353,7 +353,8 @@ namespace StructureMap.Graph
         {
             if (!HasFamily(pluginType)) return null;
 
-            return Families[pluginType].GetInstance(name) ?? _families[pluginType].MissingInstance;
+
+            return Families[pluginType].GetInstance(name);
         }
 
         /// <summary>

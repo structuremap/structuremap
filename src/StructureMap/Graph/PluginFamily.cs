@@ -15,7 +15,7 @@ namespace StructureMap.Graph
     /// </summary>
     public class PluginFamily : HasLifecycle, IDisposable
     {
-        private readonly LightweightCache<string, Instance> _instances = new LightweightCache<string, Instance>(delegate { return null; });
+        private readonly LightweightCache<string, Instance> _instances = new LightweightCache<string, Instance>();
         private readonly Type _pluginType;
         private Lazy<Instance> _defaultInstance;
         private Instance _missingInstance;
@@ -28,6 +28,8 @@ namespace StructureMap.Graph
             resetDefault();
             _pluginType.GetTypeInfo().ForAttribute<StructureMapAttribute>(a => a.Alter(this));
 
+
+            _instances.OnMissing = name => MissingInstance?.ToNamedClone(name);
         }
 
         /// <summary>

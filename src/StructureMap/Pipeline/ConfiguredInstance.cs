@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
+using StructureMap.Building.Interception;
 
 namespace StructureMap.Pipeline
 {
@@ -23,6 +26,14 @@ namespace StructureMap.Pipeline
         public ConfiguredInstance(Type templateType, params Type[] types)
             : base(templateType.MakeGenericType(types))
         {
+        }
+
+        public ConfiguredInstance(Type pluggedType, string name, DependencyCollection dependencies, IEnumerable<IInterceptor> interceptors, ConstructorInfo constructor) : base(pluggedType)
+        {
+            Name = name;
+            Constructor = constructor;
+            interceptors.Each(AddInterceptor);
+            dependencies.CopyTo(Dependencies);
         }
 
         protected override ConfiguredInstance thisObject()

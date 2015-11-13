@@ -226,5 +226,11 @@ namespace StructureMap.Pipeline
         }
 
         public Guid Id { get; private set; }
+
+        public virtual Instance ToNamedClone(string name)
+        {
+            throw new NotSupportedException($"Instance's of type '{GetType().FullName}' does not support ToNamedClose() and cannot be used as a MissingInstance");
+        }
     }
+
 }

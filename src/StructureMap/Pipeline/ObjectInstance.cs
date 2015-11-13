@@ -33,6 +33,11 @@ namespace StructureMap.Pipeline
             SetLifecycleTo<ObjectLifecycle>();
         }
 
+        public override Instance ToNamedClone(string name)
+        {
+            return new ObjectInstance<TReturned, TPluginType>(_object) {Name = name};
+        }
+
         object IValue.Value
         {
             get

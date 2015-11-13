@@ -43,6 +43,12 @@ namespace StructureMap.Pipeline
                 .Body.ToString();
         }
 
+        private LambdaInstance(string description, Expression builder)
+        {
+            _builder = builder;
+            _description = description;
+        }
+
         public LambdaInstance(Expression<Func<T>> func)
         {
             _description = func.Body.ToString();
@@ -59,6 +65,11 @@ namespace StructureMap.Pipeline
         {
             _description = description;
             _builder = Expression.Invoke(Expression.Constant(builder));
+        }
+
+        public override Instance ToNamedClone(string name)
+        {
+            return new LambdaInstance<T, TPluginType>(_description, _builder) {Name = name};
         }
 
         protected override LambdaInstance<T, TPluginType> thisInstance

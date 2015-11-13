@@ -58,6 +58,8 @@ end
 
 desc 'Compile the code'
 task :compile => [:clean, :version] do
+	sh "paket.exe install"
+
 	msbuild = '"C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe"'
 	sh "#{msbuild} src/StructureMap.sln   /property:Configuration=#{COMPILE_TARGET} /v:m /t:rebuild /nr:False /maxcpucount:2"
 end
@@ -86,6 +88,6 @@ end
 
 "Launches the documentation project in editable mode"
 task :docs do
-	sh ".paket/paket.exe install"
+	sh "paket.exe install"
 	sh "packages/Storyteller/tools/st.exe doc-run -v #{BUILD_VERSION}"
 end

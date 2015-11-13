@@ -137,8 +137,10 @@ namespace StructureMap.Testing.Graph
             var instance = new SmartInstance<BigThingy>().Named("red");
             graph.Families[typeof (BigThingy)].MissingInstance = instance;
 
-            graph.FindInstance(typeof (BigThingy), "green")
-                .ShouldBeTheSameAs(instance);
+            var cloned_and_renamed = graph.FindInstance(typeof (BigThingy), "green").ShouldBeAssignableTo<ConfiguredInstance>();
+
+            cloned_and_renamed.Name.ShouldBe("green");
+            cloned_and_renamed.PluggedType.ShouldBe(typeof(BigThingy));
         }
 
 
