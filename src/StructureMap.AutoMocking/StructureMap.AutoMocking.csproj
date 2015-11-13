@@ -79,7 +79,6 @@
     <None Include="..\structuremap.snk">
       <Link>Properties\structuremap.snk</Link>
     </None>
-    <None Include="ripple.dependencies.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
