@@ -149,5 +149,11 @@ namespace StructureMap.Query
         /// Container
         /// </summary>
         IEnumerable<AssemblyScanner> Scanners { get; }
+
+        /// <summary>
+        /// A record of all the Registry objects used to configure this Container,
+        /// including any calls to IContainer.Configure()
+        /// </summary>
+        IEnumerable<Registry> Registries { get; }
     }
 }

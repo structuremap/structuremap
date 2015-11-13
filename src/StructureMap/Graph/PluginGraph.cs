@@ -246,15 +246,10 @@ namespace StructureMap.Graph
 
         public void ImportRegistry(Registry registry)
         {
-            var all = Registries.Concat(QueuedRegistries);
+            var all = Registries.Concat(QueuedRegistries).ToArray();
 
-            if (all.Contains(registry)) return;
+            if (Registry.RegistryExists(all, registry)) return;
  
-            var type = registry.GetType();
-            if (type != typeof (Registry) && type != typeof(ConfigurationExpression))
-            {
-                if (all.Any(x => x.GetType() == type)) return;
-            }
 
             QueuedRegistries.Enqueue(registry);
 

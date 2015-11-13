@@ -165,7 +165,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 config.AddRegistry(registry2);
             });
 
-            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+            container.Model.Registries.Count(x => x.GetType() == typeof(MutatingRegistry)).ShouldBe(1);
         }
 
 

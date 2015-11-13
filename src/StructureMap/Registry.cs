@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using StructureMap.Building.Interception;
 using StructureMap.Configuration.DSL;
@@ -259,10 +261,11 @@ namespace StructureMap
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             if (other.GetType() == typeof (Registry) && GetType() == typeof (Registry)) return false;
-            if (other.GetType() == GetType())
+            if (other.GetType() == GetType() || other.GetType().AssemblyQualifiedName == GetType().AssemblyQualifiedName)
             {
                 return !GetType().GetTypeInfo().IsNotPublic;
             }
+
             return false;
         }
 
@@ -423,5 +426,27 @@ namespace StructureMap
         }
 
         internal bool PoliciesChanged { get; set; }
+
+
+        private static int mutation = 0;
+
+        public static bool RegistryExists(IEnumerable<Registry> all, Registry registry)
+        {
+            if (all.Contains(registry)) return true;
+
+            var type = registry.GetType();
+
+            if (type == typeof (Registry)) return false;
+            if (type == typeof (ConfigurationExpression)) return false;
+
+            var constructors = type.GetConstructors();
+            if (constructors.Count() == 1 && !constructors.Single().GetParameters().Any())
+            {
+                if (all.Any(x => x.GetType() == type)) return true;
+                if (all.Any(x => x.GetType().AssemblyQualifiedName == type.AssemblyQualifiedName)) return true;
+            }
+
+            return false;
+        }
     }
 }
