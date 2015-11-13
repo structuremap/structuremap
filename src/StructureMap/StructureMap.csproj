@@ -172,6 +172,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="GraphEjector.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
+	<Compile Include="Graph\FindAllTypeImplementationsFilter.cs" />
     <Compile Include="Graph\CloseGenericFamilyPolicy.cs" />
     <Compile Include="Graph\CompositeFilter.cs" />
     <Compile Include="Graph\CompositePredicate.cs" />

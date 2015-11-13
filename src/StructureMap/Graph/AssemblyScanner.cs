@@ -93,6 +93,13 @@ namespace StructureMap.Graph
             return filter;
         }
 
+        public FindAllTypeImplementationsFilter AddAllTypeImplementationsOf(Type pluginType)
+        {
+            var filter = new FindAllTypeImplementationsFilter(pluginType);
+            With(filter);
+
+            return filter;
+        }
 
         public void Exclude(Func<Type, bool> exclude)
         {
