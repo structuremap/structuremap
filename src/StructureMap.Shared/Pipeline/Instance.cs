@@ -227,10 +227,13 @@ namespace StructureMap.Pipeline
 
         public Guid Id { get; private set; }
 
+        // SAMPLE: ToNamedClose
         public virtual Instance ToNamedClone(string name)
+        // ENDSAMPLE
         {
             throw new NotSupportedException("Instance's of type '{0}' does not support ToNamedClose() and cannot be used as a MissingInstance".ToFormat(GetType().FullName));
         }
+        
     }
 
 }

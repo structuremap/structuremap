@@ -11,6 +11,7 @@ registration via type scanning and several performance improvements as well as s
 The highlights:
 
 1. We **believe** that the documentation is finally comprehensive in regards to StructureMap behavior and features
+1. StructureMap 4.0 is cross-compiled to .Net 4.0, .Net 4.0 as/ PCL, and **as CoreCLR compliant** (using the dotnet build profile).
 1. The type scanning model (`Registry.Scan()`) was completely rebuilt to make the model easier to extend and to
    *optimize application bootstrapping* in systems that heavily rely on StructureMap type scanning. See <[linkto:registration/auto-registration-and-conventions]> for more information.
 1. New diagnostic method specifically for troubleshooting type scanning problems. See <[linkto:diagnostics/type-scanning]> for more information.
