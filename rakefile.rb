@@ -78,9 +78,9 @@ end
 
 desc 'Build Nuspec packages'
 task :pack => [:compile] do
-	sh "paket.exe pack output artifacts version #{build_number}"
+	sh "paket.exe pack output artifacts version #{build_number}-alpha"
 	
-	sh "nuget.exe pack src/StructureMap.nuspec -OutputDirectory artifacts -Version #{build_number}"
+	sh "nuget.exe pack src/StructureMap.nuspec -OutputDirectory artifacts -Version #{build_number}-alpha"
 end
 
 desc "Launches VS to the StructureMap solution file"

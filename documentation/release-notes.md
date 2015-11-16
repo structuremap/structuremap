@@ -3,6 +3,30 @@
 
 StructureMap is attempting to follow a strict [SemVer](http://semver.org) versioning policy.
 
+## Release Nodes 4.0
+
+4.0 is a medium sized release that largely builds on the existing 3.0 architecture with significant improvements to conventional
+registration via type scanning and several performance improvements as well as some bug fixes.
+
+The highlights:
+
+1. We **believe** that the documentation is finally comprehensive in regards to StructureMap behavior and features
+1. The type scanning model (`Registry.Scan()`) was completely rebuilt to make the model easier to extend and to
+   *optimize application bootstrapping* in systems that heavily rely on StructureMap type scanning. See <[linkto:registration/auto-registration-and-conventions]> for more information.
+1. New diagnostic method specifically for troubleshooting type scanning problems. See <[linkto:diagnostics/type-scanning]> for more information.
+1. New concept of a "build time Instance convention" to apply much more powerful policies and conventions against your StructureMap registrations
+   as a whole. See <[linkto:registration/policies]> for more information.
+1. Runtime performance improvements
+1. Hardened StructureMap for multi-threaded usage
+1. Performance improvements specifically targeted at usage from within ASP.Net MVC and its particular manner of using IoC tools.
+1. Removed the static `ObjectFactory` facade over the application `Container` altogether.
+1. Enhanced lifecycle support for compliance with ASP.Net MVC6. Nested containers track and dispose _AlwaysUnique_ objects, the new _ContainerScoped_
+   lifecyle, and an optional mode to make the root or child containers track _Transient_ disposable objects. See <[linkto:object-lifecycle]> and <[linkto:the-container/nested-containers]> for more information.
+1. `Registry.For<T>().ClearAll()` and `Registry.For(Type).ClearAll()` methods for removing all previous registrations for a type. See 
+   <[linkto:registration/clear-or-replace]> for more information.
+
+See also [the complete list of changes and issues](https://github.com/structuremap/structuremap/issues?q=milestone%3A4.0+is%3Aclosed) for StructureMap 4.0.
+
 ## 3.1.*
 
 Click on any release version to see the list of closed GitHub issues related to any of the 3.1 releases.
