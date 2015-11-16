@@ -229,7 +229,7 @@ namespace StructureMap.Pipeline
 
         public virtual Instance ToNamedClone(string name)
         {
-            throw new NotSupportedException($"Instance's of type '{GetType().FullName}' does not support ToNamedClose() and cannot be used as a MissingInstance");
+            throw new NotSupportedException("Instance's of type '{0}' does not support ToNamedClose() and cannot be used as a MissingInstance".ToFormat(GetType().FullName));
         }
     }
 

@@ -77,8 +77,10 @@ task :compile_signed => [:version, :clean] do
 end
 
 desc 'Build Nuspec packages'
-task :pack => [:compile, :compile_signed] do
-	sh ".paket/paket.exe pack output artifacts version #{build_number}-alpha"
+task :pack => [:compile] do
+	sh "paket.exe pack output artifacts version #{build_number}"
+	
+	sh "nuget.exe pack src/StructureMap.nuspec -OutputDirectory artifacts -Version #{build_number}"
 end
 
 desc "Launches VS to the StructureMap solution file"

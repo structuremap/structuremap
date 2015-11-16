@@ -16,7 +16,7 @@ namespace StructureMap.Testing.Bugs
             {
                 _.For<ColorRule>().MissingNamedInstanceIs.ConstructedBy(c => new ColorRule(c.RequestedName));
 
-                _.For<ColorRule>().OnCreationForAll(r => Debug.WriteLine(r.Color), i =>
+                _.For<ColorRule>().OnCreationForAll("Just for testing", r => Debug.WriteLine(r.Color), i =>
                 {
                     if (i.Name != "Red" && i.Name != "Green" && i.Name != "Blue")
                     {
