@@ -3,7 +3,7 @@
 
 StructureMap is attempting to follow a strict [SemVer](http://semver.org) versioning policy.
 
-## Release Nodes 4.0
+## Release Notes 4.0
 
 4.0 is a medium sized release that largely builds on the existing 3.0 architecture with significant improvements to conventional
 registration via type scanning and several performance improvements as well as some bug fixes.
