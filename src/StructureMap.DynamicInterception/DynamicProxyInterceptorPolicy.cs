@@ -12,7 +12,7 @@ namespace StructureMap.DynamicInterception
         private static readonly Func<Type, Instance, bool> TrueFilter = ((type, instance) => true);
 
         private readonly Func<Type, Instance, bool> _filter;
-        private readonly IInterceptionBehavior[] _interceptionBehaviors;
+        private readonly object[] _interceptionBehaviors;
 
         public DynamicProxyInterceptorPolicy(Func<Type, Instance, bool> filter, params IInterceptionBehavior[] interceptionBehaviors)
         {
@@ -35,6 +35,27 @@ namespace StructureMap.DynamicInterception
         {
         }
 
+        public DynamicProxyInterceptorPolicy(Func<Type, Instance, bool> filter, params Type[] interceptionBehaviorTypes)
+        {
+            _filter = filter ?? TrueFilter;
+            _interceptionBehaviors = interceptionBehaviorTypes;
+        }
+
+        public DynamicProxyInterceptorPolicy(Func<Type, bool> filter, params Type[] interceptionBehaviorTypes)
+            : this((type, instance) => filter(type), interceptionBehaviorTypes)
+        {
+        }
+
+        public DynamicProxyInterceptorPolicy(Func<Instance, bool> filter, params Type[] interceptionBehaviorTypes)
+            : this((type, instance) => filter(instance), interceptionBehaviorTypes)
+        {
+        }
+
+        public DynamicProxyInterceptorPolicy(params Type[] interceptionBehaviorTypes)
+            : this(TrueFilter, interceptionBehaviorTypes)
+        {
+        }
+
         public IEnumerable<IInterceptor> DetermineInterceptors(Type pluginType, Instance instance)
         {
             if (_filter(pluginType, instance))
@@ -50,7 +71,7 @@ namespace StructureMap.DynamicInterception
             get
             {
                 return string.Format("Decorate with dynamic proxy classes using the following interception behaviors: {0}",
-                    string.Join(", ", _interceptionBehaviors.Select(b => b.GetType().GetFullName())));
+                    string.Join(", ", _interceptionBehaviors.Select(b => b is Type ? ((Type)b).GetFullName() : b.GetType().GetFullName())));
             }
         }
     }
