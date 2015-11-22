@@ -9,7 +9,7 @@ namespace StructureMap.DynamicInterception
 {
     public class DynamicProxyInterceptorPolicy : IInterceptorPolicy
     {
-        private static readonly Func<Type, Instance, bool> TrueFilter = ((type, instance) => true);
+        private static readonly Func<Type, Instance, bool> TrueFilter = (type, instance) => true;
 
         private readonly Func<Type, Instance, bool> _filter;
         private readonly object[] _interceptionBehaviors;
@@ -71,7 +71,7 @@ namespace StructureMap.DynamicInterception
             get
             {
                 return string.Format("Decorate with dynamic proxy classes using the following interception behaviors: {0}",
-                    string.Join(", ", _interceptionBehaviors.Select(b => b is Type ? ((Type)b).GetFullName() : b.GetType().GetFullName())));
+                    string.Join(", ", _interceptionBehaviors.Select(b => (b as Type ?? b.GetType()).GetFullName())));
             }
         }
     }
