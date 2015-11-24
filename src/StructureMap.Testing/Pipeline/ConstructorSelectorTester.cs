@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var selector = new ConstructorSelector(PluginGraph.CreateRoot());
 
-            var constructor = selector.Select(typeof (ComplexRule));
+            var constructor = selector.Select(typeof (ComplexRule), new DependencyCollection());
 
             constructor.GetParameters().Length
                 .ShouldBe(7);
@@ -62,7 +62,7 @@ namespace StructureMap.Testing.Pipeline
         public void should_get_the_greediest_constructor_if_there_is_more_than_one()
         {
             var selector = new ConstructorSelector(PluginGraph.CreateRoot());
-            var constructor = selector.Select(typeof (GreaterThanRule));
+            var constructor = selector.Select(typeof (GreaterThanRule), new DependencyCollection());
 
             constructor.GetParameters().Select(x => x.ParameterType)
                 .ShouldHaveTheSameElementsAs(typeof (string), typeof (int));
@@ -74,7 +74,7 @@ namespace StructureMap.Testing.Pipeline
             var selector = new ConstructorSelector(PluginGraph.CreateRoot());
             selector.Add(new PickTheFirstOne());
 
-            selector.Select(typeof (ClassWithMultipleConstructors))
+            selector.Select(typeof (ClassWithMultipleConstructors), new DependencyCollection())
                 .GetParameters().Select(x => x.ParameterType)
                 .ShouldHaveTheSameElementsAs(typeof (IGateway));
         }
@@ -99,7 +99,7 @@ namespace StructureMap.Testing.Pipeline
 
         public class PickTheFirstOne : IConstructorSelector
         {
-            public ConstructorInfo Find(Type pluggedType, PluginGraph graph)
+            public ConstructorInfo Find(Type pluggedType, DependencyCollection dependencies, PluginGraph graph)
             {
                 return pluggedType.GetConstructors().OrderBy(x => x.GetParameters().Count()).FirstOrDefault();
             }

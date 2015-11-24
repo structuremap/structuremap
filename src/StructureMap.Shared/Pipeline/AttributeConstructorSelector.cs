@@ -6,7 +6,7 @@ namespace StructureMap.Pipeline
 {
     public class AttributeConstructorSelector : IConstructorSelector
     {
-        public ConstructorInfo Find(Type pluggedType, PluginGraph graph)
+        public ConstructorInfo Find(Type pluggedType, DependencyCollection dependencies, PluginGraph graph)
         {
             return DefaultConstructorAttribute.GetConstructor(pluggedType);
         }

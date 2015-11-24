@@ -6,6 +6,6 @@ namespace StructureMap.Pipeline
 {
     public interface IConstructorSelector
     {
-        ConstructorInfo Find(Type pluggedType, PluginGraph graph);
+        ConstructorInfo Find(Type pluggedType, DependencyCollection dependencies, PluginGraph graph);
     }
 }

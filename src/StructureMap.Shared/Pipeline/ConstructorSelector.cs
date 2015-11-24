@@ -26,7 +26,7 @@ namespace StructureMap.Pipeline
         {
             if (instance.Constructor == null)
             {
-                instance.Constructor = Select(instance.PluggedType);
+                instance.Constructor = Select(instance.PluggedType, instance.Dependencies);
             }
         }
 
@@ -35,9 +35,9 @@ namespace StructureMap.Pipeline
             _selectors.Add(selector);
         }
 
-        public ConstructorInfo Select(Type pluggedType)
+        public ConstructorInfo Select(Type pluggedType, DependencyCollection dependencies)
         {
-            return _selectors.Union(_defaults).FirstValue(x => x.Find(pluggedType, _graph));
+            return _selectors.Union(_defaults).FirstValue(x => x.Find(pluggedType, dependencies, _graph));
         }
     }
 }

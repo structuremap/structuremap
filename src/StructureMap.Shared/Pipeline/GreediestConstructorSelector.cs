@@ -8,7 +8,7 @@ namespace StructureMap.Pipeline
 {
     public class GreediestConstructorSelector : IConstructorSelector
     {
-        public ConstructorInfo Find(Type pluggedType, PluginGraph graph)
+        public ConstructorInfo Find(Type pluggedType, DependencyCollection dependencies, PluginGraph graph)
         {
             return pluggedType
                 .GetConstructors()

@@ -92,7 +92,7 @@ namespace StructureMap.Building
         public static ConstructorStep BuildConstructorStep(Type pluggedType, ConstructorInfo constructor,
             DependencyCollection dependencies, Policies policies)
         {
-            var ctor = constructor ?? policies.SelectConstructor(pluggedType);
+            var ctor = constructor ?? policies.SelectConstructor(pluggedType, dependencies);
             if (ctor == null)
             {
                 throw new StructureMapConfigurationException(

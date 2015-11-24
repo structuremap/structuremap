@@ -243,7 +243,7 @@ namespace StructureMap.AutoMocking
 
         private object[] getConstructorArgs()
         {
-            var ctor = new GreediestConstructorSelector().Find(typeof (TTargetClass), null);
+            var ctor = new GreediestConstructorSelector().Find(typeof (TTargetClass), new DependencyCollection(), null);
             var list = new List<object>();
             foreach (var parameterInfo in ctor.GetParameters())
             {

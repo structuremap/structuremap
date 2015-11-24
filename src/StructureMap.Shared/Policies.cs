@@ -98,7 +98,7 @@ namespace StructureMap
 
         public bool CanBeAutoFilled(Type concreteType)
         {
-            var ctor = SelectConstructor(concreteType);
+            var ctor = SelectConstructor(concreteType, new DependencyCollection());
 
             if (ctor == null) return false;
 
@@ -124,9 +124,9 @@ namespace StructureMap
             return SetterRules.IsMandatory(propertyInfo);
         }
 
-        public ConstructorInfo SelectConstructor(Type pluggedType)
+        public ConstructorInfo SelectConstructor(Type pluggedType, DependencyCollection dependencies)
         {
-            return ConstructorSelector.Select(pluggedType);
+            return ConstructorSelector.Select(pluggedType, dependencies);
         }
     }
 }
