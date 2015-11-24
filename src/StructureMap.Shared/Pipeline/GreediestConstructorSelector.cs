@@ -12,8 +12,17 @@ namespace StructureMap.Pipeline
         {
             return pluggedType
                 .GetConstructors()
+                .Where(x => !HasMissingPrimitives(x, dependencies))
                 .OrderByDescending(x => x.GetParameters().Count())
                 .FirstOrDefault();
+        }
+
+        public static bool HasMissingPrimitives(ConstructorInfo ctor, DependencyCollection dependencies)
+        {
+            return ctor
+                .GetParameters()
+                .Where(x => x.ParameterType.IsSimple())
+                .Any(param => dependencies.FindByTypeOrName(param.ParameterType, param.Name) == null);
         }
     }
 }

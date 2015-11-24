@@ -19,7 +19,8 @@ namespace StructureMap.Pipeline
         private readonly IConstructorSelector[] _defaults = new IConstructorSelector[]
         {
             new AttributeConstructorSelector(),
-            new GreediestConstructorSelector()
+            new GreediestConstructorSelector(),
+            new FirstConstructor()
         };
 
         protected override void apply(Type pluginType, IConfiguredInstance instance)
@@ -38,6 +39,14 @@ namespace StructureMap.Pipeline
         public ConstructorInfo Select(Type pluggedType, DependencyCollection dependencies)
         {
             return _selectors.Union(_defaults).FirstValue(x => x.Find(pluggedType, dependencies, _graph));
+        }
+    }
+
+    public class FirstConstructor : IConstructorSelector
+    {
+        public ConstructorInfo Find(Type pluggedType, DependencyCollection dependencies, PluginGraph graph)
+        {
+            return pluggedType.GetConstructors().FirstOrDefault();
         }
     }
 }

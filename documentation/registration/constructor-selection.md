@@ -19,6 +19,14 @@ The default constructor selection is demonstrated below:
 
 <[sample:select-the-greediest-ctor]>
 
+**New in StructureMap 4.0**, the "greediest constructor selection" will bypass any constructor function that requires "simple" arguments
+like strings, numbers, or enumeration values that are not explicitly configured for the instance.
+
+You can see this behavior shown below:
+
+<[sample:skip-ctor-with-missing-simples]>
+
+
 ## Explicitly Selecting a Constructor
 To override the constructor selection explicitly on a case by case basis, you
 can use the `SelectConstructor(Expression)` method in the <[linkto:registration/registry-dsl]>

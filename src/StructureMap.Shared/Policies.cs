@@ -30,7 +30,6 @@ namespace StructureMap
         public Policies(PluginGraph pluginGraph)
         {
             ConstructorSelector = new ConstructorSelector(pluginGraph);
-            _policies.Add(ConstructorSelector);
         }
 
         public void Add(IInstancePolicy policy)
@@ -52,7 +51,8 @@ namespace StructureMap
 
         public void Apply(Type pluginType, Instance instance)
         {
-            _policies.Where(x => !instance.AppliedPolicies.Contains(x))
+            // Constructor Selector needs to run *after* all explicitly added policies
+            _policies.Concat(new IInstancePolicy[] {ConstructorSelector}).Where(x => !instance.AppliedPolicies.Contains(x))
                 .Each(policy =>
                 {
                     try

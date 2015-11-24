@@ -384,6 +384,7 @@
     <Compile Include="Pipeline\ConstructorSelectorTester.cs" />
     <Compile Include="Pipeline\DependencyCollectionTester.cs" />
     <Compile Include="Pipeline\EnumerableInstanceTester.cs" />
+    <Compile Include="Pipeline\GreediestConstructorSelectorTester.cs" />
     <Compile Include="Pipeline\LambdaInstanceTester.cs" />
     <Compile Include="Pipeline\ContainerDisposalTester.cs" />
     <Compile Include="Pipeline\ContainerIsInTheContainerTester.cs" />

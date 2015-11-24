@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using NUnit.Framework;
+using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
@@ -154,6 +155,45 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeTrue();
         }
 
+        // ENDSAMPLE
+
+        
+        // SAMPLE: skip-ctor-with-missing-simples
+        public class DbContext
+        {
+            public string ConnectionString { get; set; }
+
+            public DbContext(string connectionString)
+            {
+                ConnectionString = connectionString;
+            }
+
+            public DbContext() : this("default value")
+            {
+                
+            }
+        }
+
+        [Test]
+        public void should_bypass_ctor_with_unresolvable_simple_args()
+        {
+            var container = new Container();
+            container.GetInstance<DbContext>()
+                .ConnectionString.ShouldBe("default value");
+        }
+
+        [Test]
+        public void should_use_greediest_ctor_that_has_all_of_simple_dependencies()
+        {
+            var container = new Container(_ =>
+            {
+                _.ForConcreteType<DbContext>().Configure
+                    .Ctor<string>("connectionString").Is("not the default");
+            });
+
+            container.GetInstance<DbContext>()
+                .ConnectionString.ShouldBe("not the default");
+        }
         // ENDSAMPLE
     }
 }

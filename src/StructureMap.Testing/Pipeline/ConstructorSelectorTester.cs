@@ -39,6 +39,11 @@ namespace StructureMap.Testing.Pipeline
                 Attribute = attribute;
                 Value = value;
             }
+
+            public GreaterThanRule(IWidget widget, Rule rule)
+            {
+                
+            }
         }
 
         [Test]
@@ -65,7 +70,7 @@ namespace StructureMap.Testing.Pipeline
             var constructor = selector.Select(typeof (GreaterThanRule), new DependencyCollection());
 
             constructor.GetParameters().Select(x => x.ParameterType)
-                .ShouldHaveTheSameElementsAs(typeof (string), typeof (int));
+                .ShouldHaveTheSameElementsAs(typeof (IWidget), typeof (Rule));
         }
 
         [Test]

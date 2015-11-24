@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using Shouldly;
@@ -167,7 +168,8 @@ namespace StructureMap.Testing.Graph
 
 
             family.AddType(typeof (DataTable));
-            family.Instances.Count().ShouldBe(1);
+            family.AddType(GetType());
+            family.Instances.Count().ShouldBe(2);
         }
 
         [Test]
