@@ -21,7 +21,7 @@ namespace StructureMap.Testing.Building
             dependencies.Add(typeof (IWidget), new AWidget());
 
             var build = ConcreteType.BuildSource(typeof (GuyWithCtorAndArgs), null, dependencies,
-                new Policies());
+                Policies.Default());
 
             var visitor = new StubVisitor();
             build.AcceptVisitor(visitor);

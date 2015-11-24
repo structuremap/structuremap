@@ -27,13 +27,14 @@ namespace StructureMap.Graph
         private readonly LightweightCache<string, PluginGraph> _profiles;
 
         public TransientTracking TransientTracking = TransientTracking.DefaultNotTrackedAtRoot;
+        
 
         public string Name { get; set; }
 
         /// <summary>
         /// Specifies interception, construction selection, and setter usage policies
         /// </summary>
-        public readonly Policies Policies = new Policies();
+        public readonly Policies Policies;
 
         /// <summary>
         /// Holds a cache of concrete types that can be considered for closing generic interface
@@ -88,6 +89,8 @@ namespace StructureMap.Graph
 
         private PluginGraph()
         {
+            Policies = new Policies(this);
+
             _profiles =
                 new LightweightCache<string, PluginGraph>(name => new PluginGraph {ProfileName = name, Parent = this});
 

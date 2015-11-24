@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Building.Interception
 
             policy1.ShouldBe(policy2);
 
-            var policies = new Policies();
+            var policies = Policies.Default();
             policies.Add(policy1);
             policies.Add(policy2);
             policies.Add(policy1);
@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Building.Interception
             var activator5 = new ActivatorInterceptor<IGateway>(x => x.DoSomething());
 
 
-            var policies = new Policies();
+            var policies = Policies.Default();
             policies.Add(activator1.ToPolicy());
             policies.Add(activator2.ToPolicy());
             policies.Add(activator3.ToPolicy());

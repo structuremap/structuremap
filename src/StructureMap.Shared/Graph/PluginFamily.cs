@@ -246,7 +246,7 @@ namespace StructureMap.Graph
         {
             get
             {
-                if (Owner == null || Owner.Root == null) return new Policies();
+                if (Owner == null || Owner.Root == null) return new Policies(PluginGraph.CreateRoot());
 
                 return Owner.Root.Policies;
             }

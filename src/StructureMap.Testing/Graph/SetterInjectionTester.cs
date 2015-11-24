@@ -23,14 +23,14 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AutoFillDeterminationWithSetterPropertiesIsFalse()
         {
-            new Policies().CanBeAutoFilled(typeof (CannotBeAutoFilledGridColumn))
+            Policies.Default().CanBeAutoFilled(typeof (CannotBeAutoFilledGridColumn))
                 .ShouldBeFalse();
         }
 
         [Test]
         public void AutoFillDeterminationWithSetterPropertiesIsTrue()
         {
-            new Policies().CanBeAutoFilled(typeof (AutoFilledGridColumn))
+            Policies.Default().CanBeAutoFilled(typeof (AutoFilledGridColumn))
                 .ShouldBeTrue();
         }
     }

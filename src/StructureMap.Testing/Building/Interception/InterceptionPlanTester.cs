@@ -27,7 +27,7 @@ namespace StructureMap.Testing.Building.Interception
 
             Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() =>
             {
-                new InterceptionPlan(typeof (ITarget), inner, new Policies(),
+                new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
                     new IInterceptor[]
                     {
                         new DecoratorInterceptor(typeof (ATarget), typeof (ATarget))
@@ -55,7 +55,7 @@ namespace StructureMap.Testing.Building.Interception
             var target = new Target();
             var inner = Constant.For(target);
 
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(),
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
                 new IInterceptor[]
                 {
                     new ActivatorInterceptor<ITarget>(x => x.Activate())
@@ -74,7 +74,7 @@ namespace StructureMap.Testing.Building.Interception
             var target = new Target();
             var inner = Constant.For(target);
 
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(),
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
                 new IInterceptor[] {new ActivatorInterceptor<Target>((session, x) => x.UseSession(session))});
 
             var theSession = new StubBuildSession();
@@ -90,7 +90,7 @@ namespace StructureMap.Testing.Building.Interception
             var target = new Target();
             var inner = Constant.For(target);
 
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(),
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
                 new IInterceptor[] {new ActivatorInterceptor<Target>((session, x) => x.BlowUpOnSession(session))});
 
             var theSession = new StubBuildSession();
@@ -108,7 +108,7 @@ namespace StructureMap.Testing.Building.Interception
             var target = new Target();
             var inner = Constant.For(target);
 
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(),
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
                 new IInterceptor[]
                 {
                     new ActivatorInterceptor<ITarget>(x => x.Activate()),
@@ -130,7 +130,7 @@ namespace StructureMap.Testing.Building.Interception
             var inner = Constant.For(target);
 
             var interceptor = new ActivatorInterceptor<Target>(x => x.ThrowUp());
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(),
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
                 new IInterceptor[]
                 {
                     interceptor
@@ -156,7 +156,7 @@ namespace StructureMap.Testing.Building.Interception
             var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>(t => new DecoratedTarget(t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(), new IInterceptor[] {decorator});
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[] {decorator});
 
             var session = new StubBuildSession();
             plan.ToBuilder<ITarget>()(session, session)
@@ -172,7 +172,7 @@ namespace StructureMap.Testing.Building.Interception
 
             var decorator1 = new FuncInterceptor<ITarget>(t => new DecoratedTarget(t));
             var decorator2 = new FuncInterceptor<ITarget>(t => new BorderedTarget(t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(),
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
                 new IInterceptor[] {decorator1, decorator2});
 
             var session = new StubBuildSession();
@@ -190,7 +190,7 @@ namespace StructureMap.Testing.Building.Interception
 
             var decorator1 = new FuncInterceptor<ITarget>(t => new DecoratedTarget(t));
             var decorator2 = new FuncInterceptor<ITarget>(t => new BorderedTarget(t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(), new IInterceptor[]
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[]
             {
                 decorator1,
                 decorator2,
@@ -215,7 +215,7 @@ namespace StructureMap.Testing.Building.Interception
             var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>(t => new ThrowsDecoratedTarget(t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(), new IInterceptor[] {decorator});
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[] {decorator});
 
             var ex =
                 Exception<StructureMapInterceptorException>.ShouldBeThrownBy(
@@ -236,7 +236,7 @@ namespace StructureMap.Testing.Building.Interception
             var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>((s, t) => new ContextKeepingTarget(s, t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(), new IInterceptor[] {decorator});
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[] {decorator});
 
             var theSession = new StubBuildSession();
             var result = plan.ToBuilder<ITarget>()(theSession, theSession)
@@ -253,7 +253,7 @@ namespace StructureMap.Testing.Building.Interception
             var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>((s, t) => new SadContextKeepingTarget(s, t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(), new IInterceptor[] {decorator});
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[] {decorator});
 
             var theSession = new StubBuildSession();
 
@@ -273,7 +273,7 @@ namespace StructureMap.Testing.Building.Interception
             var inner = Constant.For(target);
 
             var interceptor = new ActivatorInterceptor<Target>(x => x.ThrowUp());
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(),
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
                 new IInterceptor[]
                 {
                     interceptor
@@ -291,7 +291,7 @@ namespace StructureMap.Testing.Building.Interception
             var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>((s, t) => new ContextKeepingTarget(s, t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(), new IInterceptor[] {decorator});
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[] {decorator});
 
             plan.AcceptVisitor(theVisitor);
 
@@ -305,7 +305,7 @@ namespace StructureMap.Testing.Building.Interception
             var inner = Constant.For(target);
 
             var decorator = new DecoratorInterceptor(typeof (ITarget), typeof (DecoratedTarget));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, new Policies(), new IInterceptor[] {decorator});
+            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[] {decorator});
 
             plan.AcceptVisitor(theVisitor);
 

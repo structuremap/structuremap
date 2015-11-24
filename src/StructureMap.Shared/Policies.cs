@@ -12,8 +12,13 @@ namespace StructureMap
 {
     public class Policies
     {
+        public static Policies Default()
+        {
+            return new Policies(PluginGraph.CreateRoot());
+        }
+
         public readonly SetterRules SetterRules = new SetterRules();
-        public readonly ConstructorSelector ConstructorSelector = new ConstructorSelector();
+        public readonly ConstructorSelector ConstructorSelector;
 
         private readonly object _buildLock = new object();
 
@@ -22,8 +27,9 @@ namespace StructureMap
 
         private readonly IList<IInstancePolicy> _policies = new List<IInstancePolicy>();
 
-        public Policies()
+        public Policies(PluginGraph pluginGraph)
         {
+            ConstructorSelector = new ConstructorSelector(pluginGraph);
             _policies.Add(ConstructorSelector);
         }
 

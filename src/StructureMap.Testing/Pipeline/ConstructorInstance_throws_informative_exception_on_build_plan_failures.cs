@@ -16,7 +16,7 @@ namespace StructureMap.Testing.Pipeline
 
             var ex =
                 Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(
-                    () => { instance.ToBuilder(typeof (GuyWithPrimitives), new Policies()); });
+                    () => { instance.ToBuilder(typeof (GuyWithPrimitives), Policies.Default()); });
 
             ex.ToString()
                 .ShouldContain(

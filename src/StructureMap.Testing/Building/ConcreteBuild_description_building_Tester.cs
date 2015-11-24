@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Building
         public void see_the_description_of_class_with_ctors_and_setters()
         {
             var build = ConcreteType.BuildSource(typeof (GuyWithCtorAndArgs), null, new DependencyCollection(),
-                new Policies());
+                Policies.Default());
 
             Debug.WriteLine(build.Description);
         }
@@ -28,7 +28,7 @@ namespace StructureMap.Testing.Building
             dependencies.Add(typeof (IWidget), new AWidget());
 
             var build = ConcreteType.BuildSource(typeof (GuyWithCtorAndArgs), null, dependencies,
-                new Policies());
+                Policies.Default());
 
             Debug.WriteLine(build.Description);
         }
@@ -37,7 +37,7 @@ namespace StructureMap.Testing.Building
         public void see_the_description_of_class_with__only_ctors()
         {
             var build = ConcreteType.BuildSource(typeof (GuyWithOnlyCtor), null, new DependencyCollection(),
-                new Policies());
+                Policies.Default());
 
             Debug.WriteLine(build.Description);
         }
@@ -50,7 +50,7 @@ namespace StructureMap.Testing.Building
             dependencies.Add(typeof (IWidget), new AWidget());
 
             var build = ConcreteType.BuildSource(typeof (GuyWithOnlyCtor), null, dependencies,
-                new Policies());
+                Policies.Default());
 
             Debug.WriteLine(build.Description);
         }

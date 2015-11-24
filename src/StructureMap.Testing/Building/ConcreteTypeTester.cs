@@ -233,7 +233,7 @@ namespace StructureMap.Testing.Building
             var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
             {
                 ConcreteType.BuildConstructorStep(typeof (GuyWithNoSuitableCtor), null, new DependencyCollection(),
-                    new Policies());
+                    Policies.Default());
             });
 
             ex.Message.ShouldContain("No public constructor could be selected for concrete type " +
@@ -249,7 +249,7 @@ namespace StructureMap.Testing.Building
             dependencies.Add("age", 40);
             dependencies.Add("isAwake", true);
 
-            ConcreteType.BuildSource(typeof (GuyWithPrimitives), null, dependencies, new Policies())
+            ConcreteType.BuildSource(typeof (GuyWithPrimitives), null, dependencies, Policies.Default())
                 .IsValid().ShouldBeTrue();
         }
 
@@ -262,7 +262,7 @@ namespace StructureMap.Testing.Building
             dependencies.Add("age", 40);
             //dependencies.Add("isAwake", true);
 
-            ConcreteType.BuildSource(typeof (GuyWithPrimitives), null, dependencies, new Policies())
+            ConcreteType.BuildSource(typeof (GuyWithPrimitives), null, dependencies, Policies.Default())
                 .IsValid().ShouldBeFalse();
         }
 
@@ -276,7 +276,7 @@ namespace StructureMap.Testing.Building
             dependencies.Add("Age", 40);
             dependencies.Add("IsAwake", true);
 
-            ConcreteType.BuildSource(typeof (GuyWithPrimitiveSetters), null, dependencies, new Policies())
+            ConcreteType.BuildSource(typeof (GuyWithPrimitiveSetters), null, dependencies, Policies.Default())
                 .IsValid().ShouldBeTrue();
         }
 
@@ -289,7 +289,7 @@ namespace StructureMap.Testing.Building
             dependencies.Add("Age", 40);
             //dependencies.Add("IsAwake", true);
 
-            ConcreteType.BuildSource(typeof (GuyWithPrimitiveSetters), null, dependencies, new Policies())
+            ConcreteType.BuildSource(typeof (GuyWithPrimitiveSetters), null, dependencies, Policies.Default())
                 .IsValid().ShouldBeFalse();
         }
     }

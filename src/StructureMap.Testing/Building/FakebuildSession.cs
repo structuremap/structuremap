@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Building
 
         public FakeBuildSession()
         {
-            Policies = new Policies();
+            Policies = Policies.Default();
         }
 
         public void SetDefault<T>(T @object)

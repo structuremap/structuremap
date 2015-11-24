@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using NUnit.Framework;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 
@@ -49,7 +50,7 @@ namespace StructureMap.Testing.Acceptance
     // SAMPLE: custom-ctor-rule
     public class ThingCtorRule : IConstructorSelector
     {
-        public ConstructorInfo Find(Type pluggedType)
+        public ConstructorInfo Find(Type pluggedType, PluginGraph graph)
         {
             // if this rule does not apply to the pluggedType,
             // just return null to denote "not applicable"

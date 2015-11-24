@@ -16,7 +16,7 @@ namespace StructureMap.Building
         private readonly ConstructorStep _constructor;
         private readonly IList<Setter> _setters = new List<Setter>();
 
-        public ConcreteBuild(Type concreteType) : this(concreteType, new ConstructorSelector().Select(concreteType))
+        public ConcreteBuild(Type concreteType) : this(concreteType, new ConstructorSelector(null).Select(concreteType))
         {
         }
 

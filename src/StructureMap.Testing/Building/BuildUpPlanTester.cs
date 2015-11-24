@@ -69,7 +69,7 @@ namespace StructureMap.Testing.Building
                     _target = new ClassWithMixOfSetters();
 
                     var thePlan = ConcreteType.BuildUpPlan(typeof (ClassWithMixOfSetters), theDependencies,
-                        new Policies());
+                        Policies.Default());
 
                     thePlan.BuildUp(_session, _session, _target);
                 }

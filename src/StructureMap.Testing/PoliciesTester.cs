@@ -8,28 +8,28 @@ namespace StructureMap.Testing
         [Test]
         public void CanBeAutoFilledIsFalse()
         {
-            new Policies().CanBeAutoFilled(typeof (ClassWithPrimitiveConstructorArguments))
+            Policies.Default().CanBeAutoFilled(typeof (ClassWithPrimitiveConstructorArguments))
                 .ShouldBeFalse();
         }
 
         [Test]
         public void CanBeAutoFilledIsTrue()
         {
-            new Policies().CanBeAutoFilled(typeof (ClassWithAllNonSimpleConstructorArguments))
+            Policies.Default().CanBeAutoFilled(typeof (ClassWithAllNonSimpleConstructorArguments))
                 .ShouldBeTrue();
         }
 
         [Test]
         public void CanBeAutoFilled_if_simple_property_has_default_value()
         {
-            new Policies().CanBeAutoFilled(typeof (GuyWithName)).ShouldBeTrue();
+            Policies.Default().CanBeAutoFilled(typeof (GuyWithName)).ShouldBeTrue();
         }
 
 
         [Test]
         public void cannot_be_auto_filled_with_no_contructors()
         {
-            new Policies().CanBeAutoFilled(typeof (ClassWithNoConstructor))
+            Policies.Default().CanBeAutoFilled(typeof (ClassWithNoConstructor))
                 .ShouldBeFalse();
         }
 

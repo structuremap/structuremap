@@ -2,12 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
     public class ConstructorSelector : ConfiguredInstancePolicy
     {
+        private readonly PluginGraph _graph;
         private readonly IList<IConstructorSelector> _selectors = new List<IConstructorSelector>();
+
+        public ConstructorSelector(PluginGraph graph)
+        {
+            _graph = graph;
+        }
 
         private readonly IConstructorSelector[] _defaults = new IConstructorSelector[]
         {
@@ -30,7 +37,7 @@ namespace StructureMap.Pipeline
 
         public ConstructorInfo Select(Type pluggedType)
         {
-            return _selectors.Union(_defaults).FirstValue(x => x.Find(pluggedType));
+            return _selectors.Union(_defaults).FirstValue(x => x.Find(pluggedType, _graph));
         }
     }
 }

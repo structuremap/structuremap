@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using Shouldly;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
@@ -15,7 +16,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void get_the_first_constructor_marked_with_the_attribute_if_it_exists()
         {
-            var selector = new ConstructorSelector();
+            var selector = new ConstructorSelector(PluginGraph.CreateRoot());
 
             var constructor = selector.Select(typeof (ComplexRule));
 
@@ -60,7 +61,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void should_get_the_greediest_constructor_if_there_is_more_than_one()
         {
-            var selector = new ConstructorSelector();
+            var selector = new ConstructorSelector(PluginGraph.CreateRoot());
             var constructor = selector.Select(typeof (GreaterThanRule));
 
             constructor.GetParameters().Select(x => x.ParameterType)
@@ -70,7 +71,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void custom_selectors_have_precedence()
         {
-            var selector = new ConstructorSelector();
+            var selector = new ConstructorSelector(PluginGraph.CreateRoot());
             selector.Add(new PickTheFirstOne());
 
             selector.Select(typeof (ClassWithMultipleConstructors))
@@ -98,7 +99,7 @@ namespace StructureMap.Testing.Pipeline
 
         public class PickTheFirstOne : IConstructorSelector
         {
-            public ConstructorInfo Find(Type pluggedType)
+            public ConstructorInfo Find(Type pluggedType, PluginGraph graph)
             {
                 return pluggedType.GetConstructors().OrderBy(x => x.GetParameters().Count()).FirstOrDefault();
             }
