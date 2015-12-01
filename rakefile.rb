@@ -14,7 +14,6 @@ task :default => [:test]
 desc "Do stupid Nuget stuff for idiotic .Net builds"
 task :csharp do
 	sh "nuget.exe install Microsoft.CSharp -Version 4.0.0"
-	Dir.mkdir "C:/Users/fubuadmin/.nuget/packages"
 	FileUtils.cp "Microsoft.CSharp.4.0.0/Microsoft.CSharp.4.0.0.nupkg", "C:/Users/fubuadmin/.nuget/packages"
 end
 
