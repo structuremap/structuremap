@@ -7,9 +7,15 @@ build_revision = tc_build_number || Time.new.strftime('5%H%M')
 build_number = "#{BUILD_VERSION}.#{build_revision}"
 BUILD_NUMBER = build_number 
 
-task :ci => [:default, :pack]
+task :ci => [:csharp, :default, :pack]
 
 task :default => [:test]
+
+desc "Do stupid Nuget stuff for idiotic .Net builds"
+task :csharp do
+	sh "nuget.exe install Microsoft.CSharp -Version 4.0.0"
+	FileUtils.cp "Microsoft.CSharp.4.0.0/Microsoft.CSharp.4.0.0.nupkg", "C:\Users\fubuadmin\.nuget\packages"
+end
 
 desc "Prepares the working directory for a new build"
 task :clean do
@@ -59,8 +65,7 @@ end
 desc 'Compile the code'
 task :compile => [:clean, :version] do
 	sh "paket.exe install"
-	sh "nuget.exe install Microsoft.CSharp -Version 4.0.0"
-	
+
 	msbuild = '"C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe"'
 	sh "#{msbuild} src/StructureMap.sln   /property:Configuration=#{COMPILE_TARGET} /v:m /t:rebuild /nr:False /maxcpucount:2"
 end
