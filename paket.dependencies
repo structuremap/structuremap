@@ -3,7 +3,7 @@ source http://packages.nuget.org/v1/FeedService.svc
 
 nuget Castle.Core 3.1.0
 nuget Fixie
-nuget Microsoft.CSharp 4.0.0
+nuget Microsoft.CSharp 4.0.0 version_in_path: true
 nuget Moq 4.0.10827
 nuget RhinoMocks 3.6.1
 nuget Shouldly
