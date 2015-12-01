@@ -59,7 +59,8 @@ end
 desc 'Compile the code'
 task :compile => [:clean, :version] do
 	sh "paket.exe install"
-
+	sh "nuget install Microsoft.CSharp -Version 4.0.0"
+	
 	msbuild = '"C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe"'
 	sh "#{msbuild} src/StructureMap.sln   /property:Configuration=#{COMPILE_TARGET} /v:m /t:rebuild /nr:False /maxcpucount:2"
 end
