@@ -1,6 +1,7 @@
 ﻿using Castle.DynamicProxy;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -10,33 +11,44 @@ namespace StructureMap.DynamicInterception
     internal class MethodInvocation : ISyncMethodInvocation, IAsyncMethodInvocation
     {
         private readonly IInvocation _invocation;
-        private readonly IList<IArgument> _arguments;
-        private readonly IDictionary<string, IArgument> _argumentMap;
+        private readonly Lazy<ReadOnlyCollection<IArgument>> _arguments;
+        private readonly Lazy<IDictionary<string, IArgument>> _argumentMap;
 
         public MethodInvocation(IInvocation invocation)
         {
             _invocation = invocation;
-            _arguments = invocation.Method.GetParameters()
-                .Zip(invocation.Arguments, (info, value) => new { info, value })
-                .Select((t, i) => new Argument(invocation, i, t.value, t.info))
-                .ToList<IArgument>();
-            _argumentMap = _arguments.ToDictionary(a => a.ParameterInfo.Name);
+            _arguments = new Lazy<ReadOnlyCollection<IArgument>>(() => invocation.Method.GetParameters()
+                                                                                 .Zip(invocation.Arguments, (info, value) => new { info, value })
+                                                                                 .Select((t, i) => new Argument(invocation, i, t.value, t.info))
+                                                                                 .ToList<IArgument>()
+                                                                                 .AsReadOnly());
+            _argumentMap = new Lazy<IDictionary<string, IArgument>>(() => _arguments.Value.ToDictionary(a => a.ParameterInfo.Name));
         }
 
         public IList<IArgument> Arguments
         {
-            get { return new List<IArgument>(_arguments); }
+            get { return _arguments.Value; }
         }
 
         public IArgument GetArgument(string name)
         {
             IArgument result;
-            return _argumentMap.TryGetValue(name, out result) ? result : null;
+            return _argumentMap.Value.TryGetValue(name, out result) ? result : null;
+        }
+
+        public object TargetInstance
+        {
+            get { return _invocation.InvocationTarget; }
         }
 
         public MethodInfo MethodInfo
         {
             get { return _invocation.Method; }
+        }
+
+        public MethodInfo InstanceMethodInfo
+        {
+            get { return _invocation.MethodInvocationTarget; }
         }
 
         public IMethodInvocationResult InvokeNext()

@@ -10,7 +10,11 @@ namespace StructureMap.DynamicInterception
 
         IArgument GetArgument(string name);
 
+        object TargetInstance { get; }
+
         MethodInfo MethodInfo { get; }
+
+        MethodInfo InstanceMethodInfo { get; }
 
         Type ActualReturnType { get; }
 
