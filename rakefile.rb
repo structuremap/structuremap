@@ -7,7 +7,7 @@ build_revision = tc_build_number || Time.new.strftime('5%H%M')
 build_number = "#{BUILD_VERSION}.#{build_revision}"
 BUILD_NUMBER = build_number 
 
-task :ci => [:csharp, :default, :pack]
+task :ci => [:default, :pack]
 
 task :default => [:test]
 
@@ -65,7 +65,8 @@ end
 desc 'Compile the code'
 task :compile => [:clean, :version] do
 	sh "paket.exe install"
-
+	sh "nuget.exe restore src/StructureMap.sln"
+	
 	msbuild = '"C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe"'
 	sh "#{msbuild} src/StructureMap.sln   /property:Configuration=#{COMPILE_TARGET} /v:m /t:rebuild /nr:False /maxcpucount:2"
 end
