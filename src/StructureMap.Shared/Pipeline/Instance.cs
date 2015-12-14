@@ -158,6 +158,14 @@ namespace StructureMap.Pipeline
             return "Instance of {0} -- {1}".ToFormat(typeName, Description);
         }
 
+        public void ApplyAllPolicies(Type pluginType, Policies policies)
+        {
+            lock (_buildLock)
+            {
+                policies.Apply(pluginType, this);
+            }
+        }
+
         protected virtual IBuildPlan buildPlan(Type pluginType, Policies policies)
         {
             try
@@ -233,7 +241,8 @@ namespace StructureMap.Pipeline
         {
             throw new NotSupportedException("Instance's of type '{0}' does not support ToNamedClose() and cannot be used as a MissingInstance".ToFormat(GetType().FullName));
         }
-        
+
+
     }
 
 }

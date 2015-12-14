@@ -229,8 +229,9 @@ namespace StructureMap
             // Need to force the build plan to be created here.
             if (!instance.HasBuildPlan())
             {
-                Policies.Apply(pluginType, instance);
+                instance.ApplyAllPolicies(pluginType, Policies);
             }
+            
 
             return instance.DetermineLifecycle(_instances.DefaultLifecycleFor(pluginType));
         }
