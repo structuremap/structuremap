@@ -64,7 +64,7 @@ end
 
 desc 'Compile the code'
 task :compile => [:clean, :version] do
-	sh "paket.exe install"
+	sh "paket.exe restore"
 	sh "nuget.exe restore src/StructureMap.sln"
 	
 	msbuild = '"C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe"'
@@ -97,6 +97,6 @@ end
 
 "Launches the documentation project in editable mode"
 task :docs do
-	sh "paket.exe install"
+	sh "paket.exe restore"
 	sh "packages/Storyteller/tools/st.exe doc-run -v #{BUILD_VERSION}"
 end

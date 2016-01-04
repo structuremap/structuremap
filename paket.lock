@@ -23,7 +23,7 @@ NUGET
     Moq (4.0.10827)
     RhinoMocks (3.6.1)
     Shouldly (2.5.0)
-    Storyteller (3.0.0.274-alpha)
+    Storyteller (3.0.0.300-alpha)
     System.Collections (4.0.10) - version_in_path: true, framework: dnxcore50
       System.Diagnostics.Debug (>= 4.0.0) - framework: dnxcore50
       System.Resources.ResourceManager (>= 4.0.0) - framework: dnxcore50
