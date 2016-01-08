@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{93877CE0-BA48-4F28-B372-B8E802CEE085}"
 EndProject
@@ -39,6 +39,8 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StructureMap.Shared", "StructureMap.Shared\StructureMap.Shared.shproj", "{6EB495CA-A997-452B-B113-60B8FDC432EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Dotnet", "StructureMap.Dotnet\StructureMap.Dotnet.csproj", "{57144C5D-7614-45EA-8F8E-07C62709FEA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.ExeWidget", "StructureMap.Testing.ExeWidget\StructureMap.Testing.ExeWidget.csproj", "{3001815E-2766-44D6-AFA1-8FD8F4C400D9}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -456,6 +458,36 @@ Global
 		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
 		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.ReleaseSign|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.ReleaseSign|Mixed Platforms.Build.0 = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Build|.NET.ActiveCfg = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Build|.NET.Build.0 = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Build|Any CPU.ActiveCfg = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Build|Any CPU.Build.0 = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Build|Mixed Platforms.Build.0 = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Debug|.NET.Build.0 = Debug|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.NET45WP8|.NET.ActiveCfg = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.NET45WP8|.NET.Build.0 = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.NET45WP8|Any CPU.ActiveCfg = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.NET45WP8|Any CPU.Build.0 = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.NET45WP8|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.NET45WP8|Mixed Platforms.Build.0 = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Release|.NET.ActiveCfg = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Release|.NET.Build.0 = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.ReleaseSign|.NET.ActiveCfg = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.ReleaseSign|.NET.Build.0 = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.ReleaseSign|Any CPU.ActiveCfg = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.ReleaseSign|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9}.ReleaseSign|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -468,5 +500,6 @@ Global
 		{CAB97F7F-FB75-410C-898A-88DCAAC036BE} = {E1C10209-160D-4054-ACB7-478A9FDCF84C}
 		{C205EA4C-4CD0-4221-A3CB-AFD835F0B263} = {E1C10209-160D-4054-ACB7-478A9FDCF84C}
 		{DCDB6C5F-8D8A-4542-8F50-1A72E4D883E8} = {E1C10209-160D-4054-ACB7-478A9FDCF84C}
+		{3001815E-2766-44D6-AFA1-8FD8F4C400D9} = {E1C10209-160D-4054-ACB7-478A9FDCF84C}
 	EndGlobalSection
 EndGlobal
