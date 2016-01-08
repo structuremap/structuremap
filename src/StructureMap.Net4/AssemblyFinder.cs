@@ -29,7 +29,7 @@ namespace StructureMap.Graph
         public static IEnumerable<Assembly> FindAssemblies(string assemblyPath, Action<string> logFailure)
         {
             var dllFiles = Directory.EnumerateFiles(assemblyPath, "*.dll", SearchOption.AllDirectories);
-            var exeFiles = Directory.EnumerateFiles(assemblyPath, "*.dll", SearchOption.AllDirectories);
+            var exeFiles = Directory.EnumerateFiles(assemblyPath, "*.exe", SearchOption.AllDirectories);
 
             var files = dllFiles.Concat(exeFiles);
             foreach (var file in files)
