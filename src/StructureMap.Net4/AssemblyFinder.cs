@@ -8,11 +8,6 @@ namespace StructureMap.Graph
 {
     public static class AssemblyFinder
     {
-        public static IEnumerable<Assembly> FindDependentAssemblies()
-        {
-            return FindAssemblies(file => { }).Where(x => x.GetReferencedAssemblies().Any(assem => assem.Name == "FubuMVC.Core"));
-        }
-
         public static IEnumerable<Assembly> FindAssemblies(Action<string> logFailure)
         {
             var assemblyPath = AppDomain.CurrentDomain.BaseDirectory;
