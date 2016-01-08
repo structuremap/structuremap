@@ -19,17 +19,17 @@ namespace StructureMap.Graph
             }
         }
 
-        public static void AssembliesFromApplicationBaseDirectory(this IAssemblyScanner scanner)
+        public static void AssembliesFromApplicationBaseDirectory(this IAssemblyScanner scanner, bool includeExeFiles = false)
         {
-            scanner.AssembliesFromApplicationBaseDirectory(a => true);
+            scanner.AssembliesFromApplicationBaseDirectory(a => true, includeExeFiles: includeExeFiles);
         }
 
-        public static void AssembliesFromApplicationBaseDirectory(this IAssemblyScanner scanner, Func<Assembly, bool> assemblyFilter)
+        public static void AssembliesFromApplicationBaseDirectory(this IAssemblyScanner scanner, Func<Assembly, bool> assemblyFilter, bool includeExeFiles = false)
         {
             var assemblies = AssemblyFinder.FindAssemblies(assemblyFilter, txt =>
             {
                 Console.WriteLine("StructureMap could not load assembly from file " + txt);
-            });
+            }, includeExeFiles: includeExeFiles);
 
             foreach (var assembly in assemblies)
             {
@@ -37,12 +37,12 @@ namespace StructureMap.Graph
             }
         }
 
-        public static void AssembliesFromPath(this IAssemblyScanner scanner, string path)
+        public static void AssembliesFromPath(this IAssemblyScanner scanner, string path, bool includeExeFiles=false)
         {
             var assemblies = AssemblyFinder.FindAssemblies(path, txt =>
             {
                 Console.WriteLine("StructureMap could not load assembly from file " + txt);
-            });
+            }, includeExeFiles: includeExeFiles);
 
             foreach (var assembly in assemblies)
             {
@@ -51,12 +51,12 @@ namespace StructureMap.Graph
         }
 
         public static void AssembliesFromPath(this IAssemblyScanner scanner, string path,
-            Func<Assembly, bool> assemblyFilter)
+            Func<Assembly, bool> assemblyFilter, bool includeExeFiles = false)
         {
             var assemblies = AssemblyFinder.FindAssemblies(path, txt =>
             {
                 Console.WriteLine("StructureMap could not load assembly from file " + txt);
-            }).Where(assemblyFilter);
+            }, includeExeFiles: includeExeFiles).Where(assemblyFilter);
 
 
             foreach (var assembly in assemblies)
