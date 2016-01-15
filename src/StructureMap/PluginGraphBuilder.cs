@@ -34,7 +34,6 @@ namespace StructureMap
             return this;
         }
 
-
         /// <summary>
         ///     Reads the configuration information and returns the PluginGraph definition of
         ///     Plugin families and Plugin's
@@ -71,8 +70,11 @@ namespace StructureMap
             graph.Profiles.Each(addCloseGenericPolicyTo);
         }
 
+        public static bool IsRunningConfig = false;
+
         public void RunConfigurations()
         {
+            IsRunningConfig = true;
             _configurations.Each(x => {
                 x.Register(this);
                 x.Configure(_graph);
@@ -93,6 +95,7 @@ namespace StructureMap
 
                 builder.Build();
             }
+            IsRunningConfig = false;
         }
 
         public void AddScanner(AssemblyScanner scanner)
