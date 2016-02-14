@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using Shouldly;
+using System.Threading.Tasks;
 
 namespace StructureMap.Testing.Acceptance
 {
@@ -84,6 +85,15 @@ namespace StructureMap.Testing.Acceptance
 
             guy1.WasDisposed.ShouldBeFalse();
             guy2.WasDisposed.ShouldBeTrue();
+        }       
+        
+        [Test]
+        public void stress_test_creation_and_disposal_of_child_containers_in_concurrent_operations()
+        {
+            Parallel.ForEach(Enumerable.Range(0, 1000000), i =>
+            {
+                using (parent.CreateChildContainer()) { }
+            });
         }
 
         public class DisposableGuy : IDisposable
