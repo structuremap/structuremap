@@ -164,35 +164,42 @@ namespace StructureMap
 
         public void Configure(Action<ConfigurationExpression> configure)
         {
-            var registry = new ConfigurationExpression();
-            configure(registry);
+            _pluginGraph.IsRunningConfigure = true;
 
-            if (registry.HasPolicyChanges() && Role == ContainerRole.Nested)
+            try
             {
-                throw new StructureMapConfigurationException("Policy changes to a nested container are not allowed. Policies can only be applied to the root container");
+                var registry = new ConfigurationExpression();
+                configure(registry);
+
+                if (registry.HasPolicyChanges() && Role == ContainerRole.Nested)
+                {
+                    throw new StructureMapConfigurationException("Policy changes to a nested container are not allowed. Policies can only be applied to the root container");
+                }
+
+                if (registry.HasPolicyChanges())
+                {
+                    _pluginGraph.ClearTypeMisses();
+                }
+
+                var builder = new PluginGraphBuilder(_pluginGraph);
+                builder.Add(registry);
+
+                registry.Registries.Each(x => builder.Add(x));
+
+                builder.RunConfigurations();
+
+                if (registry.HasPolicyChanges())
+                {
+                    Instances.GetAllInstances().ToArray().Each(x => x.ClearBuildPlan());
+
+                    Profiles.AllProfiles().ToArray()
+                        .Each(x => x.Instances.GetAllInstances().ToArray().Each(i => i.ClearBuildPlan()));
+
+                }
             }
-
-            if (registry.HasPolicyChanges())
+            finally
             {
-                _pluginGraph.ClearTypeMisses();
-            }
-
-            var builder = new PluginGraphBuilder(_pluginGraph);
-            builder.Add(registry);
-
-            registry.Registries.Each(x => builder.Add(x));
-
-            builder.RunConfigurations();
-
-            if (registry.HasPolicyChanges())
-            {
-                
-
-                Instances.GetAllInstances().ToArray().Each(x => x.ClearBuildPlan());
-
-                Profiles.AllProfiles().ToArray()
-                    .Each(x => x.Instances.GetAllInstances().ToArray().Each(i => i.ClearBuildPlan()));
-
+                _pluginGraph.IsRunningConfigure = false;
             }
         }
 
