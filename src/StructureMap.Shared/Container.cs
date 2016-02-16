@@ -1133,7 +1133,7 @@ namespace StructureMap
         {
             if (defaultInstance == null && pluginType.IsConcrete())
             {
-                defaultInstance = new ConfiguredInstance(pluginType);
+                defaultInstance = new ConfiguredInstance(pluginType) {Name = requestedName};
             }
 
             var basicInstance = defaultInstance as IOverridableInstance;

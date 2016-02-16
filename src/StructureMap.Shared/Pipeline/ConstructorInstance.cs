@@ -106,7 +106,8 @@ namespace StructureMap.Pipeline
 
         public ConstructorInstance Override(ExplicitArguments arguments)
         {
-            var instance = new ConstructorInstance(_pluggedType);
+            var instance = new ConstructorInstance(_pluggedType) {Name = Name};
+
             _dependencies.CopyTo(instance._dependencies);
 
             arguments.Configure(instance);
