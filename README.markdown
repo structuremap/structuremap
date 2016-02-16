@@ -19,7 +19,8 @@ Building the Source
 -------------------
 
 1. Clone the repository: `git clone git://github.com/structuremap/structuremap.git`
-1. Open the solution at src/StructureMap.sln and go to town! Note that Paket is used for auto-restoring Nuget dependencies as part of the MSBuild compilation. Just compile through VS.Net to retrieve all the dependencies.
+2. From the command line, run `paket restore` once to resolve and fetch the nuget dependencies. I disabled the "auto-restore" feature because I felt like it was too slow in normal development. I apologize for the problems that has caused folks in pulling down the code.
+1. Open the solution at src/StructureMap.sln and go to town! 
 
 Note:
 
