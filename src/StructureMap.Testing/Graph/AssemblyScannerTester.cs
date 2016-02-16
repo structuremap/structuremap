@@ -165,7 +165,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void scan_all_assemblies_in_a_folder_including_exe()
         {
-            Scan(x => x.AssembliesFromPath(assemblyScanningFolder, includeExeFiles: true));
+            Scan(x => x.AssembliesAndExecutablesFromPath(assemblyScanningFolder));
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldHaveFamilyWithSameName<IWorker>();
             shouldHaveFamilyWithSameName<IDefinedInExe>();
@@ -174,7 +174,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void scan_all_assemblies_in_application_base_directory_including_exe()
         {
-            Scan(x => x.AssembliesFromApplicationBaseDirectory(includeExeFiles: true));
+            Scan(x => x.AssembliesAndExecutablesFromApplicationBaseDirectory());
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldHaveFamilyWithSameName<IWorker>();
             shouldHaveFamilyWithSameName<IDefinedInExe>();

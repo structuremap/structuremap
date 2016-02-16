@@ -67,6 +67,11 @@ namespace StructureMap.Graph
         public static IEnumerable<Assembly> FindAssemblies(Func<Assembly, bool> filter,
             Action<string> onDirectoryFound = null, bool includeExeFiles=false)
         {
+            if (filter == null)
+            {
+                filter = a => true;
+            }
+
             if (onDirectoryFound == null)
             {
                 onDirectoryFound = dir => { };
