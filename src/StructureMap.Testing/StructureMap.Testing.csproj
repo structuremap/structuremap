@@ -111,6 +111,10 @@
       <Project>{6d812b81-cf2e-4df1-9f73-bc19e5a6a019}</Project>
       <Name>StructureMap.Net4</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.ExeWidget\StructureMap.Testing.ExeWidget.csproj">
+      <Project>{3001815e-2766-44d6-afa1-8fd8f4c400d9}</Project>
+      <Name>StructureMap.Testing.ExeWidget</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StructureMap.Web\StructureMap.Web.csproj">
       <Project>{fa8fdbc9-46ed-4976-a554-a5a1079bd765}</Project>
       <Name>StructureMap.Web</Name>

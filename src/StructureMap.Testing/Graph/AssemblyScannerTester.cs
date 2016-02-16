@@ -12,6 +12,7 @@ using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using StructureMap.Testing.Widget5;
 using StructureMap.TypeRules;
+using StructureMap.Testing.ExeWidget;
 
 namespace StructureMap.Testing.Graph
 {
@@ -56,9 +57,11 @@ namespace StructureMap.Testing.Graph
 
             var assembly1 = typeof (RedGreenRegistry).Assembly.Location;
             var assembly2 = typeof (IWorker).Assembly.Location;
+            var assembly3 = typeof(IDefinedInExe).Assembly.Location;
 
             File.Copy(assembly1, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly1)), true);
             File.Copy(assembly2, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly2)), true);
+            File.Copy(assembly3, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly3)), true);
         }
 
         private PluginGraph theGraph;
@@ -146,6 +149,7 @@ namespace StructureMap.Testing.Graph
             Scan(x => x.AssembliesFromPath(assemblyScanningFolder));
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldHaveFamilyWithSameName<IWorker>();
+            shouldNotHaveFamilyWithSameName<IDefinedInExe>();
         }
 
         [Test]
@@ -154,9 +158,28 @@ namespace StructureMap.Testing.Graph
             Scan(x => x.AssembliesFromApplicationBaseDirectory());
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldHaveFamilyWithSameName<IWorker>();
+            shouldNotHaveFamilyWithSameName<IDefinedInExe>();
+        }
+        // ENDSAMPLE
+
+        [Test]
+        public void scan_all_assemblies_in_a_folder_including_exe()
+        {
+            Scan(x => x.AssembliesFromPath(assemblyScanningFolder, includeExeFiles: true));
+            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldHaveFamilyWithSameName<IWorker>();
+            shouldHaveFamilyWithSameName<IDefinedInExe>();
         }
 
-        // ENDSAMPLE
+        [Test]
+        public void scan_all_assemblies_in_application_base_directory_including_exe()
+        {
+            Scan(x => x.AssembliesFromApplicationBaseDirectory(includeExeFiles: true));
+            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldHaveFamilyWithSameName<IWorker>();
+            shouldHaveFamilyWithSameName<IDefinedInExe>();
+        }
+
 
         // SAMPLE: scan-calling-assembly
         [Test]

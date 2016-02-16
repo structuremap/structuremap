@@ -8,12 +8,7 @@ namespace StructureMap.Graph
 {
     public static class AssemblyFinder
     {
-        public static IEnumerable<Assembly> FindDependentAssemblies()
-        {
-            return FindAssemblies(file => { }).Where(x => x.GetReferencedAssemblies().Any(assem => assem.Name == "FubuMVC.Core"));
-        }
-
-        public static IEnumerable<Assembly> FindAssemblies(Action<string> logFailure)
+        public static IEnumerable<Assembly> FindAssemblies(Action<string> logFailure, bool includeExeFiles)
         {
             var assemblyPath = AppDomain.CurrentDomain.BaseDirectory;
             var binPath = FindBinPath();
@@ -23,15 +18,20 @@ namespace StructureMap.Graph
             }
 
 
-            return FindAssemblies(assemblyPath, logFailure);
+            return FindAssemblies(assemblyPath, logFailure, includeExeFiles);
         }
 
-        public static IEnumerable<Assembly> FindAssemblies(string assemblyPath, Action<string> logFailure)
+        public static IEnumerable<Assembly> FindAssemblies(string assemblyPath, Action<string> logFailure, bool includeExeFiles)
         {
             var dllFiles = Directory.EnumerateFiles(assemblyPath, "*.dll", SearchOption.AllDirectories);
-            var exeFiles = Directory.EnumerateFiles(assemblyPath, "*.dll", SearchOption.AllDirectories);
+            var files = dllFiles;
 
-            var files = dllFiles.Concat(exeFiles);
+            if(includeExeFiles)
+            {
+                var exeFiles = Directory.EnumerateFiles(assemblyPath, "*.exe", SearchOption.AllDirectories);
+                files = dllFiles.Concat(exeFiles);
+            }
+
             foreach (var file in files)
             {
                 var name = Path.GetFileNameWithoutExtension(file);
@@ -65,14 +65,14 @@ namespace StructureMap.Graph
 
 
         public static IEnumerable<Assembly> FindAssemblies(Func<Assembly, bool> filter,
-            Action<string> onDirectoryFound = null)
+            Action<string> onDirectoryFound = null, bool includeExeFiles=false)
         {
             if (onDirectoryFound == null)
             {
                 onDirectoryFound = dir => { };
             }
 
-            return FindAssemblies(file => { }).Where(filter);
+            return FindAssemblies(file => { }, includeExeFiles: includeExeFiles).Where(filter);
         }
 
 
