@@ -15,6 +15,11 @@ namespace StructureMap.Pipeline
             get { return "Default"; }
         }
 
+        public override Instance ToNamedClone(string name)
+        {
+            return this;
+        }
+
         public override IDependencySource ToDependencySource(Type pluginType)
         {
             return EnumerableInstance.IsEnumerable(pluginType)

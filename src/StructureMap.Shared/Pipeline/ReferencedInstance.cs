@@ -59,5 +59,10 @@ namespace StructureMap.Pipeline
         {
             return this;
         }
+
+        public override Instance ToNamedClone(string name)
+        {
+            return this;
+        }
     }
 }
