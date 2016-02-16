@@ -11,14 +11,28 @@ namespace StructureMap.Graph
         public static IEnumerable<Assembly> FindAssemblies(Action<string> logFailure, bool includeExeFiles)
         {
             var assemblyPath = AppDomain.CurrentDomain.BaseDirectory;
-            var binPath = FindBinPath();
-            if (!string.IsNullOrEmpty(binPath))
+            var binPath = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
+
+            if (string.IsNullOrEmpty(binPath))
             {
-                assemblyPath = Path.Combine(assemblyPath, binPath);
+                return FindAssemblies(assemblyPath, logFailure, includeExeFiles);
             }
 
 
-            return FindAssemblies(assemblyPath, logFailure, includeExeFiles);
+            if (Path.IsPathRooted(binPath))
+            {
+                return FindAssemblies(binPath, logFailure, includeExeFiles);
+            }
+
+
+            var binPaths = binPath.Split(';');
+            return binPaths.SelectMany(bin =>
+            {
+                var path = Path.Combine(assemblyPath, bin);
+                return FindAssemblies(path, logFailure, includeExeFiles);
+            });
+
+            
         }
 
         public static IEnumerable<Assembly> FindAssemblies(string assemblyPath, Action<string> logFailure, bool includeExeFiles)
@@ -50,18 +64,7 @@ namespace StructureMap.Graph
             }
         }
 
-        public static string FindBinPath()
-        {
-            var binPath = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
-            if (!string.IsNullOrEmpty(binPath))
-            {
-                return Path.IsPathRooted(binPath)
-                    ? binPath
-                    : Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, binPath);
-            }
 
-            return null;
-        }
 
 
         public static IEnumerable<Assembly> FindAssemblies(Func<Assembly, bool> filter,
