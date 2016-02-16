@@ -4,6 +4,8 @@ using Rhino.Mocks;
 using Shouldly;
 using StructureMap.Attributes;
 using StructureMap.Building;
+using StructureMap.Building.Interception;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget;
@@ -20,14 +22,14 @@ namespace StructureMap.Testing.Building
         public void if_a_dependency_value_is_IDependencySource_just_use_that()
         {
             var source = MockRepository.GenerateMock<IDependencySource>();
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeArg", typeof (IGateway), source)
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeArg", typeof (IGateway), source)
                 .ShouldBeTheSameAs(source);
         }
 
         [Test]
         public void no_value_for_non_simple_resolves_to_default_source()
         {
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IGateway), null)
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (IGateway), null)
                 .ShouldBeOfType<DefaultDependencySource>()
                 .DependencyType.ShouldBe(typeof (IGateway));
         }
@@ -38,27 +40,27 @@ namespace StructureMap.Testing.Building
             var instance = new FakeInstance();
             instance.SetLifecycleTo(new SingletonLifecycle());
 
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IGateway), instance)
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (IGateway), instance)
                 .ShouldBeTheSameAs(instance.DependencySource);
         }
 
         [Test]
         public void if_value_exists_and_it_is_the_right_type_return_constant()
         {
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (string), "foo")
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (string), "foo")
                 .ShouldBe(Constant.For("foo"));
 
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (int), 42)
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (int), 42)
                 .ShouldBe(Constant.For(42));
 
             // My dad raises registered Beefmasters and he'd be disappointed
             // if the default here was anything else
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (BreedEnum),
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (BreedEnum),
                 BreedEnum.Beefmaster)
                 .ShouldBe(Constant.For(BreedEnum.Beefmaster));
 
             var gateway = new StubbedGateway();
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IGateway), gateway)
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (IGateway), gateway)
                 .ShouldBe(Constant.For<IGateway>(gateway));
         }
 
@@ -66,24 +68,24 @@ namespace StructureMap.Testing.Building
         public void if_list_value_exists_use_that()
         {
             var list = new List<IGateway> {new StubbedGateway(), new StubbedGateway()};
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), list)
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), list)
                 .ShouldBe(Constant.For(list));
 
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IList<IGateway>), list)
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (IList<IGateway>), list)
                 .ShouldBe(Constant.For<IList<IGateway>>(list));
         }
 
         [Test]
         public void coerce_simple_numbers()
         {
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (int), "42")
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (int), "42")
                 .ShouldBe(Constant.For(42));
         }
 
         [Test]
         public void coerce_enum()
         {
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (BreedEnum), "Angus")
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (BreedEnum), "Angus")
                 .ShouldBe(Constant.For(BreedEnum.Angus));
         }
 
@@ -92,7 +94,7 @@ namespace StructureMap.Testing.Building
         {
             var array = new IGateway[] {new StubbedGateway(), new StubbedGateway()};
             var constant =
-                ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), array)
+                ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), array)
                     .ShouldBeOfType<Constant>();
 
             constant.ReturnedType.ShouldBe(typeof (List<IGateway>));
@@ -105,7 +107,7 @@ namespace StructureMap.Testing.Building
         {
             var array = new IGateway[] {new StubbedGateway(), new StubbedGateway()};
             var constant =
-                ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IList<IGateway>), array)
+                ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (IList<IGateway>), array)
                     .ShouldBeOfType<Constant>();
 
             constant.ReturnedType.ShouldBe(typeof (IList<IGateway>));
@@ -118,7 +120,7 @@ namespace StructureMap.Testing.Building
         {
             var list = new IGateway[] {new StubbedGateway(), new StubbedGateway()};
             var constant =
-                ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), list)
+                ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (List<IGateway>), list)
                     .ShouldBeOfType<Constant>();
 
             constant.ReturnedType.ShouldBe(typeof (List<IGateway>));
@@ -131,7 +133,7 @@ namespace StructureMap.Testing.Building
         {
             var list = new List<IGateway> {new StubbedGateway(), new StubbedGateway()};
             var constant =
-                ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (IGateway[]), list)
+                ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (IGateway[]), list)
                     .ShouldBeOfType<Constant>();
 
             constant.ReturnedType.ShouldBe(typeof (IGateway[]));
@@ -143,7 +145,7 @@ namespace StructureMap.Testing.Building
         public void use_all_possible_for_array()
         {
             var enumerableType = typeof (IGateway[]);
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
                 .ShouldBe(new AllPossibleValuesDependencySource(enumerableType));
         }
 
@@ -151,7 +153,7 @@ namespace StructureMap.Testing.Building
         public void use_all_possible_for_ienumerable()
         {
             var enumerableType = typeof (IEnumerable<IGateway>);
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
                 .ShouldBe(new AllPossibleValuesDependencySource(enumerableType));
         }
 
@@ -159,7 +161,7 @@ namespace StructureMap.Testing.Building
         public void use_all_possible_for_ilist()
         {
             var enumerableType = typeof (IList<IGateway>);
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
                 .ShouldBe(new AllPossibleValuesDependencySource(enumerableType));
         }
 
@@ -167,14 +169,14 @@ namespace StructureMap.Testing.Building
         public void use_all_possible_for_list()
         {
             var enumerableType = typeof (List<IGateway>);
-            ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
+            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
                 .ShouldBe(new AllPossibleValuesDependencySource(enumerableType));
         }
 
         [Test]
         public void source_for_missing_string_constructor_arg()
         {
-            var source = ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeProp", typeof (string), null)
+            var source = ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof (string), null)
                 .ShouldBeOfType<DependencyProblem>();
 
             source.Name.ShouldBe("SomeProp");
@@ -186,7 +188,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void source_for_missing_string_setter_arg()
         {
-            var source = ConcreteType.SourceFor(ConcreteType.SetterProperty, "SomeProp", typeof (string), null)
+            var source = ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.SetterProperty, "SomeProp", typeof (string), null)
                 .ShouldBeOfType<DependencyProblem>();
 
             source.Name.ShouldBe("SomeProp");
@@ -200,6 +202,7 @@ namespace StructureMap.Testing.Building
         {
             var colorRule = new ColorRule("Red");
             var source = ConcreteType.SourceFor(
+                new Policies(PluginGraph.CreateRoot()),
                 ConcreteType.SetterProperty,
                 "SomeProp",
                 typeof (IGateway),
@@ -216,7 +219,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void source_for_conversion_problem()
         {
-            var source = ConcreteType.SourceFor(ConcreteType.ConstructorArgument, "SomeArg", typeof (int), "foo")
+            var source = ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeArg", typeof (int), "foo")
                 .ShouldBeOfType<DependencyProblem>();
 
             source.Name.ShouldBe("SomeArg");

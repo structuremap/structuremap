@@ -253,6 +253,11 @@ namespace StructureMap.Testing.Graph
 
     public class FakeDependencySource : IDependencySource
     {
+        public FakeDependencySource()
+        {
+            ReturnedType = typeof (string);
+        }
+
         public string Description { get; private set; }
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)
@@ -260,7 +265,7 @@ namespace StructureMap.Testing.Graph
             throw new NotImplementedException();
         }
 
-        public Type ReturnedType { get; private set; }
+        public Type ReturnedType { get;  }
 
         public void AcceptVisitor(IDependencyVisitor visitor)
         {

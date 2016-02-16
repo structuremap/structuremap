@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 
@@ -85,7 +86,7 @@ namespace StructureMap.Building
 
             if (dependency == null && !isMandatory) return;
 
-            var source = SourceFor(SetterProperty, setter.Name, setter.PropertyType, dependency);
+            var source = SourceFor(policies, SetterProperty, setter.Name, setter.PropertyType, dependency);
             plan.Add(setter.PropertyType, setter, source);
         }
 
@@ -114,7 +115,7 @@ namespace StructureMap.Building
                         dependency = x.DefaultValue;
                     }
 
-                    return SourceFor(ConstructorArgument, x.Name, x.ParameterType, dependency);
+                    return SourceFor(policies, ConstructorArgument, x.Name, x.ParameterType, dependency);
                 });
 
             ctorStep.Add(ctorDependencies);
@@ -129,7 +130,7 @@ namespace StructureMap.Building
             return multiples;
         }
 
-        public static IDependencySource SourceFor(string ctorOrSetter, string name, Type dependencyType, object value)
+        public static IDependencySource SourceFor(Policies policies, string ctorOrSetter, string name, Type dependencyType, object value)
         {
             if (value == null)
             {
@@ -159,7 +160,18 @@ namespace StructureMap.Building
 
             if (value is Instance)
             {
-                return value.As<Instance>().ToDependencySource(dependencyType);
+                var instance = value.As<Instance>();
+                if (instance.Interceptors.Any())
+                {
+                    var inner = instance.ToDependencySource(dependencyType);
+                    return new InterceptionPlan(dependencyType, inner, policies, instance.Interceptors);
+                }
+                else
+                {
+                    return instance.ToDependencySource(dependencyType);
+                }
+
+
             }
 
             if (value.GetType().CanBeCastTo(dependencyType))

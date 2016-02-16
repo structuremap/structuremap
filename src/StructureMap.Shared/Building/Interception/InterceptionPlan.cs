@@ -45,6 +45,11 @@ namespace StructureMap.Building.Interception
             }
         }
 
+        public IDependencySource Inner
+        {
+            get { return _inner; }
+        }
+
         public Func<IBuildSession, IContext, T> ToBuilder<T>()
         {
             var lambdaType = typeof (Func<IBuildSession, IContext, T>);
