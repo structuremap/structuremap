@@ -73,7 +73,8 @@ namespace StructureMap.TypeRules
 
         public static bool IsInNamespace(this Type type, string nameSpace)
         {
-            return type.Namespace != null && type.Namespace.StartsWith(nameSpace);
+            var subNameSpace = nameSpace + ".";
+            return type.Namespace != null && (type.Namespace.Equals(nameSpace) || type.Namespace.StartsWith(subNameSpace));
         }
 
         public static bool IsOpenGeneric(this Type type)

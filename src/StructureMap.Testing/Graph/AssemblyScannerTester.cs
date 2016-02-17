@@ -117,9 +117,12 @@ namespace StructureMap.Testing.Graph
         public void is_in_namespace()
         {
             GetType().IsInNamespace("blah").ShouldBeFalse();
+            GetType().IsInNamespace("Struct").ShouldBeFalse();
             GetType().IsInNamespace("StructureMap").ShouldBeTrue();
+            GetType().IsInNamespace("StructureMap.Test").ShouldBeFalse();
             GetType().IsInNamespace("StructureMap.Testing").ShouldBeTrue();
             GetType().IsInNamespace("StructureMap.Testing.Graph").ShouldBeTrue();
+            GetType().IsInNamespace("StructureMap.Testing.Graphics").ShouldBeFalse();
             GetType().IsInNamespace("StructureMap.Testing.Graph.Something").ShouldBeFalse();
 
             var _person = new
