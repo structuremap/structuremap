@@ -221,5 +221,57 @@ namespace StructureMap.Testing.Bugs
                 }
             }
         }
+
+        [TestFixture]
+        public class Register_generic_types_with_inheritance_but_dont_register_the_base_class
+        {
+            [Test]
+            public void configure_container_during_construction()
+            {
+                var container = new Container(new TestRegistry());
+                AssertConfigurationIsCorrect(container);
+            }
+
+            [Test]
+            public void configure_container_after_construction()
+            {
+                var container = new Container();
+                container.Configure(x => x.IncludeRegistry(new TestRegistry()));
+                AssertConfigurationIsCorrect(container);
+            }
+
+            private static void AssertConfigurationIsCorrect(Container container)
+            {
+                // can resolve explicitly registered generics
+                container.GetInstance<IMoreSpecificGeneric<string>>().ShouldBeOfType(typeof(GenericImpl<string>));
+                container.GetInstance<IMoreSpecificGeneric<string>>().Value.ShouldBe("derived");
+                container.GetInstance<IMostSpecificGeneric<string>>().ShouldBeOfType(typeof(GenericImpl<string>));
+                container.GetInstance<IMostSpecificGeneric<string>>().Value.ShouldBe("most derived");
+
+                // can resolve the base type, but don't check to which type exactly, as this relies on the order of registrations
+                CanResolve<IGeneric<string>>(container).ShouldBeTrue();
+            }
+
+            interface IGeneric<T>
+            {
+                T Value { get; }
+            }
+            interface IMoreSpecificGeneric<T> : IGeneric<T> { }
+            interface IMostSpecificGeneric<T> : IMoreSpecificGeneric<T> { }
+
+            class GenericImpl<T> : IMostSpecificGeneric<string>
+            {
+                public string Value { get; set; }
+            }
+
+            class TestRegistry : Registry
+            {
+                public TestRegistry()
+                {
+                    For<IMostSpecificGeneric<string>>().Use(new GenericImpl<string> { Value = "most derived" });
+                    For<IMoreSpecificGeneric<string>>().Use(new GenericImpl<string> { Value = "derived" });
+                }
+            }
+        }
     }
 }
