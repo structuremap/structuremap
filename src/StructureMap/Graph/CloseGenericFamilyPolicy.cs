@@ -33,6 +33,8 @@ namespace StructureMap.Graph
                     return family;
                 }
 
+                if (PluginGraphBuilder.IsRunningConfig)
+                    return null;
                 return _graph.Families.ToArray().FirstOrDefault(x => type.GetTypeInfo().IsAssignableFrom(x.PluginType.GetTypeInfo()));
             }
 
