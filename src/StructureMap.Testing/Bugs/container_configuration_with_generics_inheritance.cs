@@ -47,9 +47,9 @@ namespace StructureMap.Testing.Bugs
 
                 // contravariance - can resolve generics with type param which inherits from an explicitly registered one
                 CanResolve<IGenericContravariant<Base>>(container).ShouldBeFalse();
-                container.GetInstance<IGenericContravariant<Derived2>>().ShouldBeOfType(typeof(GenericContravariant<Derived1>));
-                container.GetInstance<IGenericContravariant<Derived4>>().ShouldBeOfType(typeof(GenericContravariant<Derived1>)); // 1 not 3, because 1 is registered before 3
-                container.GetInstance<IGenericContravariant<Derived6>>().ShouldBeOfType(typeof(GenericContravariant<Derived1>)); // 1 not 5, because 1 is registered before 5
+                CanResolve<IGenericContravariant<Derived2>>(container).ShouldBeTrue();
+                CanResolve<IGenericContravariant<Derived4>>(container).ShouldBeTrue();
+                CanResolve<IGenericContravariant<Derived6>>(container).ShouldBeTrue();
             }
 
             interface IGenericContravariant<in T> { }
@@ -95,9 +95,9 @@ namespace StructureMap.Testing.Bugs
                 container.GetInstance<IGenericCovariant<Derived5>>().ShouldBeOfType(typeof(GenericCovariant<Derived5>));
 
                 // covariance - can resolve generics with type param which is base of an explicitly registered one
-                container.GetInstance<IGenericCovariant<Base>>().ShouldBeOfType(typeof(GenericCovariant<Derived1>));
-                container.GetInstance<IGenericCovariant<Derived2>>().ShouldBeOfType(typeof(GenericCovariant<Derived5>)); // 5 not 3, because 5 is registered before 3
-                container.GetInstance<IGenericCovariant<Derived4>>().ShouldBeOfType(typeof(GenericCovariant<Derived5>));
+                CanResolve<IGenericCovariant<Base>>(container).ShouldBeTrue();
+                CanResolve<IGenericCovariant<Derived2>>(container).ShouldBeTrue();
+                CanResolve<IGenericCovariant<Derived4>>(container).ShouldBeTrue();
                 CanResolve<IGenericCovariant<Derived6>>(container).ShouldBeFalse();
             }
 
