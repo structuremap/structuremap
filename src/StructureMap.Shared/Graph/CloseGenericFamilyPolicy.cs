@@ -18,6 +18,8 @@ namespace StructureMap.Graph
 
         public PluginFamily Build(Type type)
         {
+            if (_graph.IsRunningConfigure) return null;
+
             if (!type.GetTypeInfo().IsGenericType) return null;
 
             var basicType = type.GetGenericTypeDefinition();
