@@ -47,12 +47,11 @@ namespace StructureMap.Testing.Bugs
                 container.GetInstance<IGenericContravariant<Derived5>>().ShouldBeOfType(typeof(GenericContravariant<Derived5>));
 
                 // contravariance - can resolve generics with type param which inherits from an explicitly registered one
+                // KNOWING WHICH TYPE EXACTLY IT WILL BE IS NOT SUPPORTED, AND NOT GOING TO. BUT AT LEAST CHECK IT'S ONE OF THE CORRECT ONES
                 CanResolve<IGenericContravariant<Base>>(container).ShouldBeFalse();
                 container.GetInstance<IGenericContravariant<Derived2>>().ShouldBeOfType(typeof(GenericContravariant<Derived1>));
-                
-                // NOT SUPPORTED, AND NOT GOING TO.
-                //container.GetInstance<IGenericContravariant<Derived4>>().ShouldBeOfType(typeof(GenericContravariant<Derived1>)); // 1 not 3, because 1 is registered before 3
-                //container.GetInstance<IGenericContravariant<Derived6>>().ShouldBeOfType(typeof(GenericContravariant<Derived1>)); // 1 not 5, because 1 is registered before 5
+                container.GetInstance<IGenericContravariant<Derived4>>().GetType().ShouldBeOneOf(typeof(GenericContravariant<Derived1>), typeof(GenericContravariant<Derived3>));
+                container.GetInstance<IGenericContravariant<Derived6>>().GetType().ShouldBeOneOf(typeof(GenericContravariant<Derived1>), typeof(GenericContravariant<Derived3>), typeof(GenericContravariant<Derived5>));
             }
 
             public interface IGenericContravariant<in T> { }
@@ -100,10 +99,9 @@ namespace StructureMap.Testing.Bugs
                 container.GetInstance<IGenericCovariant<Derived5>>().ShouldBeOfType(typeof(GenericCovariant<Derived5>));
 
                 // covariance - can resolve generics with type param which is base of an explicitly registered one
-                container.GetInstance<IGenericCovariant<Base>>().ShouldBeOfType(typeof(GenericCovariant<Derived1>));
-
-                // NOT SUPPORTED, AND NOT GOING TO.
-                //container.GetInstance<IGenericCovariant<Derived2>>().ShouldBeOfType(typeof(GenericCovariant<Derived5>)); // 5 not 3, because 5 is registered before 3
+                // KNOWING WHICH TYPE EXACTLY IT WILL BE IS NOT SUPPORTED, AND NOT GOING TO. BUT AT LEAST CHECK IT'S ONE OF THE CORRECT ONES
+                container.GetInstance<IGenericCovariant<Base>>().GetType().ShouldBeOneOf(typeof(GenericCovariant<Derived5>), typeof(GenericCovariant<Derived3>), typeof(GenericCovariant<Derived1>));
+                container.GetInstance<IGenericCovariant<Derived2>>().GetType().ShouldBeOneOf(typeof(GenericCovariant<Derived5>), typeof(GenericCovariant<Derived3>));
                 container.GetInstance<IGenericCovariant<Derived4>>().ShouldBeOfType(typeof(GenericCovariant<Derived5>));
                 CanResolve<IGenericCovariant<Derived6>>(container).ShouldBeFalse();
             }
