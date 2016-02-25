@@ -29,6 +29,36 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget),
                     typeof (DefaultWidget));
         }
+
+        [Test]
+        public void get_instance_gets_most_recently_registered_type()
+        {
+            using (var container = new Container(new SecondRegistry()))
+            {
+                container.GetInstance<IWidget>()
+                    .IsType<BWidget>();
+            }
+        }
+    }
+
+    public class FirstRegistry : Registry
+    {
+        public FirstRegistry()
+        {
+            For<IWidget>()
+                .Use<AWidget>();
+        }
+    }
+
+    public class SecondRegistry : Registry
+    {
+        public SecondRegistry()
+        {
+            IncludeRegistry<FirstRegistry>();
+
+            For<IWidget>()
+                .Use<BWidget>();
+        }
     }
 
     public class ARegistry : Registry
