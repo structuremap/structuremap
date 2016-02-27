@@ -92,7 +92,6 @@ namespace StructureMap.Testing.Graph
             }
         }
 
-
         private void shouldHaveFamily<T>()
         {
             theGraph.Families.Has(typeof (T)).ShouldBeTrue();
@@ -102,7 +101,6 @@ namespace StructureMap.Testing.Graph
         {
             theGraph.Families.Has(typeof (T)).ShouldBeFalse();
         }
-
 
         private void shouldHaveFamilyWithSameName<T>()
         {

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
+
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 
 namespace StructureMap.Testing.Acceptance
 {
@@ -12,7 +12,8 @@ namespace StructureMap.Testing.Acceptance
         {
             var container = new Container(new ARegistry());
 
-            container.GetAllInstances<IWidget>().OrderBy(x => x.GetType().Name)
+            container.GetAllInstances<IWidget>()
+                .OrderBy(x => x.GetType().Name)
                 .Select(x => x.GetType())
                 .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget),
                     typeof (DefaultWidget));
@@ -24,7 +25,8 @@ namespace StructureMap.Testing.Acceptance
             var container = new Container();
             container.Configure(x => x.IncludeRegistry<ARegistry>());
 
-            container.GetAllInstances<IWidget>().OrderBy(x => x.GetType().Name)
+            container.GetAllInstances<IWidget>()
+                .OrderBy(x => x.GetType().Name)
                 .Select(x => x.GetType())
                 .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget),
                     typeof (DefaultWidget));

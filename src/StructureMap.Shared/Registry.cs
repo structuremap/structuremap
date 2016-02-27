@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Building.Interception;
@@ -27,7 +26,7 @@ namespace StructureMap
     /// </example>
     public class Registry : IRegistry
     {
-        private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
+        private readonly IList<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
 
         internal readonly IList<AssemblyScanner> Scanners = new List<AssemblyScanner>(); 
 
@@ -74,7 +73,15 @@ namespace StructureMap
         /// <param name="registry"></param>
         public void IncludeRegistry(Registry registry)
         {
-            alter = g => g.ImportRegistry(registry);
+            foreach (var scanner in registry.Scanners)
+            {
+                Scanners.Add(scanner);
+            }
+
+            foreach (var action in registry._actions)
+            {
+                _actions.Add(action);
+            }
         }
 
         /// <summary>
@@ -187,7 +194,6 @@ namespace StructureMap
         {
             return new GenericFamilyExpression(pluginType, lifecycle, this);
         }
-
 
         /// <summary>
         /// Shortcut to make StructureMap return the default object of U casted to T

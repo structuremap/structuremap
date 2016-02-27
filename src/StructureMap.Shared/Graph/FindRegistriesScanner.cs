@@ -1,5 +1,5 @@
 using System.Linq;
-using StructureMap.Configuration.DSL;
+
 using StructureMap.Graph.Scanning;
 
 namespace StructureMap.Graph
@@ -11,7 +11,6 @@ namespace StructureMap.Graph
             types.FindTypes(TypeClassification.Closed | TypeClassification.Concretes)
                 .Where(Registry.IsPublicRegistry)
                 .Each(type => registry.Configure(x => x.ImportRegistry(type)));
-
         }
     }
 }

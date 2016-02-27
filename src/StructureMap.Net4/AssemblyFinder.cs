@@ -82,7 +82,5 @@ namespace StructureMap.Graph
 
             return FindAssemblies(file => { }, includeExeFiles: includeExeFiles).Where(filter);
         }
-
-
     }
 }
