@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using StructureMap.Configuration.DSL;
+
 using StructureMap.Graph;
 
 namespace StructureMap
@@ -67,7 +67,6 @@ namespace StructureMap
 
                 scanning.Each(x => _graph.ImportRegistry(x.Result));
             }
-
 
             if (_graph.QueuedRegistries.Any())
             {
