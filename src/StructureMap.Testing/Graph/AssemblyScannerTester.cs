@@ -160,10 +160,12 @@ namespace StructureMap.Testing.Graph
         }
         // ENDSAMPLE
 
+        // SAMPLE: scan-filesystem-for-exe
         [Test]
         public void scan_all_assemblies_in_a_folder_including_exe()
         {
             Scan(x => x.AssembliesAndExecutablesFromPath(assemblyScanningFolder));
+
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldHaveFamilyWithSameName<IWorker>();
             shouldHaveFamilyWithSameName<IDefinedInExe>();
@@ -173,10 +175,12 @@ namespace StructureMap.Testing.Graph
         public void scan_all_assemblies_in_application_base_directory_including_exe()
         {
             Scan(x => x.AssembliesAndExecutablesFromApplicationBaseDirectory());
+
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldHaveFamilyWithSameName<IWorker>();
             shouldHaveFamilyWithSameName<IDefinedInExe>();
         }
+        // ENDSAMPLE
 
 
         // SAMPLE: scan-calling-assembly

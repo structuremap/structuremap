@@ -58,6 +58,12 @@ StructureMap provides facilities for registering types by finding assemblies in 
 
 <[sample:scan-filesystem]>
 
+Do note that StructureMap 4.0 does not search for `.exe` files in the assembly search. The StructureMap team felt this was
+problematic and "nobody would ever actually want to do that." We were wrong, and due to many user requests, you can now
+**opt in** to scanning `.exe` files with a new public method on `AssemblyScanner` shown below:
+
+<[sample:scan-filesystem-for-exe]>
+
 Do be aware that while this technique is very powerful for extensibility, it's been extremely problematic for
 some folks in the past. The StructureMap team's recommendation for using this feature is to:
 
@@ -69,6 +75,8 @@ some folks in the past. The StructureMap team's recommendation for using this fe
 Behind the scenes, StructureMap is using the `Assembly.GetExportedTypes()` method from the .Net CLR to find types and this
 mechanism is **very** sensitive to missing dependencies. Again, thanks to the new <[linkto:diagnostics/type-scanning;title=type scanning diagnostics]>,
 you now have some visibility into assembly loading failures that used to be silently swallowed internally.
+
+
 
 ## Excluding Types
 

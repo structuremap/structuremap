@@ -3,6 +3,14 @@
 
 StructureMap is attempting to follow a strict [SemVer](http://semver.org) versioning policy.
 
+## Release Notes 4.1
+
+4.1 was mostly a bugfix release, but also included some new public API calls for type scanning discovery from *.exe files.
+See the [closed GitHub issues](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A4.1+is%3Aclosed) for details.
+
+## Release Notes 4.0
+
+4.0.1 was strictly a bug fix release. 
 ## Release Notes 4.0
 
 4.0 is a medium sized release that largely builds on the existing 3.0 architecture with significant improvements to conventional
