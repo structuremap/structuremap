@@ -57,10 +57,20 @@ namespace StructureMap.Graph
                 }
                 catch (Exception)
                 {
-                    logFailure(file);
+                    try
+                    {
+                        assembly = Assembly.LoadFrom(file);
+                    }
+                    catch (Exception)
+                    {
+                        logFailure(file);
+                    }
                 }
 
-                if (assembly != null) yield return assembly;
+                if (assembly != null)
+                {
+                    yield return assembly;
+                }
             }
         }
 
