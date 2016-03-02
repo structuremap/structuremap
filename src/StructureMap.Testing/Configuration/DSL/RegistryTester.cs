@@ -150,24 +150,6 @@ namespace StructureMap.Testing.Configuration.DSL
             }
         }
 
-        [Test]
-        public void include_an_existing_registry_should_not_reevaluate_the_registry()
-        {
-            var registry1 = new Registry();
-            registry1.IncludeRegistry<MutatingRegistry>();
-
-            var registry2 = new Registry();
-            registry2.IncludeRegistry<MutatingRegistry>();
-
-            var container = new Container(config =>
-            {
-                config.AddRegistry(registry1);
-                config.AddRegistry(registry2);
-            });
-
-            container.Model.Registries.Count(x => x.GetType() == typeof(MutatingRegistry)).ShouldBe(1);
-        }
-
 
         [Test]
         public void Latch_on_a_PluginGraph()
