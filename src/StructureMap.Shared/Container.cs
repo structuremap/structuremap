@@ -9,6 +9,7 @@ using StructureMap.TypeRules;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
 
@@ -16,7 +17,7 @@ namespace StructureMap
 {
     public class Container : IContainer
     {
-        private readonly IList<Container> _children = new List<Container>();
+        private readonly ConcurrentBag<Container> _children = new ConcurrentBag<Container>();
         private IPipelineGraph _pipelineGraph;
         private readonly object _syncLock = new object();
 
