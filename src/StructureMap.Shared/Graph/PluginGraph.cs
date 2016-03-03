@@ -200,7 +200,7 @@ namespace StructureMap.Graph
             get { return Parent == null ? this : Parent.Root; }
         }
 
-        public bool IsRunningConfigure { get; set; }
+        internal bool IsRunningConfigure { get; set; }
 
         /// <summary>
         ///   Adds the concreteType as an Instance of the pluginType
