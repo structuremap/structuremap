@@ -21,7 +21,7 @@ of StructureMap.
 
 ## Why Nested Containers over HttpContext or ThreadLocal Scoping?
 
-Why not just use `HttpContext` based lifecycles like we've always done in the past? Because `HttpContext` is not supported by the any
+Why not just use `HttpContext` based lifecycles like we've always done in the past? Because `HttpContext` is not supported by any
 type of [OWIN](http://www.strathweb.com/2013/05/the-future-is-now-owin-and-multi-hosting-asp-net-web-applications/) web host and will not be a part of ASP.Net vNext. Using a Nested Container per HTTP request is a better, lighterweight way
 to scope services to an HTTP request without coupling your code to what will soon be legacy ASP.Net runtime code.
 
@@ -44,7 +44,7 @@ Creating a nested container is as simple as calling the `IContainer.GetNestedCon
 
 ## Lifecycle Rules
 
-While StructureMap supports several object instance lifecycles out of the boxy, in idiomatic usage of StructureMap the only common lifecyles are:
+While StructureMap supports several object instance lifecycles out of the box, in idiomatic usage of StructureMap the only common lifecyles are:
 
 1. `Transient` - The default lifecycle. A new object is created for a configured Instance on each request to the container
 1. `Singleton` - One instance is constructed and used over the entire Container lifetime
@@ -53,7 +53,7 @@ In the context of a Nested Container however, the `Transient` scoping now applie
 
 <[sample:nested-transients]>
 
-`Instance's` scoped to anything but `Transient` or `AlwaysUnique` are resolved as normal, but **through the parent container**:
+`Instances` scoped to anything but `Transient` or `AlwaysUnique` are resolved as normal, but **through the parent container**:
 
 <[sample:nested-singletons]>
 
