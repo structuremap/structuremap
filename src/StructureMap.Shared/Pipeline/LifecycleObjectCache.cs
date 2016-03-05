@@ -31,6 +31,10 @@ namespace StructureMap.Pipeline
 
         public void Eject(Type pluginType, Instance instance)
         {
+            // Prevent null reference exception.
+            if (pluginType.AssemblyQualifiedName == null)
+                return;
+
             var key = instance.InstanceKey(pluginType);
             _lock.MaybeWrite(() => {
                 if (!_objects.ContainsKey(key)) return;
