@@ -13,7 +13,31 @@ namespace StructureMap.Pipeline
 
         public override IObjectCache FindCache(ILifecycleContext context)
         {
-            throw new NotSupportedException("Should never be called");
+            return new NulloObjectCache();
+        }
+
+        public class NulloObjectCache : IObjectCache
+        {
+            public object Get(Type pluginType, Instance instance, IBuildSession session)
+            {
+                return session.BuildNewInSession(pluginType, instance);
+            }
+
+            public int Count { get; } = 0;
+            public bool Has(Type pluginType, Instance instance)
+            {
+                return false;
+            }
+
+            public void Eject(Type pluginType, Instance instance)
+            {
+                // nothing
+            }
+
+            public void DisposeAndClear()
+            {
+                // nothing
+            }
         }
     }
 }
