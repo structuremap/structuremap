@@ -164,6 +164,9 @@ namespace StructureMap
 
         public void Configure(Action<ConfigurationExpression> configure)
         {
+            if (_pluginGraph.IsRunningConfigure)
+                throw new StructureMapConfigurationException("The container is already being configured. Recursive IContainer.Configure() calls are not allowed");
+
             _pluginGraph.IsRunningConfigure = true;
 
             try
