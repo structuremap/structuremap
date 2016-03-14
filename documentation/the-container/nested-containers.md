@@ -44,7 +44,7 @@ Creating a nested container is as simple as calling the `IContainer.GetNestedCon
 
 ## Lifecycle Rules
 
-While StructureMap supports several object instance lifecycles out of the boxy, in idiomatic usage of StructureMap the only common lifecyles are:
+While StructureMap supports several object instance lifecycles out of the box, in idiomatic usage of StructureMap the only common lifecyles are:
 
 1. `Transient` - The default lifecycle. A new object is created for a configured Instance on each request to the container
 1. `Singleton` - One instance is constructed and used over the entire Container lifetime
