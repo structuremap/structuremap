@@ -1,12 +1,7 @@
-﻿using NUnit.Framework;
-
-namespace StructureMap.Testing.Examples
+﻿namespace StructureMap.Testing.Examples
 {
-
-
     public class DependencyInjectionSample
     {
-
         // SAMPLE: basic-dependency-injection
         public interface IDatabase { }
 
@@ -23,6 +18,7 @@ namespace StructureMap.Testing.Examples
             // Setter Injection
             public IDatabase Database { get; set; }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: basic-service-location
@@ -36,7 +32,7 @@ namespace StructureMap.Testing.Examples
                 _database = container.GetInstance<IDatabase>();
             }
         }
-        // ENDSAMPLE
 
+        // ENDSAMPLE
     }
 }

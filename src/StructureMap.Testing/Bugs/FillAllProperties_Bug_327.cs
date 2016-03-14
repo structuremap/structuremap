@@ -1,11 +1,10 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class FillAllProperties_Bug_327
     {
-        [Test]
+        [Fact]
         public void try_out_the_convention()
         {
             var container =

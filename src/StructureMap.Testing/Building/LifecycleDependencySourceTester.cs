@@ -1,14 +1,13 @@
-﻿using NUnit.Framework;
-using StructureMap.Building;
+﻿using StructureMap.Building;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class LifecycleDependencySourceTester
     {
-        [Test]
+        [Fact]
         public void can_use_lifecyle_resolver_for_dependency()
         {
             var build = new ConcreteBuild<LifecycleTarget>();
@@ -16,10 +15,10 @@ namespace StructureMap.Testing.Building
             var instance = new ObjectInstance(gateway);
 
             var session = new FakeBuildSession();
-            session.LifecycledObjects[typeof (IGateway)][instance]
+            session.LifecycledObjects[typeof(IGateway)][instance]
                 = gateway;
 
-            var arg = new LifecycleDependencySource(typeof (IGateway), instance);
+            var arg = new LifecycleDependencySource(typeof(IGateway), instance);
             build.ConstructorArgs(arg);
 
             var target = build.Build<LifecycleTarget>(session);

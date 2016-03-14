@@ -1,13 +1,13 @@
-﻿using System.Linq;
-using NUnit.Framework;
-using StructureMap.Graph;
+﻿using StructureMap.Graph;
+using StructureMap.Testing.xUnit;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_313
     {
-        [Test]
+        [Fact]
         public void exclude_type_does_indeed_work()
         {
             var container = new Container(_ =>
@@ -22,10 +22,10 @@ namespace StructureMap.Testing.Bugs
 
             container.GetAllInstances<IFoo>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (Foo1), typeof (Foo3));
+                .ShouldHaveTheSameElementsAs(typeof(Foo1), typeof(Foo3));
         }
 
-        [Test, Explicit("This test is invalid and will fail, included to demonstrate a usage problem")]
+        [Fact, Explicit("This test is invalid and will fail, included to demonstrate a usage problem")]
         public void demo_of_problem()
         {
             var container = new Container(_ =>
@@ -45,10 +45,10 @@ namespace StructureMap.Testing.Bugs
                 });
             });
 
-            // This will fail! 
+            // This will fail!
             container.GetAllInstances<IFoo>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (Foo3));
+                .ShouldHaveTheSameElementsAs(typeof(Foo3));
         }
 
         public interface IFoo

@@ -1,11 +1,9 @@
-using System;
-using NUnit.Framework;
 using Shouldly;
-using StructureMap.Configuration.DSL;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class StructureMapConfigurationTester
     {
         public class WebRegistry : Registry
@@ -17,14 +15,14 @@ namespace StructureMap.Testing
         }
 
         // Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en
-        [Test]
+        [Fact]
         public void TheDefaultInstanceIsALambdaForGuidNewGuid()
         {
             var container = new Container(x => x.For<Guid>().Use(() => Guid.NewGuid()));
             container.GetInstance<Guid>().ShouldNotBe(Guid.Empty);
         }
 
-        [Test]
+        [Fact]
         public void TheDefaultInstance_has_a_dependency_upon_a_Guid_NewGuid_lambda_generated_instance()
         {
             var container = new Container(x =>
@@ -53,7 +51,7 @@ namespace StructureMap.Testing
 
         public Guid SomeGuid { get; set; }
 
-        #endregion
+        #endregion IFoo Members
     }
 
     public interface ISomething

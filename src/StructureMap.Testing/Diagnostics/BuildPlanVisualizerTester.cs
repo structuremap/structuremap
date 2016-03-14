@@ -1,27 +1,26 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Diagnostics;
+using Xunit;
 
 namespace StructureMap.Testing.Diagnostics
 {
-    [TestFixture]
     public class BuildPlanVisualizerTester
     {
-        [Test]
+        [Fact]
         public void create_deep()
         {
             new BuildPlanVisualizer(PipelineGraph.BuildEmpty(), true)
                 .MaxLevels.ShouldBe(int.MaxValue);
         }
 
-        [Test]
+        [Fact]
         public void create_default_is_0_levels()
         {
             new BuildPlanVisualizer(PipelineGraph.BuildEmpty())
                 .MaxLevels.ShouldBe(0);
         }
 
-        [Test]
+        [Fact]
         public void create_with_explicit_levels()
         {
             new BuildPlanVisualizer(PipelineGraph.BuildEmpty(), levels: 2)

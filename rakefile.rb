@@ -40,7 +40,7 @@ task :version do
   options = {
 	:description => 'IoC Container for .Net',
 	:product_name => 'StructureMap',
-	:copyright => 'Copyright 2004-2015 Jeremy D. Miller, Joshua Flanagan, Frank Quednau, Tim Kellogg, et al. All rights reserved.',
+	:copyright => 'Copyright 2004-2016 Jeremy D. Miller, Joshua Flanagan, Frank Quednau, Tim Kellogg, et al. All rights reserved.',
 	:trademark => commit,
 	:version => asm_version,
 	:file_version => build_number,
@@ -75,7 +75,7 @@ desc 'Run the unit tests'
 task :test => [:compile] do
 	Dir.mkdir RESULTS_DIR
 
-	sh "packages/Fixie/lib/net45/Fixie.Console.exe src/StructureMap.Testing/bin/#{COMPILE_TARGET}/StructureMap.Testing.dll --NUnitXml results/TestResult.xml"
+	sh "packages/xunit.runner.console/tools/xunit.console.exe src/StructureMap.Testing/bin/#{COMPILE_TARGET}/StructureMap.Testing.dll -notrait Explicit=true -nunit results/TestResult.xml"
 end
 
 desc 'Compile the Signed Version of StructureMap'

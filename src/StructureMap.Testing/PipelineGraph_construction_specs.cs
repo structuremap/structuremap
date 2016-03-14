@@ -1,14 +1,13 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class PipelineGraph_construction_specs
     {
-        [Test]
+        [Fact]
         public void build_root_for_default_tracking_style()
         {
             var pluginGraph = PluginGraph.CreateRoot();
@@ -18,7 +17,7 @@ namespace StructureMap.Testing
             graph.Transients.ShouldBeOfType<NulloTransientCache>();
         }
 
-        [Test]
+        [Fact]
         public void build_root_for_tracked_transients()
         {
             var pluginGraph = PluginGraph.CreateRoot();
@@ -27,7 +26,5 @@ namespace StructureMap.Testing
 
             graph.Transients.ShouldBeOfType<TrackingTransientCache>();
         }
-
-
     }
 }

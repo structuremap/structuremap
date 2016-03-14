@@ -1,13 +1,12 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class mixed_constructor_setter_and_fields
     {
-        [Test]
+        [Fact]
         public void with_all_constants()
         {
             var build = new ConcreteBuild<MixedTarget>();

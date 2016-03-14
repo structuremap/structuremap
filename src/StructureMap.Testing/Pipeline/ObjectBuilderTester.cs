@@ -1,14 +1,13 @@
-using System;
-using NUnit.Framework;
 using StructureMap.Building;
 using StructureMap.Testing.Widget;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class ObjectBuilderTester
     {
-        [Test]
+        [Fact]
         public void ObjectBuilder_should_throw_308_if_interception_fails()
         {
             Exception<StructureMapInterceptorException>.ShouldBeThrownBy(() =>
@@ -23,7 +22,7 @@ namespace StructureMap.Testing.Pipeline
             });
         }
 
-        [Test]
+        [Fact]
         public void should_apply_interception()
         {
             object comingAcross = null;

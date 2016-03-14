@@ -1,19 +1,17 @@
 ﻿using System.Diagnostics;
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_443
     {
-        [Test]
+        [Fact]
         public void should_call_OnCreation_for_regstered_inline_dependencies()
         {
             var container = Container.For<TheRegistry>();
 
             var plan = container.Model.For<IRootType>().Default.DescribeBuildPlan();
             Debug.WriteLine(plan);
-
 
             container.GetInstance<IRootType>();
             Dependency.StuffWasDone.ShouldBeTrue();
@@ -29,6 +27,7 @@ namespace StructureMap.Testing.Bugs
         }
 
         public interface IRootType { }
+
         public class RootType : IRootType
         {
             public RootType(IDependency dependency)
@@ -37,6 +36,7 @@ namespace StructureMap.Testing.Bugs
         }
 
         public interface IDependency { }
+
         public class Dependency : IDependency
         {
             public static bool StuffWasDone;

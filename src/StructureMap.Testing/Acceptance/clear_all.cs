@@ -1,11 +1,9 @@
-﻿using System.Diagnostics;
-using NUnit.Framework;
-using Shouldly;
-using StructureMap.Configuration.DSL;
+﻿using Shouldly;
+using System.Diagnostics;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class clear_all
     {
         // SAMPLE: ImportantClientWidget
@@ -18,27 +16,26 @@ namespace StructureMap.Testing.Acceptance
                 For<IWidget>().ClearAll().Use<ImportantClientWidget>();
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: clear_all_in_action
-        [Test]
+        [Fact]
         public void clear_all_in_action()
         {
             var container = new Container(_ =>
             {
                 _.For<IWidget>().Use<AWidget>();
 
-                
                 _.IncludeRegistry<ImportantClientServices>();
             });
 
             container.GetInstance<IWidget>()
                 .ShouldBeOfType<ImportantClientWidget>();
 
-            Debug.WriteLine(container.WhatDoIHave(pluginType:typeof(IWidget)));
+            Debug.WriteLine(container.WhatDoIHave(pluginType: typeof(IWidget)));
         }
+
         // ENDSAMPLE
     }
-
-    
 }

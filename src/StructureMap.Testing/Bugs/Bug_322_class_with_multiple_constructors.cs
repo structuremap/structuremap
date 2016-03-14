@@ -1,12 +1,11 @@
-﻿using NUnit.Framework;
-using StructureMap.Graph;
+﻿using StructureMap.Graph;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_322_class_with_multiple_constructors
     {
-        [Test]
+        [Fact]
         public void reproduce()
         {
             var anotherDependency = new AnotherDependency();
@@ -21,7 +20,6 @@ namespace StructureMap.Testing.Bugs
                 });
                 x.For<IActivityService>().Singleton();
 
-
                 x.ForConcreteType<ClassWithTwoConstructors>()
                     .Configure.SelectConstructor(() => new ClassWithTwoConstructors(new AnotherDependency()))
                     .Ctor<AnotherDependency>().Is(anotherDependency);
@@ -34,7 +32,6 @@ namespace StructureMap.Testing.Bugs
                 .AnotherDependency.AnotherDependency.ShouldBeTheSameAs(anotherDependency);
         }
 
-
         public class AnotherDependency
         {
         }
@@ -42,7 +39,6 @@ namespace StructureMap.Testing.Bugs
         public class ClassWithTwoConstructors
         {
             private readonly AnotherDependency _anotherDependency;
-
 
             public ClassWithTwoConstructors(int age, string name)
             {

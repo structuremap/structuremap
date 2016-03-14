@@ -1,10 +1,9 @@
-﻿using System;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class nested_containers
     {
         // SAMPLE: nested-creation
@@ -26,7 +25,7 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        [Test]
+        [Fact]
         public void creating_a_nested_container()
         {
             // From an IContainer object
@@ -44,7 +43,7 @@ namespace StructureMap.Testing.Acceptance
         // ENDSAMPLE
 
         // SAMPLE: nested-singletons
-        [Test]
+        [Fact]
         public void nested_container_usage_of_singletons()
         {
             var container = new Container(_ => { _.ForSingletonOf<IColorCache>().Use<ColorCache>(); });
@@ -62,7 +61,7 @@ namespace StructureMap.Testing.Acceptance
         // ENDSAMPLE
 
         // SAMPLE: nested-transients
-        [Test]
+        [Fact]
         public void nested_container_behavior_of_transients()
         {
             // "Transient" is the default lifecycle
@@ -91,7 +90,7 @@ namespace StructureMap.Testing.Acceptance
         // ENDSAMPLE
 
         // SAMPLE: nested-profiles
-        [Test]
+        [Fact]
         public void nested_container_from_profile_container()
         {
             var container = new Container(x =>
@@ -101,12 +100,12 @@ namespace StructureMap.Testing.Acceptance
                 x.Profile("Blue", _ => _.For<IColor>().Use<Blue>());
                 x.Profile("Green", _ => _.For<IColor>().Use<Green>());
             });
-            
+
             using (var nested = container.GetProfile("Blue").GetNestedContainer())
             {
                 nested.GetInstance<IColor>().ShouldBeOfType<Blue>();
             }
- 
+
             using (var nested = container.GetNestedContainer("Green"))
             {
                 nested.GetInstance<IColor>().ShouldBeOfType<Green>();
@@ -116,7 +115,7 @@ namespace StructureMap.Testing.Acceptance
         // ENDSAMPLE
 
         // SAMPLE: nested-disposal
-        [Test]
+        [Fact]
         public void nested_container_disposal()
         {
             var container = new Container(_ =>
@@ -145,7 +144,6 @@ namespace StructureMap.Testing.Acceptance
                 nestedGreen = nested.GetInstance<IColor>()
                     .ShouldBeOfType<Green>();
 
-
                 nestedBlue = nested.GetInstance<Blue>();
 
                 nestedPurple = nested.GetInstance<Purple>();
@@ -160,7 +158,6 @@ namespace StructureMap.Testing.Acceptance
             // are disposed
             nestedPurple.WasDisposed.ShouldBeTrue();
 
-
             // NOT disposed because it's owned by
             // the parent container
             singleton.WasDisposed.ShouldBeFalse();
@@ -169,7 +166,7 @@ namespace StructureMap.Testing.Acceptance
         // ENDSAMPLE
 
         // SAMPLE: nested-overriding
-        [Test]
+        [Fact]
         public void overriding_services_in_a_nested_container()
         {
             var container = new Container(_ =>
@@ -226,7 +223,7 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        [Test]
+        [Fact]
         public void service_location_and_container_resolution_inside_nested_containers()
         {
             var container = new Container();
@@ -238,7 +235,7 @@ namespace StructureMap.Testing.Acceptance
                 // The injected IContainer is the nested container
                 holder.Container.ShouldBeTheSameAs(nested);
 
-                // Func<T> and Lazy<T> values will be built by 
+                // Func<T> and Lazy<T> values will be built by
                 // the nested container w/ the nested container
                 // scoping
                 var nestedFoo = nested.GetInstance<Foo>();
@@ -250,7 +247,7 @@ namespace StructureMap.Testing.Acceptance
 
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void always_unique_disposal()
         {
             var container = new Container(_ =>
@@ -282,7 +279,7 @@ namespace StructureMap.Testing.Acceptance
     {
     }
 
-    public class Purple : Blue  {  }
+    public class Purple : Blue { }
 
     public class Blue : IColor, IDisposable
     {
@@ -368,7 +365,6 @@ namespace StructureMap.Testing.Acceptance
     }
 
     // ENDSAMPLE
-
 
     public interface IUnitOfWork
     {

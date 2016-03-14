@@ -1,12 +1,11 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class ClassWithoutPublicConstructorNullReferenceException
     {
-        [Test]
+        [Fact]
         public void should_not_throw_a_null_reference_exception()
         {
             var container =

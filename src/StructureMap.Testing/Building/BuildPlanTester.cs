@@ -1,24 +1,22 @@
-﻿using System;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class BuildPlanTester
     {
         private Instance theInstance;
-        private BuildTarget theTarget;
+        private readonly BuildTarget theTarget;
         private IInterceptor[] theInterceptors;
         private IDependencySource theInner;
-        private Lazy<BuildPlan> _plan;
-        private FakeBuildSession theSession;
+        private readonly Lazy<BuildPlan> plan;
+        private readonly FakeBuildSession theSession;
 
-        [SetUp]
-        public void SetUp()
+        public BuildPlanTester()
         {
             theTarget = new BuildTarget();
             theInstance = new ObjectInstance(theTarget);
@@ -27,25 +25,25 @@ namespace StructureMap.Testing.Building
 
             theInner = Constant.For(theTarget);
 
-            _plan =
+            plan =
                 new Lazy<BuildPlan>(
-                    () => new BuildPlan(typeof (IBuildTarget), theInstance, theInner, Policies.Default(), theInterceptors));
+                    () => new BuildPlan(typeof(IBuildTarget), theInstance, theInner, Policies.Default(), theInterceptors));
 
             theSession = new FakeBuildSession();
         }
 
         private BuildPlan thePlan
         {
-            get { return _plan.Value; }
+            get { return plan.Value; }
         }
 
-        [Test]
+        [Fact]
         public void create_happy_path_with_no_interceptors()
         {
             thePlan.Build(theSession, theSession).ShouldBeTheSameAs(theTarget);
         }
 
-        [Test]
+        [Fact]
         public void create_happy_path_with_a_single_decorate_interceptor()
         {
             theInterceptors = new IInterceptor[]
@@ -58,7 +56,7 @@ namespace StructureMap.Testing.Building
                 .Inner.ShouldBeTheSameAs(theTarget);
         }
 
-        [Test]
+        [Fact]
         public void the_construction_blows_up_get_the_description_of_the_instance()
         {
             theInner = new ConcreteBuild<ThrowsUpTarget>();
@@ -71,7 +69,7 @@ namespace StructureMap.Testing.Building
             ex.Message.ShouldContain("new ThrowsUpTarget()");
         }
 
-        [Test]
+        [Fact]
         public void description_when_the_instance_has_a_name()
         {
             theInstance.Name = "Red";
@@ -79,24 +77,24 @@ namespace StructureMap.Testing.Building
             thePlan.Description.ShouldBe("Instance of StructureMap.Testing.Building.IBuildTarget ('Red')");
         }
 
-        [Test]
+        [Fact]
         public void description_when_the_instance_type_does_not_match_the_concrete_type()
         {
             thePlan.Description.ShouldBe(
                 "Instance of StructureMap.Testing.Building.IBuildTarget (StructureMap.Testing.Building.BuildTarget)");
         }
 
-        [Test]
+        [Fact]
         public void description_when_the_instance_concrete_type_is_indeterminate()
         {
             theInstance = new RiggedInstance(null);
             thePlan.Description.ShouldBe("Instance of StructureMap.Testing.Building.IBuildTarget");
         }
 
-        [Test]
+        [Fact]
         public void description_when_the_instance_concrete_type_is_the_plugin_type()
         {
-            theInstance = new RiggedInstance(typeof (IBuildTarget));
+            theInstance = new RiggedInstance(typeof(IBuildTarget));
             thePlan.Description.ShouldBe("Instance of StructureMap.Testing.Building.IBuildTarget");
         }
     }

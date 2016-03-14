@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using StructureMap.Web;
+using Xunit;
 
 namespace StructureMap.Testing.Web
 {
-    [TestFixture]
     public class EjectingWithHybridScoping
     {
-        [Test]
+        [Fact]
         public void does_not_blow_up()
         {
             var container = new Container(x => { x.For<IFoo>().HybridHttpOrThreadLocalScoped().Use<Foo>(); });

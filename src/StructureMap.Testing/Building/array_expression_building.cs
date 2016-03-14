@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building;
 using StructureMap.Testing.Widget3;
+using System.Collections.Generic;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class array_expression_building
     {
-        [Test]
+        [Fact]
         public void can_build_with_array_dependency()
         {
             var gateway1 = new StubbedGateway();
@@ -17,7 +16,7 @@ namespace StructureMap.Testing.Building
             var gateway3 = new StubbedGateway();
 
             var build = new ConcreteBuild<GatewayArrayUser>();
-            var array = new ArrayDependencySource(typeof (IGateway),
+            var array = new ArrayDependencySource(typeof(IGateway),
                 Constant.For(gateway1),
                 Constant.For(gateway2),
                 Constant.For(gateway3));
@@ -29,21 +28,21 @@ namespace StructureMap.Testing.Building
             arrayUser.Gateways.ShouldHaveTheSameElementsAs(gateway1, gateway2, gateway3);
         }
 
-        [Test]
+        [Fact]
         public void return_type_of_ArrayDependencySource()
         {
             var gateway1 = new StubbedGateway();
             var gateway2 = new StubbedGateway();
             var gateway3 = new StubbedGateway();
-            var array = new ArrayDependencySource(typeof (IGateway),
+            var array = new ArrayDependencySource(typeof(IGateway),
                 Constant.For(gateway1),
                 Constant.For(gateway2),
                 Constant.For(gateway3));
 
-            array.ReturnedType.ShouldBe(typeof (IGateway[]));
+            array.ReturnedType.ShouldBe(typeof(IGateway[]));
         }
 
-        [Test]
+        [Fact]
         public void can_build_with_ienumerable_dependency()
         {
             var gateway1 = new StubbedGateway();
@@ -51,7 +50,7 @@ namespace StructureMap.Testing.Building
             var gateway3 = new StubbedGateway();
 
             var build = new ConcreteBuild<GatewayEnumerableUser>();
-            var array = new ArrayDependencySource(typeof (IGateway),
+            var array = new ArrayDependencySource(typeof(IGateway),
                 Constant.For(gateway1),
                 Constant.For(gateway2),
                 Constant.For(gateway3));
@@ -63,7 +62,7 @@ namespace StructureMap.Testing.Building
             enumerableUser.Gateways.ShouldHaveTheSameElementsAs(gateway1, gateway2, gateway3);
         }
 
-        [Test]
+        [Fact]
         public void can_build_with_ilist_dependency()
         {
             var gateway1 = new StubbedGateway();
@@ -71,7 +70,7 @@ namespace StructureMap.Testing.Building
             var gateway3 = new StubbedGateway();
 
             var build = new ConcreteBuild<GatewayIListUser>();
-            var array = new ArrayDependencySource(typeof (IGateway),
+            var array = new ArrayDependencySource(typeof(IGateway),
                 Constant.For(gateway1),
                 Constant.For(gateway2),
                 Constant.For(gateway3));

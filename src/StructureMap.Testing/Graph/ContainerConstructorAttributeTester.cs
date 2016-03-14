@@ -1,16 +1,15 @@
-using NUnit.Framework;
 using StructureMap.Testing.Widget;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class ContainerConstructorAttributeTester
     {
-        [Test]
+        [Fact]
         public void GetConstructor()
         {
             var constructor = DefaultConstructorAttribute.GetConstructor(
-                typeof (ComplexRule));
+                typeof(ComplexRule));
 
             constructor.ShouldNotBeNull();
         }

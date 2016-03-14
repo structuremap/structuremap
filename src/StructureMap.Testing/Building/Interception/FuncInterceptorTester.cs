@@ -1,48 +1,46 @@
-﻿using System;
-using System.Linq.Expressions;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
+using System;
+using System.Linq.Expressions;
+using Xunit;
 
 namespace StructureMap.Testing.Building.Interception
 {
-    [TestFixture]
     public class FuncInterceptorTester
     {
         private FuncInterceptor<ITarget> theInterceptor;
 
-        [SetUp]
-        public void SetUp()
+        public FuncInterceptorTester()
         {
             theInterceptor = new FuncInterceptor<ITarget>(x => new DecoratedTarget(x));
         }
 
-        [Test]
+        [Fact]
         public void role_is_decorator()
         {
             theInterceptor.Role.ShouldBe(InterceptorRole.Decorates);
         }
 
-        [Test]
+        [Fact]
         public void accepts_type()
         {
-            theInterceptor.Accepts.ShouldBe(typeof (ITarget));
+            theInterceptor.Accepts.ShouldBe(typeof(ITarget));
         }
 
-        [Test]
+        [Fact]
         public void return_type()
         {
-            theInterceptor.Returns.ShouldBe(typeof (ITarget));
+            theInterceptor.Returns.ShouldBe(typeof(ITarget));
         }
 
-        [Test]
+        [Fact]
         public void description_comes_from_the_body()
         {
             theInterceptor.Description.ShouldContain("new DecoratedTarget(ITarget)");
         }
 
-        [Test]
+        [Fact]
         public void explicit_description()
         {
             theInterceptor = new FuncInterceptor<ITarget>(x => new DecoratedTarget(x), "decorating the target");
@@ -50,7 +48,7 @@ namespace StructureMap.Testing.Building.Interception
             theInterceptor.Description.ShouldContain("decorating the target");
         }
 
-        [Test]
+        [Fact]
         public void description_when_uses_IContext_too()
         {
             theInterceptor = new FuncInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t));
@@ -58,7 +56,7 @@ namespace StructureMap.Testing.Building.Interception
             theInterceptor.Description.ShouldContain("new ContextKeepingTarget(IContext, ITarget)");
         }
 
-        [Test]
+        [Fact]
         public void explicit_description_with_icontext()
         {
             theInterceptor = new FuncInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t), "context keeping");
@@ -66,14 +64,14 @@ namespace StructureMap.Testing.Building.Interception
             theInterceptor.Description.ShouldContain("context keeping");
         }
 
-        [Test]
+        [Fact]
         public void compile_and_use_by_itself_not_using_IBuildSession()
         {
-            var variable = Expression.Variable(typeof (ITarget), "target");
+            var variable = Expression.Variable(typeof(ITarget), "target");
 
             var expression = theInterceptor.ToExpression(Policies.Default(), Parameters.Session, variable);
 
-            var lambdaType = typeof (Func<ITarget, ITarget>);
+            var lambdaType = typeof(Func<ITarget, ITarget>);
             var lambda = Expression.Lambda(lambdaType, expression, variable);
 
             var func = lambda.Compile().As<Func<ITarget, ITarget>>();
@@ -85,17 +83,16 @@ namespace StructureMap.Testing.Building.Interception
                 .Inner.ShouldBeTheSameAs(target);
         }
 
-
-        [Test]
+        [Fact]
         public void compile_and_use_by_itself_using_IContext()
         {
             theInterceptor = new FuncInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t));
 
-            var variable = Expression.Variable(typeof (ITarget), "target");
+            var variable = Expression.Variable(typeof(ITarget), "target");
 
             var expression = theInterceptor.ToExpression(Policies.Default(), Parameters.Context, variable);
 
-            var lambdaType = typeof (Func<IContext, ITarget, ITarget>);
+            var lambdaType = typeof(Func<IContext, ITarget, ITarget>);
             var lambda = Expression.Lambda(lambdaType, expression, Parameters.Context, variable);
 
             var func = lambda.Compile().As<Func<IContext, ITarget, ITarget>>();
@@ -148,7 +145,6 @@ namespace StructureMap.Testing.Building.Interception
         {
             throw new DivideByZeroException("you failed!");
         }
-
 
         public void Activate()
         {

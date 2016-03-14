@@ -1,13 +1,12 @@
-﻿using System;
-using Castle.Core.Internal;
-using NUnit.Framework;
+﻿using Castle.Core.Internal;
 using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class fallback_registrations
     {
         // SAMPLE: fallback_registrations
@@ -30,7 +29,7 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        [Test]
+        [Fact]
         public void see_use_if_none_in_action()
         {
             var container1 = Container.For<DefaultServices>();
@@ -39,7 +38,6 @@ namespace StructureMap.Testing.Acceptance
             // to AWidget
             container1.GetInstance<IWidget>()
                 .ShouldBeOfType<AWidget>();
-
 
             var container2 = new Container(_ =>
             {
@@ -55,6 +53,7 @@ namespace StructureMap.Testing.Acceptance
             container2.GetInstance<IWidget>()
                 .ShouldBeOfType<BWidget>();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: use-if-none-modularity
@@ -70,7 +69,7 @@ namespace StructureMap.Testing.Acceptance
 
                 // Dependending on what assemblies are present,
                 // this might find specific registrations that
-                // will take precedence over the UseIfNone() 
+                // will take precedence over the UseIfNone()
                 // registrations in DefaultServices
                 Scan(_ =>
                 {
@@ -83,6 +82,7 @@ namespace StructureMap.Testing.Acceptance
                 });
             }
         }
+
         // ENDSAMPLE
     }
 }

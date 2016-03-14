@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Testing.Widget2;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class EnumerationTester
     {
-        [Test]
+        [Fact]
         public void BuildClassWithEnumeration()
         {
             var manager = new Container();

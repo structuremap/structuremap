@@ -1,16 +1,15 @@
-using System;
-using System.Linq;
-using System.Linq.Expressions;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class PluginGraphTester
     {
         public static PluginGraph Empty()
@@ -18,52 +17,51 @@ namespace StructureMap.Testing.Graph
             return new PluginGraphBuilder().Build();
         }
 
-        [Test]
+        [Fact]
         public void default_tracking_style()
         {
             Empty().TransientTracking.ShouldBe(TransientTracking.DefaultNotTrackedAtRoot);
         }
 
-
-        [Test]
+        [Fact]
         public void add_type_adds_an_instance_for_type_once_and_only_once()
         {
             var graph = PluginGraph.CreateRoot();
 
-            graph.AddType(typeof (IThingy), typeof (BigThingy));
+            graph.AddType(typeof(IThingy), typeof(BigThingy));
 
-            var family = graph.Families[typeof (IThingy)];
+            var family = graph.Families[typeof(IThingy)];
             family.Instances
                 .Single()
                 .ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldBe(typeof (BigThingy));
+                .PluggedType.ShouldBe(typeof(BigThingy));
 
-            graph.AddType(typeof (IThingy), typeof (BigThingy));
+            graph.AddType(typeof(IThingy), typeof(BigThingy));
 
             family.Instances.Count().ShouldBe(1);
         }
 
-        [Test]
+        [Fact]
         public void all_instances_when_family_has_not_been_created()
         {
             var graph = PluginGraph.CreateRoot();
-            graph.AllInstances(typeof (BigThingy)).Any().ShouldBeFalse();
+            graph.AllInstances(typeof(BigThingy)).Any().ShouldBeFalse();
 
-            graph.Families.Has(typeof (BigThingy)).ShouldBeFalse();
+            graph.Families.Has(typeof(BigThingy)).ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void all_instances_when_the_family_already_exists()
         {
             var graph = PluginGraph.CreateRoot();
 
             // just forcing the family to be created
-            graph.Families[typeof (BigThingy)].ShouldNotBeNull();
+            graph.Families[typeof(BigThingy)].ShouldNotBeNull();
 
-            graph.AllInstances(typeof (BigThingy)).Any().ShouldBeFalse();
+            graph.AllInstances(typeof(BigThingy)).Any().ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void eject_family_removes_the_family_and_disposes_all_of_its_instances()
         {
             var instance1 = new FakeInstance();
@@ -71,163 +69,162 @@ namespace StructureMap.Testing.Graph
             var instance3 = new FakeInstance();
 
             var graph = PluginGraph.CreateRoot();
-            graph.Families[typeof (IThingy)].AddInstance(instance1);
-            graph.Families[typeof (IThingy)].AddInstance(instance2);
-            graph.Families[typeof (IThingy)].AddInstance(instance3);
+            graph.Families[typeof(IThingy)].AddInstance(instance1);
+            graph.Families[typeof(IThingy)].AddInstance(instance2);
+            graph.Families[typeof(IThingy)].AddInstance(instance3);
 
-            graph.EjectFamily(typeof (IThingy));
+            graph.EjectFamily(typeof(IThingy));
 
             instance1.WasDisposed.ShouldBeTrue();
             instance2.WasDisposed.ShouldBeTrue();
             instance3.WasDisposed.ShouldBeTrue();
 
-            graph.Families.Has(typeof (IThingy));
+            graph.Families.Has(typeof(IThingy));
         }
 
-        [Test]
+        [Fact]
         public void find_family_by_closing_an_open_interface_that_matches()
         {
             var graph = Empty();
-            graph.Families[typeof (IOpen<>)].SetDefault(new ConfiguredInstance(typeof (Open<>)));
+            graph.Families[typeof(IOpen<>)].SetDefault(new ConfiguredInstance(typeof(Open<>)));
 
-            graph.Families[typeof (IOpen<string>)].GetDefaultInstance().ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldBe(typeof (Open<string>));
+            graph.Families[typeof(IOpen<string>)].GetDefaultInstance().ShouldBeOfType<ConstructorInstance>()
+                .PluggedType.ShouldBe(typeof(Open<string>));
         }
 
-        [Test]
+        [Fact]
         public void find_family_for_concrete_type_with_default()
         {
             var graph = Empty();
-            graph.Families[typeof (BigThingy)].GetDefaultInstance()
+            graph.Families[typeof(BigThingy)].GetDefaultInstance()
                 .ShouldBeOfType<ConstructorInstance>()
-                .PluggedType.ShouldBe(typeof (BigThingy));
+                .PluggedType.ShouldBe(typeof(BigThingy));
         }
 
-        [Test]
+        [Fact]
         public void find_instance_negative_when_family_does_exist_but_instance_does_not()
         {
             var graph = PluginGraph.CreateRoot();
-            graph.Families[typeof (BigThingy)].AddInstance(new SmartInstance<BigThingy>().Named("red"));
+            graph.Families[typeof(BigThingy)].AddInstance(new SmartInstance<BigThingy>().Named("red"));
 
-            graph.FindInstance(typeof (BigThingy), "blue").ShouldBeNull();
+            graph.FindInstance(typeof(BigThingy), "blue").ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void find_instance_negative_when_family_does_not_exist_does_not_create_family()
         {
             var graph = PluginGraph.CreateRoot();
-            graph.FindInstance(typeof (BigThingy), "blue").ShouldBeNull();
-            graph.Families.Has(typeof (BigThingy)).ShouldBeFalse();
+            graph.FindInstance(typeof(BigThingy), "blue").ShouldBeNull();
+            graph.Families.Has(typeof(BigThingy)).ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void find_instance_positive()
         {
             var graph = PluginGraph.CreateRoot();
             var instance = new SmartInstance<BigThingy>().Named("red");
-            graph.Families[typeof (BigThingy)].AddInstance(instance);
+            graph.Families[typeof(BigThingy)].AddInstance(instance);
 
-            graph.FindInstance(typeof (BigThingy), "red").ShouldBeTheSameAs(instance);
+            graph.FindInstance(typeof(BigThingy), "red").ShouldBeTheSameAs(instance);
         }
 
-        [Test]
+        [Fact]
         public void find_instance_can_use_missing_instance()
         {
             var graph = PluginGraph.CreateRoot();
             var instance = new SmartInstance<BigThingy>().Named("red");
-            graph.Families[typeof (BigThingy)].MissingInstance = instance;
+            graph.Families[typeof(BigThingy)].MissingInstance = instance;
 
-            var cloned_and_renamed = graph.FindInstance(typeof (BigThingy), "green").ShouldBeAssignableTo<ConfiguredInstance>();
+            var cloned_and_renamed = graph.FindInstance(typeof(BigThingy), "green").ShouldBeAssignableTo<ConfiguredInstance>();
 
             cloned_and_renamed.Name.ShouldBe("green");
             cloned_and_renamed.PluggedType.ShouldBe(typeof(BigThingy));
         }
 
-
-        [Test]
+        [Fact]
         public void has_default_positive()
         {
             var graph = PluginGraph.CreateRoot();
-            graph.Families[typeof (IThingy)].SetDefault(new SmartInstance<BigThingy>());
+            graph.Families[typeof(IThingy)].SetDefault(new SmartInstance<BigThingy>());
 
-            graph.HasDefaultForPluginType(typeof (IThingy));
+            graph.HasDefaultForPluginType(typeof(IThingy));
         }
 
-        [Test]
+        [Fact]
         public void has_default_when_the_family_has_not_been_created()
         {
             var graph = PluginGraph.CreateRoot();
-            graph.HasDefaultForPluginType(typeof (IThingy)).ShouldBeFalse();
+            graph.HasDefaultForPluginType(typeof(IThingy)).ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void has_default_with_family_but_no_default()
         {
             var graph = PluginGraph.CreateRoot();
-            graph.Families[typeof (IThingy)].AddInstance(new SmartInstance<BigThingy>());
-            graph.Families[typeof (IThingy)].AddInstance(new SmartInstance<BigThingy>());
+            graph.Families[typeof(IThingy)].AddInstance(new SmartInstance<BigThingy>());
+            graph.Families[typeof(IThingy)].AddInstance(new SmartInstance<BigThingy>());
 
-            graph.HasDefaultForPluginType(typeof (IThingy))
+            graph.HasDefaultForPluginType(typeof(IThingy))
                 .ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void has_instance_negative_when_the_family_has_not_been_created()
         {
             var graph = PluginGraph.CreateRoot();
 
-            graph.HasInstance(typeof (IThingy), "red")
+            graph.HasInstance(typeof(IThingy), "red")
                 .ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void has_instance_negative_with_the_family_already_existing()
         {
             var graph = PluginGraph.CreateRoot();
-            graph.Families[typeof (IThingy)]
+            graph.Families[typeof(IThingy)]
                 .AddInstance(new SmartInstance<BigThingy>().Named("blue"));
 
-            graph.HasInstance(typeof (IThingy), "red")
+            graph.HasInstance(typeof(IThingy), "red")
                 .ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void has_instance_positive()
         {
             var graph = PluginGraph.CreateRoot();
-            graph.Families[typeof (IThingy)]
+            graph.Families[typeof(IThingy)]
                 .AddInstance(new SmartInstance<BigThingy>().Named("blue"));
 
-            graph.HasInstance(typeof (IThingy), "blue")
+            graph.HasInstance(typeof(IThingy), "blue")
                 .ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void has_family_false_with_simple()
         {
             var graph = Empty();
-            graph.HasFamily(typeof (IThingy)).ShouldBeFalse();
+            graph.HasFamily(typeof(IThingy)).ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void has_family_true_with_simple()
         {
             var graph = Empty();
-            graph.AddFamily(new PluginFamily(typeof (IThingy)));
+            graph.AddFamily(new PluginFamily(typeof(IThingy)));
 
-            graph.HasFamily(typeof (IThingy)).ShouldBeTrue();
+            graph.HasFamily(typeof(IThingy)).ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void add_family_sets_the_parent_relationship()
         {
             var graph = Empty();
-            graph.AddFamily(new PluginFamily(typeof (IThingy)));
+            graph.AddFamily(new PluginFamily(typeof(IThingy)));
 
-            graph.Families[typeof (IThingy)].Owner.ShouldBeTheSameAs(graph);
+            graph.Families[typeof(IThingy)].Owner.ShouldBeTheSameAs(graph);
         }
 
-        [Test]
+        [Fact]
         public void find_root()
         {
             var top = PluginGraph.CreateRoot();
@@ -239,14 +236,13 @@ namespace StructureMap.Testing.Graph
             leaf.Root.ShouldBeTheSameAs(top);
         }
 
-
-        [Test]
+        [Fact]
         public void has_family_true_with_open_generics()
         {
             var graph = Empty();
-            graph.Families[typeof (IOpen<>)].SetDefault(new ConstructorInstance(typeof (Open<>)));
+            graph.Families[typeof(IOpen<>)].SetDefault(new ConstructorInstance(typeof(Open<>)));
 
-            graph.HasFamily(typeof (IOpen<string>))
+            graph.HasFamily(typeof(IOpen<string>))
                 .ShouldBeTrue();
         }
     }
@@ -255,7 +251,7 @@ namespace StructureMap.Testing.Graph
     {
         public FakeDependencySource()
         {
-            ReturnedType = typeof (string);
+            ReturnedType = typeof(string);
         }
 
         public string Description { get; private set; }
@@ -265,7 +261,7 @@ namespace StructureMap.Testing.Graph
             throw new NotImplementedException();
         }
 
-        public Type ReturnedType { get;  }
+        public Type ReturnedType { get; }
 
         public void AcceptVisitor(IDependencyVisitor visitor)
         {
@@ -323,6 +319,6 @@ namespace StructureMap.Testing.Graph
         {
         }
 
-        #endregion
+        #endregion IThingy Members
     }
 }

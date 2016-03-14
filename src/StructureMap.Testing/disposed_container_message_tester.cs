@@ -1,10 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using System.Reflection;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Acceptance;
+using System;
+using System.Diagnostics;
+using System.Reflection;
+using Xunit;
 
 namespace StructureMap.Testing
 {
@@ -20,7 +20,7 @@ namespace StructureMap.Testing
 
         public string ObjectName = "WRONG";
 
-        [Test]
+        [Fact]
         public void call_into_disposed_app_container()
         {
             var container = new Container();
@@ -49,12 +49,9 @@ namespace StructureMap.Testing
             shouldThrow(() => container.TryGetInstance(typeof(IService)));
             shouldThrow(() => container.TryGetInstance(typeof(IService), "foo"));
             shouldThrow(() => container.WhatDoIHave());
-
-
         }
 
-
-        [Test]
+        [Fact]
         public void call_into_disposed_nested_container()
         {
             var root = new Container();
@@ -84,11 +81,9 @@ namespace StructureMap.Testing
             shouldThrow(() => container.TryGetInstance(typeof(IService)));
             shouldThrow(() => container.TryGetInstance(typeof(IService), "foo"));
             shouldThrow(() => container.WhatDoIHave());
-
-
         }
 
-        [Test]
+        [Fact]
         public void call_into_disposed_child_container()
         {
             var root = new Container();
@@ -118,8 +113,6 @@ namespace StructureMap.Testing
             shouldThrow(() => container.TryGetInstance(typeof(IService)));
             shouldThrow(() => container.TryGetInstance(typeof(IService), "foo"));
             shouldThrow(() => container.WhatDoIHave());
-
-
         }
     }
      */

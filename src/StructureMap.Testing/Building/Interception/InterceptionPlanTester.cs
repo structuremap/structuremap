@@ -1,25 +1,23 @@
-﻿using NUnit.Framework;
-using Rhino.Mocks;
+﻿using Rhino.Mocks;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
 using StructureMap.Testing.Pipeline;
+using Xunit;
 
 namespace StructureMap.Testing.Building.Interception
 {
-    [TestFixture]
     public class InterceptionPlanTester
     {
-        private IBuildPlanVisitor theVisitor;
+        private readonly IBuildPlanVisitor theVisitor;
 
-        [SetUp]
-        public void SetUp()
+        public InterceptionPlanTester()
         {
             theVisitor = MockRepository.GenerateMock<IBuildPlanVisitor>();
         }
 
-        [Test]
+        [Fact]
         public void will_not_accept_decorator_that_does_not_match_the_plugin_type()
         {
             var target = new Target();
@@ -27,7 +25,7 @@ namespace StructureMap.Testing.Building.Interception
 
             Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() =>
             {
-                new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
+                new InterceptionPlan(typeof(ITarget), inner, Policies.Default(),
                     new IInterceptor[]
                     {
                         new DecoratorInterceptor(typeof (ATarget), typeof (ATarget))
@@ -48,14 +46,13 @@ namespace StructureMap.Testing.Building.Interception
             }
         }
 
-
-        [Test]
+        [Fact]
         public void intercept_happy_path_with_a_single_activation()
         {
             var target = new Target();
             var inner = Constant.For(target);
 
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(),
                 new IInterceptor[]
                 {
                     new ActivatorInterceptor<ITarget>(x => x.Activate())
@@ -68,14 +65,14 @@ namespace StructureMap.Testing.Building.Interception
             target.HasBeenActivated.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void intercept_happy_path_with_a_single_activation_that_uses_session()
         {
             var target = new Target();
             var inner = Constant.For(target);
 
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
-                new IInterceptor[] {new ActivatorInterceptor<Target>((session, x) => x.UseSession(session))});
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(),
+                new IInterceptor[] { new ActivatorInterceptor<Target>((session, x) => x.UseSession(session)) });
 
             var theSession = new StubBuildSession();
             plan.ToBuilder<ITarget>()(theSession, theSession)
@@ -84,14 +81,14 @@ namespace StructureMap.Testing.Building.Interception
             target.Session.ShouldBeTheSameAs(theSession);
         }
 
-        [Test]
+        [Fact]
         public void intercept_sad_path_with_a_single_activation_that_uses_session()
         {
             var target = new Target();
             var inner = Constant.For(target);
 
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
-                new IInterceptor[] {new ActivatorInterceptor<Target>((session, x) => x.BlowUpOnSession(session))});
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(),
+                new IInterceptor[] { new ActivatorInterceptor<Target>((session, x) => x.BlowUpOnSession(session)) });
 
             var theSession = new StubBuildSession();
 
@@ -102,13 +99,13 @@ namespace StructureMap.Testing.Building.Interception
             ex.Message.ShouldContain("Target.BlowUpOnSession(IContext)");
         }
 
-        [Test]
+        [Fact]
         public void multiple_activators_taking_different_accept_types()
         {
             var target = new Target();
             var inner = Constant.For(target);
 
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(),
                 new IInterceptor[]
                 {
                     new ActivatorInterceptor<ITarget>(x => x.Activate()),
@@ -123,14 +120,14 @@ namespace StructureMap.Testing.Building.Interception
             target.Color.ShouldBe("Green");
         }
 
-        [Test]
+        [Fact]
         public void activator_that_fails_gets_wrapped_in_descriptive_text()
         {
             var target = new Target();
             var inner = Constant.For(target);
 
             var interceptor = new ActivatorInterceptor<Target>(x => x.ThrowUp());
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(),
                 new IInterceptor[]
                 {
                     interceptor
@@ -149,14 +146,14 @@ namespace StructureMap.Testing.Building.Interception
             ex.Message.ShouldContain(interceptor.Description);
         }
 
-        [Test]
+        [Fact]
         public void single_decorator_happy_path_that_uses_the_plugin_type()
         {
             var target = new Target();
             var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>(t => new DecoratedTarget(t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[] {decorator});
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(), new IInterceptor[] { decorator });
 
             var session = new StubBuildSession();
             plan.ToBuilder<ITarget>()(session, session)
@@ -164,7 +161,7 @@ namespace StructureMap.Testing.Building.Interception
                 .Inner.ShouldBeTheSameAs(target);
         }
 
-        [Test]
+        [Fact]
         public void multiple_decorators_happy_path()
         {
             var target = new Target();
@@ -172,8 +169,8 @@ namespace StructureMap.Testing.Building.Interception
 
             var decorator1 = new FuncInterceptor<ITarget>(t => new DecoratedTarget(t));
             var decorator2 = new FuncInterceptor<ITarget>(t => new BorderedTarget(t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
-                new IInterceptor[] {decorator1, decorator2});
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(),
+                new IInterceptor[] { decorator1, decorator2 });
 
             var session = new StubBuildSession();
             plan.ToBuilder<ITarget>()(session, session)
@@ -182,7 +179,7 @@ namespace StructureMap.Testing.Building.Interception
                 .Inner.ShouldBeTheSameAs(target);
         }
 
-        [Test]
+        [Fact]
         public void mixed_activators_and_decorators_happy_path()
         {
             var target = new Target();
@@ -190,7 +187,7 @@ namespace StructureMap.Testing.Building.Interception
 
             var decorator1 = new FuncInterceptor<ITarget>(t => new DecoratedTarget(t));
             var decorator2 = new FuncInterceptor<ITarget>(t => new BorderedTarget(t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[]
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(), new IInterceptor[]
             {
                 decorator1,
                 decorator2,
@@ -208,14 +205,14 @@ namespace StructureMap.Testing.Building.Interception
             target.HasBeenActivated.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void single_decorator_sad_path_that_uses_the_plugin_type()
         {
             var target = new Target();
             var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>(t => new ThrowsDecoratedTarget(t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[] {decorator});
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(), new IInterceptor[] { decorator });
 
             var ex =
                 Exception<StructureMapInterceptorException>.ShouldBeThrownBy(
@@ -228,15 +225,14 @@ namespace StructureMap.Testing.Building.Interception
             ex.Message.ShouldContain("new ThrowsDecoratedTarget(ITarget)");
         }
 
-
-        [Test]
+        [Fact]
         public void single_decorator_happy_path_that_uses_the_plugin_type_and_session()
         {
             var target = new Target();
             var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>((s, t) => new ContextKeepingTarget(s, t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[] {decorator});
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(), new IInterceptor[] { decorator });
 
             var theSession = new StubBuildSession();
             var result = plan.ToBuilder<ITarget>()(theSession, theSession)
@@ -246,17 +242,16 @@ namespace StructureMap.Testing.Building.Interception
             result.Session.ShouldBeTheSameAs(theSession);
         }
 
-        [Test]
+        [Fact]
         public void single_decorator_sad_path_that_uses_the_plugin_type_and_session()
         {
             var target = new Target();
             var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>((s, t) => new SadContextKeepingTarget(s, t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[] {decorator});
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(), new IInterceptor[] { decorator });
 
             var theSession = new StubBuildSession();
-
 
             var ex =
                 Exception<StructureMapInterceptorException>.ShouldBeThrownBy(
@@ -265,15 +260,14 @@ namespace StructureMap.Testing.Building.Interception
             ex.Message.ShouldContain("new SadContextKeepingTarget(IContext, ITarget)");
         }
 
-
-        [Test]
+        [Fact]
         public void accept_visitor_for_activator()
         {
             var target = new Target();
             var inner = Constant.For(target);
 
             var interceptor = new ActivatorInterceptor<Target>(x => x.ThrowUp());
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(),
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(),
                 new IInterceptor[]
                 {
                     interceptor
@@ -284,28 +278,28 @@ namespace StructureMap.Testing.Building.Interception
             theVisitor.AssertWasCalled(x => x.Activator(interceptor));
         }
 
-        [Test]
+        [Fact]
         public void accept_visitor_for_func_decorator()
         {
             var target = new Target();
             var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>((s, t) => new ContextKeepingTarget(s, t));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[] {decorator});
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(), new IInterceptor[] { decorator });
 
             plan.AcceptVisitor(theVisitor);
 
             theVisitor.AssertWasCalled(x => x.Decorator(decorator));
         }
 
-        [Test]
+        [Fact]
         public void accept_visitor_for_DependencyInterceptor()
         {
             var target = new Target();
             var inner = Constant.For(target);
 
-            var decorator = new DecoratorInterceptor(typeof (ITarget), typeof (DecoratedTarget));
-            var plan = new InterceptionPlan(typeof (ITarget), inner, Policies.Default(), new IInterceptor[] {decorator});
+            var decorator = new DecoratorInterceptor(typeof(ITarget), typeof(DecoratedTarget));
+            var plan = new InterceptionPlan(typeof(ITarget), inner, Policies.Default(), new IInterceptor[] { decorator });
 
             plan.AcceptVisitor(theVisitor);
 

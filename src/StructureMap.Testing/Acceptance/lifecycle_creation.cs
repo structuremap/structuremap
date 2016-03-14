@@ -1,10 +1,9 @@
-﻿using System;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class lifecycle_creation
     {
         // SAMPLE: SingletonThing-disposed-on-container-dispose
@@ -17,10 +16,11 @@ namespace StructureMap.Testing.Acceptance
 
             public bool WasDisposed { get; set; }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: singleton-in-action
-        [Test]
+        [Fact]
         public void singletons_are_disposed_when_the_container_is_disposed()
         {
             var container = new Container(_ =>
@@ -44,9 +44,10 @@ namespace StructureMap.Testing.Acceptance
             // the SingletonThing scoped object should be disposed
             singleton.WasDisposed.ShouldBeTrue();
         }
+
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void singletons_are_created_in_a_completely_separate_context_in_the_parent_container()
         {
             var container = new Container(x =>
@@ -117,7 +118,7 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        [Test]
+        [Fact]
         public void transient_scoped_Instance_is_built_once_per_resolution_to_the_Container()
         {
             var container = new Container(_ => { _.For<IUnitOfWork>().Use<DefaultUnitOfWork>(); });

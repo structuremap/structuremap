@@ -1,14 +1,12 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Pipeline;
-using StructureMap.Testing.Acceptance;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class ChildContainer_Singleton_error_330
     {
-        [Test]
+        [Fact]
         public void should_be_able_to_instantiate_root()
         {
             var parentContainer = new Container();
@@ -26,12 +24,11 @@ namespace StructureMap.Testing.Bugs
             // Fixed
             childContainer.GetInstance<IRoot>().ShouldNotBeNull(); // Fails
 
-
             childContainer.Model.For<IRoot>().Lifecycle.ShouldBeOfType<ContainerLifecycle>();
         }
 
         // SAMPLE: singletons_to_child_container_are_isolated
-        [Test]
+        [Fact]
         public void singletons_to_child_container_are_isolated()
         {
             var parentContainer = new Container(_ =>
@@ -61,6 +58,7 @@ namespace StructureMap.Testing.Bugs
             child1.GetInstance<IRoot>()
                 .ShouldNotBeTheSameAs(child2);
         }
+
         // ENDSAMPLE
 
         public interface IRoot

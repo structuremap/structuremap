@@ -1,14 +1,12 @@
-﻿using System;
+﻿using Shouldly;
+using StructureMap.Pipeline;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
-using Shouldly;
-using StructureMap.Configuration.DSL;
-using StructureMap.Pipeline;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class inline_dependencies
     {
         // SAMPLE: inline-dependencies-ColorWidget
@@ -25,7 +23,7 @@ namespace StructureMap.Testing.Acceptance
         // ENDSAMPLE
 
         // SAMPLE: inline-dependencies-value
-        [Test]
+        [Fact]
         public void inline_usage_of_primitive_constructor_argument()
         {
             var container = new Container(_ =>
@@ -118,7 +116,6 @@ namespace StructureMap.Testing.Acceptance
         {
         }
 
-
         // SAMPLE: inline-dependencies-simple-ctor-injection
         public class InlineCtorArgs : Registry
         {
@@ -207,7 +204,7 @@ namespace StructureMap.Testing.Acceptance
             public DualConditionRuleRegistry()
             {
                 // In this case, because DualConditionRule
-                // has two different 
+                // has two different
                 For<IEventRule>().Use<DualConditionRule>()
                     .Ctor<ICondition>("first").Is<Condition1>()
                     .Ctor<ICondition>("second").Is<Condition2>();
@@ -215,7 +212,6 @@ namespace StructureMap.Testing.Acceptance
         }
 
         // ENDSAMPLE
-
 
         // SAMPLE: inline-dependencies-setters
         public class RuleWithSetters : IEventRule
@@ -319,15 +315,15 @@ namespace StructureMap.Testing.Acceptance
         {
             public OpenTypesRegistry()
             {
-                var instance = new ConstructorInstance(typeof (EventRule<>));
+                var instance = new ConstructorInstance(typeof(EventRule<>));
 
                 // By name
-                instance.Dependencies.Add("action", typeof (Action1<>));
+                instance.Dependencies.Add("action", typeof(Action1<>));
 
                 // Everything else is syntactical sugur over this:
                 instance.Dependencies.Add(new Argument
                 {
-                    Type = typeof (IAction<>), // The dependency type
+                    Type = typeof(IAction<>), // The dependency type
                     Name = "action", // The name of the dependency, either
                     // a constructor argument name or
                     // the name of a setter property
@@ -335,7 +331,7 @@ namespace StructureMap.Testing.Acceptance
                     // Specify the actual dependency
                     // This can be either a concrete type, the prebuilt value,
                     // or an Instance
-                    Dependency = typeof (Action1<>)
+                    Dependency = typeof(Action1<>)
                 });
             }
         }

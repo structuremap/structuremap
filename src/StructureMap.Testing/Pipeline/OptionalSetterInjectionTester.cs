@@ -1,14 +1,13 @@
-using System;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Testing.Widget;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class OptionalSetterInjectionTester
     {
-        [Test]
+        [Fact]
         public void AutoFill_a_property()
         {
             var container = new Container(r =>
@@ -19,11 +18,10 @@ namespace StructureMap.Testing.Pipeline
                 r.For<Rule>().Use(new ColorRule("Green"));
             });
 
-
-            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
+            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
         }
 
-        [Test]
+        [Fact]
         public void one_optional_child_array_setter()
         {
             var container = new Container(x =>
@@ -35,7 +33,7 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<ClassWithDependency>().Rules.Length.ShouldBe(1);
         }
 
-        [Test]
+        [Fact]
         public void one_optional_child_setter2()
         {
             var container = new Container(r =>
@@ -44,10 +42,10 @@ namespace StructureMap.Testing.Pipeline
                     .Setter<Rule>().Is(new ColorRule("Red"));
             });
 
-            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
+            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
         }
 
-        [Test]
+        [Fact]
         public void one_optional_child_setter_with_the_setter_property_defined()
         {
             var container = new Container(r =>
@@ -56,11 +54,10 @@ namespace StructureMap.Testing.Pipeline
                     .Setter<Rule>().Is(new ColorRule("Red"));
             });
 
-            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
+            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
         }
 
-
-        [Test]
+        [Fact]
         public void one_optional_child_setter_without_the_setter_property_defined()
         {
             var container = new Container(r => { r.ForConcreteType<ClassWithDependency>(); });
@@ -68,7 +65,7 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void one_optional_enum_setter()
         {
             var container = new Container(r =>
@@ -80,7 +77,7 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<ClassWithOneEnum>().Color.ShouldBe(ColorEnum.Red);
         }
 
-        [Test]
+        [Fact]
         public void one_optional_long_and_one_bool_setter()
         {
             var container = new Container(r =>
@@ -95,7 +92,7 @@ namespace StructureMap.Testing.Pipeline
             instance.Active.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void one_optional_setter_injection_with_string()
         {
             var container = new Container(r =>
@@ -107,7 +104,7 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<ClassWithOneSetter>().Name.ShouldBe("Jeremy");
         }
 
-        [Test]
+        [Fact]
         public void optional_setter_injection_with_string()
         {
             var container = new Container(r =>
@@ -124,7 +121,7 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<OptionalSetterTarget>("NoName").Name.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void optional_setter_with_Action()
         {
             var container = new Container(r =>
@@ -141,12 +138,12 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<OptionalSetterTarget>("NoName").Name.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void using_the_FillAllPropertiesOf()
         {
             var container = new Container(r => r.Policies.FillAllPropertiesOfType<Rule>().Use(new ColorRule("Red")));
 
-            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
+            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
         }
     }
 

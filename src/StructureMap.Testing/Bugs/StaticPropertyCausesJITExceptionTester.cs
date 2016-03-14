@@ -1,11 +1,10 @@
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class StaticPropertyCausesJITExceptionTester
     {
-        [Test]
+        [Fact]
         public void Get_instance_should_work()
         {
             var container = new Container(x => x.ForConcreteType<ClassWithStaticProperty>());

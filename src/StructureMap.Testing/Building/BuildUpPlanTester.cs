@@ -1,16 +1,15 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Attributes;
 using StructureMap.Building;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class BuildUpPlanTester
     {
-        [Test]
+        [Fact]
         public void can_build_setters_on_an_existing_object()
         {
             var target = new SetterTarget();
@@ -22,7 +21,7 @@ namespace StructureMap.Testing.Building
             var plan = new BuildUpPlan<SetterTarget>();
             plan.Set(x => x.Color, "Red");
             plan.Set(x => x.Direction, "Green");
-            plan.Set(x => x.Gateway, new DefaultDependencySource(typeof (IGateway)));
+            plan.Set(x => x.Gateway, new DefaultDependencySource(typeof(IGateway)));
 
             plan.BuildUp(session, session, target);
 
@@ -32,66 +31,58 @@ namespace StructureMap.Testing.Building
         }
     }
 
-    [TestFixture]
     public class BuildUpTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public BuildUpTester()
         {
-            TheDefaultGateway = new DefaultGateway();
-
+            theDefaultGateway = new DefaultGateway();
 
             var args = new ExplicitArguments();
-            args.Set<IGateway>(TheDefaultGateway);
-            _session = BuildSession.Empty(args);
+            args.Set<IGateway>(theDefaultGateway);
+            session = BuildSession.Empty(args);
 
-            theDependencies = new DependencyCollection {{"Age", 34}};
+            theDependencies = new DependencyCollection { { "Age", 34 } };
 
-
-            _target = null;
+            target = null;
         }
 
-        #endregion
-
-        private ClassWithMixOfSetters _target;
-        private BuildSession _session;
-        private DefaultGateway TheDefaultGateway;
+        private ClassWithMixOfSetters target;
+        private readonly BuildSession session;
+        private readonly DefaultGateway theDefaultGateway;
         private DependencyCollection theDependencies;
 
         private ClassWithMixOfSetters TheTarget
         {
             get
             {
-                if (_target == null)
+                if (target == null)
                 {
-                    _target = new ClassWithMixOfSetters();
+                    target = new ClassWithMixOfSetters();
 
-                    var thePlan = ConcreteType.BuildUpPlan(typeof (ClassWithMixOfSetters), theDependencies,
+                    var thePlan = ConcreteType.BuildUpPlan(typeof(ClassWithMixOfSetters), theDependencies,
                         Policies.Default());
 
-                    thePlan.BuildUp(_session, _session, _target);
+                    thePlan.BuildUp(session, session, target);
                 }
 
-                return _target;
+                return target;
             }
         }
 
-        [Test]
+        [Fact]
         public void do_not_set_optional_properties_and_the_value_of_those_properties_is_the_default()
         {
             TheTarget.FirstName.ShouldBeNull();
             TheTarget.LastName.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void set_a_mandatory_primitive_property()
         {
             TheTarget.Age.ShouldBe(34);
         }
 
-        [Test]
+        [Fact]
         public void set_optional_properties_and_the_values_should_be_set()
         {
             theDependencies.Add("FirstName", "Jeremy");
@@ -101,7 +92,7 @@ namespace StructureMap.Testing.Building
             TheTarget.LastName.ShouldBe("Miller");
         }
 
-        [Test]
+        [Fact]
         public void set_optional_property_for_a_child_object()
         {
             var theService = new ColorService("red");
@@ -110,13 +101,13 @@ namespace StructureMap.Testing.Building
             TheTarget.Service.ShouldBeTheSameAs(theService);
         }
 
-        [Test]
+        [Fact]
         public void sets_a_mandatory_child_property()
         {
-            TheTarget.Gateway.ShouldBeTheSameAs(TheDefaultGateway);
+            TheTarget.Gateway.ShouldBeTheSameAs(theDefaultGateway);
         }
 
-        [Test]
+        [Fact]
         public void the_optional_child_properties_are_not_set_if_the_instance_is_not_explicitly_specified()
         {
             TheTarget.Service.ShouldBeNull();

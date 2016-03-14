@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class StructureMapTests
     {
-        [Test]
+        [Fact]
         public void Test()
         {
             var container = new Container(x =>

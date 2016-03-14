@@ -1,11 +1,10 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_363_HasBeenCreated_for_ObjectLifecycle
     {
-        [Test]
+        [Fact]
         public void do_not_blow_up()
         {
             var foo = new Foo();

@@ -1,27 +1,15 @@
-using System;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
-using StructureMap.Configuration;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
     public class RegistryTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
         public class RedGreenRegistry : Registry
         {
             public RedGreenRegistry()
@@ -55,36 +43,35 @@ namespace StructureMap.Testing.Configuration.DSL
 
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void Can_add_an_instance_for_concrete_class_with_no_constructors()
         {
             var registry = new Registry();
             registry.For<ConcreteWithNoConstructor>().Use(
                 c => ConcreteWithNoConstructor.Build());
 
-
             var container = new Container(registry);
             container.GetInstance<ConcreteWithNoConstructor>().ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void an_instance_of_the_base_registry_is_equal_to_itself()
         {
             var registry1 = new Registry();
 
-            registry1.Equals((object) registry1).ShouldBeTrue();
+            registry1.Equals((object)registry1).ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void two_instances_of_the_base_registry_type_are_not_considered_equal()
         {
             var registry1 = new Registry();
             var registry2 = new Registry();
 
-            registry1.Equals((object) registry2).ShouldBeFalse();
+            registry1.Equals((object)registry2).ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void two_instances_of_a_public_derived_registry_type_are_considered_equal()
         {
             var registry1 = new TestRegistry();
@@ -92,27 +79,27 @@ namespace StructureMap.Testing.Configuration.DSL
             var registry3 = new TestRegistry2();
             var registry4 = new TestRegistry2();
 
-            registry1.Equals((object) registry1).ShouldBeTrue();
-            registry1.Equals((object) registry2).ShouldBeTrue();
-            registry2.Equals((object) registry1).ShouldBeTrue();
-            registry3.Equals((object) registry4).ShouldBeTrue();
+            registry1.Equals((object)registry1).ShouldBeTrue();
+            registry1.Equals((object)registry2).ShouldBeTrue();
+            registry2.Equals((object)registry1).ShouldBeTrue();
+            registry3.Equals((object)registry4).ShouldBeTrue();
 
-            registry1.Equals((object) registry3).ShouldBeFalse();
-            registry3.Equals((object) registry1).ShouldBeFalse();
+            registry1.Equals((object)registry3).ShouldBeFalse();
+            registry3.Equals((object)registry1).ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void two_instances_of_a_non_public_derived_registry_type_are_not_considered_equal()
         {
             var registry1 = new InternalTestRegistry();
             var registry2 = new InternalTestRegistry();
 
-            registry1.Equals((object) registry1).ShouldBeTrue();
-            registry1.Equals((object) registry2).ShouldBeFalse();
+            registry1.Equals((object)registry1).ShouldBeTrue();
+            registry1.Equals((object)registry2).ShouldBeFalse();
         }
 
         // SAMPLE: including-registries
-        [Test]
+        [Fact]
         public void include_a_registry()
         {
             var registry = new Registry();
@@ -150,8 +137,7 @@ namespace StructureMap.Testing.Configuration.DSL
             }
         }
 
-
-        [Test]
+        [Fact]
         public void Latch_on_a_PluginGraph()
         {
             var registry2 = new TestRegistry2();
@@ -161,18 +147,16 @@ namespace StructureMap.Testing.Configuration.DSL
 
             graph.QueuedRegistries.Count.ShouldBe(1);
 
-
             graph.ImportRegistry(registry2);
             graph.QueuedRegistries.Count.ShouldBe(1);
         }
 
-        [Test]
+        [Fact]
         public void use_the_basic_actions_as_part_of_building_a_PluginGraph()
         {
             var container = new Container(new BasicActionRegistry());
             container.GetInstance<IGateway>().ShouldBeOfType<Fake3Gateway>();
         }
-
     }
 
     public class ConcreteWithNoConstructor
@@ -210,7 +194,6 @@ namespace StructureMap.Testing.Configuration.DSL
     {
     }
 
-
     public class FakeGateway : IGateway
     {
         #region IGateway Members
@@ -225,7 +208,7 @@ namespace StructureMap.Testing.Configuration.DSL
             get { throw new NotImplementedException(); }
         }
 
-        #endregion
+        #endregion IGateway Members
     }
 
     public class Fake2Gateway : IGateway
@@ -242,7 +225,7 @@ namespace StructureMap.Testing.Configuration.DSL
             get { throw new NotImplementedException(); }
         }
 
-        #endregion
+        #endregion IGateway Members
     }
 
     public class Fake3Gateway : IGateway
@@ -259,7 +242,7 @@ namespace StructureMap.Testing.Configuration.DSL
             get { throw new NotImplementedException(); }
         }
 
-        #endregion
+        #endregion IGateway Members
     }
 
     public class BasicActionRegistry : Registry

@@ -1,19 +1,15 @@
-using System;
-using System.Diagnostics;
-using NUnit.Framework;
 using Shouldly;
-using StructureMap.Graph;
-using StructureMap.Testing.Acceptance;
+using System;
+using Xunit;
 using AWidget = StructureMap.Testing.Widget.AWidget;
 using ColorWidget = StructureMap.Testing.Widget.ColorWidget;
 using IWidget = StructureMap.Testing.Widget.IWidget;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class Lazy_and_Func_construction_strategy_Tester
     {
-        [Test]
+        [Fact]
         public void FactoryTemplateTester()
         {
             var container =
@@ -38,7 +34,7 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-        [Test]
+        [Fact]
         public void lazy_resolution_in_action()
         {
             var container = new Container(_ =>
@@ -49,16 +45,17 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<WidgetLazyUser>()
                 .Widget.ShouldBeOfType<AWidget>();
         }
+
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void can_build_a_Lazy_of_T_automatically()
         {
             new Container().GetInstance<Lazy<ConcreteClass>>()
                 .Value.ShouldBeOfType<ConcreteClass>().ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void build_a_func_for_a_concrete_class()
         {
             var container = new Container();
@@ -67,7 +64,7 @@ namespace StructureMap.Testing.Pipeline
             func().ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void build_a_func_that_returns_a_transient()
         {
             var container =
@@ -86,7 +83,7 @@ namespace StructureMap.Testing.Pipeline
         }
 
         // SAMPLE: using-func-t
-        [Test]
+        [Fact]
         public void build_a_func_that_returns_a_singleton()
         {
             var container = new Container(x =>
@@ -105,10 +102,11 @@ namespace StructureMap.Testing.Pipeline
             w1.ShouldBeTheSameAs(w3);
             w2.ShouldBeTheSameAs(w3);
         }
+
         // ENDSAMPLE
 
         // SAMPLE: using-func-string-t
-        [Test]
+        [Fact]
         public void build_a_func_by_string()
         {
             var container = new Container(x =>
@@ -121,17 +119,17 @@ namespace StructureMap.Testing.Pipeline
             var func = container.GetInstance<Func<string, IWidget>>();
             func("green").ShouldBeOfType<ColorWidget>().Color.ShouldBe("green");
         }
+
         // ENDSAMPLE
 
         public class ConcreteClass
         {
         }
 
-
         // SAMPLE: using-lazy-as-workaround-for-bidirectional-dependency
 
         [Singleton]
-        public class Thing1 
+        public class Thing1
         {
             private readonly Lazy<Thing2> _thing2;
 
@@ -147,7 +145,7 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Singleton]
-        public class Thing2 
+        public class Thing2
         {
             public Thing1 Thing1 { get; set; }
 
@@ -157,7 +155,7 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-        [Test]
+        [Fact]
         public void use_lazy_as_workaround_for_bi_directional_dependency()
         {
             var container = new Container();
@@ -167,6 +165,7 @@ namespace StructureMap.Testing.Pipeline
             thing1.Thing2.ShouldBeSameAs(thing2);
             thing2.Thing1.ShouldBeSameAs(thing1);
         }
+
         // ENDSAMPLE
     }
 }

@@ -1,17 +1,12 @@
-﻿using System;
-using NUnit.Framework;
-using StructureMap.Building;
-using StructureMap.Configuration.DSL;
-using StructureMap.Pipeline;
-using StructureMap.Pipeline.Lazy;
-using StructureMap.Testing.GenericWidgets;
+﻿using StructureMap.Pipeline;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class basic_registrations
     {
-        [Test]
+        [Fact]
         public void blows_up_if_no_default()
         {
             var container = new Container(_ =>
@@ -22,6 +17,7 @@ namespace StructureMap.Testing.Acceptance
             });
         }
     }
+
     /*
     // SAMPLE: SettingDefaults
     public class SettingDefaults : Registry
@@ -46,7 +42,7 @@ namespace StructureMap.Testing.Acceptance
             // Also rare, but you can supply an Instance object
             // yourself for special needs
             For<IWidget>().UseInstance(new MySpecialInstance());
-            
+
             // If you're registering an open generic type
             // or you just have Type objects, use this syntax
             For(typeof (IService<>)).Use(typeof (Service<>));
@@ -105,6 +101,5 @@ namespace StructureMap.Testing.Acceptance
 
     public class SpecialWidget : IWidget
     {
-        
     }
 }

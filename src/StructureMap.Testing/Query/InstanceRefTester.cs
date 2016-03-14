@@ -1,79 +1,72 @@
-using NUnit.Framework;
-using Rhino.Mocks;
+using Moq;
 using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.Testing.Widget;
+using Xunit;
 
 namespace StructureMap.Testing.Query
 {
-    [TestFixture]
     public class InstanceRefTester
     {
-        #region Setup/Teardown
+        private readonly NullInstance instance;
+        private readonly Mock<IFamily> familyMock;
+        private readonly InstanceRef instanceRef;
 
-        [SetUp]
-        public void SetUp()
+        public InstanceRefTester()
         {
             instance = new NullInstance();
-            family = MockRepository.GenerateMock<IFamily>();
+            familyMock = new Mock<IFamily>();
 
-            instanceRef = new InstanceRef(instance, family);
+            instanceRef = new InstanceRef(instance, familyMock.Object);
         }
 
-        #endregion
-
-        private NullInstance instance;
-        private IFamily family;
-        private InstanceRef instanceRef;
-
-        [Test]
+        [Fact]
         public void eject_object_calls_to_the_family()
         {
             instanceRef.EjectObject();
 
-            family.AssertWasCalled(x => x.Eject(instance));
+            familyMock.Verify(x => x.Eject(instance));
         }
 
-        [Test]
+        [Fact]
         public void get_uses_the_family_to_return()
         {
             var widget = new AWidget();
 
-            family.Stub(x => x.Build(instance)).Return(widget);
+            familyMock.Setup(x => x.Build(instance)).Returns(widget);
 
             instanceRef.Get<IWidget>().ShouldBeTheSameAs(widget);
         }
 
-        [Test]
+        [Fact]
         public void has_relays_from_IFamily()
         {
-            family.Stub(x => x.HasBeenCreated(instance)).Return(true);
+            familyMock.Setup(x => x.HasBeenCreated(instance)).Returns(true);
 
             instanceRef.ObjectHasBeenCreated().ShouldBeTrue();
         }
 
-
-        [Test]
+        [Fact]
         public void has_relays_from_IFamily_2()
         {
-            family.Stub(x => x.HasBeenCreated(instance)).Return(false);
+            familyMock.Setup(x => x.HasBeenCreated(instance)).Returns(false);
 
             instanceRef.ObjectHasBeenCreated().ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void name_just_relays()
         {
             instanceRef.Name.ShouldBe(instance.Name);
         }
 
-        [Test]
+        [Fact]
         public void plugin_type_comes_from_family()
         {
-            family.Stub(x => x.PluginType).Return(typeof (IWidget));
+            familyMock.Setup(x => x.PluginType).Returns(typeof(IWidget));
 
-            instanceRef.PluginType.ShouldBe(typeof (IWidget));
+            instanceRef.PluginType.ShouldBe(typeof(IWidget));
         }
     }
 }

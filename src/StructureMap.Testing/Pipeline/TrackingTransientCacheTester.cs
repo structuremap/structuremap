@@ -1,15 +1,14 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Pipeline;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class TrackingTransientCacheTester
     {
-        [Test]
+        [Fact]
         public void get_builds_a_new_object_everytime_it_is_called()
         {
             var cache = new TrackingTransientCache();
@@ -17,36 +16,35 @@ namespace StructureMap.Testing.Pipeline
             var instance = new SmartInstance<Target>();
             var session = new FakeBuildSession();
 
-            var t1 = cache.Get(typeof (Target), instance, session);
-            var t2 = cache.Get(typeof (Target), instance, session);
-            var t3 = cache.Get(typeof (Target), instance, session);
+            var t1 = cache.Get(typeof(Target), instance, session);
+            var t2 = cache.Get(typeof(Target), instance, session);
+            var t3 = cache.Get(typeof(Target), instance, session);
 
             t1.ShouldNotBeTheSameAs(t2);
             t1.ShouldNotBeTheSameAs(t3);
             t2.ShouldNotBeTheSameAs(t3);
         }
 
-
-        [Test]
+        [Fact]
         public void tracks_disposable_objects_only()
         {
             var cache = new TrackingTransientCache();
             var session = new FakeBuildSession();
 
-            var disposable = cache.Get(typeof (Target), new SmartInstance<Target>(), session);
-            var notDisposable = cache.Get(typeof (NotTracked), new SmartInstance<NotTracked>(), session);
+            var disposable = cache.Get(typeof(Target), new SmartInstance<Target>(), session);
+            var notDisposable = cache.Get(typeof(NotTracked), new SmartInstance<NotTracked>(), session);
 
             cache.Tracked.Single().ShouldBeTheSameAs(disposable);
         }
 
-        [Test]
+        [Fact]
         public void is_explicit_release_mode()
         {
             var cache = new TrackingTransientCache();
             cache.Style.ShouldBe(TransientTracking.ExplicitReleaseMode);
         }
 
-        [Test]
+        [Fact]
         public void release_from_the_cache()
         {
             var cache = new TrackingTransientCache();
@@ -62,7 +60,6 @@ namespace StructureMap.Testing.Pipeline
             t2.WasDisposed.ShouldBeFalse();
             cache.Tracked.ShouldHaveTheSameElementsAs(t1, t2, t3);
 
-
             cache.Release(t2);
 
             // only t2 should be disposed
@@ -74,7 +71,7 @@ namespace StructureMap.Testing.Pipeline
             cache.Tracked.ShouldHaveTheSameElementsAs(t1, t3);
         }
 
-        [Test]
+        [Fact]
         public void dispose_and_clear_all()
         {
             var cache = new TrackingTransientCache();
@@ -85,7 +82,6 @@ namespace StructureMap.Testing.Pipeline
             var t1 = cache.Get(typeof(Target), instance, session).As<Target>();
             var t2 = cache.Get(typeof(Target), instance, session).As<Target>();
             var t3 = cache.Get(typeof(Target), instance, session).As<Target>();
-
 
             cache.DisposeAndClear();
 
@@ -127,6 +123,7 @@ namespace StructureMap.Testing.Pipeline
         }
 
         public Policies Policies { get; private set; }
+
         public object CreateInstance(Type pluginType, string name)
         {
             throw new NotImplementedException();

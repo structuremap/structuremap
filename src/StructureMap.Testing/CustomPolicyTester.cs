@@ -1,15 +1,14 @@
-﻿using System;
-using System.Diagnostics;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Pipeline;
+using System;
+using System.Diagnostics;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class CustomPolicyTester
     {
-        [Test]
+        [Fact]
         public void use_a_custom_policy()
         {
             var container = new Container(_ =>
@@ -32,7 +31,7 @@ namespace StructureMap.Testing
         {
             protected override void apply(Type pluginType, IConfiguredInstance instance)
             {
-                if (instance.PluggedType == typeof (SpecialGuy))
+                if (instance.PluggedType == typeof(SpecialGuy))
                 {
                     instance.Dependencies.Add(typeof(IRepository), new SmartInstance<SpecialRepository>());
                 }
@@ -40,7 +39,9 @@ namespace StructureMap.Testing
         }
 
         public interface IRepository { }
+
         public class NormalRepository : IRepository { }
+
         public class SpecialRepository : IRepository { }
 
         public class NormalGuy
@@ -63,6 +64,4 @@ namespace StructureMap.Testing
             }
         }
     }
-
-
 }

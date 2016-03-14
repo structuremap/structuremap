@@ -1,27 +1,22 @@
-using System;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
-using StructureMap.Configuration;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class DefaultConventionScanningTester
     {
-        [Test]
+        [Fact]
         public void FindPluginType()
         {
-            new DefaultConventionScanner().FindPluginType(typeof (Convention))
-                .ShouldBe(typeof (IConvention));
+            new DefaultConventionScanner().FindPluginType(typeof(Convention))
+                .ShouldBe(typeof(IConvention));
 
             new DefaultConventionScanner().FindPluginType(GetType()).ShouldBeNull();
         }
 
-
-        [Test]
+        [Fact]
         public void Process_to_Container()
         {
             var container = new Container(registry =>
@@ -36,8 +31,7 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<IConvention>().ShouldBeOfType<Convention>();
         }
 
-
-        [Test]
+        [Fact]
         public void Process_to_Container_2()
         {
             var container = new Container(registry =>
@@ -52,8 +46,7 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<IConvention>().ShouldBeOfType<Convention>();
         }
 
-
-        [Test]
+        [Fact]
         public void can_configure_plugin_families_via_dsl()
         {
             var container = new Container(registry => registry.Scan(x =>

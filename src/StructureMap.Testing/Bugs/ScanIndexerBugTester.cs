@@ -1,11 +1,10 @@
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class ScanIndexerBugTester
     {
-        [Test]
+        [Fact]
         public void do_not_blow_up_on_scanning_the_property_for_indexer()
         {
             var container = new Container();

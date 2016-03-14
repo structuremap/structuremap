@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_354_bidirectional_dep_bug_under_heavy_threading
     {
         private const String PearCode = "P";
 
-        [Test]
+        [Fact]
         public void do_not_blow_up()
         {
             var container = new Container(_ =>
@@ -81,4 +80,3 @@ namespace StructureMap.Testing.Bugs
         }
     }
 }
-

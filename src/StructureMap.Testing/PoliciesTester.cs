@@ -1,35 +1,33 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class PoliciesTester
     {
-        [Test]
+        [Fact]
         public void CanBeAutoFilledIsFalse()
         {
-            Policies.Default().CanBeAutoFilled(typeof (ClassWithPrimitiveConstructorArguments))
+            Policies.Default().CanBeAutoFilled(typeof(ClassWithPrimitiveConstructorArguments))
                 .ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void CanBeAutoFilledIsTrue()
         {
-            Policies.Default().CanBeAutoFilled(typeof (ClassWithAllNonSimpleConstructorArguments))
+            Policies.Default().CanBeAutoFilled(typeof(ClassWithAllNonSimpleConstructorArguments))
                 .ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void CanBeAutoFilled_if_simple_property_has_default_value()
         {
-            Policies.Default().CanBeAutoFilled(typeof (GuyWithName)).ShouldBeTrue();
+            Policies.Default().CanBeAutoFilled(typeof(GuyWithName)).ShouldBeTrue();
         }
 
-
-        [Test]
+        [Fact]
         public void cannot_be_auto_filled_with_no_contructors()
         {
-            Policies.Default().CanBeAutoFilled(typeof (ClassWithNoConstructor))
+            Policies.Default().CanBeAutoFilled(typeof(ClassWithNoConstructor))
                 .ShouldBeFalse();
         }
 

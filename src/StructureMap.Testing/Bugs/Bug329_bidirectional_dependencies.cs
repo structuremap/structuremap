@@ -1,14 +1,13 @@
-﻿using System;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug329_bidirectional_dependencies
     {
-        [Test]
+        [Fact]
         public void Singleton_WhenFailsToConstruct_ShouldNotThrowBiDiErrorsOnFurtherAttemptsToConstruct()
         {
             var container = new Container(_ =>
@@ -28,7 +27,6 @@ namespace StructureMap.Testing.Bugs
                 () => { container.GetInstance<SomeSingletonThatConnectsToDatabaseOnConstruction>(); })
                 .InnerException.ShouldBeOfType<DivideByZeroException>()
                 .Message.ShouldContain("Database is down");
-
 
             // The database has now come online.
             DatabaseStatus.DatabaseIsDown = false;

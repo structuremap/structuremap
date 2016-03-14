@@ -1,15 +1,14 @@
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Specify_Lifecycle_on_open_generic_Tester
     {
-        [Test]
+        [Fact]
         public void should_obey_lifecycle_set_on_open_type()
         {
             var container =
-                new Container(x => { x.ForSingletonOf(typeof (IOpenType<>)).Use(typeof (OpenType<>)); });
+                new Container(x => { x.ForSingletonOf(typeof(IOpenType<>)).Use(typeof(OpenType<>)); });
 
             var o1 = container.GetInstance<IOpenType<string>>();
             var o2 = container.GetInstance<IOpenType<string>>();

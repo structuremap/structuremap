@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
+using System;
+using System.Collections.Generic;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_436
     {
-        [Test]
+        [Fact]
         public void should_add_the_instance_name_when_created_with_type()
         {
             var container = new Container(_ =>

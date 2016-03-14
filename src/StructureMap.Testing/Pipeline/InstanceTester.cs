@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
@@ -9,22 +6,15 @@ using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class InstanceTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
-        [Test]
+        [Fact]
         public void Build_the_InstanceToken()
         {
             var instance = new InstanceUnderTest();
@@ -36,7 +26,7 @@ namespace StructureMap.Testing.Pipeline
             token.Description.ShouldBe("InstanceUnderTest");
         }
 
-        [Test]
+        [Fact]
         public void has_explicit_name()
         {
             var instance = new InstanceUnderTest();
@@ -46,7 +36,7 @@ namespace StructureMap.Testing.Pipeline
             instance.HasExplicitName().ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void can_set_scope_directly_on_the_instance()
         {
             var i1 = new ConfiguredInstance(GetType()).Named("foo");
@@ -55,7 +45,7 @@ namespace StructureMap.Testing.Pipeline
             i1.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
 
-        [Test]
+        [Fact]
         public void does_override_the_scope_of_the_parent()
         {
             var family = new PluginFamily(GetType());
@@ -69,8 +59,7 @@ namespace StructureMap.Testing.Pipeline
             i1.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
 
-
-        [Test]
+        [Fact]
         public void instance_key_is_predictable()
         {
             var i1 = new ConfiguredInstance(GetType()).Named("foo");
@@ -79,15 +68,15 @@ namespace StructureMap.Testing.Pipeline
             i1.InstanceKey(GetType()).ShouldBe(i1.InstanceKey(GetType()));
             i2.InstanceKey(GetType()).ShouldBe(i2.InstanceKey(GetType()));
             i1.InstanceKey(GetType()).ShouldNotBe(i2.InstanceKey(GetType()));
-            i1.InstanceKey(typeof (InstanceUnderTest)).ShouldNotBe(i1.InstanceKey(GetType()));
+            i1.InstanceKey(typeof(InstanceUnderTest)).ShouldNotBe(i1.InstanceKey(GetType()));
         }
 
-        [Test]
+        [Fact]
         public void add_interceptor_when_the_accept_type_is_possible_on_the_return_type()
         {
             var instance = new InstanceUnderTest
             {
-                Type = typeof (StubbedGateway)
+                Type = typeof(StubbedGateway)
             };
 
             var interceptor = new ActivatorInterceptor<IGateway>(g => g.DoSomething());
@@ -101,12 +90,12 @@ namespace StructureMap.Testing.Pipeline
                 .ShouldBeTheSameAs(interceptor);
         }
 
-        [Test]
+        [Fact]
         public void add_interceptor_that_cannot_accept_the_returned_type()
         {
             var instance = new InstanceUnderTest
             {
-                Type = typeof (ColorRule)
+                Type = typeof(ColorRule)
             };
 
             var interceptor = new ActivatorInterceptor<IGateway>(g => g.DoSomething());

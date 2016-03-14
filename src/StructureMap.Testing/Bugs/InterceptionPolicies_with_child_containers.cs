@@ -1,13 +1,12 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Testing.Acceptance;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class InterceptionPolicies_with_child_containers
     {
-        [Test]
+        [Fact]
         public void policies_should_apply_to_child_containers()
         {
             var container = new Container(x =>
@@ -22,7 +21,7 @@ namespace StructureMap.Testing.Bugs
                 .Activated.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void policies_should_apply_to_nested_containers()
         {
             var container = new Container(x =>

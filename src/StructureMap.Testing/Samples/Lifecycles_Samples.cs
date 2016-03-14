@@ -1,14 +1,12 @@
-﻿using NUnit.Framework;
-using StructureMap.Configuration.DSL;
-using StructureMap.Pipeline;
+﻿using StructureMap.Pipeline;
+using Xunit;
 
 namespace StructureMap.Testing.Samples
 {
-    [TestFixture]
     public class Lifecycles_Samples
     {
         // SAMPLE: SingletonThing-in-action
-        [Test]
+        [Fact]
         public void singletons()
         {
             var c = new Container(x => { x.For<IService>().Use<Service>().Singleton(); });
@@ -24,7 +22,7 @@ namespace StructureMap.Testing.Samples
 
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void singletons_2()
         {
             var c = new Container(x => { x.For<IService>().Singleton().Use<Service>(); });
@@ -45,9 +43,8 @@ namespace StructureMap.Testing.Samples
             }
         }
 
-
         // SAMPLE: how-transient-works
-        [Test]
+        [Fact]
         public void Transient()
         {
             var c = new Container(x => { x.For<IService>().Use<Service>().Transient(); });
@@ -59,7 +56,7 @@ namespace StructureMap.Testing.Samples
                 .ShouldNotBeTheSameAs(c.GetInstance<IService>())
                 .ShouldNotBeTheSameAs(c.GetInstance<IService>());
 
-            // Within a nested container, 'Transient' now 
+            // Within a nested container, 'Transient' now
             // means within the Nested Container.
             // A nested container is effectively one request
             using (var nested = c.GetNestedContainer())
@@ -73,7 +70,7 @@ namespace StructureMap.Testing.Samples
         // ENDSAMPLE
 
         // SAMPLE: how-always-unique
-        [Test]
+        [Fact]
         public void Always_Unique()
         {
             var c = new Container(x => { x.For<IService>().Use<Service>().AlwaysUnique(); });
@@ -85,7 +82,7 @@ namespace StructureMap.Testing.Samples
                 .ShouldNotBeTheSameAs(c.GetInstance<IService>())
                 .ShouldNotBeTheSameAs(c.GetInstance<IService>());
 
-            // Within a nested container, 'Transient' now 
+            // Within a nested container, 'Transient' now
             // means within the Nested Container.
             // A nested container is effectively one request
             using (var nested = c.GetNestedContainer())
@@ -95,7 +92,7 @@ namespace StructureMap.Testing.Samples
                     .ShouldNotBeTheSameAs(nested.GetInstance<IService>());
             }
 
-            // Even in a single request, 
+            // Even in a single request,
             var holder = c.GetInstance<ServiceUserHolder>();
             holder.Service.ShouldNotBeTheSameAs(holder.User.Service);
         }
@@ -124,7 +121,7 @@ namespace StructureMap.Testing.Samples
             }
         }
 
-        [Test]
+        [Fact]
         public void Transient_within_a_single_request()
         {
             var container = new Container(x => x.For<IService>().Use<Service>());
@@ -132,7 +129,6 @@ namespace StructureMap.Testing.Samples
             var holder = container.GetInstance<ServiceUserHolder>();
             holder.Service.ShouldBeTheSameAs(holder.User.Service);
         }
-
 
         // SAMPLE: lifecycle-configuration-at-plugin-type
         public class LifecycleAtPluginTypeRegistry : Registry
@@ -143,7 +139,6 @@ namespace StructureMap.Testing.Samples
 
                 // This is the default behavior anyway
                 For<IGateway>().Transient();
-
 
                 For<IRule>().AlwaysUnique();
 
@@ -172,7 +167,6 @@ namespace StructureMap.Testing.Samples
         }
 
         // ENDSAMPLE
-
 
         public class MyCustomLifecycle : ILifecycle
         {

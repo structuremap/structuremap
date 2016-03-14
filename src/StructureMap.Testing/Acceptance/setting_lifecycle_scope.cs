@@ -1,16 +1,15 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.Widget;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class setting_lifecycle_scope
     {
-        [Test]
+        [Fact]
         public void can_specify_at_family_level()
         {
             var container = new Container(x => { x.For<Rule>().Singleton().Use<ARule>(); });
@@ -22,7 +21,7 @@ namespace StructureMap.Testing.Acceptance
         }
 
         // SAMPLE: lifecycle-rules
-        [Test]
+        [Fact]
         public void lifecycle_precedence()
         {
             var container = new Container(x =>

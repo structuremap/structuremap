@@ -1,23 +1,21 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Samples;
 using StructureMap.Web.Pipeline;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class iconfigured_instance_behavior
     {
-        [Test]
+        [Fact]
         public void set_to_singleton()
         {
             // SAMPLE: set-iconfigured-instance-to-SingletonThing
-            IConfiguredInstance instance 
-                = new ConfiguredInstance(typeof (WidgetHolder));
+            IConfiguredInstance instance
+                = new ConfiguredInstance(typeof(WidgetHolder));
 
             instance.Singleton();
 
@@ -25,11 +23,9 @@ namespace StructureMap.Testing.Acceptance
             // ENDSAMPLE
         }
 
-
-        [Test]
+        [Fact]
         public void set_to_default()
         {
-            
             // SAMPLE: iconfiguredinstance-lifecycle
             IConfiguredInstance instance
                 = new ConfiguredInstance(typeof(WidgetHolder));
@@ -49,7 +45,6 @@ namespace StructureMap.Testing.Acceptance
 
             instance.Lifecycle
                 .ShouldBeOfType<TransientLifecycle>();
-
         }
 
         // SAMPLE: reflecting-over-parameters
@@ -60,17 +55,17 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        [Test]
+        [Fact]
         public void reflecting_over_constructor_args()
         {
             IConfiguredInstance instance = new SmartInstance<GuyWithArguments>()
                 // I'm just forcing it to assign the constructor function
                 .SelectConstructor(() => new GuyWithArguments(null, null));
 
-
             instance.Constructor.GetParameters().Select(x => x.Name)
                 .ShouldHaveTheSameElementsAs("widget", "rule");
         }
+
         // ENDSAMPLE
 
         // SAMPLE: iconfiguredinstance-getsettableproperties
@@ -80,23 +75,23 @@ namespace StructureMap.Testing.Acceptance
             public Rule Rule { get; private set; }
         }
 
-        [Test]
+        [Fact]
         public void get_settable_properties()
         {
-            IConfiguredInstance instance 
+            IConfiguredInstance instance
                 = new ConfiguredInstance(typeof(GuyWithProperties));
 
             instance.SettableProperties()
                 .Single().Name.ShouldBe("Widget");
         }
+
         // ENDSAMPLE
 
-
         // SAMPLE: add-dependency-by-property-info
-        [Test]
+        [Fact]
         public void dependency_with_setter_with_value()
         {
-            var instance 
+            var instance
                 = new ConfiguredInstance(typeof(GuyWithProperties));
             var prop = instance.PluggedType.GetProperty("Widget");
 
@@ -108,10 +103,11 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<GuyWithProperties>(instance)
                 .Widget.ShouldBeTheSameAs(myWidget);
         }
+
         // ENDSAMPLE
 
         // SAMPLE: add-dependency-by-property-info-with-instance
-        [Test]
+        [Fact]
         public void dependency_with_setter_with_instance()
         {
             var instance
@@ -126,8 +122,8 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<GuyWithProperties>(instance)
                 .Widget.ShouldBeOfType<AWidget>();
         }
-        // ENDSAMPLE
 
+        // ENDSAMPLE
 
         // SAMPLE: add-dependency-by-constructor-parameter
         public class GuyWithDatabaseConnection
@@ -140,7 +136,7 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        [Test]
+        [Fact]
         public void specify_dependency_by_constructor_parameter()
         {
             var instance = ConstructorInstance
@@ -149,16 +145,16 @@ namespace StructureMap.Testing.Acceptance
             var parameter = instance.Constructor.GetParameters().Single();
             parameter.Name.ShouldBe("connectionString");
 
-            var connString = 
+            var connString =
                 "I haven't used sql server in years and I don't remember what connection strings look like";
 
             instance.Dependencies.AddForConstructorParameter(parameter, connString);
-
 
             var guy = new Container().GetInstance<GuyWithDatabaseConnection>(instance);
 
             guy.ConnectionString.ShouldBe(connString);
         }
+
         // ENDSAMPLE
 
         // SAMPLE: add-interceptor-to-iconfigured-instance
@@ -173,10 +169,10 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        [Test]
+        [Fact]
         public void add_interceptor()
         {
-            var interceptor = 
+            var interceptor =
                 new ActivatorInterceptor<SimpleWidget>(w => w.Intercept());
             var instance = new SmartInstance<SimpleWidget>();
 
@@ -185,6 +181,7 @@ namespace StructureMap.Testing.Acceptance
             new Container().GetInstance<SimpleWidget>(instance)
                 .WasIntercepted.ShouldBeTrue();
         }
+
         // ENDSAMPLE
     }
 }

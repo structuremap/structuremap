@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Graph;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class CloseOpenGenericsWithSomeSpecifics
     {
-        [Test]
+        [Fact]
         public void should_handle_default_closed_and_specific_closed()
         {
             var container = new Container(x =>
@@ -15,10 +14,10 @@ namespace StructureMap.Testing.Bugs
                 x.Scan(y =>
                 {
                     y.TheCallingAssembly();
-                    y.ConnectImplementationsToTypesClosing(typeof (IAmOpenGeneric<>));
+                    y.ConnectImplementationsToTypesClosing(typeof(IAmOpenGeneric<>));
                 });
 
-                x.For(typeof (IAmOpenGeneric<>)).Use(typeof (TheClosedGeneric<>));
+                x.For(typeof(IAmOpenGeneric<>)).Use(typeof(TheClosedGeneric<>));
             });
 
             container.GetInstance<IAmOpenGeneric<int>>().ShouldBeOfType<TheClosedGeneric<int>>();

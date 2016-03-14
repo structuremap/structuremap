@@ -1,14 +1,13 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_244_using_Func_of_string_as_a_dependency
     {
-        [Test]
+        [Fact]
         public void use_a_simple_func_for_string_dependency()
         {
             var container = new Container(x => { x.For<Rule>().Use<ColorRule>().Ctor<string>().Is(() => "blue"); });
@@ -17,7 +16,7 @@ namespace StructureMap.Testing.Bugs
                 .ShouldBeOfType<ColorRule>().Color.ShouldBe("blue");
         }
 
-        [Test]
+        [Fact]
         public void use_a_func_of_context_for_string_dependency()
         {
             var container = new Container(x =>
@@ -30,7 +29,7 @@ namespace StructureMap.Testing.Bugs
             container.GetInstance<StringHolder>().Name.ShouldBe("fuschia");
         }
 
-        [Test]
+        [Fact]
         public void use_a_func_for_a_simple_type()
         {
             var container = new Container(x => { x.For<IntHolder>().Use<IntHolder>().Ctor<int>().Is(() => 5); });
@@ -39,7 +38,7 @@ namespace StructureMap.Testing.Bugs
                 .Number.ShouldBe(5);
         }
 
-        [Test]
+        [Fact]
         public void use_a_func_for_enums()
         {
             var container =

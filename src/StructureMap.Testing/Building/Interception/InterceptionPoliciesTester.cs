@@ -1,17 +1,16 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Building.Interception
 {
-    [TestFixture]
     public class InterceptionPoliciesTester
     {
-        [Test]
+        [Fact]
         public void do_not_duplicate_interceptor_policies()
         {
             var theActivator = new ActivatorInterceptor<ITarget>(x => x.Activate());
@@ -29,7 +28,7 @@ namespace StructureMap.Testing.Building.Interception
             policies.Interception().Single().ShouldBeTheSameAs(policy1);
         }
 
-        [Test]
+        [Fact]
         public void select_interceptors()
         {
             var activator1 = new ActivatorInterceptor<ITarget>(x => x.Activate());
@@ -38,7 +37,6 @@ namespace StructureMap.Testing.Building.Interception
             var activator4 = new ActivatorInterceptor<ITarget>(x => x.Debug());
             var activator5 = new ActivatorInterceptor<IGateway>(x => x.DoSomething());
 
-
             var policies = Policies.Default();
             policies.Add(activator1.ToPolicy());
             policies.Add(activator2.ToPolicy());
@@ -46,28 +44,24 @@ namespace StructureMap.Testing.Building.Interception
             policies.Add(activator4.ToPolicy());
             policies.Add(activator5.ToPolicy());
 
-
             var instance1 = new SmartInstance<Target>();
             policies.Apply(typeof(ITarget), instance1);
             instance1.Interceptors
                 .ShouldHaveTheSameElementsAs(activator1, activator2, activator3, activator4);
-
 
             var instance2 = new SmartInstance<ATarget>();
             policies.Apply(typeof(ITarget), instance2);
             instance2.Interceptors
                 .ShouldHaveTheSameElementsAs(activator1, activator4);
 
-
             var instance3 = new SmartInstance<StubbedGateway>();
             policies.Apply(typeof(ITarget), instance3);
             instance3.Interceptors
                 .ShouldHaveTheSameElementsAs(activator5);
-                
         }
 
         // SAMPLE: InterceptorPolicy<T>-in-action
-        [Test]
+        [Fact]
         public void apply_policy_selectively_with_a_func()
         {
             var activator1 = new ActivatorInterceptor<ITarget>(x => x.Activate());
@@ -109,6 +103,7 @@ namespace StructureMap.Testing.Building.Interception
                 throw new NotImplementedException();
             }
         }
+
         // ENDSAMPLE
 
         public class BTarget : ATarget
@@ -123,6 +118,4 @@ namespace StructureMap.Testing.Building.Interception
         {
         }
     }
-
-
 }

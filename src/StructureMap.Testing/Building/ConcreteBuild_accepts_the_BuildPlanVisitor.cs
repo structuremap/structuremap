@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Framework;
-using StructureMap.Building;
+﻿using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class ConcreteBuild_accepts_the_BuildPlanVisitor
     {
-        [Test]
+        [Fact]
         public void sends_the_constructor_args_and_parameters_to_the_visitor()
         {
             var dependencies = new DependencyCollection();
-            dependencies.Add(typeof (Rule), new ColorRule("Red"));
-            dependencies.Add(typeof (IWidget), new AWidget());
+            dependencies.Add(typeof(Rule), new ColorRule("Red"));
+            dependencies.Add(typeof(IWidget), new AWidget());
 
-            var build = ConcreteType.BuildSource(typeof (GuyWithCtorAndArgs), null, dependencies,
+            var build = ConcreteType.BuildSource(typeof(GuyWithCtorAndArgs), null, dependencies,
                 Policies.Default());
 
             var visitor = new StubVisitor();

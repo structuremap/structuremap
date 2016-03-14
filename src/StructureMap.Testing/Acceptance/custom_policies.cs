@@ -1,12 +1,11 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Pipeline;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class custom_policies
     {
         // SAMPLE: database-users
@@ -29,6 +28,7 @@ namespace StructureMap.Testing.Acceptance
                 ConnectionString = connectionString;
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: connectionstringpolicy
@@ -51,10 +51,11 @@ namespace StructureMap.Testing.Acceptance
                 return "the connection string";
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: use_the_connection_string_policy
-        [Test]
+        [Fact]
         public void use_the_connection_string_policy()
         {
             var container = new Container(_ =>
@@ -68,8 +69,8 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<ConnectedThing>()
                 .ConnectionString.ShouldBe("the connection string");
         }
-        // ENDSAMPLE
 
+        // ENDSAMPLE
 
         // SAMPLE: IDatabase
         public interface IDatabase { }
@@ -88,6 +89,7 @@ namespace StructureMap.Testing.Acceptance
                 return string.Format("ConnectionString: {0}", ConnectionString);
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: database-users-2
@@ -123,8 +125,10 @@ namespace StructureMap.Testing.Acceptance
             // and ctor params. The easiest thing is to just make
             // setters private
             public IDatabase Green { get; private set; }
+
             public IDatabase Red { get; private set; }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: InjectDatabaseByName
@@ -133,7 +137,7 @@ namespace StructureMap.Testing.Acceptance
             protected override void apply(Type pluginType, IConfiguredInstance instance)
             {
                 instance.Constructor.GetParameters()
-                    .Where(x => x.ParameterType == typeof (IDatabase))
+                    .Where(x => x.ParameterType == typeof(IDatabase))
                     .Each(param =>
                     {
                         // Using ReferencedInstance here tells StructureMap
@@ -143,10 +147,10 @@ namespace StructureMap.Testing.Acceptance
                     });
             }
         }
+
         // ENDSAMPLE
 
-
-        [Test]
+        [Fact]
         public void choose_database()
         {
             // SAMPLE: choose_database_container_setup
@@ -157,7 +161,7 @@ namespace StructureMap.Testing.Acceptance
 
                 _.For<IDatabase>().Add<Database>().Named("green")
                     .Ctor<string>("connectionString").Is("*green*");
-                
+
                 _.Policies.Add<InjectDatabaseByName>();
             });
             // ENDSAMPLE
@@ -179,8 +183,8 @@ namespace StructureMap.Testing.Acceptance
             // ENDSAMPLE
         }
 
-
         public interface IWidgets { }
+
         public class WidgetCache : IWidgets { }
 
         // SAMPLE: CacheIsSingleton
@@ -194,10 +198,11 @@ namespace StructureMap.Testing.Acceptance
                 }
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: set_cache_to_singleton
-        [Test]
+        [Fact]
         public void set_cache_to_singleton()
         {
             var container = new Container(_ =>
@@ -212,11 +217,12 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<IWidgets>()
                 .ShouldBeTheSameAs(container.GetInstance<IWidgets>());
 
-            // Now that the policy has executed, we 
+            // Now that the policy has executed, we
             // can verify that WidgetCache is a SingletonThing
             container.Model.For<IWidgets>().Default
                 .Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
+
         // ENDSAMPLE
 
         public class MyCustomPolicy : IInstancePolicy
@@ -226,7 +232,7 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        [Test]
+        [Fact]
         public void show_registration()
         {
             // SAMPLE: policies.add

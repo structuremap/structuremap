@@ -1,25 +1,15 @@
-using System.Collections.Generic;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using System.Collections.Generic;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class DefaultInstanceTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
         public interface IDefault
         {
         }
@@ -43,14 +33,13 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-
-        [Test]
+        [Fact]
         public void Get_description()
         {
             new DefaultInstance().Description.ShouldBe("Default");
         }
 
-        [Test]
+        [Fact]
         public void use_all_instances_of_an_enumerable_element_type()
         {
             var widget1 = new AWidget();
@@ -70,43 +59,42 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<ClassWithWidgets>().Widgets.ShouldHaveTheSameElementsAs(widget1, widget2, widget3);
         }
 
-        [Test]
+        [Fact]
         public void to_dependency_source_when_not_an_enum()
         {
-            new DefaultInstance().ToDependencySource(typeof (IGateway))
+            new DefaultInstance().ToDependencySource(typeof(IGateway))
                 .ShouldBeOfType<DefaultDependencySource>()
-                .DependencyType.ShouldBe(typeof (IGateway));
+                .DependencyType.ShouldBe(typeof(IGateway));
         }
 
-        [Test]
+        [Fact]
         public void to_dependency_source_when_an_array()
         {
-            var enumerationType = typeof (IGateway[]);
+            var enumerationType = typeof(IGateway[]);
             new DefaultInstance().ToDependencySource(enumerationType)
                 .ShouldBe(new AllPossibleValuesDependencySource(enumerationType));
         }
 
-        [Test]
+        [Fact]
         public void to_dependency_source_when_an_IEnumerable()
         {
-            var enumerationType = typeof (IEnumerable<IGateway>);
+            var enumerationType = typeof(IEnumerable<IGateway>);
             new DefaultInstance().ToDependencySource(enumerationType)
                 .ShouldBe(new AllPossibleValuesDependencySource(enumerationType));
         }
 
-
-        [Test]
+        [Fact]
         public void to_dependency_source_when_an_IList()
         {
-            var enumerationType = typeof (IList<IGateway>);
+            var enumerationType = typeof(IList<IGateway>);
             new DefaultInstance().ToDependencySource(enumerationType)
                 .ShouldBe(new AllPossibleValuesDependencySource(enumerationType));
         }
 
-        [Test]
+        [Fact]
         public void to_dependency_source_when_a_concrete_List()
         {
-            var enumerationType = typeof (IList<IGateway>);
+            var enumerationType = typeof(IList<IGateway>);
             new DefaultInstance().ToDependencySource(enumerationType)
                 .ShouldBe(new AllPossibleValuesDependencySource(enumerationType));
         }

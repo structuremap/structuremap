@@ -1,14 +1,11 @@
-﻿using Moq;
-using NUnit.Framework;
-using Shouldly;
-using MockRepository = Rhino.Mocks.MockRepository;
+﻿using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug438_Default_Instance_in_MissingNameInstance
     {
-        [Test]
+        [Fact]
         public void is_not_broken()
         {
             var container = new Container(_ =>
@@ -33,7 +30,6 @@ namespace StructureMap.Testing.Bugs
 
         public interface ISomeOtherThing
         {
-            
         }
 
         public class OtherConcreteClass : ISomeOtherThing

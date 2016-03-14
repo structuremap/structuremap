@@ -1,46 +1,43 @@
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.AutoFactory;
-using System;
 using System.Collections.Generic;
+using Xunit;
 
 namespace StructureMap.Testing.AutoFactories
 {
-    [TestFixture]
     public class AutoFactoryTester
     {
-        private Container _container;
+        private readonly Container container;
 
-        [SetUp]
-        public void SetUp()
+        public AutoFactoryTester()
         {
-            _container = new Container();
+            container = new Container();
         }
 
-        [Test]
+        [Fact]
         public void Can_build_the_factory()
         {
-            _container.Configure(cfg =>
+            container.Configure(cfg =>
             {
                 cfg.For<IDummyService>().Use<DummyService>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = _container.GetInstance<IDummyFactory>();
+            var factory = container.GetInstance<IDummyFactory>();
 
             factory.ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void Can_resolve_component()
         {
-            _container.Configure(cfg =>
+            container.Configure(cfg =>
             {
                 cfg.For<IDummyService>().Use<DummyService>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = _container.GetInstance<IDummyFactory>();
+            var factory = container.GetInstance<IDummyFactory>();
 
             var component = factory.CreateDummyService();
 
@@ -48,16 +45,16 @@ namespace StructureMap.Testing.AutoFactories
             component.ShouldBeOfType<DummyService>();
         }
 
-        [Test]
+        [Fact]
         public void Can_resolve_generic_components_via_a_generic_method()
         {
-            _container.Configure(cfg =>
+            container.Configure(cfg =>
             {
                 cfg.For<IDummyService>().Use<DummyService>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = _container.GetInstance<IDummyFactory>();
+            var factory = container.GetInstance<IDummyFactory>();
 
             var component = factory.CreateService<IDummyService>();
 
@@ -65,16 +62,16 @@ namespace StructureMap.Testing.AutoFactories
             component.ShouldBeOfType<DummyService>();
         }
 
-        [Test]
+        [Fact]
         public void Can_resolve_a_closed_generic_return_type()
         {
-            _container.Configure(cfg =>
+            container.Configure(cfg =>
             {
                 cfg.For<IHandler<Message>>().Use<MessageHandler>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = _container.GetInstance<IDummyFactory>();
+            var factory = container.GetInstance<IDummyFactory>();
 
             var component = factory.CreateHandler<Message>();
 
@@ -82,16 +79,16 @@ namespace StructureMap.Testing.AutoFactories
             component.ShouldBeOfType<MessageHandler>();
         }
 
-        [Test]
+        [Fact]
         public void ResolveServiceWithExplicitArguments()
         {
-            _container.Configure(cfg =>
+            container.Configure(cfg =>
             {
                 cfg.For<IDummyService>().Use<DummyServiceWithName>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = _container.GetInstance<IDummyFactory>();
+            var factory = container.GetInstance<IDummyFactory>();
 
             var component = factory.CreateDummyService("John", "Smith");
 
@@ -102,16 +99,16 @@ namespace StructureMap.Testing.AutoFactories
             );
         }
 
-        [Test]
+        [Fact]
         public void ResolveServiceWithRedundantExplicitArguments()
         {
-            _container.Configure(cfg =>
+            container.Configure(cfg =>
             {
                 cfg.For<IDummyService>().Use<DummyService>();
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = _container.GetInstance<IDummyFactory>();
+            var factory = container.GetInstance<IDummyFactory>();
 
             var component = factory.CreateDummyService("John", "Smith");
 
@@ -122,10 +119,10 @@ namespace StructureMap.Testing.AutoFactories
             );
         }
 
-        [Test]
+        [Fact]
         public void ResolveNamedServiceWithExplicitArguments()
         {
-            _container.Configure(cfg =>
+            container.Configure(cfg =>
             {
                 cfg.For<IDummyService>().Use<DummyService>();
                 cfg.For<IDummyService>().Add<DummyServiceWithName>().Named("direct");
@@ -133,7 +130,7 @@ namespace StructureMap.Testing.AutoFactories
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = _container.GetInstance<IDummyFactory>();
+            var factory = container.GetInstance<IDummyFactory>();
 
             var component = factory.GetNamedDummyService("reversed", "John", "Smith");
 
@@ -144,10 +141,10 @@ namespace StructureMap.Testing.AutoFactories
             );
         }
 
-        [Test]
+        [Fact]
         public void TryToResolveNotRegisteredNamedService()
         {
-            _container.Configure(cfg =>
+            container.Configure(cfg =>
             {
                 cfg.For<IDummyService>().Use<DummyService>();
                 cfg.For<IDummyService>().Add<DummyServiceWithName>().Named("direct");
@@ -155,17 +152,17 @@ namespace StructureMap.Testing.AutoFactories
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = _container.GetInstance<IDummyFactory>();
+            var factory = container.GetInstance<IDummyFactory>();
 
             var component = factory.GetNamedDummyService("unknown", "John", "Smith");
 
             component.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void ResolveServiceNames()
         {
-            _container.Configure(cfg =>
+            container.Configure(cfg =>
             {
                 cfg.For<IDummyService>().Use<DummyService>();
                 cfg.For<IDummyService>().Add<DummyServiceWithName>().Named("direct");
@@ -173,7 +170,7 @@ namespace StructureMap.Testing.AutoFactories
                 cfg.For<IDummyFactory>().CreateFactory();
             });
 
-            var factory = _container.GetInstance<IDummyFactory>();
+            var factory = container.GetInstance<IDummyFactory>();
 
             var names = factory.GetNames<IDummyService>();
 

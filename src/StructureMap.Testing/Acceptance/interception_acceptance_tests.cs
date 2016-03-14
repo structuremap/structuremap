@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class interception_acceptance_tests
     {
         // SAMPLE: activate_by_action
-        [Test]
+        [Fact]
         public void activate_by_action()
         {
             var container = new Container(x =>
@@ -26,9 +25,10 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<AWidget>()
                 .Activated.ShouldBeTrue();
         }
+
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void activate_by_expression_action()
         {
             var container = new Container(x =>
@@ -43,7 +43,7 @@ namespace StructureMap.Testing.Acceptance
                 .Activated.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void activate_by_action_using_IContext()
         {
             var container = new Container(x =>
@@ -61,7 +61,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeTheSameAs(widget);
         }
 
-        [Test]
+        [Fact]
         public void activate_by_expression_and_IContext()
         {
             var container = new Container(x =>
@@ -80,7 +80,7 @@ namespace StructureMap.Testing.Acceptance
         }
 
         // SAMPLE: decorator-by-type-example
-        [Test]
+        [Fact]
         public void decorator_example()
         {
             var container = new Container(_ =>
@@ -96,9 +96,10 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<WidgetHolder>()
                 .Inner.ShouldBeOfType<AWidget>();
         }
+
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void equivalent()
         {
             // SAMPLE: simple-decorator-equivalent
@@ -115,7 +116,7 @@ namespace StructureMap.Testing.Acceptance
         }
 
         // SAMPLE: decorate-plugin-type-with-type
-        [Test]
+        [Fact]
         public void decorate_with_type()
         {
             var container = new Container(x =>
@@ -129,9 +130,10 @@ namespace StructureMap.Testing.Acceptance
                 .Inner
                 .ShouldBeOfType<AWidget>();
         }
+
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void decorate_with_type_and_inline_dependency()
         {
             var container = new Container(x =>
@@ -149,7 +151,7 @@ namespace StructureMap.Testing.Acceptance
             holder.Inner.ShouldBeOfType<AWidget>();
         }
 
-        [Test]
+        [Fact]
         public void decorate_with_additional_filter_on_instance()
         {
             var container = new Container(x =>
@@ -173,7 +175,7 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<IWidget>("C").ShouldBeOfType<CWidget>();
         }
 
-        [Test]
+        [Fact]
         public void decorate_with_additional_filter_on_instance_with_func()
         {
             var container = new Container(x =>
@@ -197,7 +199,7 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<IWidget>("C").ShouldBeOfType<CWidget>();
         }
 
-        [Test]
+        [Fact]
         public void decorate_by_func()
         {
             var container = new Container(x =>
@@ -212,7 +214,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<AWidget>();
         }
 
-        [Test]
+        [Fact]
         public void decorate_by_expression()
         {
             var container = new Container(x =>
@@ -227,7 +229,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<AWidget>();
         }
 
-        [Test]
+        [Fact]
         public void decorate_with_expression_and_IContext()
         {
             var container = new Container(x =>
@@ -242,7 +244,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<AWidget>();
         }
 
-        [Test]
+        [Fact]
         public void decorate_with_func_and_IContext()
         {
             var container = new Container(x =>
@@ -259,7 +261,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<AWidget>();
         }
 
-        [Test]
+        [Fact]
         public void decorate_with_open_generics()
         {
             var container = new Container(x =>
@@ -267,9 +269,9 @@ namespace StructureMap.Testing.Acceptance
                 x.For<IWidget>().Use<AWidget>();
                 x.For<IService>().Use<AService>();
 
-                x.For(typeof (IFoo<,>)).DecorateAllWith(typeof (DecoratedFoo<,>));
+                x.For(typeof(IFoo<,>)).DecorateAllWith(typeof(DecoratedFoo<,>));
 
-                x.For(typeof (IFoo<,>)).Use(typeof (Foo<,>));
+                x.For(typeof(IFoo<,>)).Use(typeof(Foo<,>));
             });
 
             var decorator = container.GetInstance<IFoo<IWidget, IService>>()
@@ -280,7 +282,7 @@ namespace StructureMap.Testing.Acceptance
         }
 
         // SAMPLE: use_a_custom_interception_policy
-        [Test]
+        [Fact]
         public void use_a_custom_interception_policy()
         {
             var container = new Container(x =>
@@ -294,10 +296,10 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<WidgetHolder>()
                 .Inner.ShouldBeOfType<AWidget>();
         }
+
         // ENDSAMPLE
 
-
-        [Test]
+        [Fact]
         public void intercept_a_literal_object()
         {
             var widget = new AWidget();
@@ -323,6 +325,7 @@ namespace StructureMap.Testing.Acceptance
             Activated = true;
         }
     }
+
     // ENDSAMPLE
 
     public class WidgetKeeper
@@ -334,7 +337,6 @@ namespace StructureMap.Testing.Acceptance
             Kept.Add(widget);
         }
     }
-
 
     public interface IWidget
     {
@@ -348,6 +350,7 @@ namespace StructureMap.Testing.Acceptance
     public class AWidget : Activateable, IWidget
     {
     }
+
     // ENDSAMPLE
 
     public class BWidget : Activateable, IWidget
@@ -373,6 +376,7 @@ namespace StructureMap.Testing.Acceptance
             get { return _inner; }
         }
     }
+
     // ENDSAMPLE
 
     public class NamedWidgetHolder : WidgetHolder
@@ -483,13 +487,14 @@ namespace StructureMap.Testing.Acceptance
 
         public IEnumerable<IInterceptor> DetermineInterceptors(Type pluginType, Instance instance)
         {
-            if (pluginType == typeof (IWidget))
+            if (pluginType == typeof(IWidget))
             {
                 // DecoratorInterceptor is the simple case of wrapping one type with another
                 // concrete type that takes the first as a dependency
-                yield return new DecoratorInterceptor(typeof (IWidget), typeof (WidgetHolder));
+                yield return new DecoratorInterceptor(typeof(IWidget), typeof(WidgetHolder));
             }
         }
     }
+
     // ENDSAMPLE
 }

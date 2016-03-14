@@ -1,16 +1,14 @@
-using System.Linq;
-using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class FirstInterfaceConventionTester
     {
-        [SetUp]
-        public void SetUp()
+        public FirstInterfaceConventionTester()
         {
             // SAMPLE: using-RegisterConcreteTypesAgainstTheFirstInterface
             container = new Container(x =>
@@ -20,14 +18,13 @@ namespace StructureMap.Testing.Graph
                     o.TheCallingAssembly();
                     o.RegisterConcreteTypesAgainstTheFirstInterface();
 
-                    o.Exclude(t => t.CanBeCastTo(typeof (IGateway)));
+                    o.Exclude(t => t.CanBeCastTo(typeof(IGateway)));
                 });
             });
             // ENDSAMPLE
         }
 
         private Container container;
-
 
         public interface I1
         {
@@ -91,17 +88,17 @@ namespace StructureMap.Testing.Graph
         {
         }
 
-        [Test]
+        [Fact]
         public void do_not_register_type_if_there_are_primitive_arguments()
         {
             container.Model.HasImplementationsFor<I3>().ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void simple_case()
         {
-            container.Model.For<I1>().Instances.Any(x => x.ReturnedType == typeof (C1)).ShouldBeTrue();
-            container.Model.For<I1>().Instances.Any(x => x.ReturnedType == typeof (C2)).ShouldBeTrue();
+            container.Model.For<I1>().Instances.Any(x => x.ReturnedType == typeof(C1)).ShouldBeTrue();
+            container.Model.For<I1>().Instances.Any(x => x.ReturnedType == typeof(C2)).ShouldBeTrue();
 
             container.Model.For<I2>().Instances.Select(x => x.ReturnedType).Any().ShouldBeFalse();
         }

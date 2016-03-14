@@ -1,18 +1,17 @@
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class ContainerIsInTheContainerTester
     {
-        [Test]
+        [Fact]
         public void build_a_class_that_needs_a_container_and_inject_the_current_container()
         {
             var container = new Container();
             container.GetInstance<ClassThatNeedsContainer>().Container.ShouldBeTheSameAs(container);
         }
 
-        [Test]
+        [Fact]
         public void build_a_container_and_retrieve_the_container_itself_through_service_location()
         {
             var container = new Container();

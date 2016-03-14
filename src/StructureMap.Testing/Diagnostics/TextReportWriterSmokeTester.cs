@@ -1,22 +1,12 @@
-using System;
-using NUnit.Framework;
 using StructureMap.Diagnostics;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Diagnostics
 {
-    [TestFixture]
     public class TextReportWriterSmokeTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
-        [Test]
+        [Fact]
         public void TryWithTwoColumnsAndSomeDividers()
         {
             var writer = new TextReportWriter(2);

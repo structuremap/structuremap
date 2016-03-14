@@ -1,18 +1,16 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using NUnit.Framework;
-using Shouldly;
-using StructureMap.Pipeline;
+﻿using Shouldly;
 using StructureMap.Testing.Diagnostics;
 using StructureMap.Testing.Widget;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using Xunit;
 
 namespace StructureMap.Testing.Examples
 {
-    [TestFixture]
     public class UsingContainerModel
     {
-        [Test]
+        [Fact]
         public void finding_things()
         {
             var container = Container.For<VisualizationRegistry>();
@@ -22,17 +20,16 @@ namespace StructureMap.Testing.Examples
                 .Each(pluginType => Debug.WriteLine(pluginType.PluginType));
             // ENDSAMPLE
 
-
             // SAMPLE: find-default-of-plugintype
             // Finding the concrete type of the default
             // IDevice service
             container.Model.DefaultTypeFor<IDevice>()
-                .ShouldBe(typeof (DefaultDevice));
+                .ShouldBe(typeof(DefaultDevice));
 
             // Find the configuration model for the default
             // IDevice service
             container.Model.For<IDevice>().Default
-                .ReturnedType.ShouldBe(typeof (DefaultDevice));
+                .ReturnedType.ShouldBe(typeof(DefaultDevice));
             // ENDSAMPLE
 
             // SAMPLE: find-named-instance-by-type-and-name
@@ -47,7 +44,7 @@ namespace StructureMap.Testing.Examples
             // ENDSAMPLE
 
             // SAMPLE: eject-and-remove-configuration
-            // Removes all configurations and objects already built as singletons 
+            // Removes all configurations and objects already built as singletons
             // related to types in the current Assembly
             container.Model.EjectAndRemoveTypes(type => type.Assembly == Assembly.GetExecutingAssembly());
 
@@ -72,7 +69,6 @@ namespace StructureMap.Testing.Examples
             // Are there any configured instances for IDevice?
             container.Model.HasImplementationsFor<IDevice>().ShouldBeTrue();
             // ENDSAMPLE
-             
 
             // SAMPLE: working-with-single-instance-ref
             // First, find the model for a single Instance
@@ -104,7 +100,7 @@ namespace StructureMap.Testing.Examples
             var rawModel = instance.Instance;
 
             // ENDSAMPLE
-             * 
+             *
              */
         }
     }

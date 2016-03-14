@@ -1,19 +1,14 @@
-using System;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
-using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget3;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
     public class InterceptorTesting : Registry
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public InterceptorTesting()
         {
             _lastService = null;
             recorder = new ContextRecorder();
@@ -22,7 +17,6 @@ namespace StructureMap.Testing.Configuration.DSL
             _container = new Container(r =>
             {
                 r.For<ContextRecorder>().Use(recorder);
-
 
                 r.For<IService>().AddInstances(x =>
                 {
@@ -70,49 +64,46 @@ namespace StructureMap.Testing.Configuration.DSL
             });
         }
 
-        #endregion
-
         private ColorService _lastService;
 
         private IContainer _container;
         private ContextRecorder recorder;
 
-        [Test]
+        [Fact]
         public void call_the_build_context_with_enrich()
         {
             _container.GetInstance<IService>("DecoratedWithContext");
             recorder.WasTouched.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void call_the_build_context_with_startup()
         {
             _container.GetInstance<IService>("InterceptedWithContext");
             recorder.WasTouched.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void DecorateAConstructedService()
         {
             var service = _container.GetInstance<IService>("Purple");
-            var decoratorService = (DecoratorService) service;
+            var decoratorService = (DecoratorService)service;
 
-            var innerService = (ColorService) decoratorService.Inner;
+            var innerService = (ColorService)decoratorService.Inner;
             innerService.Color.ShouldBe("Purple");
         }
 
-        [Test]
+        [Fact]
         public void DecorateInline()
         {
             var service = _container.GetInstance<IService>("Decorated");
-            var decoratorService = (DecoratorService) service;
+            var decoratorService = (DecoratorService)service;
 
-            var innerService = (ColorService) decoratorService.Inner;
+            var innerService = (ColorService)decoratorService.Inner;
             innerService.Color.ShouldBe("Orange");
         }
 
-
-        [Test]
+        [Fact]
         public void OnCreationWithAConstructedService()
         {
             _lastService.ShouldBeNull();
@@ -120,7 +111,7 @@ namespace StructureMap.Testing.Configuration.DSL
             _lastService.ShouldBeTheSameAs(interceptedService);
         }
 
-        [Test]
+        [Fact]
         public void RegisterAnOnCreationMethodForAnInstance()
         {
             // "Intercepted" should get intercepted and stored as _lastService.
@@ -134,7 +125,7 @@ namespace StructureMap.Testing.Configuration.DSL
             _lastService.ShouldBeTheSameAs(interceptedService);
         }
 
-        [Test]
+        [Fact]
         public void TrapFailureInInterceptor()
         {
             var ex =
@@ -156,7 +147,6 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             _inner = inner;
         }
-
 
         public IService Inner
         {

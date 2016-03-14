@@ -1,12 +1,11 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using NUnit.Framework;
-using StructureMap.Graph;
+﻿using StructureMap.Graph;
 using StructureMap.TypeRules;
+using System.Diagnostics;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class GenericVarianceResolution
     {
         public interface INotificationHandler<in TNotification>
@@ -39,13 +38,13 @@ namespace StructureMap.Testing.Bugs
             }
         }
 
-        [Test]
+        [Fact]
         public void RegisterMultipleHandlersOfSameInterface()
         {
-            typeof (OpenNotificationHandler<Notification>).CanBeCastTo<INotificationHandler<Notification>>()
+            typeof(OpenNotificationHandler<Notification>).CanBeCastTo<INotificationHandler<Notification>>()
                 .ShouldBeTrue();
 
-            typeof (OpenNotificationHandler<>).CanBeCastTo(typeof (INotificationHandler<>))
+            typeof(OpenNotificationHandler<>).CanBeCastTo(typeof(INotificationHandler<>))
                 .ShouldBeTrue();
 
             var container = new Container(x =>
@@ -53,7 +52,7 @@ namespace StructureMap.Testing.Bugs
                 x.Scan(s =>
                 {
                     s.TheCallingAssembly();
-                    s.ConnectImplementationsToTypesClosing(typeof (INotificationHandler<>));
+                    s.ConnectImplementationsToTypesClosing(typeof(INotificationHandler<>));
                 });
             });
 
@@ -61,8 +60,8 @@ namespace StructureMap.Testing.Bugs
 
             handlers.Select(x => x.GetType()).OrderBy(x => x.Name)
                 .Each(x => Debug.WriteLine(x.Name))
-                .ShouldHaveTheSameElementsAs(typeof (BaseNotificationHandler), typeof (ConcreteNotificationHandler),
-                    typeof (OpenNotificationHandler<Notification>));
+                .ShouldHaveTheSameElementsAs(typeof(BaseNotificationHandler), typeof(ConcreteNotificationHandler),
+                    typeof(OpenNotificationHandler<Notification>));
         }
     }
 }

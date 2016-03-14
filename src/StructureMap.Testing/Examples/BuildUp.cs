@@ -1,5 +1,5 @@
-using NUnit.Framework;
 using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing.Examples
 {
@@ -8,10 +8,9 @@ namespace StructureMap.Testing.Examples
         public string ConnectionString { get; set; }
     }
 
-    [TestFixture]
     public class demo_the_BuildUp
     {
-        [Test]
+        [Fact]
         public void push_in_a_string_property()
         {
             // There is a limitation to this.  As of StructureMap 2.5.2,

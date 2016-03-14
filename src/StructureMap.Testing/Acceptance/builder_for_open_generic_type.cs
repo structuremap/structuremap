@@ -1,33 +1,33 @@
-﻿using System;
-using System.Diagnostics;
-using System.Reflection;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building;
 using StructureMap.Pipeline;
+using System;
+using System.Diagnostics;
+using System.Reflection;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class builder_for_open_generic_type
     {
         // SAMPLE: generic-builders-in-action
-        [Test]
+        [Fact]
         public void show_the_workaround_for_generic_builders()
         {
             var container = new Container(_ =>
             {
-                _.For(typeof (IRepository<,>)).Use(new RepositoryInstanceFactory());
+                _.For(typeof(IRepository<,>)).Use(new RepositoryInstanceFactory());
             });
 
             container.GetInstance<IRepository<string, int>>()
                 .ShouldBeOfType<Repository<string, int>>();
 
-            Debug.WriteLine(container.WhatDoIHave(assembly:Assembly.GetExecutingAssembly()));
+            Debug.WriteLine(container.WhatDoIHave(assembly: Assembly.GetExecutingAssembly()));
         }
+
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void using_repository_instance()
         {
             // SAMPLE: using-repository-instance
@@ -54,7 +54,7 @@ namespace StructureMap.Testing.Acceptance
             // StructureMap will cache the object built out of this,
             // so the expensive Reflection hit only happens
             // once
-            var instanceType = typeof (RepositoryInstance<,>).MakeGenericType(types);
+            var instanceType = typeof(RepositoryInstance<,>).MakeGenericType(types);
             return Activator.CreateInstance(instanceType).As<Instance>();
         }
 
@@ -71,9 +71,10 @@ namespace StructureMap.Testing.Acceptance
 
         public override Type ReturnedType
         {
-            get { return typeof (Repository<,>); }
+            get { return typeof(Repository<,>); }
         }
     }
+
     // ENDSAMPLE
 
     // SAMPLE: RepositoryInstance
@@ -93,13 +94,14 @@ namespace StructureMap.Testing.Acceptance
             }
         }
     }
+
     // ENDSAMPLE
 
     // SAMPLE: IRepository<T,T1>
     public interface IRepository<TDocument, TQuery>
     {
-
     }
+
     // ENDSAMPLE
 
     // SAMPLE: RepositoryBuilder
@@ -110,10 +112,8 @@ namespace StructureMap.Testing.Acceptance
             return new Repository<TDocument, TQuery>();
         }
     }
+
     // ENDSAMPLE
-
-    
-
 
     public class Repository<T, T1> : IRepository<T, T1>
     {

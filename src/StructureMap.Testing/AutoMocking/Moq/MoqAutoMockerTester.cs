@@ -1,29 +1,26 @@
-using System;
-using System.Linq.Expressions;
 using Moq;
-using NUnit.Framework;
 using StructureMap.AutoMocking;
 using StructureMap.AutoMocking.Moq;
+using System;
+using System.Linq.Expressions;
+using Xunit;
 
 namespace StructureMap.Testing.AutoMocking.Moq
 {
-    [TestFixture]
     public class example_MoqAutoMocker_usage
     {
-        [Test]
+        [Fact]
         public void verify_an_expected_calls()
         {
             var autoMocker = new MoqAutoMocker<AutoMockerTester.ConcreteClass>();
             var mockedService = autoMocker.Get<AutoMockerTester.IMockedService>();
             autoMocker.ClassUnderTest.CallService();
 
-
             var mockedServiceWrapper = Mock.Get(mockedService);
             mockedServiceWrapper.Verify(x => x.Go());
         }
     }
 
-    [TestFixture]
     public class MoqAutoMockerTester : AutoMockerTester
     {
         protected override AutoMocker<T> createAutoMocker<T>()

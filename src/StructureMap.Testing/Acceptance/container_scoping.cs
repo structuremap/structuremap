@@ -1,9 +1,8 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class container_scoping
     {
         public class Disposable : IDisposable
@@ -17,14 +16,14 @@ namespace StructureMap.Testing.Acceptance
 
             public void Dispose()
             {
-                if (_wasDisposed) Assert.Fail("This object should not be disposed twice");
+                Assert.False(_wasDisposed, "This object should not be disposed twice");
 
                 _wasDisposed = true;
             }
         }
 
         // SAMPLE: container-scoped-in-action
-        [Test]
+        [Fact]
         public void container_scoping_with_root_child_and_nested_container()
         {
             var container = new Container(_ =>
@@ -79,8 +78,7 @@ namespace StructureMap.Testing.Acceptance
             container.Dispose();
             mainDisposable.WasDisposed.ShouldBeTrue();
         }
+
         // ENDSAMPLE
     }
-
-
 }

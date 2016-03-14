@@ -1,19 +1,23 @@
-﻿using System;
+﻿using Shouldly;
 using System.Diagnostics;
-using NUnit.Framework;
-using Shouldly;
-using StructureMap.Configuration.DSL;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
     public class container_configuration_with_generics_inheritance
     {
         public class Base { }
+
         public class Derived1 : Base { }
+
         public class Derived2 : Derived1 { }
+
         public class Derived3 : Derived2 { }
+
         public class Derived4 : Derived3 { }
+
         public class Derived5 : Derived4 { }
+
         public class Derived6 : Derived5 { }
 
         private static bool CanResolve<T>(IContainer container)
@@ -21,17 +25,16 @@ namespace StructureMap.Testing.Bugs
             return container.TryGetInstance(typeof(T)) != null;
         }
 
-        [TestFixture]
         public class Register_generic_types_with_contravariance
         {
-            [Test]
+            [Fact]
             public void configure_container_during_construction()
             {
                 var container = new Container(new TestRegistry());
                 AssertConfigurationIsCorrect(container);
             }
 
-            [Test]
+            [Fact]
             public void configure_container_after_construction()
             {
                 var container = new Container();
@@ -55,6 +58,7 @@ namespace StructureMap.Testing.Bugs
             }
 
             public interface IGenericContravariant<in T> { }
+
             public class GenericContravariant<T> : IGenericContravariant<T> { }
 
             public class TestRegistry : Registry
@@ -71,17 +75,16 @@ namespace StructureMap.Testing.Bugs
             }
         }
 
-        [TestFixture]
         public class Register_generic_types_with_covariance
         {
-            [Test]
+            [Fact]
             public void configure_container_during_construction()
             {
                 var container = new Container(new TestRegistry());
                 AssertConfigurationIsCorrect(container);
             }
 
-            [Test]
+            [Fact]
             public void configure_container_after_construction()
             {
                 var container = new Container();
@@ -107,6 +110,7 @@ namespace StructureMap.Testing.Bugs
             }
 
             public interface IGenericCovariant<out T> { }
+
             public class GenericCovariant<T> : IGenericCovariant<T> { }
 
             public class TestRegistry : Registry
@@ -123,17 +127,16 @@ namespace StructureMap.Testing.Bugs
             }
         }
 
-        [TestFixture]
         public class Register_generic_types_with_no_variance
         {
-            [Test]
+            [Fact]
             public void configure_container_during_construction()
             {
                 var container = new Container(new TestRegistry());
                 AssertConfigurationIsCorrect(container);
             }
 
-            [Test]
+            [Fact]
             public void configure_container_after_construction()
             {
                 var container = new Container();
@@ -156,6 +159,7 @@ namespace StructureMap.Testing.Bugs
             }
 
             public interface IGeneric<T> { }
+
             public class Generic<T> : IGeneric<T> { }
 
             public class TestRegistry : Registry
@@ -172,17 +176,16 @@ namespace StructureMap.Testing.Bugs
             }
         }
 
-        [TestFixture]
         public class Register_generic_types_with_inheritance
         {
-            [Test]
+            [Fact]
             public void configure_container_during_construction()
             {
                 var container = new Container(new TestRegistry());
                 AssertConfigurationIsCorrect(container);
             }
 
-            [Test]
+            [Fact]
             public void configure_container_after_construction()
             {
                 var container = new Container();
@@ -205,7 +208,9 @@ namespace StructureMap.Testing.Bugs
             {
                 T Value { get; }
             }
+
             public interface IMoreSpecificGeneric<T> : IGeneric<T> { }
+
             public interface IMostSpecificGeneric<T> : IMoreSpecificGeneric<T> { }
 
             public class GenericImpl<T> : IMostSpecificGeneric<string>

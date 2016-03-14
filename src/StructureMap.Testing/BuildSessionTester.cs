@@ -1,7 +1,3 @@
-using System;
-using System.Diagnostics;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Configuration.DSL;
@@ -10,10 +6,13 @@ using StructureMap.Pipeline;
 using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class BuildSessionTester
     {
         public class WidgetHolder
@@ -31,7 +30,7 @@ namespace StructureMap.Testing
             }
         }
 
-        [Test]
+        [Fact]
         public void can_get_all_of_a_type_during_object_creation()
         {
             var container = new Container(x =>
@@ -51,7 +50,7 @@ namespace StructureMap.Testing
             container.GetInstance<TopClass>().Widgets.Count().ShouldBe(4);
         }
 
-        [Test]
+        [Fact]
         public void descriptive_exception_when_a_named_instance_cannot_be_found()
         {
             var container = new Container(x =>
@@ -77,8 +76,7 @@ namespace StructureMap.Testing
                 "Could not find an Instance named 'purple' for PluginType StructureMap.Testing.Widget.IWidget");
         }
 
-
-        [Test]
+        [Fact]
         public void can_get_all_of_a_type_during_object_creation_as_generic_type()
         {
             var container = new Container(x =>
@@ -98,8 +96,7 @@ namespace StructureMap.Testing
             container.GetInstance<TopClass>().Widgets.Count().ShouldBe(4);
         }
 
-
-        [Test]
+        [Fact]
         public void can_get_all_of_a_type_by_GetAllInstances_during_object_creation_as_generic_type()
         {
             var container = new Container(x =>
@@ -119,7 +116,7 @@ namespace StructureMap.Testing
             container.GetInstance<TopClass>().Widgets.Count().ShouldBe(4);
         }
 
-        [Test]
+        [Fact]
         public void Get_a_unique_value_for_each_individual_buildsession()
         {
             var count = 0;
@@ -132,10 +129,10 @@ namespace StructureMap.Testing
                 return new ColorRule("Red");
             });
 
-            var result1 = session.FindObject(typeof (ColorRule), instance);
-            var result2 = session.FindObject(typeof (ColorRule), instance);
-            var result3 = session2.FindObject(typeof (ColorRule), instance);
-            var result4 = session2.FindObject(typeof (ColorRule), instance);
+            var result1 = session.FindObject(typeof(ColorRule), instance);
+            var result2 = session.FindObject(typeof(ColorRule), instance);
+            var result3 = session2.FindObject(typeof(ColorRule), instance);
+            var result4 = session2.FindObject(typeof(ColorRule), instance);
 
             count.ShouldBe(2);
 
@@ -144,7 +141,7 @@ namespace StructureMap.Testing
             result3.ShouldBeTheSameAs(result4);
         }
 
-        [Test]
+        [Fact]
         public void If_no_child_array_is_explicitly_defined_return_all_instances()
         {
             IContainer manager = new Container(r =>
@@ -161,7 +158,7 @@ namespace StructureMap.Testing
             holder.Widgets.Length.ShouldBe(3);
         }
 
-        [Test]
+        [Fact]
         public void Return_the_same_object_everytime_an_object_is_requested()
         {
             var count = 0;
@@ -173,10 +170,10 @@ namespace StructureMap.Testing
                 return new ColorRule("Red");
             });
 
-            var result1 = session.FindObject(typeof (ColorRule), instance);
-            var result2 = session.FindObject(typeof (ColorRule), instance);
-            var result3 = session.FindObject(typeof (ColorRule), instance);
-            var result4 = session.FindObject(typeof (ColorRule), instance);
+            var result1 = session.FindObject(typeof(ColorRule), instance);
+            var result2 = session.FindObject(typeof(ColorRule), instance);
+            var result3 = session.FindObject(typeof(ColorRule), instance);
+            var result4 = session.FindObject(typeof(ColorRule), instance);
 
             count.ShouldBe(1);
 
@@ -185,7 +182,7 @@ namespace StructureMap.Testing
             result1.ShouldBeTheSameAs(result4);
         }
 
-        [Test]
+        [Fact]
         public void Return_the_same_object_within_a_session_for_the_default_of_a_plugin_type()
         {
             var count = 0;
@@ -201,11 +198,10 @@ namespace StructureMap.Testing
             var graph = registry.Build();
             var session = BuildSession.ForPluginGraph(graph);
 
-
-            var result1 = session.GetInstance(typeof (ColorRule));
-            var result2 = session.GetInstance(typeof (ColorRule));
-            var result3 = session.GetInstance(typeof (ColorRule));
-            var result4 = session.GetInstance(typeof (ColorRule));
+            var result1 = session.GetInstance(typeof(ColorRule));
+            var result2 = session.GetInstance(typeof(ColorRule));
+            var result3 = session.GetInstance(typeof(ColorRule));
+            var result4 = session.GetInstance(typeof(ColorRule));
 
             count.ShouldBe(1);
 
@@ -214,7 +210,7 @@ namespace StructureMap.Testing
             result1.ShouldBeTheSameAs(result4);
         }
 
-        [Test]
+        [Fact]
         public void Throw_exception_When_trying_to_build_an_instance_that_cannot_be_found()
         {
             var graph = PipelineGraph.BuildEmpty();
@@ -222,24 +218,22 @@ namespace StructureMap.Testing
             var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
             {
                 var session = new BuildSession(graph);
-                session.CreateInstance(typeof (IGateway), "Gateway that is not configured");
+                session.CreateInstance(typeof(IGateway), "Gateway that is not configured");
             });
 
             ex.Title.ShouldBe(
                 "Could not find an Instance named 'Gateway that is not configured' for PluginType StructureMap.Testing.Widget3.IGateway");
         }
 
-
-        [Test]
+        [Fact]
         public void When_calling_GetInstance_if_no_default_can_be_found_throw_202()
         {
             var graph = PipelineGraph.BuildEmpty();
 
-
             var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
             {
                 var session = new BuildSession(graph);
-                session.GetInstance(typeof (IGateway));
+                session.GetInstance(typeof(IGateway));
             });
 
             ex.Context.ShouldContain("There is no configuration specified for StructureMap.Testing.Widget3.IGateway");
@@ -248,14 +242,14 @@ namespace StructureMap.Testing
                 "No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Widget3.IGateway'");
         }
 
-        [Test]
+        [Fact]
         public void when_retrieving_an_object_by_name()
         {
             var red = new ColorService("red");
             var green = new ColorService("green");
 
             var graph = PluginGraph.CreateRoot();
-            var family = graph.Families[typeof (IService)];
+            var family = graph.Families[typeof(IService)];
             family.AddInstance(new ObjectInstance(red).Named("red"));
             family.AddInstance(new ObjectInstance(green).Named("green"));
 
@@ -263,7 +257,7 @@ namespace StructureMap.Testing
             session.GetInstance<IService>("red").ShouldBeTheSameAs(red);
         }
 
-        [Test]
+        [Fact]
         public void when_retrieving_an_object_by_nongeneric_type_and_name()
         {
             var red = new ColorService("red");
@@ -275,10 +269,10 @@ namespace StructureMap.Testing
             var graph = registry.Build();
 
             var session = BuildSession.ForPluginGraph(graph);
-            session.GetInstance(typeof (IService), "red").ShouldBeTheSameAs(red);
+            session.GetInstance(typeof(IService), "red").ShouldBeTheSameAs(red);
         }
 
-        [Test]
+        [Fact]
         public void when_retrieving_by_try_get_instance_for_instance_that_does_exist()
         {
             var theService = new ColorService("red");
@@ -287,14 +281,14 @@ namespace StructureMap.Testing
             session.TryGetInstance<IService>().ShouldBeTheSameAs(theService);
         }
 
-        [Test]
+        [Fact]
         public void when_retrieving_by_try_get_named_instance_that_does_exist()
         {
             var red = new ColorService("red");
             var green = new ColorService("green");
 
             var graph = PluginGraph.CreateRoot();
-            var family = graph.Families[typeof (IService)];
+            var family = graph.Families[typeof(IService)];
             family.AddInstance(new ObjectInstance(red).Named("red"));
             family.AddInstance(new ObjectInstance(green).Named("green"));
 
@@ -303,21 +297,21 @@ namespace StructureMap.Testing
             session.TryGetInstance<IService>("green").ShouldBeTheSameAs(green);
         }
 
-        [Test]
+        [Fact]
         public void when_retrieving_by_try_get_named_instance_that_does_not_exist()
         {
             var session = BuildSession.Empty();
             session.TryGetInstance<IService>("red").ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void when_retrieving_with_try_get_instance_for_instance_that_does_not_exists()
         {
             var session = BuildSession.Empty();
             session.TryGetInstance<IService>().ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void when_retrieving_with_try_get_instance_with_nongeneric_type_that_does_exist()
         {
             var theService = new ColorService("red");
@@ -325,17 +319,17 @@ namespace StructureMap.Testing
             registry.For<IService>().Use(theService);
             var session = BuildSession.ForPluginGraph(registry.Build());
 
-            session.TryGetInstance(typeof (IService)).ShouldBeTheSameAs(theService);
+            session.TryGetInstance(typeof(IService)).ShouldBeTheSameAs(theService);
         }
 
-        [Test]
+        [Fact]
         public void when_retrieving_with_try_get_instance_with_nongeneric_type_that_does_not_exist()
         {
             var session = BuildSession.Empty();
-            session.TryGetInstance(typeof (IService)).ShouldBeNull();
+            session.TryGetInstance(typeof(IService)).ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void when_retrieving_by_try_get_named_instance_with_nongeneric_type_that_does_exist()
         {
             var red = new ColorService("red");
@@ -347,17 +341,17 @@ namespace StructureMap.Testing
             var graph = registry.Build();
 
             var session = BuildSession.ForPluginGraph(graph);
-            session.TryGetInstance(typeof (IService), "red").ShouldBeTheSameAs(red);
+            session.TryGetInstance(typeof(IService), "red").ShouldBeTheSameAs(red);
         }
 
-        [Test]
+        [Fact]
         public void when_retrieving_by_try_get_named_instance_with_type_that_does_not_exist()
         {
             var session = BuildSession.Empty();
-            session.TryGetInstance(typeof (IService), "yo").ShouldBeNull();
+            session.TryGetInstance(typeof(IService), "yo").ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void Can_get_an_instance_using_the_non_generic_method()
         {
             var registry = new Registry();
@@ -367,20 +361,20 @@ namespace StructureMap.Testing
 
             var session = BuildSession.ForPluginGraph(graph);
 
-            var instance = session.GetInstance(typeof (IFooService));
+            var instance = session.GetInstance(typeof(IFooService));
 
             instance.ShouldNotBeNull();
             instance.ShouldBeOfType<Service>();
         }
 
-        [Test]
+        [Fact]
         public void parent_type_is_null_in_the_initial_state()
         {
             var session = BuildSession.ForPluginGraph(PluginGraph.CreateRoot());
             session.ParentType.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void push_an_instance_onto_a_session()
         {
             var session = BuildSession.ForPluginGraph(PluginGraph.CreateRoot());
@@ -389,14 +383,14 @@ namespace StructureMap.Testing
             session.ParentType.ShouldBeNull();
             session.Push(new SmartInstance<ARule>());
 
-            session.ParentType.ShouldBe(typeof (StubbedGateway));
+            session.ParentType.ShouldBe(typeof(StubbedGateway));
 
             session.Push(new SmartInstance<AWidget>());
 
-            session.ParentType.ShouldBe(typeof (ARule));
+            session.ParentType.ShouldBe(typeof(ARule));
         }
 
-        [Test]
+        [Fact]
         public void push_and_pop_an_instance_onto_a_session()
         {
             var session = BuildSession.ForPluginGraph(PluginGraph.CreateRoot());
@@ -408,10 +402,10 @@ namespace StructureMap.Testing
 
             session.Pop();
 
-            session.ParentType.ShouldBe(typeof (AWidget));
+            session.ParentType.ShouldBe(typeof(AWidget));
         }
 
-        [Test]
+        [Fact]
         public void pushing_the_same_instance_will_throw_a_bidirectional_dependency_exception()
         {
             var session = BuildSession.ForPluginGraph(PluginGraph.CreateRoot());
@@ -479,7 +473,7 @@ namespace StructureMap.Testing
 
         public override Type ReturnedType
         {
-            get { return typeof (ColorRule); }
+            get { return typeof(ColorRule); }
         }
     }
 }

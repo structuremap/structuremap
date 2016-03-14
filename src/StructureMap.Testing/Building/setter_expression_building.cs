@@ -1,14 +1,13 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building;
 using StructureMap.Testing.Widget3;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class setter_expression_building
     {
-        [Test]
+        [Fact]
         public void simple_creation_of_properties_with_only_constants()
         {
             var step = new ConcreteBuild<SetterTarget>();
@@ -21,7 +20,7 @@ namespace StructureMap.Testing.Building
             target.Direction.ShouldBe("North");
         }
 
-        [Test]
+        [Fact]
         public void simple_creation_of_fields_with_only_constants()
         {
             var step = new ConcreteBuild<FieldTarget>();

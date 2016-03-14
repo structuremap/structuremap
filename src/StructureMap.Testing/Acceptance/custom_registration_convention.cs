@@ -1,13 +1,12 @@
-﻿using System;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Graph.Scanning;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class custom_registration_convention
     {
         // SAMPLE: custom-registration-convention
@@ -42,7 +41,7 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        [Test]
+        [Fact]
         public void use_custom_registration_convention()
         {
             var container = new Container(_ =>

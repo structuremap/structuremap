@@ -1,13 +1,12 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class constructor_expression_building
     {
-        [Test]
+        [Fact]
         public void try_a_simple_constructor_with_all_constants()
         {
             var step = ConcreteBuild<CtorTarget>.For(() => new CtorTarget("", 0));

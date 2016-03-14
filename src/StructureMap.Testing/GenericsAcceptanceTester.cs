@@ -1,14 +1,13 @@
-using System;
-using System.Reflection;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.TypeRules;
+using System;
+using System.Reflection;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class GenericsAcceptanceTester
     {
         public interface IService<T>
@@ -38,7 +37,7 @@ namespace StructureMap.Testing
         {
             public Type GetT()
             {
-                return typeof (T);
+                return typeof(T);
             }
         }
 
@@ -51,7 +50,6 @@ namespace StructureMap.Testing
                 _plug = plug;
             }
 
-
             public IPlug<T> Plug
             {
                 get { return _plug; }
@@ -62,13 +60,13 @@ namespace StructureMap.Testing
         {
         }
 
-        [Test]
+        [Fact]
         public void CanBuildAGenericObjectThatHasAnotherGenericObjectAsAChild()
         {
             var container = new Container(x =>
             {
-                x.For(typeof (IService<>)).Use(typeof (Service<>));
-                x.For(typeof (IHelper<>)).Use(typeof (Helper<>));
+                x.For(typeof(IService<>)).Use(typeof(Service<>));
+                x.For(typeof(IHelper<>)).Use(typeof(Helper<>));
             });
 
             container.GetInstance<IService<string>>()
@@ -76,19 +74,19 @@ namespace StructureMap.Testing
                 .Helper.ShouldBeOfType<Helper<string>>();
         }
 
-        [Test]
+        [Fact]
         public void CanCreatePluginFamilyForGenericTypeWithGenericParameter()
         {
-            var family = new PluginFamily(typeof (IGenericService<int>));
+            var family = new PluginFamily(typeof(IGenericService<int>));
         }
 
-        [Test]
+        [Fact]
         public void CanCreatePluginFamilyForGenericTypeWithoutGenericParameter()
         {
-            var family = new PluginFamily(typeof (IGenericService<>));
+            var family = new PluginFamily(typeof(IGenericService<>));
         }
 
-        [Test]
+        [Fact]
         public void CanGetPluginFamilyFromPluginGraphWithNoParameters()
         {
             //var builder = new PluginGraphBuilder();
@@ -98,23 +96,23 @@ namespace StructureMap.Testing
             //builder.AddScanner(scanner);
             var graph = PluginGraph.CreateRoot();
 
-            graph.Families[typeof (IGenericService<int>)].ShouldBeTheSameAs(
-                graph.Families[typeof (IGenericService<int>)]);
+            graph.Families[typeof(IGenericService<int>)].ShouldBeTheSameAs(
+                graph.Families[typeof(IGenericService<int>)]);
 
-            graph.Families[typeof (IGenericService<string>)].ShouldBeTheSameAs(
-                graph.Families[typeof (IGenericService<string>)]);
+            graph.Families[typeof(IGenericService<string>)].ShouldBeTheSameAs(
+                graph.Families[typeof(IGenericService<string>)]);
 
-            graph.Families[typeof (IGenericService<>)].ShouldBeTheSameAs(
-                graph.Families[typeof (IGenericService<>)]);
+            graph.Families[typeof(IGenericService<>)].ShouldBeTheSameAs(
+                graph.Families[typeof(IGenericService<>)]);
         }
 
-        [Test]
+        [Fact]
         public void CanGetTheSameInstanceOfGenericInterfaceWithSingletonLifecycle()
         {
             var con = new Container(x =>
             {
-                x.ForSingletonOf(typeof (IService<>)).Use(typeof (Service<>));
-                x.For(typeof (IHelper<>)).Use(typeof (Helper<>));
+                x.ForSingletonOf(typeof(IService<>)).Use(typeof(Service<>));
+                x.For(typeof(IHelper<>)).Use(typeof(Helper<>));
             });
 
             var first = con.GetInstance<IService<string>>();
@@ -123,100 +121,95 @@ namespace StructureMap.Testing
             first.ShouldBeTheSameAs(second);
         }
 
-
-        [Test]
+        [Fact]
         public void CanPlugGenericConcreteClassIntoGenericInterfaceWithNoGenericParametersSpecified()
         {
-            var canPlug = typeof (GenericService<>).CanBeCastTo(typeof (IGenericService<>));
+            var canPlug = typeof(GenericService<>).CanBeCastTo(typeof(IGenericService<>));
             canPlug.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void CanPlugConcreteNonGenericClassIntoGenericInterface()
         {
-            typeof (NotSoGenericService).CanBeCastTo(typeof (IGenericService<>))
+            typeof(NotSoGenericService).CanBeCastTo(typeof(IGenericService<>))
                 .ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void Define_profile_with_generics_and_concrete_type()
         {
             var container = new Container(registry =>
             {
-                registry.For(typeof (IHelper<>)).Use(typeof (Helper<>));
+                registry.For(typeof(IHelper<>)).Use(typeof(Helper<>));
 
-                registry.Profile("1", x => x.For(typeof (IService<>)).Use(typeof (Service<>)));
+                registry.Profile("1", x => x.For(typeof(IService<>)).Use(typeof(Service<>)));
 
-                registry.Profile("2", x => x.For(typeof (IService<>)).Use(typeof (Service2<>)));
+                registry.Profile("2", x => x.For(typeof(IService<>)).Use(typeof(Service2<>)));
             });
 
             container.GetProfile("1").GetInstance<IService<string>>().ShouldBeOfType<Service<string>>();
             container.GetProfile("2").GetInstance<IService<string>>().ShouldBeOfType<Service2<string>>();
         }
 
-        [Test]
+        [Fact]
         public void Define_profile_with_generics_with_named_instance()
         {
             IContainer container = new Container(r =>
             {
-                r.For(typeof (IService<>)).Add(typeof (Service<>)).Named("Service1");
-                r.For(typeof (IService<>)).Add(typeof (Service2<>)).Named("Service2");
+                r.For(typeof(IService<>)).Add(typeof(Service<>)).Named("Service1");
+                r.For(typeof(IService<>)).Add(typeof(Service2<>)).Named("Service2");
 
-                r.For(typeof (IHelper<>)).Use(typeof (Helper<>));
+                r.For(typeof(IHelper<>)).Use(typeof(Helper<>));
 
-                r.Profile("1", x => x.For(typeof (IService<>)).Use("Service1"));
+                r.Profile("1", x => x.For(typeof(IService<>)).Use("Service1"));
 
-                r.Profile("2", x => x.For(typeof (IService<>)).Use("Service2"));
+                r.Profile("2", x => x.For(typeof(IService<>)).Use("Service2"));
             });
 
             container.GetProfile("1").GetInstance<IService<string>>().ShouldBeOfType<Service<string>>();
 
-
             container.GetProfile("2").GetInstance<IService<int>>().ShouldBeOfType<Service2<int>>();
         }
 
-        [Test]
+        [Fact]
         public void GenericsTypeAndProfileOrMachine()
         {
             var container = new Container(registry =>
             {
-                registry.For(typeof (IHelper<>)).Use(typeof (Helper<>));
-                registry.For(typeof (IService<>)).Use(typeof (Service<>)).Named("Default");
-                registry.For(typeof (IService<>)).Add(typeof (ServiceWithPlug<>)).Named("Plugged");
-                registry.For(typeof (IPlug<>)).Use(typeof (ConcretePlug<>));
+                registry.For(typeof(IHelper<>)).Use(typeof(Helper<>));
+                registry.For(typeof(IService<>)).Use(typeof(Service<>)).Named("Default");
+                registry.For(typeof(IService<>)).Add(typeof(ServiceWithPlug<>)).Named("Plugged");
+                registry.For(typeof(IPlug<>)).Use(typeof(ConcretePlug<>));
 
-                registry.Profile("1", x => { x.For(typeof (IService<>)).Use("Default"); });
+                registry.Profile("1", x => { x.For(typeof(IService<>)).Use("Default"); });
 
-                registry.Profile("2", x => { x.For(typeof (IService<>)).Use("Plugged"); });
+                registry.Profile("2", x => { x.For(typeof(IService<>)).Use("Plugged"); });
             });
 
-            container.GetProfile("1").GetInstance(typeof (IService<string>)).ShouldBeOfType<Service<string>>();
+            container.GetProfile("1").GetInstance(typeof(IService<string>)).ShouldBeOfType<Service<string>>();
 
-            container.GetProfile("2").GetInstance(typeof (IService<string>))
+            container.GetProfile("2").GetInstance(typeof(IService<string>))
                 .ShouldBeOfType<ServiceWithPlug<string>>();
 
-            container.GetProfile("1").GetInstance(typeof (IService<string>)).ShouldBeOfType<Service<string>>();
+            container.GetProfile("1").GetInstance(typeof(IService<string>)).ShouldBeOfType<Service<string>>();
         }
 
-
-        [Test]
+        [Fact]
         public void GetGenericTypeByString()
         {
             var assem = Assembly.GetExecutingAssembly();
             var type = assem.GetType("StructureMap.Testing.ITarget`2");
 
             type.GetGenericTypeDefinition()
-                .ShouldBe(typeof (ITarget<,>));
+                .ShouldBe(typeof(ITarget<,>));
         }
 
-
-        [Test]
+        [Fact]
         public void SmokeTestCanBeCaseWithImplementationOfANonGenericInterface()
         {
-            GenericsPluginGraph.CanBeCast(typeof (ITarget<,>), typeof (DisposableTarget<,>)).ShouldBeTrue();
+            GenericsPluginGraph.CanBeCast(typeof(ITarget<,>), typeof(DisposableTarget<,>)).ShouldBeTrue();
         }
     }
-
 
     public class ComplexType<T>
     {
@@ -262,7 +255,7 @@ namespace StructureMap.Testing
         {
         }
 
-        #endregion
+        #endregion IDisposable Members
     }
 
     public interface ITarget2<T, U, V>
@@ -287,11 +280,11 @@ namespace StructureMap.Testing
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion IGenericService<T> Members
 
         public Type GetGenericType()
         {
-            return typeof (T);
+            return typeof(T);
         }
     }
 

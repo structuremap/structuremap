@@ -1,13 +1,12 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Pipeline;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_245_singleton_scope_and_default_conventions
     {
-        [Test]
+        [Fact]
         public void can_set_lifecycle_with_default_conventions()
         {
             var container = new Container();
@@ -16,7 +15,7 @@ namespace StructureMap.Testing.Bugs
                 o.Scan(x =>
                 {
                     x.AssemblyContainingType<IMyFactory>();
-                    x.Include(t => t == typeof (MyFactory));
+                    x.Include(t => t == typeof(MyFactory));
                     x.WithDefaultConventions(); // Remove this to get SingletonThing() to work.
                 });
 

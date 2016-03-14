@@ -1,16 +1,15 @@
-﻿using System.Linq;
-using NUnit.Framework;
-using StructureMap.Pipeline;
+﻿using StructureMap.Pipeline;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class GreediestConstructorSelectorTester
     {
-        [Test]
+        [Fact]
         public void has_missing_primitives_positive()
         {
-            var ctor = typeof (GuyWithPrimitiveArgs).GetConstructors().Single();
+            var ctor = typeof(GuyWithPrimitiveArgs).GetConstructors().Single();
 
             var dependencies = new DependencyCollection();
 
@@ -20,25 +19,22 @@ namespace StructureMap.Testing.Pipeline
 
             // One is still missing
             GreediestConstructorSelector.HasMissingPrimitives(ctor, dependencies).ShouldBeTrue();
-
         }
 
-        [Test]
+        [Fact]
         public void has_missing_primitives_positive_2()
         {
             var ctor = typeof(GuyWithPrimitiveArgs).GetConstructors().Single();
 
             var dependencies = new DependencyCollection();
 
-
             dependencies.Add("age", 1);
 
             // One is still missing
             GreediestConstructorSelector.HasMissingPrimitives(ctor, dependencies).ShouldBeTrue();
-
         }
 
-        [Test]
+        [Fact]
         public void has_missing_primitives_negative()
         {
             var ctor = typeof(GuyWithPrimitiveArgs).GetConstructors().Single();
@@ -50,9 +46,7 @@ namespace StructureMap.Testing.Pipeline
 
             // One is still missing
             GreediestConstructorSelector.HasMissingPrimitives(ctor, dependencies).ShouldBeFalse();
-
         }
-
     }
 
     public class GuyWithPrimitiveArgs

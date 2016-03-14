@@ -1,14 +1,13 @@
-using System;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class SmartInstanceTester
     {
         private SmartInstance<T, T> For<T>()
@@ -27,7 +26,7 @@ namespace StructureMap.Testing.Pipeline
             return container.GetInstance<T>();
         }
 
-        [Test]
+        [Fact]
         public void specify_a_constructor_dependency()
         {
             var widget = new ColorWidget("Red");
@@ -36,7 +35,7 @@ namespace StructureMap.Testing.Pipeline
                 ShouldBeTheSameAs(widget);
         }
 
-        [Test]
+        [Fact]
         public void specify_a_constructor_dependency_by_type()
         {
             var widget = new ColorWidget("Red");
@@ -44,7 +43,7 @@ namespace StructureMap.Testing.Pipeline
                 widget);
         }
 
-        [Test]
+        [Fact]
         public void specify_a_non_simple_property_with_equal_to()
         {
             var widget = new ColorWidget("Red");
@@ -55,7 +54,7 @@ namespace StructureMap.Testing.Pipeline
             widget.ShouldBeTheSameAs(container.GetInstance<ClassWithWidgetProperty>().Widget);
         }
 
-        [Test]
+        [Fact]
         public void specify_a_property_dependency()
         {
             var widget = new ColorWidget("Red");
@@ -69,7 +68,7 @@ namespace StructureMap.Testing.Pipeline
             });
         }
 
-        [Test]
+        [Fact]
         public void specify_a_simple_property()
         {
             build<SimplePropertyTarget>(instance => instance.SetProperty(x => x.Name = "Jeremy")).Name.ShouldBe(
@@ -87,20 +86,19 @@ namespace StructureMap.Testing.Pipeline
             });
         }
 
-        [Test]
+        [Fact]
         public void specify_a_simple_property_name_with_equal_to()
         {
             build<SimplePropertyTarget>(i => i.Setter(x => x.Name).Is("Scott")).Name.ShouldBe("Scott");
         }
 
-        [Test]
+        [Fact]
         public void specify_a_simple_property_with_equal_to()
         {
             build<SimplePropertyTarget>(i => i.Setter(x => x.Name).Is("Bret")).Name.ShouldBe("Bret");
         }
 
-
-        [Test]
+        [Fact]
         public void specify_an_array_as_a_constructor()
         {
             IWidget widget1 = new AWidget();
@@ -112,11 +110,10 @@ namespace StructureMap.Testing.Pipeline
                 x.Object(widget1);
                 x.Object(widget2);
                 x.Object(widget3);
-            })).Widgets.ShouldBe(new[] {widget1, widget2, widget3});
+            })).Widgets.ShouldBe(new[] { widget1, widget2, widget3 });
         }
 
-
-        [Test]
+        [Fact]
         public void specify_an_array_as_a_property()
         {
             IWidget widget1 = new AWidget();
@@ -128,10 +125,10 @@ namespace StructureMap.Testing.Pipeline
                 x.Object(widget1);
                 x.Object(widget2);
                 x.Object(widget3);
-            })).Widgets.ShouldBe(new[] {widget1, widget2, widget3});
+            })).Widgets.ShouldBe(new[] { widget1, widget2, widget3 });
         }
 
-        [Test]
+        [Fact]
         public void specify_ctorarg_with_non_simple_argument()
         {
             var widget = new ColorWidget("Red");
@@ -142,13 +139,13 @@ namespace StructureMap.Testing.Pipeline
             widget.ShouldBeTheSameAs(container.GetInstance<ClassWithWidget>().Widget);
         }
 
-        [Test]
+        [Fact]
         public void successfully_specify_the_constructor_argument_of_a_string()
         {
             build<ColorRule>(i => i.Ctor<string>("color").Is("Red")).Color.ShouldBe("Red");
         }
 
-        [Test]
+        [Fact]
         public void specify_a_constructor_dependency_by_name()
         {
             var container = new Container(r =>
@@ -162,19 +159,19 @@ namespace StructureMap.Testing.Pipeline
                 .B.B.ShouldBe("named");
         }
 
-        [Test]
+        [Fact]
         public void smart_instance_can_specify_the_constructor()
         {
             new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null))
                 .As<IConfiguredInstance>().Constructor.GetParameters().Select(x => x.ParameterType)
-                .ShouldHaveTheSameElementsAs(typeof (IGateway));
+                .ShouldHaveTheSameElementsAs(typeof(IGateway));
 
             new SmartInstance<ClassWithMultipleConstructors>(() => new ClassWithMultipleConstructors(null, null))
                 .As<IConfiguredInstance>().Constructor.GetParameters().Select(x => x.ParameterType)
-                .ShouldHaveTheSameElementsAs(typeof (IGateway), typeof (IService));
+                .ShouldHaveTheSameElementsAs(typeof(IGateway), typeof(IService));
         }
 
-        [Test]
+        [Fact]
         public void integrated_building_with_distinct_ctor_selection()
         {
             var container = new Container(x =>

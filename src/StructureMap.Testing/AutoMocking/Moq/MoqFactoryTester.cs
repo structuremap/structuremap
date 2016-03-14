@@ -1,27 +1,26 @@
 using Moq;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.AutoMocking.Moq;
+using Xunit;
 
 namespace StructureMap.Testing.AutoMocking.Moq
 {
-    [TestFixture]
     public class MoqFactoryTester
     {
-        [Test]
+        [Fact]
         public void can_make_dynamic_mocks()
         {
             var moqFactory = new MoqFactory();
-            var fooMock = moqFactory.CreateMock(typeof (ITestMocks));
+            var fooMock = moqFactory.CreateMock(typeof(ITestMocks));
 
             fooMock.ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void can_make_partial_mocks()
         {
             var moqFactory = new MoqFactory();
-            var testPartials = (TestPartials) moqFactory.CreateMockThatCallsBase(typeof (TestPartials), new object[0]);
+            var testPartials = (TestPartials)moqFactory.CreateMockThatCallsBase(typeof(TestPartials), new object[0]);
 
             testPartials.ShouldNotBeNull();
             testPartials.Concrete().ShouldBe("Concrete");
@@ -32,7 +31,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
             testPartials.Virtual().ShouldBe("MOQed!");
         }
 
-        [Test]
+        [Fact]
         public void sample_moq_usage()
         {
             var mock = new Mock<ITestMocks>();
@@ -40,7 +39,6 @@ namespace StructureMap.Testing.AutoMocking.Moq
             mock.Object.Answer().ShouldBe("Moq");
         }
     }
-
 
     public interface ITestMocks
     {

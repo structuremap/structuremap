@@ -1,10 +1,10 @@
+using Shouldly;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing
 {
@@ -23,12 +23,11 @@ namespace StructureMap.Testing
                 exception = e.ShouldBeOfType<T>();
             }
 
-            if (exception == null) Assert.Fail("An exception was expected, but not thrown by the given action.");
+            Assert.False(exception == null, "An exception was expected, but not thrown by the given action.");
 
             return exception;
         }
     }
-
 
     public delegate void MethodThatThrows();
 
@@ -40,19 +39,18 @@ namespace StructureMap.Testing
             actual.Any(expected).ShouldBeTrue();
         }
 
-
         public static void ShouldHaveTheSameElementsAs<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
         {
-            var actualList = (actual is IList) ? (IList) actual : actual.ToList();
-            var expectedList = (expected is IList) ? (IList) expected : expected.ToList();
+            var actualList = (actual is IList) ? (IList)actual : actual.ToList();
+            var expectedList = (expected is IList) ? (IList)expected : expected.ToList();
 
             ShouldHaveTheSameElementsAs(actualList, expectedList);
         }
 
         public static void ShouldHaveTheSameElementsAs<T>(this IEnumerable<T> actual, params T[] expected)
         {
-            var actualList = (actual is IList) ? (IList) actual : actual.ToList();
-            var expectedList = (expected is IList) ? (IList) expected : expected.ToList();
+            var actualList = (actual is IList) ? (IList)actual : actual.ToList();
+            var expectedList = (expected is IList) ? (IList)expected : expected.ToList();
 
             ShouldHaveTheSameElementsAs(actualList, expectedList);
         }
@@ -110,8 +108,8 @@ namespace StructureMap.Testing
 
         public static T IsType<T>(this object actual)
         {
-            actual.ShouldBeOfType(typeof (T));
-            return (T) actual;
+            actual.ShouldBeOfType(typeof(T));
+            return (T)actual;
         }
 
         public static object ShouldNotBeTheSameAs(this object actual, object expected)
@@ -122,14 +120,13 @@ namespace StructureMap.Testing
 
         public static void ShouldNotBeOfType<T>(this object actual)
         {
-            actual.ShouldNotBeOfType(typeof (T));
+            actual.ShouldNotBeOfType(typeof(T));
         }
 
         public static void ShouldNotBeOfType(this object actual, Type expected)
         {
             actual.GetType().ShouldNotBe(expected);
         }
-
 
         public static IComparable ShouldBeGreaterThan(this IComparable arg1, IComparable arg2)
         {
@@ -156,7 +153,6 @@ namespace StructureMap.Testing
             return actual;
         }
 
-
         public static void ShouldStartWith(this string actual, string expected)
         {
             actual.StartsWith(expected).ShouldBeTrue();
@@ -176,10 +172,7 @@ namespace StructureMap.Testing
                 exception = e;
             }
 
-            if (exception == null)
-            {
-                Assert.Fail(String.Format("Expected {0} to be thrown.", exceptionType.FullName));
-            }
+            Assert.False(exception == null, String.Format("Expected {0} to be thrown.", exceptionType.FullName));
 
             return exception;
         }

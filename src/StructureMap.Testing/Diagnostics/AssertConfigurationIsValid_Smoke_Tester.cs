@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Shouldly;
+using System;
 using System.Diagnostics;
-using NUnit.Framework;
-using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing.Diagnostics
 {
-    [TestFixture]
     public class AssertConfigurationIsValid_Smoke_Tester
     {
-        [Test]
+        [Fact]
         public void happy_path_with_build_plans_all_good()
         {
             var container = new Container(x => x.For<IWidget>().Use<NamedWidget>().Ctor<string>().Is("Marshall"));
@@ -18,7 +17,7 @@ namespace StructureMap.Testing.Diagnostics
             // ENDSAMPLE
         }
 
-        [Test]
+        [Fact]
         public void sad_path_with_an_invalid_build_plan()
         {
             var container = new Container(x => x.For<IWidget>().Use<NamedWidget>());
@@ -32,7 +31,7 @@ namespace StructureMap.Testing.Diagnostics
                 "Unable to create a build plan for concrete type StructureMap.Testing.Diagnostics.NamedWidget");
         }
 
-        [Test]
+        [Fact]
         public void happy_path_with_validation_method()
         {
             var container =
@@ -41,7 +40,7 @@ namespace StructureMap.Testing.Diagnostics
             container.AssertConfigurationIsValid();
         }
 
-        [Test]
+        [Fact]
         public void sad_path_with_validation_method()
         {
             var container =
@@ -55,7 +54,7 @@ namespace StructureMap.Testing.Diagnostics
             ex.Context.ShouldContain("Validation Error in Method Validate");
         }
 
-        [Test]
+        [Fact]
         public void sad_path_with_ctor_failure()
         {
             var container = new Container(x => { x.For<IWidget>().Use<FailingWidget>(); });
@@ -70,7 +69,7 @@ namespace StructureMap.Testing.Diagnostics
             Debug.WriteLine(ex.Context);
         }
 
-        [Test]
+        [Fact]
         public void only_registers_the_root_cause_for_build_problems()
         {
             var container = new Container(x =>
@@ -90,8 +89,7 @@ namespace StructureMap.Testing.Diagnostics
             Debug.WriteLine(ex.Context);
         }
 
-
-        [Test]
+        [Fact]
         public void sad_path_with_validation_method_in_profile()
         {
             var container = new Container(x =>
@@ -110,7 +108,7 @@ namespace StructureMap.Testing.Diagnostics
             ex.Context.ShouldContain("Validation Error in Method Validate");
         }
 
-        [Test]
+        [Fact]
         public void missing_default()
         {
             var container = new Container(x =>

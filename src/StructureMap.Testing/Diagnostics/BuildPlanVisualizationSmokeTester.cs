@@ -1,62 +1,55 @@
-﻿using System.Diagnostics;
-using NUnit.Framework;
-using StructureMap.Query;
+﻿using StructureMap.Query;
 using StructureMap.Testing.Widget;
+using System.Diagnostics;
+using Xunit;
 
 namespace StructureMap.Testing.Diagnostics
 {
-    [TestFixture]
     public class when_building_a_build_plan_for_a_single_instance
     {
         private string theDescription;
 
-        [SetUp]
-        public void SetUp()
+        public when_building_a_build_plan_for_a_single_instance()
         {
             var container = Container.For<VisualizationRegistry>();
             theDescription = container.Model.For<IDevice>()
                 .Default.DescribeBuildPlan();
         }
 
-        [Test]
+        [Fact]
         public void should_specify_the_plugin_type()
         {
             theDescription.ShouldContain("PluginType: StructureMap.Testing.Diagnostics.IDevice");
         }
 
-        [Test]
+        [Fact]
         public void should_display_the_lifecycle()
         {
             theDescription.ShouldContain("Lifecycle: Transient");
         }
-
-
     }
 
-    [TestFixture]
     public class Examples
     {
-        [Test]
+        [Fact]
         public void deep_build_plan_for_default_of_type()
         {
             // SAMPLE: build-plan-deep-for-default
             var container = Container.For<VisualizationRegistry>();
 
             var description = container.Model.For<IDevice>().Default
-                .DescribeBuildPlan(); 
+                .DescribeBuildPlan();
 
             Debug.WriteLine(description);
             // ENDSAMPLE
         }
     }
 
-
-    [TestFixture]
     public class BuildPlanVisualizationSmokeTester
     {
         private readonly IContainer theContainer = Container.For<VisualizationRegistry>();
 
-        [Test]
+        [Fact]
         public void no_arg_constructor()
         {
             var description = theContainer.Model.For<IDevice>()
@@ -67,7 +60,7 @@ namespace StructureMap.Testing.Diagnostics
             description.ShouldContain("new DefaultDevice()");
         }
 
-        [Test]
+        [Fact]
         public void simple_build_by_lambda()
         {
             // SAMPLE: build-plan-by-name
@@ -81,18 +74,17 @@ namespace StructureMap.Testing.Diagnostics
             description.ShouldContain("Lambda: new ADevice()");
         }
 
-        [Test]
+        [Fact]
         public void simple_build_by_object()
         {
             var description = theContainer.Model.For<IDevice>()
                 .Find("B")
                 .DescribeBuildPlan();
 
-
             description.ShouldContain("Value: StructureMap.Testing.Diagnostics.BDevice");
         }
 
-        [Test]
+        [Fact]
         public void single_ctor_arg_with_constant()
         {
             var description = theContainer.Model
@@ -103,7 +95,7 @@ namespace StructureMap.Testing.Diagnostics
             description.ShouldContain("┗ String color = Value: Red");
         }
 
-        [Test]
+        [Fact]
         public void multiple_ctor_args_with_constants()
         {
             var description = theContainer.Model
@@ -117,7 +109,7 @@ namespace StructureMap.Testing.Diagnostics
             description.ShouldContain("┗ String name = Value: Declan");
         }
 
-        [Test]
+        [Fact]
         public void multiple_ctor_args_and_setters_with_constants()
         {
             var description = theContainer.Model
@@ -131,7 +123,7 @@ namespace StructureMap.Testing.Diagnostics
             description.ShouldContain("┗ String name = Value: Declan");
         }
 
-        [Test]
+        [Fact]
         public void activator_interceptor()
         {
             var description = theContainer.Model
@@ -144,7 +136,7 @@ namespace StructureMap.Testing.Diagnostics
                 "ActivatorInterceptor of StructureMap.Testing.Acceptance.Activateable: Activateable.Activate()");
         }
 
-        [Test]
+        [Fact]
         public void inline_default_with_flat_visualization()
         {
             var description = theContainer.Model
@@ -156,7 +148,7 @@ namespace StructureMap.Testing.Diagnostics
             description.ShouldContain("┗ IDevice = **Default**");
         }
 
-        [Test]
+        [Fact]
         public void show_problems_in_flat_visualization()
         {
             var ex = Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() =>
@@ -173,7 +165,7 @@ namespace StructureMap.Testing.Diagnostics
             ex.Context.ShouldContain("Set Int64 Age = Required primitive dependency is not explicitly defined");
         }
 
-        [Test]
+        [Fact]
         public void inline_referenced_dependency()
         {
             var description = theContainer.Model
@@ -185,7 +177,7 @@ namespace StructureMap.Testing.Diagnostics
             description.ShouldContain("┗ IDevice = Instance named 'A'");
         }
 
-        [Test]
+        [Fact]
         public void inline_all_possible_enumeration()
         {
             var description = theContainer.Model
@@ -198,7 +190,7 @@ namespace StructureMap.Testing.Diagnostics
                 "┗ IEnumerable<IDevice> = All registered Instances of StructureMap.Testing.Diagnostics.IDevice");
         }
 
-        [Test]
+        [Fact]
         public void inlined_constructor_dependency_simple()
         {
             var description = theContainer.Model
@@ -208,7 +200,7 @@ namespace StructureMap.Testing.Diagnostics
             Debug.WriteLine(description);
         }
 
-        [Test]
+        [Fact]
         public void inlined_constructor_dependency_complex()
         {
             var description = theContainer.Model
@@ -218,7 +210,7 @@ namespace StructureMap.Testing.Diagnostics
             Debug.WriteLine(description);
         }
 
-        [Test]
+        [Fact]
         public void multiple_inlined_constructor_dependencies()
         {
             var description = theContainer.Model
@@ -228,7 +220,7 @@ namespace StructureMap.Testing.Diagnostics
             Debug.WriteLine(description);
         }
 
-        [Test]
+        [Fact]
         public void inline_enumerable_instance_dependency()
         {
             var description = theContainer.Model
@@ -238,7 +230,7 @@ namespace StructureMap.Testing.Diagnostics
             Debug.WriteLine(description);
         }
 
-        [Test]
+        [Fact]
         public void deep_visualization_with_a_default_that_is_not_registered()
         {
             var description = theContainer.Model
@@ -251,7 +243,7 @@ namespace StructureMap.Testing.Diagnostics
             Debug.WriteLine(description);
         }
 
-        [Test]
+        [Fact]
         public void deep_visualization_with_a_default_that_can_be_found()
         {
             var description = theContainer.Model
@@ -263,7 +255,7 @@ namespace StructureMap.Testing.Diagnostics
             Debug.WriteLine(description);
         }
 
-        [Test]
+        [Fact]
         public void deep_visualization_with_a_reference_that_cannot_be_found()
         {
             var description = theContainer.Model

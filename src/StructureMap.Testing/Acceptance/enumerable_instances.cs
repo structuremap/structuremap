@@ -1,18 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using Shouldly;
+using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class enumerable_instances
     {
         // SAMPLE: EnumerableFamilyPolicy_in_action
-        [Test]
+        [Fact]
         public void collection_types_are_all_possible_by_default()
         {
-            // NOTE that we do NOT make any explicit registration of 
+            // NOTE that we do NOT make any explicit registration of
             // IList<IWidget>, IEnumerable<IWidget>, ICollection<IWidget>, or IWidget[]
             var container = new Container(_ =>
             {
@@ -24,23 +23,23 @@ namespace StructureMap.Testing.Acceptance
             // IList<T>
             container.GetInstance<IList<IWidget>>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
 
             // ICollection<T>
             container.GetInstance<ICollection<IWidget>>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
 
             // Array of T
             container.GetInstance<IWidget[]>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
         }
 
         // ENDSAMPLE
 
         // SAMPLE: explicit-enumeration-behavior
-        [Test]
+        [Fact]
         public void override_enumeration_behavior()
         {
             var container = new Container(_ =>
@@ -51,14 +50,14 @@ namespace StructureMap.Testing.Acceptance
 
                 // Explicit registration should have precedence over the default
                 // behavior
-                _.For<IWidget[]>().Use(new IWidget[] {new DefaultWidget()});
+                _.For<IWidget[]>().Use(new IWidget[] { new DefaultWidget() });
             });
 
             container.GetInstance<IWidget[]>()
                 .Single().ShouldBeOfType<DefaultWidget>();
         }
-        // ENDSAMPLE
 
+        // ENDSAMPLE
 
         // SAMPLE: IWidgetValidator-enumerable
         public interface IWidgetValidator
@@ -80,13 +79,13 @@ namespace StructureMap.Testing.Acceptance
                 var validationMessages = _validators.SelectMany(x => x.Validate(widget))
                     .ToArray();
 
-
                 if (validationMessages.Any())
                 {
                     // don't process the widget
                 }
             }
         }
+
         // ENDSAMPLE
     }
 }

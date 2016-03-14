@@ -1,22 +1,12 @@
-using System;
-using NUnit.Framework;
 using Shouldly;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class ContainerDisposalTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
-        [Test]
+        [Fact]
         public void disposing_a_main_container_will_dispose_an_object_injected_into_the_container()
         {
             var disposable = new C2Yes();
@@ -27,7 +17,7 @@ namespace StructureMap.Testing.Pipeline
             disposable.WasDisposed.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void
             something_in_the_middle_of_container_that_tries_to_dispose_container_will_not_blow_everything_up_with_a_stack_overflow_exception
             ()
@@ -56,7 +46,7 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-        [Test]
+        [Fact]
         public void main_container_should_dispose_singletons()
         {
             var container = new Container(x => { x.ForSingletonOf<C1Yes>().Use<C1Yes>(); });
@@ -68,8 +58,7 @@ namespace StructureMap.Testing.Pipeline
             single.WasDisposed.ShouldBeTrue();
         }
 
-
-        [Test]
+        [Fact]
         public void disposing_a_nested_container_does_not_try_to_dispose_objects_created_by_the_parent()
         {
             var container = new Container(x => { x.ForSingletonOf<I1>().Use<C1No>(); });
@@ -82,7 +71,7 @@ namespace StructureMap.Testing.Pipeline
             child.Dispose();
         }
 
-        [Test]
+        [Fact]
         public void
             disposing_a_nested_container_should_dispose_all_of_the_transient_objects_created_by_the_nested_container()
         {
@@ -115,7 +104,7 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-        [Test]
+        [Fact]
         public void should_dispose_objects_injected_into_the_container_1()
         {
             var container = new Container().GetNestedContainer();
@@ -130,7 +119,7 @@ namespace StructureMap.Testing.Pipeline
             disposable.WasDisposed.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void should_dispose_objects_injected_into_the_container_2()
         {
             var container = new Container(x => x.For<I1>().Use<C1Yes>()).GetNestedContainer();
@@ -154,7 +143,7 @@ namespace StructureMap.Testing.Pipeline
 
         public void Dispose()
         {
-            if (_wasDisposed) Assert.Fail("This object should not be disposed twice");
+            Assert.False(_wasDisposed, "This object should not be disposed twice");
 
             _wasDisposed = true;
         }
@@ -164,7 +153,7 @@ namespace StructureMap.Testing.Pipeline
     {
         public void Dispose()
         {
-            Assert.Fail("This object should not be disposed");
+            Assert.True(false, "This object should not be disposed");
         }
     }
 
