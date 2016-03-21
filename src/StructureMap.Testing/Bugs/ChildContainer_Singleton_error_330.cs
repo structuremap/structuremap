@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Bugs
             // Fixed
             childContainer.GetInstance<IRoot>().ShouldNotBeNull(); // Fails
 
-            childContainer.Model.For<IRoot>().Lifecycle.ShouldBeOfType<ContainerLifecycle>();
+            childContainer.Model.For<IRoot>().Lifecycle.ShouldBeOfType<ChildContainerSingletonLifecycle>();
         }
 
         // SAMPLE: singletons_to_child_container_are_isolated

@@ -31,18 +31,7 @@ namespace StructureMap.Testing.AutoMocking
             testPartials.Virtual().ShouldBe("MOCKED!");
         }
 
-        [Fact]
-        public void can_put_mock_in_replay_mode()
-        {
-            var mockRepository = new RhinoMockRepositoryProxy();
-            var test = (ITestMocks)mockRepository.DynamicMock(typeof(ITestMocks));
 
-            mockRepository.Replay(test);
-
-            test.Stub(t => t.Answer()).Return("YES");
-            test.ShouldNotBeNull();
-            test.Answer().ShouldBe("YES");
-        }
     }
 
     public interface ITestMocks

@@ -806,14 +806,16 @@ namespace StructureMap
                 // Correct the Singleton lifecycle for child containers
                 if (Role == ContainerRole.ProfileOrChild)
                 {
+                    var lifecycle = new ChildContainerSingletonLifecycle(_pipelineGraph.ContainerCache);
+
                     var singletons = _pipelineGraph.Instances.ImmediateInstances()
                         .Where(x => x.Lifecycle is SingletonLifecycle);
 
                     singletons
-                        .Each(x => x.SetLifecycleTo<ContainerLifecycle>());
+                        .Each(x => x.SetLifecycleTo(lifecycle));
 
                     _pipelineGraph.Instances.ImmediatePluginGraph.Families.ToArray().Where(x => x.Lifecycle is SingletonLifecycle)
-                        .Each(x => x.SetLifecycleTo<ContainerLifecycle>());
+                        .Each(x => x.SetLifecycleTo(lifecycle));
                 }
 
                 if (Role == ContainerRole.Nested)

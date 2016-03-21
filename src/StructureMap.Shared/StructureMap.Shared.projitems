@@ -144,6 +144,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pipeline\ArrayCoercion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pipeline\ArrayDefinitionExpression.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pipeline\AttributeConstructorSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pipeline\ChildContainerSingletonLifecycle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pipeline\ConfiguredInstance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pipeline\ConstructorInstance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pipeline\ConstructorSelector.cs" />
