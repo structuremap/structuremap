@@ -25,32 +25,6 @@ namespace StructureMap.Testing.Bugs
                 .ShouldHaveTheSameElementsAs(typeof(Foo1), typeof(Foo3));
         }
 
-        [Fact, Explicit("This test is invalid and will fail, included to demonstrate a usage problem")]
-        public void demo_of_problem()
-        {
-            var container = new Container(_ =>
-            {
-                _.Scan(x =>
-                {
-                    x.TheCallingAssembly();
-                    x.AddAllTypesOf<IFoo>();
-                    x.ExcludeType<Foo2>();
-                });
-
-                _.Scan(x =>
-                {
-                    x.TheCallingAssembly();
-                    x.AddAllTypesOf<IFoo>();
-                    x.ExcludeType<Foo1>();
-                });
-            });
-
-            // This will fail!
-            container.GetAllInstances<IFoo>()
-                .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(Foo3));
-        }
-
         public interface IFoo
         {
         }
