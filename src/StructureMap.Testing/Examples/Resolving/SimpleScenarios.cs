@@ -1,14 +1,13 @@
-﻿using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Examples.Resolving
 {
-    [TestFixture]
     public class SimpleScenarios
     {
         // SAMPLE: GetInstance
-        [Test]
+        [Fact]
         public void get_the_default_instance()
         {
             var container = new Container(x => { x.For<IWidget>().Use<AWidget>(); });
@@ -18,14 +17,14 @@ namespace StructureMap.Testing.Examples.Resolving
 
             // or
 
-            container.GetInstance(typeof (IWidget))
+            container.GetInstance(typeof(IWidget))
                 .ShouldBeOfType<AWidget>();
         }
 
         // ENDSAMPLE
 
         // SAMPLE: GetInstance-by-name
-        [Test]
+        [Fact]
         public void get_a_named_instance()
         {
             var container = new Container(x =>
@@ -41,15 +40,15 @@ namespace StructureMap.Testing.Examples.Resolving
 
             // or
 
-            container.GetInstance(typeof (IWidget), "A").ShouldBeOfType<AWidget>();
-            container.GetInstance(typeof (IWidget), "B").ShouldBeOfType<BWidget>();
-            container.GetInstance(typeof (IWidget), "C").ShouldBeOfType<CWidget>();
+            container.GetInstance(typeof(IWidget), "A").ShouldBeOfType<AWidget>();
+            container.GetInstance(typeof(IWidget), "B").ShouldBeOfType<BWidget>();
+            container.GetInstance(typeof(IWidget), "C").ShouldBeOfType<CWidget>();
         }
 
         // ENDSAMPLE
 
         // SAMPLE: get-all-instances
-        [Test]
+        [Fact]
         public void get_all_instances()
         {
             var container = new Container(x =>
@@ -61,18 +60,17 @@ namespace StructureMap.Testing.Examples.Resolving
 
             container.GetAllInstances<IWidget>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
 
             // or
 
-            container.GetAllInstances(typeof (IWidget))
+            container.GetAllInstances(typeof(IWidget))
                 .OfType<IWidget>() // returns an IEnumerable, so I'm casting here
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
         }
 
         // ENDSAMPLE
-
 
         public interface IWidget
         {

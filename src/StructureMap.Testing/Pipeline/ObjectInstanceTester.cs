@@ -1,24 +1,14 @@
-using System;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class ObjectInstanceTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
         public interface ITarget
         {
         }
@@ -31,16 +21,15 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-
-        [Test]
+        [Fact]
         public void to_dependency_source()
         {
             var gateway = new StubbedGateway();
-            new ObjectInstance(gateway).ToDependencySource(typeof (IGateway))
+            new ObjectInstance(gateway).ToDependencySource(typeof(IGateway))
                 .ShouldBe(Constant.For<IGateway>(gateway));
         }
 
-        [Test]
+        [Fact]
         public void Build_happy_path()
         {
             var target = new ATarget();
@@ -49,26 +38,26 @@ namespace StructureMap.Testing.Pipeline
             instance.Build<ATarget>().ShouldBeTheSameAs(target);
         }
 
-        [Test]
+        [Fact]
         public void Create_description_should_return_the_ToString_of_the_inner_instance()
         {
             new ObjectInstance(this)
                 .Description.ShouldBe("Object:  " + ToString());
         }
 
-        [Test]
+        [Fact]
         public void Throw_NullArgumentException_if_literal_instance_is_null()
         {
             Exception<ArgumentNullException>.ShouldBeThrownBy(() => { new ObjectInstance(null); });
         }
 
-        [Test]
+        [Fact]
         public void object_instance_is_a_singleton()
         {
             new ObjectInstance(new DisposableGuy()).Lifecycle.ShouldBeOfType<ObjectLifecycle>();
         }
 
-        [Test]
+        [Fact]
         public void object_is_not_disposed_in_nested_container()
         {
             var guy = new DisposableGuy();

@@ -1,12 +1,11 @@
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class EnumerableShouldGetAllValuesTester
     {
         public interface IWidget
@@ -34,8 +33,7 @@ namespace StructureMap.Testing.Bugs
             }
         }
 
-
-        [Test]
+        [Fact]
         public void ienumerable_arg_should_get_all_registered()
         {
             var container = new Container(x =>

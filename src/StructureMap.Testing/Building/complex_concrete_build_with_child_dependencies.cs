@@ -1,16 +1,14 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class complex_concrete_build_with_child_dependencies
     {
-        private Game game;
+        private readonly Game game;
 
-        [SetUp]
-        public void SetUp()
+        public complex_concrete_build_with_child_dependencies()
         {
             var build = new ConcreteBuild<Game>();
             build.Constructor.Add(new ConcreteBuild<SportsTeam>()
@@ -27,7 +25,7 @@ namespace StructureMap.Testing.Building
             game = build.Build(session, session).As<Game>();
         }
 
-        [Test]
+        [Fact]
         public void with_child_constructors()
         {
             game.Home.City.ShouldBe("San Diego");
@@ -36,13 +34,13 @@ namespace StructureMap.Testing.Building
             game.Visitor.Mascot.ShouldBe("Chiefs");
         }
 
-        [Test]
+        [Fact]
         public void with_child_setter_value()
         {
             game.Stadium.ShouldBe("Qualcomm Stadium");
         }
 
-        [Test]
+        [Fact]
         public void with_child_setter_built_by_constructor()
         {
             game.Referee.ShouldBe(new Referee("John", "Smith"));
@@ -95,14 +93,14 @@ namespace StructureMap.Testing.Building
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Referee) obj);
+            return Equals((Referee)obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((_first != null ? _first.GetHashCode() : 0)*397) ^ (_last != null ? _last.GetHashCode() : 0);
+                return ((_first != null ? _first.GetHashCode() : 0) * 397) ^ (_last != null ? _last.GetHashCode() : 0);
             }
         }
     }

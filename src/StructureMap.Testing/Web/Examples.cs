@@ -1,11 +1,8 @@
-﻿using NUnit.Framework;
-using StructureMap.Configuration.DSL;
-using StructureMap.Testing.Samples;
+﻿using StructureMap.Testing.Samples;
 using StructureMap.Web.Pipeline;
 
 namespace StructureMap.Testing.Web
 {
-    [TestFixture]
     public class Examples
     {
         public void cleanup()

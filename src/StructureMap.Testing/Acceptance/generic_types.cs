@@ -1,45 +1,39 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using NUnit.Framework;
-using Shouldly;
-using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
+﻿using Shouldly;
 using StructureMap.Testing.Acceptance.Visualization;
+using System.Diagnostics;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class generic_types
     {
         // SAMPLE: register_open_generic_type
-        [Test]
+        [Fact]
         public void register_open_generic_type()
         {
             var container = new Container(_ =>
             {
-                _.For(typeof (IVisualizer<>)).Use(typeof (DefaultVisualizer<>));
+                _.For(typeof(IVisualizer<>)).Use(typeof(DefaultVisualizer<>));
             });
 
-            
-            Debug.WriteLine(container.WhatDoIHave(@namespace:"StructureMap.Testing.Acceptance.Visualization"));
-            
+            Debug.WriteLine(container.WhatDoIHave(@namespace: "StructureMap.Testing.Acceptance.Visualization"));
 
             container.GetInstance<IVisualizer<IssueCreated>>()
                 .ShouldBeOfType<DefaultVisualizer<IssueCreated>>();
 
             Debug.WriteLine(container.WhatDoIHave(@namespace: "StructureMap.Testing.Acceptance.Visualization"));
-            
-
 
             container.GetInstance<IVisualizer<IssueResolved>>()
                 .ShouldBeOfType<DefaultVisualizer<IssueResolved>>();
         }
+
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void using_visualizer()
         {
-            // SAMPLE: using-visualizer-knowning-the-type   
+            // SAMPLE: using-visualizer-knowning-the-type
             // Just setting up a Container and ILogVisualizer
             var container = Container.For<VisualizationRegistry>();
             var visualizer = container.GetInstance<ILogVisualizer>();
@@ -52,19 +46,19 @@ namespace StructureMap.Testing.Acceptance
             // ENDSAMPLE
         }
 
-        [Test]
+        [Fact]
         public void a_bunch_of_logs()
         {
             // SAMPLE: using-visualizer-not-knowing-the-type
             var logs = new object[]
             {
-                new IssueCreated(), 
-                new TaskAssigned(), 
-                new Comment(), 
+                new IssueCreated(),
+                new TaskAssigned(),
+                new Comment(),
                 new IssueResolved()
             };
 
-            // SAMPLE: using-visualizer-knowning-the-type   
+            // SAMPLE: using-visualizer-knowning-the-type
             // Just setting up a Container and ILogVisualizer
             var container = Container.For<VisualizationRegistry>();
             var visualizer = container.GetInstance<ILogVisualizer>();
@@ -75,7 +69,7 @@ namespace StructureMap.Testing.Acceptance
         }
 
         // SAMPLE: generic-defaults-with-fallback
-        [Test]
+        [Fact]
         public void generic_defaults()
         {
             var container = new Container(_ =>
@@ -87,7 +81,6 @@ namespace StructureMap.Testing.Acceptance
                 _.For<IVisualizer<IssueCreated>>().Use<IssueCreatedVisualizer>();
             });
 
-
             // We have a specific visualizer for IssueCreated
             container.GetInstance<IVisualizer<IssueCreated>>()
                 .ShouldBeOfType<IssueCreatedVisualizer>();
@@ -97,10 +90,11 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<IVisualizer<TaskAssigned>>()
                 .ShouldBeOfType<DefaultVisualizer<TaskAssigned>>();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: visualization-registry-in-action
-        [Test]
+        [Fact]
         public void visualization_registry()
         {
             var container = Container.For<VisualizationRegistry>();
@@ -118,10 +112,7 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<IVisualizer<TaskAssigned>>()
                 .ShouldBeOfType<DefaultVisualizer<TaskAssigned>>();
         }
+
         // ENDSAMPLE
     }
-
-
-   
 }
-

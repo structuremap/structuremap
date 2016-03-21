@@ -1,10 +1,9 @@
-using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Testing.Widget5;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class SetterInjectionTester
     {
         public class SetterTarget
@@ -20,17 +19,17 @@ namespace StructureMap.Testing.Graph
             public string Name4 { get; set; }
         }
 
-        [Test]
+        [Fact]
         public void AutoFillDeterminationWithSetterPropertiesIsFalse()
         {
-            Policies.Default().CanBeAutoFilled(typeof (CannotBeAutoFilledGridColumn))
+            Policies.Default().CanBeAutoFilled(typeof(CannotBeAutoFilledGridColumn))
                 .ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void AutoFillDeterminationWithSetterPropertiesIsTrue()
         {
-            Policies.Default().CanBeAutoFilled(typeof (AutoFilledGridColumn))
+            Policies.Default().CanBeAutoFilled(typeof(AutoFilledGridColumn))
                 .ShouldBeTrue();
         }
     }

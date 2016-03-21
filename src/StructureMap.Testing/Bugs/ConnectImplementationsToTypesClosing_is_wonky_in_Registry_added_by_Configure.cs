@@ -1,22 +1,20 @@
-﻿using System.Linq;
-using NUnit.Framework;
-using Shouldly;
-using StructureMap.Configuration.DSL;
+﻿using Shouldly;
 using StructureMap.Graph;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class ConnectImplementationsToTypesClosing_is_wonky_in_Registry_added_by_Configure
     {
-        [Test]
+        [Fact]
         public void has_the_correct_number_by_initialize()
         {
             var container = Container.For<BookRegistry>();
             container.GetAllInstances<IBook<SciFi>>().Count().ShouldBe(1);
         }
 
-        [Test]
+        [Fact]
         public void has_the_correct_number_by_configure()
         {
             var container = new Container();
@@ -32,7 +30,7 @@ namespace StructureMap.Testing.Bugs
             Scan(x =>
             {
                 x.TheCallingAssembly();
-                x.ConnectImplementationsToTypesClosing(typeof (IBook<>));
+                x.ConnectImplementationsToTypesClosing(typeof(IBook<>));
             });
         }
     }
@@ -40,7 +38,6 @@ namespace StructureMap.Testing.Bugs
     public interface IBook<T>
     {
     }
-
 
     public class SciFi
     {

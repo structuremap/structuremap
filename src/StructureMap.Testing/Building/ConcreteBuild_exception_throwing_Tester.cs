@@ -1,15 +1,14 @@
-﻿using System;
-using System.Diagnostics;
-using NUnit.Framework;
-using StructureMap.Building;
+﻿using StructureMap.Building;
 using StructureMap.Testing.Pipeline;
+using System;
+using System.Diagnostics;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class ConcreteBuild_exception_throwing_Tester
     {
-        [Test]
+        [Fact]
         public void happily_throws_build_exception_with_description_of_the_constructor()
         {
             var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() =>
@@ -22,7 +21,7 @@ namespace StructureMap.Testing.Building
             Debug.WriteLine(ex);
         }
 
-        [Test]
+        [Fact]
         public void exception_throwing_from_container()
         {
             var ex =

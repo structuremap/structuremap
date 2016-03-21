@@ -1,18 +1,16 @@
-﻿using System;
+﻿using StructureMap.Testing.Acceptance;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
-using StructureMap.Testing.Acceptance;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class Resolving_ienumerable_types
     {
         private Container container;
 
-        [SetUp]
-        public void SetUp()
+        public Resolving_ienumerable_types()
         {
             container = new Container(x =>
             {
@@ -22,31 +20,31 @@ namespace StructureMap.Testing
             });
         }
 
-        [Test]
+        [Fact]
         public void if_no_explicit_registration_by_list_return_all()
         {
             container.GetInstance<IList<IWidget>>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
         }
 
-        [Test]
+        [Fact]
         public void if_no_explicit_registration_by_enumerable_return_all()
         {
             container.GetInstance<IEnumerable<IWidget>>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
         }
 
-        [Test]
+        [Fact]
         public void if_no_explicit_registration_by_array_return_all()
         {
             container.GetInstance<IWidget[]>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
         }
 
-        [Test]
+        [Fact]
         public void can_override_array()
         {
             var array = new IWidget[0];
@@ -56,7 +54,7 @@ namespace StructureMap.Testing
                 .ShouldBeTheSameAs(array);
         }
 
-        [Test]
+        [Fact]
         public void can_override_list()
         {
             var list = new List<IWidget>();
@@ -67,7 +65,7 @@ namespace StructureMap.Testing
                 .ShouldBeTheSameAs(list);
         }
 
-        [Test]
+        [Fact]
         public void can_override_enumerable()
         {
             var list = new List<IWidget>();
@@ -78,22 +76,22 @@ namespace StructureMap.Testing
                 .ShouldBeTheSameAs(list);
         }
 
-        [Test]
+        [Fact]
         public void can_resolve_a_lazy_for_list()
         {
             container.GetInstance<GuyWithLazyList>()
                 .Widgets.Value
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
         }
 
-        [Test]
+        [Fact]
         public void can_resolve_a_func_for_list()
         {
             container.GetInstance<GuyWithFuncList>()
                 .Widgets()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget));
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget));
         }
     }
 

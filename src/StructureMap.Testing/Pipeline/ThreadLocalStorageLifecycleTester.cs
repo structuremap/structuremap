@@ -1,33 +1,27 @@
-using System.Threading;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using System.Threading;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
     // SAMPLE: thread-local-storage
-    [TestFixture]
+
     public class ThreadLocalStorageLifecycleTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public ThreadLocalStorageLifecycleTester()
         {
             _lifecycle = new ThreadLocalStorageLifecycle();
 
             container = new Container(x => x.For<Rule>(Lifecycles.ThreadLocal).Use(() => new ColorRule("Red")));
         }
 
-        #endregion
-
         private ThreadLocalStorageLifecycle _lifecycle;
         private ColorRule _rule1;
         private ColorRule _rule2;
         private ColorRule _rule3;
         private Container container;
-
 
         private void findRule1()
         {
@@ -62,7 +56,7 @@ namespace StructureMap.Testing.Pipeline
             _rule3.ShouldBeTheSameAs(rule);
         }
 
-        [Test]
+        [Fact]
         public void object_has_been_created()
         {
             container.Model.For<Rule>().Default.ObjectHasBeenCreated().ShouldBeFalse();
@@ -70,7 +64,7 @@ namespace StructureMap.Testing.Pipeline
             container.Model.For<Rule>().Default.ObjectHasBeenCreated().ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void FindUniqueInstancePerThread()
         {
             var t1 = new Thread(findRule1);

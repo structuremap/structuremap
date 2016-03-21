@@ -1,61 +1,59 @@
-﻿using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Building.Interception
 {
-    [TestFixture]
     public class DecoratorPolicyTester
     {
-        [Test]
+        [Fact]
         public void decorate_closed_type_no_filter_matches_on_plugin_type()
         {
-            var policy = new DecoratorPolicy(typeof (IWidget), typeof (WidgetDecorator));
+            var policy = new DecoratorPolicy(typeof(IWidget), typeof(WidgetDecorator));
 
-            policy.DetermineInterceptors(typeof (IWidget), new SmartInstance<AWidget>())
+            policy.DetermineInterceptors(typeof(IWidget), new SmartInstance<AWidget>())
                 .Single()
                 .ShouldBeOfType<DecoratorInterceptor>()
                 .Instance
                 .PluggedType
-                .ShouldBe(typeof (WidgetDecorator));
+                .ShouldBe(typeof(WidgetDecorator));
         }
 
-        [Test]
+        [Fact]
         public void decorate_closed_type_no_filter_does_not_match_on_plugin_type()
         {
-            var policy = new DecoratorPolicy(typeof (IWidget), typeof (WidgetDecorator));
+            var policy = new DecoratorPolicy(typeof(IWidget), typeof(WidgetDecorator));
 
-            policy.DetermineInterceptors(typeof (AWidget), new SmartInstance<AWidget>())
+            policy.DetermineInterceptors(typeof(AWidget), new SmartInstance<AWidget>())
                 .Any().ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void decorate_closed_type_uses_filter()
         {
-            var policy = new DecoratorPolicy(typeof (IWidget), typeof (WidgetDecorator), i => i.Name == "ok");
+            var policy = new DecoratorPolicy(typeof(IWidget), typeof(WidgetDecorator), i => i.Name == "ok");
 
-            policy.DetermineInterceptors(typeof (IWidget), new SmartInstance<AWidget>().Named("not right"))
+            policy.DetermineInterceptors(typeof(IWidget), new SmartInstance<AWidget>().Named("not right"))
                 .Any().ShouldBeFalse();
 
-            policy.DetermineInterceptors(typeof (IWidget), new SmartInstance<AWidget>().Named("ok"))
+            policy.DetermineInterceptors(typeof(IWidget), new SmartInstance<AWidget>().Named("ok"))
                 .Any().ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void open_generics_happy_path()
         {
-            var policy = new DecoratorPolicy(typeof (IFoo<,>), typeof (DecoratedFoo<,>));
+            var policy = new DecoratorPolicy(typeof(IFoo<,>), typeof(DecoratedFoo<,>));
 
-            policy.DetermineInterceptors(typeof (IFoo<string, int>), new SmartInstance<Foo<string, int>>())
+            policy.DetermineInterceptors(typeof(IFoo<string, int>), new SmartInstance<Foo<string, int>>())
                 .Single()
                 .ShouldBeOfType<DecoratorInterceptor>()
                 .Instance.PluggedType
-                .ShouldBe(typeof (DecoratedFoo<string, int>));
+                .ShouldBe(typeof(DecoratedFoo<string, int>));
         }
     }
-
 
     public interface IFoo<T1, T2>
     {

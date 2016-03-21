@@ -1,11 +1,10 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Andreas_forwarding_issue
     {
-        [Test]
+        [Fact]
         public void can_do_the_forwarding()
         {
             var container = new Container(_ =>

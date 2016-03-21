@@ -1,6 +1,6 @@
-using System;
-using NUnit.Framework;
 using Shouldly;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -20,13 +20,13 @@ namespace StructureMap.Testing.Pipeline
     {
         public object ToDto(object input)
         {
-            var dto = createDTO((Address) input);
+            var dto = createDTO((Address)input);
             return dto;
         }
 
         private object createDTO(Address input)
         {
-            // creates the AddressDTO object from the 
+            // creates the AddressDTO object from the
             // Address object passed in
             throw new NotImplementedException();
         }
@@ -49,63 +49,56 @@ namespace StructureMap.Testing.Pipeline
         }
     }
 
-    [TestFixture]
     public class when_accessing_a_type_registered_as_an_open_generics_type
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public when_accessing_a_type_registered_as_an_open_generics_type()
         {
             container = new Container(x =>
             {
                 // Define the basic open type for IFlattener<>
-                x.For(typeof (IFlattener<>)).Use(typeof (PassthroughFlattener<>));
+                x.For(typeof(IFlattener<>)).Use(typeof(PassthroughFlattener<>));
 
                 // Explicitly Register a specific closed type for Address
                 x.For<IFlattener<Address>>().Use<AddressFlattener>();
             });
         }
 
-        #endregion
-
         private Container container;
 
-        [Test]
+        [Fact]
         public void asking_for_a_closed_type_that_is_explicitly_registered_returns_the_explicitly_defined_type()
         {
             container.GetInstance<IFlattener<Address>>()
                 .ShouldBeOfType<AddressFlattener>();
         }
 
-        [Test]
+        [Fact]
         public void asking_for_a_closed_type_that_is_not_explicitly_registered_will_close_the_open_type_template()
         {
             container.GetInstance<IFlattener<Continuation>>()
                 .ShouldBeOfType<PassthroughFlattener<Continuation>>();
         }
 
-        [Test]
+        [Fact]
         public void throws_exception_if_passed_a_type_that_is_not_an_open_generic_type()
         {
             var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
             {
-                container.ForGenericType(typeof (string)).WithParameters().GetInstanceAs<IFlattener>();
-                Assert.Fail("Should have thrown exception");
+                container.ForGenericType(typeof(string)).WithParameters().GetInstanceAs<IFlattener>();
             });
 
             ex.Title.ShouldBe("Type 'System.String' is not an open generic type");
         }
 
-        [Test]
+        [Fact]
         public void using_the_generics_helper_expression()
         {
-            var flattener1 = container.ForGenericType(typeof (IFlattener<>))
-                .WithParameters(typeof (Address)).GetInstanceAs<IFlattener>();
+            var flattener1 = container.ForGenericType(typeof(IFlattener<>))
+                .WithParameters(typeof(Address)).GetInstanceAs<IFlattener>();
             flattener1.ShouldBeOfType<AddressFlattener>();
 
-            var flattener2 = container.ForGenericType(typeof (IFlattener<>))
-                .WithParameters(typeof (Continuation)).GetInstanceAs<IFlattener>();
+            var flattener2 = container.ForGenericType(typeof(IFlattener<>))
+                .WithParameters(typeof(Continuation)).GetInstanceAs<IFlattener>();
             flattener2.ShouldBeOfType<PassthroughFlattener<Continuation>>();
         }
     }
@@ -123,7 +116,7 @@ namespace StructureMap.Testing.Pipeline
         // This method can "flatten" any object
         public object Flatten(object input)
         {
-            var flattener = _container.ForGenericType(typeof (IFlattener<>))
+            var flattener = _container.ForGenericType(typeof(IFlattener<>))
                 .WithParameters(input.GetType())
                 .GetInstanceAs<IFlattener>();
 
@@ -144,11 +137,9 @@ namespace StructureMap.Testing.Pipeline
         }
     }
 
-
-    [TestFixture]
     public class when_getting_a_closed_type_from_an_open_generic_type_by_providing_an_input_parameter
     {
-        [Test]
+        [Fact]
         public void fetch_the_object()
         {
             var container =
@@ -159,17 +150,16 @@ namespace StructureMap.Testing.Pipeline
 
             var handler = container
                 .ForObject(shipment)
-                .GetClosedTypeOf(typeof (IHandler<>))
+                .GetClosedTypeOf(typeof(IHandler<>))
                 .As<IHandler>();
 
             handler.ShouldBeOfType<ShipmentHandler>().Shipment.ShouldBeTheSameAs(shipment);
         }
     }
 
-    [TestFixture]
     public class when_getting_a_closed_type_from_an_open_generic_type_by_providing_an_input_parameter_from_ObjectFactory
     {
-        [Test]
+        [Fact]
         public void fetch_the_object()
         {
             var container = new Container(
@@ -177,16 +167,15 @@ namespace StructureMap.Testing.Pipeline
 
             var shipment = new Shipment();
             var handler =
-                container.ForObject(shipment).GetClosedTypeOf(typeof (IHandler<>)).As<IHandler>();
+                container.ForObject(shipment).GetClosedTypeOf(typeof(IHandler<>)).As<IHandler>();
 
             handler.ShouldBeOfType<ShipmentHandler>().Shipment.ShouldBeTheSameAs(shipment);
         }
     }
 
-    [TestFixture]
     public class when_getting_all_closed_type_from_an_open_generic_type_by_providing_an_input_parameter
     {
-        [Test]
+        [Fact]
         public void fetch_the_objects()
         {
             var container = new Container(x =>
@@ -199,7 +188,7 @@ namespace StructureMap.Testing.Pipeline
 
             var handlers = container
                 .ForObject(shipment)
-                .GetAllClosedTypesOf(typeof (IHandler<>))
+                .GetAllClosedTypesOf(typeof(IHandler<>))
                 .As<IHandler>();
 
             handlers[0].ShouldBeOfType<ShipmentHandler>();

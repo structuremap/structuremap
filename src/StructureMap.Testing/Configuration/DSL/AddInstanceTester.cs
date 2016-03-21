@@ -1,17 +1,13 @@
-using System;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Testing.Widget;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
     public class AddInstanceTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public AddInstanceTester()
         {
             container = new Container(registry =>
             {
@@ -33,25 +29,23 @@ namespace StructureMap.Testing.Configuration.DSL
             });
         }
 
-        #endregion
-
         private IContainer container;
 
-        [Test]
+        [Fact]
         public void AddAnInstanceWithANameAndAPropertySpecifyingConcreteKey()
         {
-            var widget = (ColorWidget) container.GetInstance<IWidget>("Purple");
+            var widget = (ColorWidget)container.GetInstance<IWidget>("Purple");
             widget.Color.ShouldBe("Purple");
         }
 
-        [Test]
+        [Fact]
         public void AddAnInstanceWithANameAndAPropertySpecifyingConcreteType()
         {
-            var widget = (ColorWidget) container.GetInstance<IWidget>("DarkGreen");
+            var widget = (ColorWidget)container.GetInstance<IWidget>("DarkGreen");
             widget.Color.ShouldBe("DarkGreen");
         }
 
-        [Test]
+        [Fact]
         public void AddInstanceAndOverrideTheConcreteTypeForADependency()
         {
             IContainer container = new Container(x =>
@@ -67,18 +61,18 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         // SAMPLE: named-instance
-        [Test]
+        [Fact]
         public void SimpleCaseWithNamedInstance()
         {
             container = new Container(x => { x.For<IWidget>().Add<AWidget>().Named("MyInstance"); });
             // retrieve an instance by name
-            var widget = (AWidget) container.GetInstance<IWidget>("MyInstance");
+            var widget = (AWidget)container.GetInstance<IWidget>("MyInstance");
             widget.ShouldNotBeNull();
         }
 
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void SpecifyANewInstanceOverrideADependencyWithANamedInstance()
         {
             container = new Container(registry =>
@@ -98,11 +92,11 @@ namespace StructureMap.Testing.Configuration.DSL
 
             container.GetInstance<Rule>("Alias").ShouldBeOfType<ARule>();
 
-            var rule = (WidgetRule) container.GetInstance<Rule>("RuleThatUsesMyInstance");
+            var rule = (WidgetRule)container.GetInstance<Rule>("RuleThatUsesMyInstance");
             rule.Widget.As<ColorWidget>().Color.ShouldBe("Purple");
         }
 
-        [Test]
+        [Fact]
         public void SpecifyANewInstanceWithADependency()
         {
             // Specify a new Instance, create an instance for a dependency on the fly
@@ -120,8 +114,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .Color.ShouldBe("Orange");
         }
 
-
-        [Test]
+        [Fact]
         public void UseAPreBuiltObjectWithAName()
         {
             // Return the specific instance when an IWidget named "Julia" is requested
@@ -130,16 +123,15 @@ namespace StructureMap.Testing.Configuration.DSL
             container =
                 new Container(x => x.For<IWidget>().Add(julia).Named("Julia"));
 
-            var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Julia");
-            var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Julia");
-            var widget3 = (CloneableWidget) container.GetInstance<IWidget>("Julia");
+            var widget1 = (CloneableWidget)container.GetInstance<IWidget>("Julia");
+            var widget2 = (CloneableWidget)container.GetInstance<IWidget>("Julia");
+            var widget3 = (CloneableWidget)container.GetInstance<IWidget>("Julia");
 
             julia.ShouldBeTheSameAs(widget1);
             julia.ShouldBeTheSameAs(widget2);
             julia.ShouldBeTheSameAs(widget3);
         }
     }
-
 
     public class WidgetRule : Rule
     {
@@ -150,12 +142,10 @@ namespace StructureMap.Testing.Configuration.DSL
             _widget = widget;
         }
 
-
         public IWidget Widget
         {
             get { return _widget; }
         }
-
 
         public override bool Equals(object obj)
         {
@@ -180,14 +170,13 @@ namespace StructureMap.Testing.Configuration.DSL
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion IWidget Members
     }
 
     [Serializable]
     public class CloneableWidget : IWidget, ICloneable
     {
         private readonly string _name;
-
 
         public CloneableWidget(string name)
         {
@@ -206,7 +195,7 @@ namespace StructureMap.Testing.Configuration.DSL
             return MemberwiseClone();
         }
 
-        #endregion
+        #endregion ICloneable Members
 
         #region IWidget Members
 
@@ -215,7 +204,7 @@ namespace StructureMap.Testing.Configuration.DSL
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion IWidget Members
     }
 
     public class ARule : Rule

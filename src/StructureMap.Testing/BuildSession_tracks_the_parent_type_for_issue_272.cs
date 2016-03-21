@@ -1,24 +1,15 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Acceptance;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class BuildSession_tracks_the_parent_type_for_issue_272
     {
-        private Type parentType;
-
-        [SetUp]
-        public void SetUp()
-        {
-            parentType = null;
-        }
-
-        [Test]
+        [Fact]
         public void for_basic_get_instance()
         {
             var container = new Container(x =>
@@ -29,10 +20,10 @@ namespace StructureMap.Testing
             });
 
             container.GetInstance<ILoggerHolder>()
-                .Logger.RootType.ShouldBe(typeof (LoggerHolder));
+                .Logger.RootType.ShouldBe(typeof(LoggerHolder));
         }
 
-        [Test]
+        [Fact]
         public void in_get_instance_by_name()
         {
             var container = new Container(x =>
@@ -47,21 +38,21 @@ namespace StructureMap.Testing
             });
 
             container.GetInstance<ILoggerHolder>("Red")
-                .Logger.RootType.ShouldBe(typeof (BuildSessionTarget));
+                .Logger.RootType.ShouldBe(typeof(BuildSessionTarget));
 
             container.GetInstance<ILoggerHolder>("Blue")
-                .Logger.RootType.ShouldBe(typeof (LoggerHolder));
+                .Logger.RootType.ShouldBe(typeof(LoggerHolder));
 
-            container.GetInstance(typeof (ILoggerHolder), "Red")
+            container.GetInstance(typeof(ILoggerHolder), "Red")
                 .As<ILoggerHolder>()
-                .Logger.RootType.ShouldBe(typeof (BuildSessionTarget));
+                .Logger.RootType.ShouldBe(typeof(BuildSessionTarget));
 
-            container.GetInstance(typeof (ILoggerHolder), "Blue")
+            container.GetInstance(typeof(ILoggerHolder), "Blue")
                 .As<ILoggerHolder>()
-                .Logger.RootType.ShouldBe(typeof (LoggerHolder));
+                .Logger.RootType.ShouldBe(typeof(LoggerHolder));
         }
 
-        [Test]
+        [Fact]
         public void from_within_get_all_instances()
         {
             var container = new Container(x =>
@@ -76,21 +67,21 @@ namespace StructureMap.Testing
             });
 
             var holders = container.GetAllInstances<ILoggerHolder>().ToArray();
-            holders[0].Logger.RootType.ShouldBe(typeof (BuildSessionTarget));
-            holders[1].Logger.RootType.ShouldBe(typeof (LoggerHolder));
+            holders[0].Logger.RootType.ShouldBe(typeof(BuildSessionTarget));
+            holders[1].Logger.RootType.ShouldBe(typeof(LoggerHolder));
         }
 
-        [Test]
+        [Fact]
         public void get_instance_for_a_supplied_instance()
         {
             var container = new Container(x => { x.For<FakeLogger>().Use(c => new FakeLogger(c.RootType)); });
 
             container.GetInstance<ILoggerHolder>(new SmartInstance<LoggerHolder>())
                 .Logger.RootType
-                .ShouldBe(typeof (LoggerHolder));
+                .ShouldBe(typeof(LoggerHolder));
         }
 
-        [Test]
+        [Fact]
         public void get_instance_with_args()
         {
             var container = new Container(x =>
@@ -103,11 +94,10 @@ namespace StructureMap.Testing
             var explicitArguments = new ExplicitArguments();
             explicitArguments.Set<IWidget>(new AWidget());
             container.GetInstance<ILoggerHolder>(explicitArguments)
-                .Logger.RootType.ShouldBe(typeof (WidgetLoggerHolder));
+                .Logger.RootType.ShouldBe(typeof(WidgetLoggerHolder));
         }
 
-
-        [Test]
+        [Fact]
         public void get_instance_with_args_by_name()
         {
             var container = new Container(x =>
@@ -120,10 +110,10 @@ namespace StructureMap.Testing
             var explicitArguments = new ExplicitArguments();
             explicitArguments.Set<IWidget>(new AWidget());
             container.GetInstance<ILoggerHolder>(explicitArguments, "Foo")
-                .Logger.RootType.ShouldBe(typeof (WidgetLoggerHolder));
+                .Logger.RootType.ShouldBe(typeof(WidgetLoggerHolder));
         }
 
-        [Test]
+        [Fact]
         public void inside_a_func()
         {
             var container = new Container(x =>
@@ -133,7 +123,7 @@ namespace StructureMap.Testing
             });
 
             container.GetInstance<LazyLoggerHolderHolder>()
-                .Logger.RootType.ShouldBe(typeof (LoggerHolder));
+                .Logger.RootType.ShouldBe(typeof(LoggerHolder));
         }
     }
 
@@ -213,7 +203,6 @@ namespace StructureMap.Testing
             get { return _rootType; }
         }
     }
-
 
     public static class LogManager
     {

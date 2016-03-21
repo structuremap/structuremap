@@ -1,40 +1,29 @@
-using System;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class ConstructorInstanceTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
-        [Test]
+        [Fact]
         public void to_dependency_source()
         {
             var instance = ConstructorInstance.For<StubbedGateway>();
-            var source = instance.ToDependencySource(typeof (IGateway))
+            var source = instance.ToDependencySource(typeof(IGateway))
                 .ShouldBeOfType<LifecycleDependencySource>();
 
             source.Instance.ShouldBe(instance);
-            source.PluginType.ShouldBe(typeof (IGateway));
+            source.PluginType.ShouldBe(typeof(IGateway));
         }
 
-        [Test]
+        [Fact]
         public void set_and_get_a_collection()
         {
             var container = new Container(x =>
@@ -56,11 +45,10 @@ namespace StructureMap.Testing.Pipeline
             widgets[2].ShouldBeOfType<AWidget>();
         }
 
-        [Test]
+        [Fact]
         public void constructor_instance_picks_up_InstanceAttributes()
         {
-            var instance = new ConstructorInstance(typeof (ClassWithInstanceAttributes));
-
+            var instance = new ConstructorInstance(typeof(ClassWithInstanceAttributes));
 
             instance.Name.ShouldBe("Steve Bono"); // hey, he had a couple good years for awhile
             instance.Interceptors.Single()

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Linq.Expressions;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building;
 using StructureMap.Testing.Widget3;
+using System;
+using System.Linq.Expressions;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class TryCatchWrapperTester
     {
         private ConstantExpression good;
@@ -19,8 +18,7 @@ namespace StructureMap.Testing.Building
         private BlockExpression badVoid;
         private BlockExpression badSmVoid;
 
-        [SetUp]
-        public void SetUp()
+        public TryCatchWrapperTester()
         {
             good = Expression.Constant("I am good");
 
@@ -41,7 +39,7 @@ namespace StructureMap.Testing.Building
             badSmVoid = Expression.Block(Expression.Throw(Expression.Constant(smEx)));
         }
 
-        [Test]
+        [Fact]
         public void no_return_happy_type()
         {
             var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", null, goodVoid, "okay");
@@ -50,7 +48,7 @@ namespace StructureMap.Testing.Building
             action();
         }
 
-        [Test]
+        [Fact]
         public void no_return_sad_path_with_generic_exception()
         {
             var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", null, badVoid, "okay");
@@ -60,7 +58,7 @@ namespace StructureMap.Testing.Building
                 .InnerException.ShouldBeTheSameAs(genericEx);
         }
 
-        [Test]
+        [Fact]
         public void no_return_sad_path_with_structuremapexception()
         {
             var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", null, badSmVoid, "okay");
@@ -69,25 +67,22 @@ namespace StructureMap.Testing.Building
             Exception<StructureMapException>.ShouldBeThrownBy(() => { action(); }).ShouldBeTheSameAs(smEx);
         }
 
-
-        [Test]
+        [Fact]
         public void wrap_against_a_successful_expression_by_IDescribed()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof (string), good,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), good,
                 new StubbedDescribed("my description"));
-
 
             var func = Expression.Lambda<Func<string>>(wrapped).Compile();
 
             func().ShouldBe("I am good");
         }
 
-        [Test]
+        [Fact]
         public void wrap_against_a_failed_generic_exception_by_IDescribed()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof (string), throwGeneral,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), throwGeneral,
                 new StubbedDescribed("my description"));
-
 
             var func = Expression.Lambda<Func<string>>(wrapped).Compile();
 
@@ -98,12 +93,11 @@ namespace StructureMap.Testing.Building
             ex.InnerException.ShouldBeTheSameAs(genericEx);
         }
 
-        [Test]
+        [Fact]
         public void wrap_against_a_failed_StructureMapException_by_IDescribed()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof (string), throwSM,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), throwSM,
                 new StubbedDescribed("my description"));
-
 
             var func = Expression.Lambda<Func<string>>(wrapped).Compile();
 
@@ -114,24 +108,22 @@ namespace StructureMap.Testing.Building
             ex.ShouldBeTheSameAs(smEx);
         }
 
-        [Test]
+        [Fact]
         public void wrap_against_a_successful_expression_by_expression_description()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof (string), good,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), good,
                 () => "some description");
-
 
             var func = Expression.Lambda<Func<string>>(wrapped).Compile();
 
             func().ShouldBe("I am good");
         }
 
-        [Test]
+        [Fact]
         public void wrap_against_a_failed_generic_exception_by_expression_description()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof (string), throwGeneral,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), throwGeneral,
                 () => "some description");
-
 
             var func = Expression.Lambda<Func<string>>(wrapped).Compile();
 
@@ -142,12 +134,11 @@ namespace StructureMap.Testing.Building
             ex.InnerException.ShouldBeTheSameAs(genericEx);
         }
 
-        [Test]
+        [Fact]
         public void wrap_against_a_failed_StructureMapException_by_expression_description()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof (string), throwSM,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), throwSM,
                 () => "some description");
-
 
             var func = Expression.Lambda<Func<string>>(wrapped).Compile();
 
@@ -157,24 +148,22 @@ namespace StructureMap.Testing.Building
             ex.ShouldBeTheSameAs(smEx);
         }
 
-        [Test]
+        [Fact]
         public void wrap_against_a_successful_expression_by_string_description()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof (string), good,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), good,
                 "some description");
-
 
             var func = Expression.Lambda<Func<string>>(wrapped).Compile();
 
             func().ShouldBe("I am good");
         }
 
-        [Test]
+        [Fact]
         public void wrap_against_a_failed_generic_exception_by_string_description()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof (string), throwGeneral,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), throwGeneral,
                 "some description");
-
 
             var func = Expression.Lambda<Func<string>>(wrapped).Compile();
 
@@ -185,12 +174,11 @@ namespace StructureMap.Testing.Building
             ex.InnerException.ShouldBeTheSameAs(genericEx);
         }
 
-        [Test]
+        [Fact]
         public void wrap_against_a_failed_StructureMapException_by_string_description()
         {
-            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof (string), throwSM,
+            var wrapped = TryCatchWrapper.WrapFunc<FakeStructureMapException>("bad!", typeof(string), throwSM,
                 "some description");
-
 
             var func = Expression.Lambda<Func<string>>(wrapped).Compile();
 

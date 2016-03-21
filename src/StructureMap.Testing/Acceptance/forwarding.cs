@@ -1,23 +1,23 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class forwarding
     {
         // SAMPLE: forwarding-sample-types
         public interface IWriter { }
+
         public interface IReader { }
 
         public class StatefulCache : IReader, IWriter
         {
-            
         }
+
         // ENDSAMPLE
 
         // SAMPLE: forwarding-in-action
-        [Test]
+        [Fact]
         public void stateful_cache_serves_multiple_interfaces()
         {
             var container = new Container(_ =>
@@ -29,14 +29,14 @@ namespace StructureMap.Testing.Acceptance
                 _.Forward<StatefulCache, IWriter>();
             });
 
-
             container.GetInstance<IReader>().ShouldBeOfType<StatefulCache>();
             container.GetInstance<IWriter>().ShouldBeOfType<StatefulCache>();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: forward-without-forward
-        [Test]
+        [Fact]
         public void equivalent()
         {
             var container = new Container(_ =>
@@ -51,6 +51,7 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<IReader>().ShouldBeOfType<StatefulCache>();
             container.GetInstance<IWriter>().ShouldBeOfType<StatefulCache>();
         }
+
         // ENDSAMPLE
     }
 }

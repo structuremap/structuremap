@@ -1,23 +1,13 @@
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class ReferencedInstanceTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
         public interface IReferenced
         {
         }
@@ -26,8 +16,7 @@ namespace StructureMap.Testing.Pipeline
         {
         }
 
-
-        [Test]
+        [Fact]
         public void GetDescription()
         {
             var theReferenceKey = "theReferenceKey";
@@ -36,14 +25,14 @@ namespace StructureMap.Testing.Pipeline
             instance.Description.ShouldBe("\"theReferenceKey\"");
         }
 
-        [Test]
+        [Fact]
         public void to_dependency_source()
         {
             var theReferenceKey = "theReferenceKey";
             var instance = new ReferencedInstance(theReferenceKey);
 
-            instance.ToDependencySource(typeof (IGateway))
-                .ShouldBe(new ReferencedDependencySource(typeof (IGateway), theReferenceKey));
+            instance.ToDependencySource(typeof(IGateway))
+                .ShouldBe(new ReferencedDependencySource(typeof(IGateway), theReferenceKey));
         }
     }
 }

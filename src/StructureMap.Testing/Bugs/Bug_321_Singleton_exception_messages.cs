@@ -1,12 +1,11 @@
-﻿using NUnit.Framework;
-using StructureMap.Building;
+﻿using StructureMap.Building;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_321_Singleton_exception_messages
     {
-        [Test]
+        [Fact]
         public void make_it_happen()
         {
             var container = new Container(_ => { _.ForSingletonOf<SingleGuy>().Use<SingleGuy>(); });

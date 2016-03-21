@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Graph;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_338
     {
         public abstract class ParentClass
@@ -18,7 +17,7 @@ namespace StructureMap.Testing.Bugs
 
         public abstract class OtherChildClass : ParentClass { }
 
-        [Test]
+        [Fact]
         public void be_smart_and_do_not_add_abstract_types()
         {
             var container = new Container(_ =>

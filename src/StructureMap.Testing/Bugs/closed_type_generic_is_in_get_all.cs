@@ -1,10 +1,9 @@
-﻿using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class closed_type_generic_is_in_get_all
     {
         public interface IHandle<T>
@@ -23,12 +22,12 @@ namespace StructureMap.Testing.Bugs
         {
         }
 
-        [Test]
+        [Fact]
         public void works_just_fine()
         {
             var container = new Container(_ =>
             {
-                _.For(typeof (IHandle<>)).Use(typeof (NulloHandle<>));
+                _.For(typeof(IHandle<>)).Use(typeof(NulloHandle<>));
                 _.For<IHandle<MyEvent>>().Use<MyEventHandler>();
             });
 

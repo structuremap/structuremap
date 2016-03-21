@@ -1,20 +1,19 @@
-﻿using System;
+﻿using StructureMap.Building.Interception;
+using StructureMap.Pipeline;
+using StructureMap.TypeRules;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
-using NUnit.Framework;
-using StructureMap.Building.Interception;
-using StructureMap.Pipeline;
-using StructureMap.TypeRules;
+using Xunit;
 
 namespace StructureMap.Testing.Samples.Interception
 {
-    [TestFixture]
     public class Event_Aggregator_Registration
     {
         // SAMPLE: use_the_event_listener_registration
-        [Test]
+        [Fact]
         public void use_the_event_listener_registration()
         {
             var container = new Container(x =>
@@ -32,6 +31,7 @@ namespace StructureMap.Testing.Samples.Interception
 
             listener.Messages.Single().ShouldBeTheSameAs(message);
         }
+
         // ENDSAMPLE
     }
 
@@ -59,7 +59,7 @@ namespace StructureMap.Testing.Samples.Interception
 
         public IEnumerable<IInterceptor> DetermineInterceptors(Type pluginType, Instance instance)
         {
-            if (instance.ReturnedType.FindInterfacesThatClose(typeof (IListener<>)).Any())
+            if (instance.ReturnedType.FindInterfacesThatClose(typeof(IListener<>)).Any())
             {
                 Expression<Action<IContext, object>> register =
                     (c, o) => c.GetInstance<IEventAggregator>().AddListener(o);
@@ -67,6 +67,7 @@ namespace StructureMap.Testing.Samples.Interception
             }
         }
     }
+
     // ENDSAMPLE
 
     public interface IListener
@@ -78,6 +79,7 @@ namespace StructureMap.Testing.Samples.Interception
     {
         void Handle(T message);
     }
+
     // ENDSAMPLE
 
     // SAMPLE: IEventAggregator
@@ -85,12 +87,15 @@ namespace StructureMap.Testing.Samples.Interception
     {
         // Sending messages
         void SendMessage<T>(T message);
+
         void SendMessage<T>() where T : new();
 
         // Explicit registration
         void AddListener(object listener);
+
         void RemoveListener(object listener);
     }
+
     // ENDSAMPLE
 
     public class EventAggregator : IEventAggregator
@@ -130,7 +135,7 @@ namespace StructureMap.Testing.Samples.Interception
             withinLock(() => _listeners.Remove(listener));
         }
 
-        #endregion
+        #endregion IEventAggregator Members
 
         private object[] all()
         {
@@ -175,7 +180,6 @@ namespace StructureMap.Testing.Samples.Interception
         {
             _listeners.RemoveAll(filter);
         }
-
     }
 
     public class FilteredListener<T> : IListener<T>
@@ -196,6 +200,6 @@ namespace StructureMap.Testing.Samples.Interception
             if (_filter(message)) _action(message);
         }
 
-        #endregion
+        #endregion IListener<T> Members
     }
 }

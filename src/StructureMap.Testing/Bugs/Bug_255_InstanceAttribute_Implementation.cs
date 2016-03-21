@@ -1,20 +1,19 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_255_InstanceAttribute_Implementation
     {
-        [Test]
+        [Fact]
         public void smart_instance_respects_the_name_of_the_inner()
         {
             new SmartInstance<ClassWithInstanceAttributes>().Name.ShouldBe("SteveBono");
         }
 
-        [Test]
+        [Fact]
         public void attribute_should_alter_the_concrete_instance_in_explicit_config()
         {
             new SmartInstance<ClassWithInstanceAttributes>().Name.ShouldBe("SteveBono");
@@ -26,7 +25,7 @@ namespace StructureMap.Testing.Bugs
             container.Model.Find<IBase>("SteveBono").ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void attribute_should_alter_the_concrete_instance_in_scanning()
         {
             var container = new Container(x =>

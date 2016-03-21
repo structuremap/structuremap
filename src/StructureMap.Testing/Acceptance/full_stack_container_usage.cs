@@ -1,10 +1,9 @@
-﻿using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class full_stack_container_usage
     {
         public interface IFoo
@@ -23,7 +22,7 @@ namespace StructureMap.Testing.Acceptance
         {
         }
 
-        [Test]
+        [Fact]
         public void builds_all_instances_from_get_all()
         {
             var container = new Container(x =>
@@ -38,11 +37,11 @@ namespace StructureMap.Testing.Acceptance
 
             container.GetAllInstances<IFoo>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AFoo), typeof (BFoo), typeof (CFoo));
+                .ShouldHaveTheSameElementsAs(typeof(AFoo), typeof(BFoo), typeof(CFoo));
         }
 
         // SAMPLE: container-configure
-        [Test]
+        [Fact]
         public void change_default_in_an_existing_container()
         {
             var container = new Container(x => { x.For<IFoo>().Use<AFoo>(); });
@@ -65,7 +64,6 @@ namespace StructureMap.Testing.Acceptance
 
         // ENDSAMPLE
 
-
         public interface IOpen<T>
         {
         }
@@ -78,17 +76,16 @@ namespace StructureMap.Testing.Acceptance
         {
         }
 
-        [Test]
+        [Fact]
         public void change_default_of_generic_method()
         {
-            var container = new Container(x => { x.For(typeof (IOpen<>)).Use(typeof (AOpen<>)); });
+            var container = new Container(x => { x.For(typeof(IOpen<>)).Use(typeof(AOpen<>)); });
 
-            container.Configure(x => { x.For(typeof (IOpen<>)).Use(typeof (BOpen<>)); });
+            container.Configure(x => { x.For(typeof(IOpen<>)).Use(typeof(BOpen<>)); });
 
             container.GetInstance<IOpen<string>>()
                 .ShouldBeOfType<BOpen<string>>();
         }
-
 
         public class GuyWithOpenAndFoo
         {
@@ -102,13 +99,13 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        [Test]
+        [Fact]
         public void auto_resolve_a_concrete_type_with_defaults()
         {
             var container = new Container(x =>
             {
                 x.For<IFoo>().Use<CFoo>();
-                x.For(typeof (IOpen<>)).Use(typeof (BOpen<>));
+                x.For(typeof(IOpen<>)).Use(typeof(BOpen<>));
             });
 
             var guy = container.GetInstance<GuyWithOpenAndFoo>();
@@ -116,21 +113,20 @@ namespace StructureMap.Testing.Acceptance
             guy.Open.ShouldBeOfType<BOpen<string>>();
         }
 
-        [Test]
+        [Fact]
         public void auto_resolve_a_concrete_type_with_defaults_with_the_type()
         {
             var container = new Container(x =>
             {
                 x.For<IFoo>().Use<CFoo>();
-                x.For(typeof (IOpen<>)).Use(typeof (BOpen<>));
+                x.For(typeof(IOpen<>)).Use(typeof(BOpen<>));
             });
 
-            var guy = container.GetInstance(typeof (GuyWithOpenAndFoo))
+            var guy = container.GetInstance(typeof(GuyWithOpenAndFoo))
                 .ShouldBeOfType<GuyWithOpenAndFoo>();
             guy.Foo.ShouldBeOfType<CFoo>();
             guy.Open.ShouldBeOfType<BOpen<string>>();
         }
-
 
         public class GrandChild
         {
@@ -197,7 +193,7 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        [Test]
+        [Fact]
         public void deep_graph()
         {
             var container = new Container(x =>
@@ -219,8 +215,7 @@ namespace StructureMap.Testing.Acceptance
             parent.Child.GrandChild.Name.ShouldBe("Jeremy");
         }
 
-
-        [Test]
+        [Fact]
         public void If_there_is_only_one_instance_of_a_type_use_that_as_default()
         {
             var target = new AFoo();
@@ -231,7 +226,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeTheSameAs(target);
         }
 
-        [Test]
+        [Fact]
         public void get_by_name()
         {
             var container = new Container(x =>

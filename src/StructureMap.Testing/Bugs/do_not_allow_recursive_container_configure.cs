@@ -1,11 +1,10 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class do_not_allow_recursive_container_configure
     {
-        [Test]
+        [Fact]
         public void do_not_allow()
         {
             var container = new Container();

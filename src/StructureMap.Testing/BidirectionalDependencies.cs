@@ -1,16 +1,12 @@
-using System.Diagnostics;
-using NUnit.Framework;
 using StructureMap.Building;
+using System.Diagnostics;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class BidirectionalDependencies
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public BidirectionalDependencies()
         {
             container = new Container(x =>
             {
@@ -23,11 +19,9 @@ namespace StructureMap.Testing
             });
         }
 
-        #endregion
+        private readonly Container container;
 
-        private Container container;
-
-        [Test]
+        [Fact]
         public void do_not_blow_up_with_a_stack_overflow_problem()
         {
             var ex =
@@ -36,7 +30,7 @@ namespace StructureMap.Testing
             ex.Title.ShouldContain("Bi-directional dependency relationship detected!");
         }
 
-        [Test]
+        [Fact]
         public void do_not_blow_up_with_a_stack_overflow_problem_2()
         {
             var ex =
@@ -80,7 +74,6 @@ namespace StructureMap.Testing
         {
         }
     }
-
 
     public interface IBiView
     {

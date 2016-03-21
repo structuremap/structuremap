@@ -1,14 +1,13 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Testing.Widget;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class build_by_lambdas
     {
         // SAMPLE: build-with-lambdas
-        [Test]
+        [Fact]
         public void build_with_lambdas_1()
         {
             var container = new Container(x =>
@@ -40,7 +39,7 @@ namespace StructureMap.Testing.Acceptance
         // ENDSAMPLE
 
         // SAMPLE: build-with-lambdas-in-batch
-        [Test]
+        [Fact]
         public void add_batch_of_lambdas()
         {
             var container = new Container(x =>
@@ -73,7 +72,7 @@ namespace StructureMap.Testing.Acceptance
         // ENDSAMPLE
 
         // SAMPLE: lambdas-as-inline-dependency
-        [Test]
+        [Fact]
         public void as_inline_dependency()
         {
             var container = new Container(x =>
@@ -103,7 +102,6 @@ namespace StructureMap.Testing.Acceptance
                     .Ctor<Rule>()
                     .Is("The Purple One", s => { return s.GetInstance<RuleBuilder>().ForColor("Purple"); });
             });
-
 
             container.GetInstance<RuleHolder>("Red").Rule.ShouldBeOfType<ColorRule>().Color.ShouldBe("Red");
             container.GetInstance<RuleHolder>("Blue").Rule.ShouldBeOfType<ColorRule>().Color.ShouldBe("Blue");

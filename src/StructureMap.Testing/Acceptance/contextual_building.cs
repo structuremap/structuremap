@@ -1,19 +1,15 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
-using Shouldly;
-using StructureMap.Configuration.DSL;
+﻿using Shouldly;
 using StructureMap.Pipeline;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    
-    [TestFixture]
     public class contextual_building
     {
-
         // SAMPLE: Logger-contextual-building
-        [Test]
+        [Fact]
         public void can_happily_use_the_parent_type()
         {
             var container = new Container(x =>
@@ -24,10 +20,11 @@ namespace StructureMap.Testing.Acceptance
             });
 
             var top = container.GetInstance<LoggedClass1>();
-            top.Logger.ParentType.ShouldBe(typeof (LoggedClass1));
-            top.Child.Logger.ParentType.ShouldBe(typeof (LoggedClass2));
-            top.Child.Child.Logger.ParentType.ShouldBe(typeof (LoggedClass3));
+            top.Logger.ParentType.ShouldBe(typeof(LoggedClass1));
+            top.Child.Logger.ParentType.ShouldBe(typeof(LoggedClass2));
+            top.Child.Child.Logger.ParentType.ShouldBe(typeof(LoggedClass3));
         }
+
         // ENDSAMPLE
 
         // SAMPLE: LoggerConvention
@@ -42,7 +39,7 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
-        [Test]
+        [Fact]
         public void use_logger_convention()
         {
             var container = new Container(_ =>
@@ -55,16 +52,9 @@ namespace StructureMap.Testing.Acceptance
             top.Child.Logger.ParentType.ShouldBe(typeof(LoggedClass2));
             top.Child.Child.Logger.ParentType.ShouldBe(typeof(LoggedClass3));
         }
+
         // ENDSAMPLE
     }
-    
-
-
-
-
-
-
-
 
     // SAMPLE: LoggerFactory
     public static class LoggerFactory
@@ -74,8 +64,8 @@ namespace StructureMap.Testing.Acceptance
             return new Logger(type);
         }
     }
-    // ENDSAMPLE
 
+    // ENDSAMPLE
 
     public class LoggedClass1
     {

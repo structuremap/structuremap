@@ -1,18 +1,18 @@
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Graph.Scanning;
 using StructureMap.Testing.DocumentationExamples;
+using StructureMap.Testing.ExeWidget;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using StructureMap.Testing.Widget5;
 using StructureMap.TypeRules;
-using StructureMap.Testing.ExeWidget;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
@@ -33,35 +33,34 @@ namespace StructureMap.Testing.Graph
         }
     }
 
-    [TestFixture]
-    public class AssemblyScannerTester
+    public class AssemblyScannerTesterFixture
     {
-        #region Setup/Teardown
+        public AssemblyScannerTesterFixture()
+        {
+            var binFolder = Path.GetDirectoryName(GetType().Assembly.Location);
+            AssemblyScanningFolder = Path.Combine(binFolder, "DynamicallyLoaded");
+            if (!Directory.Exists(AssemblyScanningFolder)) Directory.CreateDirectory(AssemblyScanningFolder);
 
-        [SetUp]
-        public void SetUp()
+            var assembly1 = typeof(RedGreenRegistry).Assembly.Location;
+            var assembly2 = typeof(IWorker).Assembly.Location;
+            var assembly3 = typeof(IDefinedInExe).Assembly.Location;
+
+            File.Copy(assembly1, Path.Combine(AssemblyScanningFolder, Path.GetFileName(assembly1)), true);
+            File.Copy(assembly2, Path.Combine(AssemblyScanningFolder, Path.GetFileName(assembly2)), true);
+            File.Copy(assembly3, Path.Combine(AssemblyScanningFolder, Path.GetFileName(assembly3)), true);
+        }
+
+        public string AssemblyScanningFolder { get; private set; }
+    }
+
+    public class AssemblyScannerTester : IClassFixture<AssemblyScannerTesterFixture>
+    {
+        public AssemblyScannerTester(AssemblyScannerTesterFixture assemblyScannerTesterFixture)
         {
             TestingRegistry.Reset();
 
             theGraph = null;
-        }
-
-        #endregion
-
-        [TestFixtureSetUp]
-        public void FixtureSetUp()
-        {
-            var binFolder = Path.GetDirectoryName(GetType().Assembly.Location);
-            assemblyScanningFolder = Path.Combine(binFolder, "DynamicallyLoaded");
-            if (!Directory.Exists(assemblyScanningFolder)) Directory.CreateDirectory(assemblyScanningFolder);
-
-            var assembly1 = typeof (RedGreenRegistry).Assembly.Location;
-            var assembly2 = typeof (IWorker).Assembly.Location;
-            var assembly3 = typeof(IDefinedInExe).Assembly.Location;
-
-            File.Copy(assembly1, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly1)), true);
-            File.Copy(assembly2, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly2)), true);
-            File.Copy(assembly3, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly3)), true);
+            assemblyScanningFolder = assemblyScannerTesterFixture.AssemblyScanningFolder;
         }
 
         private PluginGraph theGraph;
@@ -78,7 +77,6 @@ namespace StructureMap.Testing.Graph
                 scan.Convention<FakeConvention>();
             });
 
-
             var builder = new PluginGraphBuilder();
             builder.Add(registry);
             theGraph = builder.Build();
@@ -94,27 +92,27 @@ namespace StructureMap.Testing.Graph
 
         private void shouldHaveFamily<T>()
         {
-            theGraph.Families.Has(typeof (T)).ShouldBeTrue();
+            theGraph.Families.Has(typeof(T)).ShouldBeTrue();
         }
 
         private void shouldNotHaveFamily<T>()
         {
-            theGraph.Families.Has(typeof (T)).ShouldBeFalse();
+            theGraph.Families.Has(typeof(T)).ShouldBeFalse();
         }
 
         private void shouldHaveFamilyWithSameName<T>()
         {
             // The Types may not be "Equal" if their assemblies were loaded in different load contexts (.LoadFrom)
             // so we will consider them equal if their names match.
-            theGraph.Families.Any(family => family.PluginType.FullName == typeof (T).FullName).ShouldBeTrue();
+            theGraph.Families.Any(family => family.PluginType.FullName == typeof(T).FullName).ShouldBeTrue();
         }
 
         private void shouldNotHaveFamilyWithSameName<T>()
         {
-            theGraph.Families.Any(family => family.PluginType.FullName == typeof (T).FullName).ShouldBeFalse();
+            theGraph.Families.Any(family => family.PluginType.FullName == typeof(T).FullName).ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void is_in_namespace()
         {
             GetType().IsInNamespace("blah").ShouldBeFalse();
@@ -133,15 +131,15 @@ namespace StructureMap.Testing.Graph
             _person.GetType().IsInNamespace("foo").ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void class_outside_namespace_doesnt_match_any_namespace_check()
         {
-            typeof (class_outside_namespace).IsInNamespace("blah").ShouldBeFalse();
-            typeof (class_outside_namespace).IsInNamespace("StructureMap").ShouldBeFalse();
+            typeof(class_outside_namespace).IsInNamespace("blah").ShouldBeFalse();
+            typeof(class_outside_namespace).IsInNamespace("StructureMap").ShouldBeFalse();
         }
 
         // SAMPLE: scan-filesystem
-        [Test]
+        [Fact]
         public void scan_all_assemblies_in_a_folder()
         {
             Scan(x => x.AssembliesFromPath(assemblyScanningFolder));
@@ -150,7 +148,7 @@ namespace StructureMap.Testing.Graph
             shouldNotHaveFamilyWithSameName<IDefinedInExe>();
         }
 
-        [Test]
+        [Fact]
         public void scan_all_assemblies_in_application_base_directory()
         {
             Scan(x => x.AssembliesFromApplicationBaseDirectory());
@@ -158,10 +156,11 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamilyWithSameName<IWorker>();
             shouldNotHaveFamilyWithSameName<IDefinedInExe>();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: scan-filesystem-for-exe
-        [Test]
+        [Fact]
         public void scan_all_assemblies_in_a_folder_including_exe()
         {
             Scan(x => x.AssembliesAndExecutablesFromPath(assemblyScanningFolder));
@@ -171,7 +170,7 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamilyWithSameName<IDefinedInExe>();
         }
 
-        [Test]
+        [Fact]
         public void scan_all_assemblies_in_application_base_directory_including_exe()
         {
             Scan(x => x.AssembliesAndExecutablesFromApplicationBaseDirectory());
@@ -180,11 +179,11 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamilyWithSameName<IWorker>();
             shouldHaveFamilyWithSameName<IDefinedInExe>();
         }
+
         // ENDSAMPLE
 
-
         // SAMPLE: scan-calling-assembly
-        [Test]
+        [Fact]
         public void scan_but_ignore_registries_by_default()
         {
             Scan(x => { x.TheCallingAssembly(); });
@@ -194,10 +193,10 @@ namespace StructureMap.Testing.Graph
 
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void scan_specific_assemblies_in_a_folder()
         {
-            var assemblyToSpecificallyExclude = typeof (IWorker).Assembly.GetName().Name;
+            var assemblyToSpecificallyExclude = typeof(IWorker).Assembly.GetName().Name;
             Scan(
                 x =>
                     x.AssembliesFromPath(assemblyScanningFolder,
@@ -207,10 +206,10 @@ namespace StructureMap.Testing.Graph
             shouldNotHaveFamilyWithSameName<IWorker>();
         }
 
-        [Test]
+        [Fact]
         public void scan_specific_assemblies_in_application_base_directory()
         {
-            var assemblyToSpecificallyExclude = typeof (IWorker).Assembly.GetName().Name;
+            var assemblyToSpecificallyExclude = typeof(IWorker).Assembly.GetName().Name;
             Scan(
                 x =>
                     x.AssembliesFromPath(assemblyScanningFolder,
@@ -221,7 +220,7 @@ namespace StructureMap.Testing.Graph
         }
 
         // SAMPLE: scan-for-registries
-        [Test]
+        [Fact]
         public void Search_for_registries_when_explicitly_told()
         {
             Scan(x =>
@@ -235,28 +234,27 @@ namespace StructureMap.Testing.Graph
 
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void use_a_dual_exclude()
         {
             Scan(x =>
             {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
-                x.Exclude(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
-                x.Exclude(type => type == typeof (IInterfaceInWidget5));
+                x.Exclude(type => type == typeof(ITypeThatHasAttributeButIsNotInRegistry));
+                x.Exclude(type => type == typeof(IInterfaceInWidget5));
             });
 
             shouldNotHaveFamily<IInterfaceInWidget5>();
             shouldNotHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
 
-
-        [Test]
+        [Fact]
         public void use_a_dual_exclude2()
         {
             Scan(x =>
             {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
-                x.Exclude(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
+                x.Exclude(type => type == typeof(ITypeThatHasAttributeButIsNotInRegistry));
                 x.Exclude(type => type == GetType());
             });
 
@@ -264,13 +262,13 @@ namespace StructureMap.Testing.Graph
             shouldNotHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
 
-        [Test]
+        [Fact]
         public void use_a_single_exclude()
         {
             Scan(x =>
             {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
-                x.Exclude(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
+                x.Exclude(type => type == typeof(ITypeThatHasAttributeButIsNotInRegistry));
             });
 
             shouldHaveFamily<IInterfaceInWidget5>();
@@ -278,7 +276,7 @@ namespace StructureMap.Testing.Graph
         }
 
         // SAMPLE: scan-exclusions
-        [Test]
+        [Fact]
         public void use_a_single_exclude_of_type()
         {
             Scan(x =>
@@ -291,8 +289,7 @@ namespace StructureMap.Testing.Graph
             shouldNotHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
 
-
-        [Test]
+        [Fact]
         public void use_a_single_exclude2()
         {
             Scan(x =>
@@ -305,8 +302,7 @@ namespace StructureMap.Testing.Graph
             shouldNotHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
 
-
-        [Test]
+        [Fact]
         public void use_a_single_exclude3()
         {
             Scan(x =>
@@ -321,7 +317,7 @@ namespace StructureMap.Testing.Graph
 
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void Use_a_single_include_predicate()
         {
             Scan(x => { x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>(); });
@@ -332,15 +328,14 @@ namespace StructureMap.Testing.Graph
             Scan(x =>
             {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
-                x.Include(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
+                x.Include(type => type == typeof(ITypeThatHasAttributeButIsNotInRegistry));
             });
 
             shouldNotHaveFamily<IInterfaceInWidget5>();
             shouldHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
 
-
-        [Test]
+        [Fact]
         public void Use_a_single_include_predicate_2()
         {
             Scan(x => { x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>(); });
@@ -351,15 +346,14 @@ namespace StructureMap.Testing.Graph
             Scan(x =>
             {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
-                x.IncludeNamespace(typeof (ITypeThatHasAttributeButIsNotInRegistry).Namespace);
+                x.IncludeNamespace(typeof(ITypeThatHasAttributeButIsNotInRegistry).Namespace);
             });
 
             shouldHaveFamily<IInterfaceInWidget5>();
             shouldHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
 
-
-        [Test]
+        [Fact]
         public void Use_a_single_include_predicate_3()
         {
             Scan(x => { x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>(); });
@@ -377,29 +371,27 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
 
-
-        [Test]
+        [Fact]
         public void use_two_predicates_for_includes()
         {
             Scan(x =>
             {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
-                x.Include(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
-                x.Include(type => type == typeof (IInterfaceInWidget5));
+                x.Include(type => type == typeof(ITypeThatHasAttributeButIsNotInRegistry));
+                x.Include(type => type == typeof(IInterfaceInWidget5));
             });
 
             shouldHaveFamily<IInterfaceInWidget5>();
             shouldHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
 
-
-        [Test]
+        [Fact]
         public void use_two_predicates_for_includes2()
         {
             Scan(x =>
             {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
-                x.Include(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
+                x.Include(type => type == typeof(ITypeThatHasAttributeButIsNotInRegistry));
                 x.Include(type => type == GetType());
             });
 
@@ -407,7 +399,6 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
     }
-
 
     public interface IController
     {
@@ -421,13 +412,9 @@ namespace StructureMap.Testing.Graph
     {
     }
 
-    [TestFixture]
     public class when_attaching_types_with_naming_pattern
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public when_attaching_types_with_naming_pattern()
         {
             container = new Container(x =>
             {
@@ -439,11 +426,9 @@ namespace StructureMap.Testing.Graph
             });
         }
 
-        #endregion
-
         private IContainer container;
 
-        [Test]
+        [Fact]
         public void can_find_objects_later_by_name()
         {
             container.GetInstance<IController>("Address")

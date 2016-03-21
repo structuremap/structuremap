@@ -1,13 +1,12 @@
-﻿using System.Linq;
-using NestedLibrary;
-using NUnit.Framework;
+﻿using NestedLibrary;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_235_for_look_for_registries_through_assemblies
     {
-        [Test]
+        [Fact]
         public void look_for_registries_fires_assembly_scanning_in_child()
         {
             var container = new Container(x =>

@@ -1,19 +1,16 @@
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Query
 {
-    [TestFixture]
     public class ClosedTypeConfigurationIntegrationTester
     {
-        #region Setup/Teardown
-
         public interface IAutomobile
         {
         }
@@ -26,8 +23,7 @@ namespace StructureMap.Testing.Query
         {
         }
 
-        [SetUp]
-        public void SetUp()
+        public ClosedTypeConfigurationIntegrationTester()
         {
             container = new Container(x =>
             {
@@ -45,24 +41,22 @@ namespace StructureMap.Testing.Query
             });
         }
 
-        #endregion
-
         private Container container;
 
-        [Test]
+        [Fact]
         public void build_when_the_cast_does_not_work()
         {
             var configuration = container.Model.For<IWidget>();
             configuration.Default.Get<Rule>().ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void build_when_the_cast_does_work()
         {
             container.Model.For<IWidget>().Default.Get<IWidget>().ShouldBeOfType<AWidget>();
         }
 
-        [Test]
+        [Fact]
         public void building_respects_the_lifecycle()
         {
             var widget1 = container.Model.For<IWidget>().Default.Get<IWidget>();
@@ -71,13 +65,13 @@ namespace StructureMap.Testing.Query
             widget1.ShouldBeTheSameAs(widget2);
         }
 
-        [Test]
+        [Fact]
         public void can_iterate_over_the_children_instances()
         {
             container.Model.InstancesOf<Rule>().Count().ShouldBe(3);
         }
 
-        [Test]
+        [Fact]
         public void eject_a_singleton()
         {
             var widget1 = container.GetInstance<IWidget>();
@@ -88,59 +82,58 @@ namespace StructureMap.Testing.Query
             container.GetInstance<IWidget>().ShouldNotBeTheSameAs(widget1);
         }
 
-        [Test]
+        [Fact]
         public void eject_a_singleton_that_has_not_been_created_does_no_harm()
         {
             container.Model.For<IWidget>().Default.EjectObject();
         }
 
-        [Test]
+        [Fact]
         public void eject_a_transient_does_no_harm()
         {
             container.Model.For<IEngine>().Default.EjectObject();
         }
 
-        [Test]
+        [Fact]
         public void eject_and_remove_an_instance_by_filter_should_remove_it_from_the_model()
         {
             var iRef = container.Model.For<Rule>().Instances.First();
             container.Model.For<Rule>().EjectAndRemove(x => x.Name == iRef.Name);
 
             container.Model.For<Rule>().Instances.Select(x => x.ReturnedType)
-                .ShouldHaveTheSameElementsAs(typeof (ARule), typeof (ColorRule));
+                .ShouldHaveTheSameElementsAs(typeof(ARule), typeof(ColorRule));
 
             container.GetAllInstances<Rule>().Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (ARule), typeof (ColorRule));
+                .ShouldHaveTheSameElementsAs(typeof(ARule), typeof(ColorRule));
         }
 
-        [Test]
+        [Fact]
         public void eject_and_remove_an_instance_should_remove_it_from_the_model()
         {
             var iRef = container.Model.For<Rule>().Instances.First();
             container.Model.For<Rule>().EjectAndRemove(iRef);
 
             container.Model.For<Rule>().Instances.Select(x => x.ReturnedType)
-                .ShouldHaveTheSameElementsAs(typeof (ARule), typeof (ColorRule));
+                .ShouldHaveTheSameElementsAs(typeof(ARule), typeof(ColorRule));
 
             container.GetAllInstances<Rule>().Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (ARule), typeof (ColorRule));
+                .ShouldHaveTheSameElementsAs(typeof(ARule), typeof(ColorRule));
         }
 
-
-        [Test]
+        [Fact]
         public void eject_and_remove_an_instance_should_remove_it_from_the_model_by_name()
         {
             var iRef = container.Model.For<Rule>().Instances.First();
             container.Model.For<Rule>().EjectAndRemove(iRef.Name);
 
             container.Model.For<Rule>().Instances.Select(x => x.ReturnedType)
-                .ShouldHaveTheSameElementsAs(typeof (ARule), typeof (ColorRule));
+                .ShouldHaveTheSameElementsAs(typeof(ARule), typeof(ColorRule));
 
             container.GetAllInstances<Rule>().Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (ARule), typeof (ColorRule));
+                .ShouldHaveTheSameElementsAs(typeof(ARule), typeof(ColorRule));
         }
 
-        [Test]
+        [Fact]
         public void eject_for_a_transient_type_in_a_container_should_be_tracked()
         {
             var nested = container.GetNestedContainer();
@@ -159,26 +152,26 @@ namespace StructureMap.Testing.Query
             nested.GetInstance<IEngine>().ShouldNotBeTheSameAs(engine1);
         }
 
-        [Test]
+        [Fact]
         public void get_default_should_return_null_when_it_does_not_exist()
         {
             container.Model.For<Rule>().Default.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void get_default_when_it_exists()
         {
-            container.Model.For<IWidget>().Default.ReturnedType.ShouldBe(typeof (AWidget));
+            container.Model.For<IWidget>().Default.ReturnedType.ShouldBe(typeof(AWidget));
         }
 
-        [Test]
+        [Fact]
         public void get_lifecycle()
         {
             container.Model.For<IWidget>().Lifecycle.ShouldBeOfType<SingletonLifecycle>();
             container.Model.For<Rule>().Lifecycle.ShouldBeOfType<TransientLifecycle>();
         }
 
-        [Test]
+        [Fact]
         public void has_been_created_for_a_purely_transient_object_should_always_be_false()
         {
             container.Model.For<IEngine>().Default.ObjectHasBeenCreated().ShouldBeFalse();
@@ -188,7 +181,7 @@ namespace StructureMap.Testing.Query
             container.Model.For<IEngine>().Default.ObjectHasBeenCreated().ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void has_been_created_for_a_singleton()
         {
             container.Model.For<IWidget>().Default.ObjectHasBeenCreated().ShouldBeFalse();
@@ -196,7 +189,7 @@ namespace StructureMap.Testing.Query
             container.Model.For<IWidget>().Default.ObjectHasBeenCreated().ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void has_been_created_for_a_transient_type_in_a_container_should_be_tracked()
         {
             var nested = container.GetNestedContainer();
@@ -208,13 +201,13 @@ namespace StructureMap.Testing.Query
             nested.Model.For<IEngine>().Default.ObjectHasBeenCreated().ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void has_implementations_negative_test()
         {
             container.Model.For<IAutomobile>().HasImplementations().ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void has_implementations_positive_test()
         {
             container.Model.For<Rule>().HasImplementations().ShouldBeTrue();

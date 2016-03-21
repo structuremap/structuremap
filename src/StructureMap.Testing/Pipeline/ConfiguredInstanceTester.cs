@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Configuration.DSL;
@@ -9,16 +7,14 @@ using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
+using System.Collections.Generic;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class ConfiguredInstanceTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public ConfiguredInstanceTester()
         {
             var registry = new Registry();
             registry.For<Rule>();
@@ -33,10 +29,7 @@ namespace StructureMap.Testing.Pipeline
             _session = BuildSession.ForPluginGraph(graph);
         }
 
-        #endregion
-
         private BuildSession _session;
-
 
         public List<string> prop1 { get; set; }
         public IGateway[] gateways { get; set; }
@@ -58,17 +51,16 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-        [Test]
+        [Fact]
         public void can_build_a_simple_class_type()
         {
-            var instance = new ConfiguredInstance(typeof (Rule1));
+            var instance = new ConfiguredInstance(typeof(Rule1));
             var rule = instance.Build<Rule>(_session);
             rule.ShouldNotBeNull();
             rule.ShouldBeOfType<Rule1>();
         }
 
-
-        [Test]
+        [Fact]
         public void build_with_a_missing_dependency_throws_configuration_exception()
         {
             var instance = ComplexRule.GetInstance();
@@ -78,24 +70,22 @@ namespace StructureMap.Testing.Pipeline
                 () => { instance.As<Instance>().Build<Rule>(_session); });
         }
 
-        [Test]
+        [Fact]
         public void can_use_a_configured_instance_with_generic_template_type_and_arguments()
         {
-            var instance = new ConfiguredInstance(typeof (Service2<>), typeof (string));
+            var instance = new ConfiguredInstance(typeof(Service2<>), typeof(string));
             var container = new Container();
 
-            container.GetInstance<IService<string>>(instance).ShouldBeOfType(typeof (Service2<string>));
+            container.GetInstance<IService<string>>(instance).ShouldBeOfType(typeof(Service2<string>));
         }
 
-
-        [Test]
+        [Fact]
         public void setter_with_primitive_happy_path()
         {
-            var instance = new ConfiguredInstance(typeof (ColorRule))
+            var instance = new ConfiguredInstance(typeof(ColorRule))
                 .Ctor<string>("color").Is("Red").Setter<int>("Age").Is(34);
 
             IConfiguredInstance configuredInstance = instance;
-
 
             configuredInstance.Dependencies.Get("color").ShouldBe("Red");
             configuredInstance.Dependencies.Get("Age").ShouldBe(34);
@@ -104,7 +94,7 @@ namespace StructureMap.Testing.Pipeline
             configuredInstance.Dependencies.Get("color").ShouldBe("Blue");
         }
 
-        [Test]
+        [Fact]
         public void HasProperty_for_child()
         {
             var instance = new ConfiguredInstance(GetType());
@@ -116,8 +106,7 @@ namespace StructureMap.Testing.Pipeline
             configuredInstance.Dependencies.Has("prop1").ShouldBeTrue();
         }
 
-
-        [Test]
+        [Fact]
         public void HasProperty_for_child_array()
         {
             var instance = new ConfiguredInstance(GetType());
@@ -129,8 +118,7 @@ namespace StructureMap.Testing.Pipeline
             configuredInstance.Dependencies.Has("prop1").ShouldBeTrue();
         }
 
-
-        [Test]
+        [Fact]
         public void TestComplexRule()
         {
             var instance = ComplexRule.GetInstance().As<Instance>();
@@ -140,11 +128,10 @@ namespace StructureMap.Testing.Pipeline
             rule.ShouldBeOfType<ComplexRule>();
         }
 
-
-        [Test]
+        [Fact]
         public void build_fails_with_StructureMapException_adds_context()
         {
-            var instance = new ConfiguredInstance(typeof (ClassThatBlowsUp));
+            var instance = new ConfiguredInstance(typeof(ClassThatBlowsUp));
 
             var actual =
                 Exception<StructureMapBuildException>.ShouldBeThrownBy(() => { instance.Build<ClassThatBlowsUp>(); });
@@ -161,7 +148,7 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-        [Test]
+        [Fact]
         public void use_the_setter_function()
         {
             var theRule = new ARule();
@@ -170,7 +157,7 @@ namespace StructureMap.Testing.Pipeline
                 new Container(
                     x =>
                     {
-                        x.For(typeof (ClassWithDependency)).Use(typeof (ClassWithDependency)).Setter<Rule>().Is(
+                        x.For(typeof(ClassWithDependency)).Use(typeof(ClassWithDependency)).Setter<Rule>().Is(
                             theRule);
                     });
 

@@ -1,14 +1,13 @@
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget4;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class FillDependenciesTester
     {
-        [Test]
+        [Fact]
         public void CanFillDependenciesSuccessfully()
         {
             var container = new Container(x =>
@@ -18,35 +17,33 @@ namespace StructureMap.Testing.Graph
             });
 
             var concreteClass =
-                (FilledConcreteClass) container.GetInstance(typeof (FilledConcreteClass));
+                (FilledConcreteClass)container.GetInstance(typeof(FilledConcreteClass));
 
             concreteClass.Widget.ShouldNotBeNull();
             concreteClass.Strategy.ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void TryToFillDependenciesOnAbstractClassThrowsException()
         {
             var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() =>
             {
                 var container = new Container();
-                container.GetInstance(typeof (AbstractClass));
+                container.GetInstance(typeof(AbstractClass));
             });
 
             ex.Title.ShouldBe(
                 "No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.AbstractClass'");
         }
 
-
-        [Test]
+        [Fact]
         public void TryToFillDependenciesOnClassWithPrimitiveArgumentsThrowsException()
         {
             Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(() =>
             {
                 var container = new Container();
-                container.GetInstance(typeof (CannotBeFilledConcreteClass));
+                container.GetInstance(typeof(CannotBeFilledConcreteClass));
             });
-
         }
     }
 

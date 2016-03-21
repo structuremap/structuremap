@@ -1,10 +1,9 @@
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
     public class AddTypesTester
     {
         public interface IAddTypes
@@ -28,7 +27,7 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         // SAMPLE: named-instances-shorthand
-        [Test]
+        [Fact]
         public void A_concrete_type_is_available_by_name_when_it_is_added_by_the_shorthand_mechanism()
         {
             IContainer container = new Container(r => r.For<IAddTypes>().AddInstances(x =>
@@ -46,7 +45,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void A_concrete_type_is_available_when_it_is_added_by_the_shorthand_mechanism()
         {
             IContainer container = new Container(registry =>
@@ -60,11 +59,10 @@ namespace StructureMap.Testing.Configuration.DSL
                 });
             });
 
-
             container.GetAllInstances<IAddTypes>().Count().ShouldBe(4);
         }
 
-        [Test]
+        [Fact]
         public void Make_sure_that_we_dont_double_dip_instances_when_we_register_a_type_with_a_name()
         {
             IContainer container = new Container(r =>

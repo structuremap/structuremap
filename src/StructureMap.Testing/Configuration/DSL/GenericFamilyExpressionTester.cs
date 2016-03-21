@@ -1,13 +1,12 @@
-using System;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
     public class GenericFamilyExpressionTester
     {
         public interface ITarget
@@ -41,7 +40,6 @@ namespace StructureMap.Testing.Configuration.DSL
             }
         }
 
-
         public interface IRepository<T>
         {
             void Save(T subject);
@@ -56,7 +54,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 throw new NotImplementedException();
             }
 
-            #endregion
+            #endregion IRepository<T> Members
         }
 
         public class OfflineRepository<T> : IRepository<T>
@@ -68,34 +66,33 @@ namespace StructureMap.Testing.Configuration.DSL
                 throw new NotImplementedException();
             }
 
-            #endregion
+            #endregion IRepository<T> Members
         }
 
         public class Invoice
         {
         }
 
-        [Test]
+        [Fact]
         public void Add_concrete_type()
         {
             var container =
                 new Container(
-                    r => r.For(typeof (ITarget)).Add(typeof (Target1)));
-
+                    r => r.For(typeof(ITarget)).Add(typeof(Target1)));
 
             container.GetAllInstances<ITarget>()
                 .First()
                 .ShouldBeOfType<Target1>();
         }
 
-        [Test]
+        [Fact]
         public void Add_concrete_type_with_name()
         {
             var container = new Container(r =>
             {
-                r.For(typeof (ITarget)).Add(typeof (Target1)).Named("1");
-                r.For(typeof (ITarget)).Add(typeof (Target2)).Named("2");
-                r.For(typeof (ITarget)).Add(typeof (Target3)).Named("3");
+                r.For(typeof(ITarget)).Add(typeof(Target1)).Named("1");
+                r.For(typeof(ITarget)).Add(typeof(Target2)).Named("2");
+                r.For(typeof(ITarget)).Add(typeof(Target3)).Named("3");
             });
 
             container.GetInstance<ITarget>("1").ShouldBeOfType<Target1>();
@@ -103,27 +100,26 @@ namespace StructureMap.Testing.Configuration.DSL
             container.GetInstance<ITarget>("3").ShouldBeOfType<Target3>();
         }
 
-        [Test]
+        [Fact]
         public void Add_default_by_concrete_type()
         {
             var container =
                 new Container(
-                    r => r.For(typeof (ITarget)).Use(typeof (Target3)));
+                    r => r.For(typeof(ITarget)).Use(typeof(Target3)));
 
             container.GetInstance<ITarget>().ShouldBeOfType<Target3>();
         }
 
-        [Test]
+        [Fact]
         public void Add_default_instance()
         {
             var container =
-                new Container(r => { r.For(typeof (ITarget)).Use(typeof (Target2)); });
+                new Container(r => { r.For(typeof(ITarget)).Use(typeof(Target2)); });
 
             container.GetInstance<ITarget>().ShouldBeOfType<Target2>();
         }
 
-
-        [Test]
+        [Fact]
         public void Add_instance_directly()
         {
             var container = new Container(r => { r.For<ITarget>().Add<Target2>(); });
@@ -132,14 +128,14 @@ namespace StructureMap.Testing.Configuration.DSL
                 .First().ShouldBeOfType<Target2>();
         }
 
-        [Test]
+        [Fact]
         public void Set_caching()
         {
             var registry = new Registry();
-            registry.For(typeof (ITarget), Lifecycles.ThreadLocal);
+            registry.For(typeof(ITarget), Lifecycles.ThreadLocal);
             var graph = registry.Build();
 
-            graph.Families[typeof (ITarget)].Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
+            graph.Families[typeof(ITarget)].Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
     }
 }

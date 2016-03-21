@@ -1,17 +1,13 @@
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Graph;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class TypeFindingTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public TypeFindingTester()
         {
             container = new Container(registry =>
             {
@@ -25,33 +21,29 @@ namespace StructureMap.Testing.Graph
             });
         }
 
-        #endregion
+        private readonly IContainer container;
 
-        private IContainer container;
-
-
-        [Test]
+        [Fact]
         public void FoundTheRightNumberOfInstancesForATypeWithNoPlugins()
         {
             container.GetAllInstances<TypeIWantToFind>().Count()
                 .ShouldBe(3);
         }
 
-        [Test]
+        [Fact]
         public void FoundTheRightNumberOfInstancesForATypeWithNoPlugins2()
         {
             container.GetAllInstances<OtherType>().Count().ShouldBe(2);
         }
 
-        [TestFixture]
         public class when_finding_all_types_implementing_and_open_generic_interface
         {
-            [Test]
+            [Fact]
             public void it_can_find_all_implementations()
             {
                 using (var container = new Container(c => c.Scan(s =>
                 {
-                    s.AddAllTypesOf(typeof (IOpenGeneric<>));
+                    s.AddAllTypesOf(typeof(IOpenGeneric<>));
                     s.TheCallingAssembly();
                 })))
                 {
@@ -61,12 +53,12 @@ namespace StructureMap.Testing.Graph
                 }
             }
 
-            [Test]
+            [Fact]
             public void it_can_override_generic_implementation_with_specific()
             {
                 var container = new Container(c => c.Scan(s =>
                 {
-                    s.AddAllTypesOf(typeof (IOpenGeneric<>));
+                    s.AddAllTypesOf(typeof(IOpenGeneric<>));
                     s.TheCallingAssembly();
                 }));
 
@@ -78,7 +70,6 @@ namespace StructureMap.Testing.Graph
             }
         }
     }
-
 
     public interface TypeIWantToFind
     {

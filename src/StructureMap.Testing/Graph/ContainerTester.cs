@@ -1,19 +1,15 @@
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class ContainerTester : Registry
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public ContainerTester()
         {
             _container = new Container(registry =>
             {
@@ -23,8 +19,6 @@ namespace StructureMap.Testing.Graph
                 registry.For<WidgetMaker>();
             });
         }
-
-        #endregion
 
         private IContainer _container;
 
@@ -57,7 +51,6 @@ namespace StructureMap.Testing.Graph
                 _provider = provider;
             }
 
-
             public IProvider Provider
             {
                 get { return _provider; }
@@ -73,17 +66,17 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<IService>().ShouldBeOfType<ColorService>().Color.ShouldBe(color);
         }
 
-        [Test]
+        [Fact]
         public void can_inject_into_a_running_container()
         {
             var container = new Container();
-            container.Inject(typeof (ISport), new ConstructorInstance(typeof (Football)));
+            container.Inject(typeof(ISport), new ConstructorInstance(typeof(Football)));
 
             container.GetInstance<ISport>()
                 .ShouldBeOfType<Football>();
         }
 
-        [Test]
+        [Fact]
         public void Can_set_profile_name_and_reset_defaults()
         {
             var container = new Container(r =>
@@ -113,21 +106,21 @@ namespace StructureMap.Testing.Graph
             assertColorIs(container, "Orange");
         }
 
-        [Test]
+        [Fact]
         public void CanBuildConcreteTypesThatAreNotPreviouslyRegistered()
         {
             IContainer manager = new Container(
                 registry => registry.For<IProvider>().Use<Provider>());
 
             // Now, have that same Container create a ClassThatUsesProvider.  StructureMap will
-            // see that ClassThatUsesProvider is concrete, determine its constructor args, and build one 
+            // see that ClassThatUsesProvider is concrete, determine its constructor args, and build one
             // for you with the default IProvider.  No other configuration necessary.
             var classThatUsesProvider = manager.GetInstance<ClassThatUsesProvider>();
 
             classThatUsesProvider.Provider.ShouldBeOfType<Provider>();
         }
 
-        [Test]
+        [Fact]
         public void CanBuildConcreteTypesThatAreNotPreviouslyRegisteredWithArgumentsProvided()
         {
             IContainer manager =
@@ -142,8 +135,7 @@ namespace StructureMap.Testing.Graph
             differentProvider.ShouldBeTheSameAs(classThatUsesProvider.Provider);
         }
 
-
-        [Test]
+        [Fact]
         public void can_get_the_default_instance()
         {
             addColorInstance("Red");
@@ -155,35 +147,35 @@ namespace StructureMap.Testing.Graph
             _container.GetInstance<Rule>().ShouldBeOfType<ColorRule>().Color.ShouldBe("Blue");
         }
 
-        [Test]
+        [Fact]
         public void GetInstanceOf3Types()
         {
             addColorInstance("Red");
             addColorInstance("Orange");
             addColorInstance("Blue");
 
-            var rule = _container.GetInstance(typeof (Rule), "Blue") as ColorRule;
+            var rule = _container.GetInstance(typeof(Rule), "Blue") as ColorRule;
             rule.ShouldNotBeNull();
             rule.Color.ShouldBe("Blue");
 
-            var widget = _container.GetInstance(typeof (IWidget), "Red") as ColorWidget;
+            var widget = _container.GetInstance(typeof(IWidget), "Red") as ColorWidget;
             widget.ShouldNotBeNull();
             widget.Color.ShouldBe("Red");
 
-            var maker = _container.GetInstance(typeof (WidgetMaker), "Orange") as ColorWidgetMaker;
+            var maker = _container.GetInstance(typeof(WidgetMaker), "Orange") as ColorWidgetMaker;
             maker.ShouldNotBeNull();
             maker.Color.ShouldBe("Orange");
         }
 
-        [Test]
+        [Fact]
         public void GetMissingType()
         {
             var ex =
                 Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(
-                    () => _container.GetInstance(typeof (string)));
+                    () => _container.GetInstance(typeof(string)));
         }
 
-        [Test]
+        [Fact]
         public void InjectStub_by_name()
         {
             IContainer container = new Container();
@@ -201,80 +193,80 @@ namespace StructureMap.Testing.Graph
             blue.ShouldBeTheSameAs(container.GetInstance<Rule>("Blue"));
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_returns_instance_for_an_open_generic_that_it_can_close()
         {
             var container =
                 new Container(
                     x =>
-                        x.For(typeof (IOpenGeneric<>)).Use(typeof (ConcreteOpenGeneric<>)));
+                        x.For(typeof(IOpenGeneric<>)).Use(typeof(ConcreteOpenGeneric<>)));
             container.TryGetInstance<IOpenGeneric<object>>().ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_returns_null_for_an_open_generic_that_it_cannot_close()
         {
             var container =
                 new Container(
                     x =>
-                        x.For(typeof (IOpenGeneric<>)).Use(typeof (ConcreteOpenGeneric<>)));
+                        x.For(typeof(IOpenGeneric<>)).Use(typeof(ConcreteOpenGeneric<>)));
             container.TryGetInstance<IAnotherOpenGeneric<object>>().ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_ReturnsInstance_WhenTypeFound()
         {
             _container.Configure(c => c.For<IProvider>().Use<Provider>());
-            var instance = _container.TryGetInstance(typeof (IProvider));
-            instance.ShouldBeOfType(typeof (Provider));
+            var instance = _container.TryGetInstance(typeof(IProvider));
+            instance.ShouldBeOfType(typeof(Provider));
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_ReturnsNull_WhenTypeNotFound()
         {
-            var instance = _container.TryGetInstance(typeof (IProvider));
+            var instance = _container.TryGetInstance(typeof(IProvider));
             instance.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstanceViaGeneric_ReturnsInstance_WhenTypeFound()
         {
             _container.Configure(c => c.For<IProvider>().Use<Provider>());
             var instance = _container.TryGetInstance<IProvider>();
-            instance.ShouldBeOfType(typeof (Provider));
+            instance.ShouldBeOfType(typeof(Provider));
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstanceViaGeneric_ReturnsNull_WhenTypeNotFound()
         {
             var instance = _container.TryGetInstance<IProvider>();
             instance.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstanceViaName_ReturnsNull_WhenNotFound()
         {
             addColorInstance("Red");
             addColorInstance("Orange");
             addColorInstance("Blue");
 
-            var rule = _container.TryGetInstance(typeof (Rule), "Yellow");
+            var rule = _container.TryGetInstance(typeof(Rule), "Yellow");
             rule.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstanceViaName_ReturnsTheOutInstance_WhenFound()
         {
             addColorInstance("Red");
             addColorInstance("Orange");
             addColorInstance("Blue");
 
-            var rule = _container.TryGetInstance(typeof (Rule), "Orange");
-            rule.ShouldBeOfType(typeof (ColorRule));
+            var rule = _container.TryGetInstance(typeof(Rule), "Orange");
+            rule.ShouldBeOfType(typeof(ColorRule));
         }
 
         // SAMPLE: TryGetInstanceViaNameAndGeneric_ReturnsInstance_WhenTypeFound
-        [Test]
+        [Fact]
         public void TryGetInstanceViaNameAndGeneric_ReturnsInstance_WhenTypeFound()
         {
             addColorInstance("Red");
@@ -283,11 +275,12 @@ namespace StructureMap.Testing.Graph
 
             // "Orange" exists, so an object should be returned
             var instance = _container.TryGetInstance<Rule>("Orange");
-            instance.ShouldBeOfType(typeof (ColorRule));
+            instance.ShouldBeOfType(typeof(ColorRule));
         }
+
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void TryGetInstanceViaNameAndGeneric_ReturnsNull_WhenTypeNotFound()
         {
             addColorInstance("Red");

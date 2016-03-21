@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class RedirectingTester
     {
-        [Test]
+        [Fact]
         public void can_successfully_redirect()
         {
             var container = new Container(x =>
@@ -22,7 +21,7 @@ namespace StructureMap.Testing.Pipeline
                 .ShouldBeOfType<OneAndTwo>();
         }
 
-        [Test]
+        [Fact]
         public void can_redirect_with_a_singleton()
         {
             var container = new Container(_ =>

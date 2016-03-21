@@ -1,20 +1,10 @@
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class InjectByFuncWithNoPublicConstructors
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
-        [Test]
+        [Fact]
         public void register_with_generic()
         {
             var container =

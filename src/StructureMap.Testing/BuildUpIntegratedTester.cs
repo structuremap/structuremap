@@ -1,9 +1,8 @@
-using NUnit.Framework;
 using StructureMap.Testing.Widget3;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class BuildUpIntegratedTester
     {
         // SAMPLE: using-buildup
@@ -13,10 +12,9 @@ namespace StructureMap.Testing
             public IService Service { get; set; }
         }
 
-        [Test]
+        [Fact]
         public void create_a_setter_rule_and_see_it_applied_in_BuildUp()
         {
-            
             var theGateway = new DefaultGateway();
             var container = new Container(x =>
             {
@@ -30,9 +28,10 @@ namespace StructureMap.Testing
             target.Gateway.ShouldBeTheSameAs(theGateway);
             target.Service.ShouldBeNull();
         }
+
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void create_a_setter_rule_and_see_it_applied_in_BuildUp_through_ObjectFactory()
         {
             var theGateway = new DefaultGateway();
@@ -56,7 +55,7 @@ namespace StructureMap.Testing
             target.Gateway.ShouldBeTheSameAs(theGateway);
         }
 
-        [Test]
+        [Fact]
         public void use_predefined_setter_values_for_buildup()
         {
             var theGateway = new DefaultGateway();
@@ -72,6 +71,4 @@ namespace StructureMap.Testing
             target.Gateway.ShouldBeTheSameAs(theGateway);
         }
     }
-
-
 }

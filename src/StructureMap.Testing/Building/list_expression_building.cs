@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
-using StructureMap.Building;
+﻿using StructureMap.Building;
 using StructureMap.Testing.Widget3;
+using System.Collections.Generic;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class list_expression_building
     {
-        [Test]
+        [Fact]
         public void can_build_with_list_dependency()
         {
             var gateway1 = new StubbedGateway();
@@ -16,7 +15,7 @@ namespace StructureMap.Testing.Building
             var gateway3 = new StubbedGateway();
 
             var build = new ConcreteBuild<GatewayListUser>();
-            var array = new ListDependencySource(typeof (IGateway),
+            var array = new ListDependencySource(typeof(IGateway),
                 Constant.For(gateway1),
                 Constant.For(gateway2),
                 Constant.For(gateway3));

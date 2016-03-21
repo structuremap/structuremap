@@ -1,20 +1,17 @@
-using System;
-using System.Diagnostics;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Query
 {
-    [TestFixture]
     public class ModelIntegrationTester
     {
-        #region Setup/Teardown
-
         public interface IEngine
         {
         }
@@ -23,13 +20,12 @@ namespace StructureMap.Testing.Query
         {
         }
 
-        [SetUp]
-        public void SetUp()
+        public ModelIntegrationTester()
         {
             container = new Container(x =>
             {
-                x.For(typeof (IService<>)).Add(typeof (Service<>));
-                x.For(typeof (IService<>)).Add(typeof (Service2<>));
+                x.For(typeof(IService<>)).Add(typeof(Service<>));
+                x.For(typeof(IService<>)).Add(typeof(Service2<>));
 
                 x.For<IWidget>().Singleton().Use<AWidget>();
                 x.For<Rule>().AddInstances(o =>
@@ -47,11 +43,9 @@ namespace StructureMap.Testing.Query
             });
         }
 
-        #endregion
-
         private Container container;
 
-        [Test]
+        [Fact]
         public void can_iterate_through_families_including_both_generics_and_normal()
         {
             // +1 for "IContainer" itself + Func + Lazy + FuncWithArg
@@ -60,44 +54,44 @@ namespace StructureMap.Testing.Query
             container.Model.PluginTypes.Each(x => Debug.WriteLine(x.PluginType.FullName));
         }
 
-        [Test]
+        [Fact]
         public void can_iterate_through_instances_of_pipeline_graph_for_closed_type_from_model()
         {
             container.Model.InstancesOf<Rule>().Count().ShouldBe(3);
         }
 
-        [Test]
+        [Fact]
         public void can_iterate_through_instances_of_pipeline_graph_for_closed_type_that_is_not_registered()
         {
             container.Model.InstancesOf<IServiceProvider>().Count().ShouldBe(0);
         }
 
-        [Test]
+        [Fact]
         public void can_iterate_through_instances_of_pipeline_graph_for_generics()
         {
-            container.Model.For(typeof (IService<>)).Instances.Count().ShouldBe(2);
+            container.Model.For(typeof(IService<>)).Instances.Count().ShouldBe(2);
         }
 
-        [Test]
+        [Fact]
         public void can_iterate_through_instances_of_pipeline_graph_for_generics_from_model()
         {
-            container.Model.InstancesOf(typeof (IService<>)).Count().ShouldBe(2);
+            container.Model.InstancesOf(typeof(IService<>)).Count().ShouldBe(2);
         }
 
-        [Test]
+        [Fact]
         public void default_type_for_from_the_top()
         {
-            container.Model.DefaultTypeFor<IWidget>().ShouldBe(typeof (AWidget));
+            container.Model.DefaultTypeFor<IWidget>().ShouldBe(typeof(AWidget));
             container.Model.DefaultTypeFor<Rule>().ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void get_all_instances_from_the_top()
         {
             container.Model.AllInstances.Count().ShouldBe(14); // Func/Func+Arg/Lazy are built in
         }
 
-        [Test]
+        [Fact]
         public void get_all_possibles()
         {
             // Startable1 is a SingletonThing
@@ -111,14 +105,12 @@ namespace StructureMap.Testing.Query
                 .Each(x => x.Start());
             // ENDSAMPLE
 
-
-
             allStartables.Each(x => x.WasStarted.ShouldBeTrue());
 
             startable1.WasStarted.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void has_default_implementation_from_the_top()
         {
             container.Model.HasDefaultImplementationFor<IWidget>().ShouldBeTrue();
@@ -126,67 +118,67 @@ namespace StructureMap.Testing.Query
             container.Model.HasDefaultImplementationFor<IServiceProvider>().ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void has_implementation_from_the_top()
         {
             container.Model.HasDefaultImplementationFor<IServiceProvider>().ShouldBeFalse();
             container.Model.HasDefaultImplementationFor<IWidget>().ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void has_implementations_should_be_false_for_a_type_that_is_not_registered()
         {
             container.Model.For<ISomething>().HasImplementations().ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void remove_an_entire_closed_type()
         {
             container.GetAllInstances<Rule>().Count().ShouldBe(3);
-            container.Model.EjectAndRemove(typeof (Rule));
+            container.Model.EjectAndRemove(typeof(Rule));
             container.Model.HasImplementationsFor<Rule>().ShouldBeFalse();
 
             container.TryGetInstance<Rule>().ShouldBeNull();
             container.GetAllInstances<Rule>().Count().ShouldBe(0);
         }
 
-        [Test]
+        [Fact]
         public void remove_an_entire_closed_type_with_the_filter()
         {
-            container.Model.EjectAndRemovePluginTypes(t => t == typeof (Rule) || t == typeof (IWidget));
+            container.Model.EjectAndRemovePluginTypes(t => t == typeof(Rule) || t == typeof(IWidget));
 
             container.Model.HasImplementationsFor<IWidget>().ShouldBeFalse();
             container.Model.HasImplementationsFor<Rule>().ShouldBeFalse();
             container.Model.HasImplementationsFor<IEngine>().ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void remove_an_open_type()
         {
-            container.Model.EjectAndRemove(typeof (IService<>));
+            container.Model.EjectAndRemove(typeof(IService<>));
 
-            container.Model.HasImplementationsFor(typeof (IService<>));
+            container.Model.HasImplementationsFor(typeof(IService<>));
 
             container.TryGetInstance<IService<string>>().ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void remove_an_open_type_with_a_filter()
         {
-            container.Model.EjectAndRemovePluginTypes(t => t == typeof (IService<>));
+            container.Model.EjectAndRemovePluginTypes(t => t == typeof(IService<>));
 
-            container.Model.HasImplementationsFor(typeof (IService<>));
+            container.Model.HasImplementationsFor(typeof(IService<>));
 
             container.TryGetInstance<IService<string>>().ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void remove_types_based_on_a_filter()
         {
             container.GetAllInstances<Rule>().Any(x => x is ARule).ShouldBeTrue();
             container.Model.HasImplementationsFor<IWidget>().ShouldBeTrue();
 
-            container.Model.EjectAndRemoveTypes(t => t == typeof (IWidget) || t == typeof (ARule));
+            container.Model.EjectAndRemoveTypes(t => t == typeof(IWidget) || t == typeof(ARule));
 
             container.GetAllInstances<Rule>().Any(x => x is ARule).ShouldBeFalse();
             container.Model.HasImplementationsFor<IWidget>().ShouldBeFalse();
@@ -197,8 +189,10 @@ namespace StructureMap.Testing.Query
     public interface IStartable
     {
         bool WasStarted { get; }
+
         void Start();
     }
+
     // ENDSAMPLE
 
     public class Startable : IStartable

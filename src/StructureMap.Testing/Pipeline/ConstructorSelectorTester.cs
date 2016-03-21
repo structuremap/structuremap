@@ -1,24 +1,23 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using System;
+using System.Linq;
+using System.Reflection;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class ConstructorSelectorTester
     {
-        [Test]
+        [Fact]
         public void get_the_first_constructor_marked_with_the_attribute_if_it_exists()
         {
             var selector = new ConstructorSelector(PluginGraph.CreateRoot());
 
-            var constructor = selector.Select(typeof (ComplexRule), new DependencyCollection());
+            var constructor = selector.Select(typeof(ComplexRule), new DependencyCollection());
 
             constructor.GetParameters().Length
                 .ShouldBe(7);
@@ -42,11 +41,10 @@ namespace StructureMap.Testing.Pipeline
 
             public GreaterThanRule(IWidget widget, Rule rule)
             {
-                
             }
         }
 
-        [Test]
+        [Fact]
         public void using_the_greediest_ctor()
         {
             var container = new Container(_ =>
@@ -63,29 +61,28 @@ namespace StructureMap.Testing.Pipeline
 
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void should_get_the_greediest_constructor_if_there_is_more_than_one()
         {
             var selector = new ConstructorSelector(PluginGraph.CreateRoot());
-            var constructor = selector.Select(typeof (GreaterThanRule), new DependencyCollection());
+            var constructor = selector.Select(typeof(GreaterThanRule), new DependencyCollection());
 
             constructor.GetParameters().Select(x => x.ParameterType)
-                .ShouldHaveTheSameElementsAs(typeof (IWidget), typeof (Rule));
+                .ShouldHaveTheSameElementsAs(typeof(IWidget), typeof(Rule));
         }
 
-        [Test]
+        [Fact]
         public void custom_selectors_have_precedence()
         {
             var selector = new ConstructorSelector(PluginGraph.CreateRoot());
             selector.Add(new PickTheFirstOne());
 
-            selector.Select(typeof (ClassWithMultipleConstructors), new DependencyCollection())
+            selector.Select(typeof(ClassWithMultipleConstructors), new DependencyCollection())
                 .GetParameters().Select(x => x.ParameterType)
-                .ShouldHaveTheSameElementsAs(typeof (IGateway));
+                .ShouldHaveTheSameElementsAs(typeof(IGateway));
         }
 
-
-        [Test]
+        [Fact]
         public void integration_test_with_custom_rule_in_container()
         {
             var container = new Container(x =>
@@ -101,7 +98,6 @@ namespace StructureMap.Testing.Pipeline
                 .CtorUsed.ShouldBe("One Arg");
         }
 
-
         public class PickTheFirstOne : IConstructorSelector
         {
             public ConstructorInfo Find(Type pluggedType, DependencyCollection dependencies, PluginGraph graph)
@@ -110,11 +106,9 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-
         public class ClassWithMultipleConstructors
         {
             public string CtorUsed;
-
 
             public ClassWithMultipleConstructors(IGateway gateway)
             {

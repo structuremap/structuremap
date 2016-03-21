@@ -1,8 +1,7 @@
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class PerRequestInterceptorTester
     {
         //Think of this as a data session
@@ -50,7 +49,7 @@ namespace StructureMap.Testing
             public Model2 Model2 { get; set; }
         }
 
-        [Test]
+        [Fact]
         public void TestObjectReturnedAreUnique()
         {
             var container = new Container(

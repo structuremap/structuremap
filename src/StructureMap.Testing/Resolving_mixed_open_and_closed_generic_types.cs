@@ -1,19 +1,18 @@
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class Resolving_mixed_open_and_closed_generic_types
     {
-        [Test]
+        [Fact]
         public void when_only_open_instances_are_present_they_are_resolved()
         {
             var container = new Container(x =>
             {
-                x.For(typeof (INeedAnEntity<>)).Add(typeof (OpenEntityType<>));
-                x.For(typeof (INeedAnEntity<>)).Add(typeof (AnotherOpenEntityType<>));
+                x.For(typeof(INeedAnEntity<>)).Add(typeof(OpenEntityType<>));
+                x.For(typeof(INeedAnEntity<>)).Add(typeof(AnotherOpenEntityType<>));
             });
 
             var instances = container.GetAllInstances<INeedAnEntity<Entity>>().ToArray();
@@ -23,14 +22,14 @@ namespace StructureMap.Testing
             instances[1].GetType().Name.ShouldBe("AnotherOpenEntityType`1");
         }
 
-        [Test]
+        [Fact]
         public void when_a_closed_instance_is_present_only_closed_types_are_resolved()
         {
             var container = new Container(x =>
             {
-                x.For(typeof (INeedAnEntity<>)).Add(typeof (OpenEntityType<>));
-                x.For(typeof (INeedAnEntity<Entity>)).Add(typeof (ClosedEntityType));
-                x.For(typeof (INeedAnEntity<Entity>)).Add(typeof (AnotherClosedEntityType));
+                x.For(typeof(INeedAnEntity<>)).Add(typeof(OpenEntityType<>));
+                x.For(typeof(INeedAnEntity<Entity>)).Add(typeof(ClosedEntityType));
+                x.For(typeof(INeedAnEntity<Entity>)).Add(typeof(AnotherClosedEntityType));
             });
 
             var instances = container.GetAllInstances<INeedAnEntity<Entity>>().ToArray();

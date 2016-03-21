@@ -1,13 +1,12 @@
-using System;
-using NUnit.Framework;
 using Shouldly;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class Func_Typefactory_construction_strategy_Tester
     {
-        [Test]
+        [Fact]
         public void FactoryTemplateTester()
         {
             var container = new Container();
@@ -15,7 +14,7 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<Func<ConcreteClass1, ConcreteClass2>>()(c1).ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void dependency_was_properly_injected()
         {
             var c1 = new ConcreteClass1();
@@ -24,19 +23,19 @@ namespace StructureMap.Testing.Pipeline
             c2.C1.ShouldBeTheSameAs(c1);
         }
 
-        [Test]
+        [Fact]
         public void configuration_is_honored()
         {
             var c = new Container(ce => ce.For<IFoo>().Use<ConcreteClass1>());
             var f = c.GetInstance<Func<IFoo, ConcreteClass3>>();
             f.ShouldNotBeNull();
 
-            var c1 = new ConcreteClass1 {SomeGuid = Guid.NewGuid()};
+            var c1 = new ConcreteClass1 { SomeGuid = Guid.NewGuid() };
             var c3 = f(c1);
             c3.C1.ShouldBeTheSameAs(c1);
         }
 
-        [Test]
+        [Fact]
         public void nothing_special_about_a_string_input()
         {
             var c4 = new Container().GetInstance<Func<double, ConcreteClass4>>()(123.4);

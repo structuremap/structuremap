@@ -1,11 +1,10 @@
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
     public class ProgrammaticConstructorSelectionTester
     {
-        [Test]
+        [Fact]
         public void override_constructor_selection_in_code()
         {
             var container = new Container(x =>
@@ -28,7 +27,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
         public ClassWithTwoConstructors(int age, string name)
         {
-            Assert.Fail("Should not be called");
+            Assert.True(false, "Should not be called");
 
             _age = age;
             _name = name;

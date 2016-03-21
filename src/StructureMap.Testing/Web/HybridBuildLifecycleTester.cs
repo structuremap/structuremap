@@ -1,14 +1,13 @@
-using NUnit.Framework;
 using StructureMap.Testing.DocumentationExamples;
 using StructureMap.Testing.Widget3;
 using StructureMap.Web;
+using Xunit;
 
 namespace StructureMap.Testing.Web
 {
-    [TestFixture]
     public class HybridBuildLifecycleTester
     {
-        [Test]
+        [Fact]
         public void run_without_an_httpcontext()
         {
             var container = new Container(x => x.For<IService>(WebLifecycles.Hybrid).Use<RemoteService>());

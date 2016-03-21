@@ -1,18 +1,13 @@
-using System;
-using NUnit.Framework;
 using Shouldly;
-using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget3;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
     public class InterceptAllInstancesOfPluginTypeTester : Registry
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public InterceptAllInstancesOfPluginTypeTester()
         {
             _lastService = null;
             _manager = null;
@@ -54,8 +49,6 @@ namespace StructureMap.Testing.Configuration.DSL
             });
         }
 
-        #endregion
-
         private IService _lastService;
         private IContainer _manager;
         private Action<Registry> _defaultRegistry;
@@ -74,7 +67,7 @@ namespace StructureMap.Testing.Configuration.DSL
             return _manager.GetInstance<IService>(name);
         }
 
-        [Test]
+        [Fact]
         public void DecorateForAll()
         {
             var green = getService("Green", r =>
@@ -87,7 +80,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .Inner.ShouldBeOfType<ColorService>().Color.ShouldBe("Green");
         }
 
-        [Test]
+        [Fact]
         public void OnStartupForAll()
         {
             Action<Registry> action = registry =>
@@ -95,7 +88,6 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.For<IService>().OnCreationForAll("setting the last service", s => _lastService = s)
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
-
 
             var red = getService("Red", action);
             red.ShouldBeTheSameAs(_lastService);
@@ -111,13 +103,9 @@ namespace StructureMap.Testing.Configuration.DSL
         }
     }
 
-    [TestFixture]
     public class InterceptAllInstancesOfPluginTypeTester_with_SmartInstance : Registry
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public InterceptAllInstancesOfPluginTypeTester_with_SmartInstance()
         {
             _lastService = null;
             _manager = null;
@@ -137,8 +125,6 @@ namespace StructureMap.Testing.Configuration.DSL
                 }));
         }
 
-        #endregion
-
         private IService _lastService;
         private IContainer _manager;
         private Action<Registry> _defaultRegistry;
@@ -157,7 +143,7 @@ namespace StructureMap.Testing.Configuration.DSL
             return _manager.GetInstance<IService>(name);
         }
 
-        [Test]
+        [Fact]
         public void DecorateForAll()
         {
             Action<Registry> action = r =>
@@ -166,16 +152,14 @@ namespace StructureMap.Testing.Configuration.DSL
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
 
-
             var green = getService(action, "Green");
 
-
-            var decoratorService = (DecoratorService) green;
-            var innerService = (ColorService) decoratorService.Inner;
+            var decoratorService = (DecoratorService)green;
+            var innerService = (ColorService)decoratorService.Inner;
             innerService.Color.ShouldBe("Green");
         }
 
-        [Test]
+        [Fact]
         public void OnStartupForAll()
         {
             Action<Registry> action = r =>

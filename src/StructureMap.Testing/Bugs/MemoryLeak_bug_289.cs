@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Shouldly;
+using StructureMap.Pipeline;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using Shouldly;
-using StructureMap.Pipeline;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class MemoryLeak_bug_289
     {
-        [Test]
+        [Fact]
         public void no_longer_tracks_nested_containers_in_parent_scope()
         {
             var container = new Container(x =>

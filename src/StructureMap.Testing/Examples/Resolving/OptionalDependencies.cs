@@ -1,9 +1,8 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing.Examples.Resolving
 {
-    [TestFixture]
     public class OptionalDependencies
     {
         // SAMPLE: optional-foo
@@ -18,7 +17,7 @@ namespace StructureMap.Testing.Examples.Resolving
         // ENDSAMPLE
 
         // SAMPLE: optional-got-it
-        [Test]
+        [Fact]
         public void i_have_got_that()
         {
             var container = new Container(_ => _.For<IFoo>().Use<Foo>());
@@ -28,14 +27,14 @@ namespace StructureMap.Testing.Examples.Resolving
 
             // -- or --
 
-            container.TryGetInstance(typeof (IFoo))
+            container.TryGetInstance(typeof(IFoo))
                 .ShouldNotBeNull();
         }
 
         // ENDSAMPLE
 
         // SAMPLE: optional-dont-got-it
-        [Test]
+        [Fact]
         public void i_do_not_have_that()
         {
             var container = new Container();
@@ -45,7 +44,7 @@ namespace StructureMap.Testing.Examples.Resolving
 
             // -- or --
 
-            container.TryGetInstance(typeof (IFoo))
+            container.TryGetInstance(typeof(IFoo))
                 .ShouldBeNull();
         }
 
@@ -56,7 +55,7 @@ namespace StructureMap.Testing.Examples.Resolving
         {
         }
 
-        [Test]
+        [Fact]
         public void no_auto_resolution_of_concrete_types()
         {
             var container = new Container();
@@ -82,10 +81,10 @@ namespace StructureMap.Testing.Examples.Resolving
         {
         }
 
-        [Test]
+        [Fact]
         public void can_try_get_open_type_resolution()
         {
-            var container = new Container(_ => { _.For(typeof (IThing<>)).Use(typeof (Thing<>)); });
+            var container = new Container(_ => { _.For(typeof(IThing<>)).Use(typeof(Thing<>)); });
 
             container.TryGetInstance<IThing<string>>()
                 .ShouldBeOfType<Thing<string>>();
@@ -98,7 +97,7 @@ namespace StructureMap.Testing.Examples.Resolving
         {
         }
 
-        [Test]
+        [Fact]
         public void real_usage()
         {
             var container = new Container();

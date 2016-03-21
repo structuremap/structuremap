@@ -1,14 +1,13 @@
-﻿using System.Diagnostics;
-using NUnit.Framework;
-using StructureMap.Pipeline;
+﻿using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using System.Diagnostics;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class WhatDoIHave_Smoke_Tester
     {
-        [Test]
+        [Fact]
         public void empty_container()
         {
             // SAMPLE: whatdoihave-simple
@@ -19,7 +18,7 @@ namespace StructureMap.Testing
             // ENDSAMPLE
         }
 
-        [Test]
+        [Fact]
         public void display_one_service_for_an_interface()
         {
             // SAMPLE: what_do_i_have_container
@@ -46,8 +45,7 @@ namespace StructureMap.Testing
             // ENDSAMPLE
         }
 
-
-        [Test]
+        [Fact]
         public void render_the_fallback_instance_if_it_exists()
         {
             var container = new Container(x =>
@@ -73,7 +71,7 @@ namespace StructureMap.Testing
             description.ShouldContain("StructureMap.Testing.VTwelve");
         }
 
-        [Test]
+        [Fact]
         public void render_the_missing_named_instance_if_it_exists()
         {
             var container =
@@ -88,7 +86,7 @@ namespace StructureMap.Testing
             description.ShouldContain("Lambda: new NamedEngine(IContext.RequestedName)");
         }
 
-        [Test]
+        [Fact]
         public void display_one_service_for__a_nested_container()
         {
             var container = new Container(x =>
@@ -108,7 +106,7 @@ namespace StructureMap.Testing
             Debug.WriteLine(container.GetNestedContainer().WhatDoIHave());
         }
 
-        [Test]
+        [Fact]
         public void display_one_service_for__a_profile_container()
         {
             var container = new Container(x =>
@@ -130,7 +128,7 @@ namespace StructureMap.Testing
             Debug.WriteLine(container.GetProfile("Blue").WhatDoIHave());
         }
 
-        [Test]
+        [Fact]
         public void filter_by_assembly()
         {
             var container = new Container(x =>
@@ -150,21 +148,21 @@ namespace StructureMap.Testing
             });
 
             // SAMPLE: whatdoihave-assembly
-            Debug.WriteLine(container.WhatDoIHave(assembly: typeof (IWidget).Assembly));
+            Debug.WriteLine(container.WhatDoIHave(assembly: typeof(IWidget).Assembly));
             // ENDSAMPLE
         }
 
-        [Test]
+        [Fact]
         public void filtering_examples()
         {
             // SAMPLE: whatdoihave-filtering
             var container = new Container();
 
             // Filter by the Assembly of the Plugin Type
-            var byAssembly = container.WhatDoIHave(assembly: typeof (IWidget).Assembly);
+            var byAssembly = container.WhatDoIHave(assembly: typeof(IWidget).Assembly);
 
             // Only report on the specified Plugin Type
-            var byPluginType = container.WhatDoIHave(typeof (IWidget));
+            var byPluginType = container.WhatDoIHave(typeof(IWidget));
 
             // Filter to Plugin Type's in the named namespace
             // The 'IsInNamespace' test will include child namespaces
@@ -176,7 +174,7 @@ namespace StructureMap.Testing
             // ENDSAMPLE
         }
 
-        [Test]
+        [Fact]
         public void filter_by_plugin_type()
         {
             var container = new Container(x =>
@@ -196,11 +194,11 @@ namespace StructureMap.Testing
             });
 
             // SAMPLE: whatdoihave-plugintype
-            Debug.WriteLine(container.WhatDoIHave(typeof (IWidget)));
+            Debug.WriteLine(container.WhatDoIHave(typeof(IWidget)));
             // ENDSAMPLE
         }
 
-        [Test]
+        [Fact]
         public void filter_by_type_name()
         {
             var container = new Container(x =>
@@ -226,7 +224,7 @@ namespace StructureMap.Testing
             // ENDSAMPLE
         }
 
-        [Test]
+        [Fact]
         public void filter_by_namespace()
         {
             var container = new Container(x =>

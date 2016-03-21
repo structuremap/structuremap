@@ -1,18 +1,15 @@
-﻿using System.Linq;
-using System.Windows.Input;
-using NUnit.Framework;
-using Shouldly;
-using StructureMap.Building.Interception;
+﻿using StructureMap.Building.Interception;
 using StructureMap.Graph;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
     // This came from SO: http://stackoverflow.com/questions/32722306/decorator-interception-with-open-generics-in-structuremap-3
 
-    [TestFixture]
     public class OpenGenericDecorator_question
     {
-        [Test]
+        [Fact]
         public void applies_the_decorator()
         {
             var container = new Container(_ =>
@@ -22,7 +19,7 @@ namespace StructureMap.Testing.Bugs
                 {
                     scan.Exclude(type => type == typeof(CommandHandlerLoggingDecorator<>));
                     scan.TheCallingAssembly();
-                    scan.ConnectImplementationsToTypesClosing(typeof (ICommandHandler<>));
+                    scan.ConnectImplementationsToTypesClosing(typeof(ICommandHandler<>));
                 });
             });
 
@@ -46,7 +43,7 @@ namespace StructureMap.Testing.Bugs
     public class CommandHandlerLoggingDecoration : DecoratorPolicy
     {
         public CommandHandlerLoggingDecoration()
-            : base(typeof (ICommandHandler<>), typeof (CommandHandlerLoggingDecorator<>), type => true)
+            : base(typeof(ICommandHandler<>), typeof(CommandHandlerLoggingDecorator<>), type => true)
         {
         }
     }
@@ -69,15 +66,11 @@ namespace StructureMap.Testing.Bugs
     {
     }
 
-
     public class OtherCommand1Handler : ICommandHandler<Command1>
     {
-        
     }
 
     public class YetAnotherCommand1Handler : ICommandHandler<Command1>
     {
-
     }
-
 }

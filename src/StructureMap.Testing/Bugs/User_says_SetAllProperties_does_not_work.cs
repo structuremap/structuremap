@@ -1,12 +1,11 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class User_says_SetAllProperties_does_not_work
     {
-        [Test]
+        [Fact]
         public void try_the_setter_policy()
         {
             var container = new Container(_ =>
@@ -19,7 +18,6 @@ namespace StructureMap.Testing.Bugs
                 .ApiCommunicator.ShouldBeOfType<ApiCommunicatorWindowsAuthentication>();
         }
     }
-
 
     public interface IApiCommunicator
     {

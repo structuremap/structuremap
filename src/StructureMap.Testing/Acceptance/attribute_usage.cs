@@ -1,22 +1,20 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using NUnit.Framework;
-using Shouldly;
-using StructureMap.Graph;
+﻿using Shouldly;
 using StructureMap.Pipeline;
+using System.Diagnostics;
+using System.Reflection;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class attribute_usage
     {
-        [Test]
+        [Fact]
         public void family_type_marked_as_singleton()
         {
             var container = new Container(_ =>
             {
                 _.For<ITeamCache>().Use<TeamCache>();
-                
+
                 // additional ITeamCache
                 _.For<ITeamCache>().Add<OtherTeamCache>();
 
@@ -31,21 +29,20 @@ namespace StructureMap.Testing.Acceptance
                     instance.Lifecycle
                         .ShouldBeOfType<SingletonLifecycle>();
                 });
-                
 
             // ITeam is NOT marked with [Singleton]
             container.Model.For<ITeam>().Lifecycle
                 .ShouldNotBeOfType<SingletonLifecycle>();
         }
 
-        [Test]
+        [Fact]
         public void plugged_type_marked_as_singleton()
         {
             var container = new Container(_ =>
             {
                 _.For<ITeamCache>().Use<TeamCache>();
                 _.For<ITeam>().Use<Chiefs>();
-            }); 
+            });
 
             container.Model.For<ITeam>()
                 .Default
@@ -57,6 +54,7 @@ namespace StructureMap.Testing.Acceptance
         public interface ITeamCache { }
 
         public class TeamCache : ITeamCache { }
+
         public class OtherTeamCache : ITeamCache { }
 
         public interface ITeam { }
@@ -65,16 +63,15 @@ namespace StructureMap.Testing.Acceptance
 
         [Singleton] // This specific type will be a singleton
         public class Chiefs : ITeam { }
+
         // ENDSAMPLE
-
-
 
         public interface ILogger { }
 
         [AlwaysUnique]
         public class NLogLogger : ILogger { }
 
-        [Test]
+        [Fact]
         public void using_the_always_unique_attribute()
         {
             var container = new Container(_ =>
@@ -86,7 +83,6 @@ namespace StructureMap.Testing.Acceptance
                 .Default.Lifecycle
                 .ShouldBeOfType<UniquePerRequestLifecycle>();
         }
-
 
         // SAMPLE: AppSettingAttribute
         public class AppSettingAttribute : StructureMapAttribute
@@ -112,6 +108,7 @@ namespace StructureMap.Testing.Acceptance
                 instance.Dependencies.AddForConstructorParameter(parameter, value);
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: AppSettingTarget
@@ -127,10 +124,11 @@ namespace StructureMap.Testing.Acceptance
                 Name = name;
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: using_parameter_and_property_attibutes
-        [Test]
+        [Fact]
         public void using_parameter_and_property_attibutes()
         {
             System.Configuration.ConfigurationManager.AppSettings["name"] = "Jeremy";
@@ -147,6 +145,7 @@ namespace StructureMap.Testing.Acceptance
 
             Debug.WriteLine(container.Model.For<AppSettingTarget>().Default.DescribeBuildPlan());
         }
+
         // ENDSAMPLE
     }
 
@@ -156,7 +155,6 @@ namespace StructureMap.Testing.Acceptance
 
     [Singleton] // because the most wonderful thing about Tiggers is that I'm the only one....
     public class Tigger { }
-    // ENDSAMPLE
 
-    
+    // ENDSAMPLE
 }

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Reflection;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
+using System;
+using System.Reflection;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Acceptance
 
         public BaseThing(IWidget widget, IService service)
         {
-            Assert.Fail("I should not have been called");
+            Assert.True(false, "I should not have been called");
         }
     }
 
@@ -57,17 +57,16 @@ namespace StructureMap.Testing.Acceptance
             // just return null to denote "not applicable"
             if (!pluggedType.CanBeCastTo<BaseThing>()) return null;
 
-            return pluggedType.GetConstructor(new[] {typeof (IWidget)});
+            return pluggedType.GetConstructor(new[] { typeof(IWidget) });
         }
     }
 
     // ENDSAMPLE
 
-    [TestFixture]
     public class constructor_selection
     {
         // SAMPLE: using-custom-ctor-rule
-        [Test]
+        [Fact]
         public void use_a_custom_constructor_selector()
         {
             var container = new Container(_ =>
@@ -86,7 +85,6 @@ namespace StructureMap.Testing.Acceptance
 
         // ENDSAMPLE
 
-
         // SAMPLE: using-default-ctor-attribute
         public class AttributedThing
         {
@@ -103,11 +101,11 @@ namespace StructureMap.Testing.Acceptance
 
             public AttributedThing(IWidget widget, IService service)
             {
-                Assert.Fail("I should not have been called");
+                Assert.True(false, "I should not have been called");
             }
         }
 
-        [Test]
+        [Fact]
         public void select_constructor_by_attribute()
         {
             var container = new Container(_ => { _.For<IWidget>().Use<AWidget>(); });
@@ -131,11 +129,11 @@ namespace StructureMap.Testing.Acceptance
 
             public Thingie(IWidget widget, IService service)
             {
-                Assert.Fail("I should not have been called");
+                Assert.True(false, "I should not have been called");
             }
         }
 
-        [Test]
+        [Fact]
         public void override_the_constructor_selection()
         {
             var container = new Container(_ =>
@@ -145,7 +143,7 @@ namespace StructureMap.Testing.Acceptance
                 _.ForConcreteType<Thingie>().Configure
 
                     // StructureMap parses the expression passed
-                    // into the method below to determine the 
+                    // into the method below to determine the
                     // constructor
                     .SelectConstructor(() => new Thingie(null));
             });
@@ -157,7 +155,6 @@ namespace StructureMap.Testing.Acceptance
 
         // ENDSAMPLE
 
-        
         // SAMPLE: skip-ctor-with-missing-simples
         public class DbContext
         {
@@ -170,11 +167,10 @@ namespace StructureMap.Testing.Acceptance
 
             public DbContext() : this("default value")
             {
-                
             }
         }
 
-        [Test]
+        [Fact]
         public void should_bypass_ctor_with_unresolvable_simple_args()
         {
             var container = new Container();
@@ -182,7 +178,7 @@ namespace StructureMap.Testing.Acceptance
                 .ConnectionString.ShouldBe("default value");
         }
 
-        [Test]
+        [Fact]
         public void should_use_greediest_ctor_that_has_all_of_simple_dependencies()
         {
             var container = new Container(_ =>
@@ -194,6 +190,7 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<DbContext>()
                 .ConnectionString.ShouldBe("not the default");
         }
+
         // ENDSAMPLE
     }
 }

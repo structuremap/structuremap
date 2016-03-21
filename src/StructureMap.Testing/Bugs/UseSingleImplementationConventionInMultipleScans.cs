@@ -1,13 +1,10 @@
-﻿using NUnit.Framework;
-using StructureMap;
-using StructureMap.Configuration.DSL;
+﻿using StructureMap;
 using StructureMap.Graph;
 using StructureMapBugRepo.NS1;
 using StructureMapBugRepo.NS2;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class UseSingleImplementationConventionInMultipleScans
     {
         public void Repro()
@@ -35,7 +32,7 @@ namespace StructureMapBugRepo.NS1
         {
             Scan(s =>
             {
-                // For this sample, we're using Namespaces, but in my real project, 
+                // For this sample, we're using Namespaces, but in my real project,
                 // it's two different assemblies, and has the exact same issue.
                 s.TheCallingAssembly();
                 s.IncludeNamespaceContainingType<IShared>();
@@ -62,7 +59,7 @@ namespace StructureMapBugRepo.NS2
         {
             Scan(s =>
             {
-                // For this sample, we're using Namespaces, but in my real project, 
+                // For this sample, we're using Namespaces, but in my real project,
                 // it's two different assemblies, and has the exact same issue.
                 s.TheCallingAssembly();
                 s.IncludeNamespaceContainingType<IMine>();

@@ -1,13 +1,12 @@
 using Castle.DynamicProxy;
-using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.AutoFactory;
 using StructureMap.Pipeline;
 using System;
+using Xunit;
 
 namespace StructureMap.Testing.AutoFactories
 {
-    [TestFixture]
     public class ProxyFactoryTests
     {
         public interface IFactory
@@ -28,7 +27,7 @@ namespace StructureMap.Testing.AutoFactories
             return MockRepository.GenerateStub<TDependency>();
         }
 
-        [Test]
+        [Fact]
         public void Should_create_a_proxy_factory()
         {
             var proxyGenerator = new ProxyGenerator();
@@ -41,7 +40,7 @@ namespace StructureMap.Testing.AutoFactories
             factory.ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void Should_build_the_service_by_return_type_from_context()
         {
             var proxyGenerator = new ProxyGenerator();

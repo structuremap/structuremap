@@ -1,20 +1,17 @@
-﻿using System;
+﻿using Shouldly;
+using System;
 using System.Linq;
-using NUnit.Framework;
-using Shouldly;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class child_containers
     {
-        private Container parent;
-        private IContainer child;
+        private readonly Container parent;
+        private readonly IContainer child;
 
-
-        [SetUp]
-        public void SetUp()
+        public child_containers()
         {
             parent = new Container(_ =>
             {
@@ -25,14 +22,14 @@ namespace StructureMap.Testing.Acceptance
             child = parent.CreateChildContainer();
         }
 
-        [Test]
+        [Fact]
         public void resolve_to_a_parent_transient_if_no_override()
         {
             child.GetInstance<IWidget>()
                 .ShouldBeOfType<AWidget>();
         }
 
-        [Test]
+        [Fact]
         public void resolve_the_child_override()
         {
             child.Configure(x => { x.For<IWidget>().Use<BWidget>(); });
@@ -44,7 +41,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<AWidget>();
         }
 
-        [Test]
+        [Fact]
         public void with_dependencies()
         {
             child.Configure(x => { x.For<IWidget>().Use<BWidget>(); });
@@ -58,7 +55,7 @@ namespace StructureMap.Testing.Acceptance
             guy.Service.ShouldBeOfType<AService>();
         }
 
-        [Test]
+        [Fact]
         public void disposing_the_parent_container_also_disposes_child_containers()
         {
             child.Configure(x => x.ForSingletonOf<DisposableGuy>());
@@ -69,7 +66,7 @@ namespace StructureMap.Testing.Acceptance
             guy.WasDisposed.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void disposing_child_does_not_dispose_singletons_created_by_parent()
         {
             parent.Configure(x => x.ForSingletonOf<DisposableGuy>());
@@ -86,9 +83,9 @@ namespace StructureMap.Testing.Acceptance
 
             guy1.WasDisposed.ShouldBeFalse();
             guy2.WasDisposed.ShouldBeTrue();
-        }       
-        
-        [Test]
+        }
+
+        [Fact]
         public void stress_test_creation_and_disposal_of_child_containers_in_concurrent_operations()
         {
             Parallel.ForEach(Enumerable.Range(0, 1000000), i =>
@@ -106,7 +103,5 @@ namespace StructureMap.Testing.Acceptance
                 WasDisposed = true;
             }
         }
-
-
     }
 }

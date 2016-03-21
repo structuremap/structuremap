@@ -1,13 +1,12 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Pipeline;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class explicit_arguments
     {
-        [Test]
+        [Fact]
         public void supply_defaults_by_generic()
         {
             // SAMPLE: explicit-arg-container
@@ -35,7 +34,7 @@ namespace StructureMap.Testing.Acceptance
             // ENDSAMPLE
         }
 
-        [Test]
+        [Fact]
         public void supply_defaults_with_args()
         {
             var container = new Container(x =>
@@ -63,7 +62,7 @@ namespace StructureMap.Testing.Acceptance
             // ENDSAMPLE
         }
 
-        [Test]
+        [Fact]
         public void supply_defaults_by_generic_in_a_bunch()
         {
             var container = new Container(x =>
@@ -93,7 +92,7 @@ namespace StructureMap.Testing.Acceptance
         }
 
         // SAMPLE: explicit-named-arguments
-        [Test]
+        [Fact]
         public void supply_named_arguments()
         {
             var container = new Container(x => { x.For<IWidget>().Use<ColorWidget>().Ctor<string>().Is("Red"); });

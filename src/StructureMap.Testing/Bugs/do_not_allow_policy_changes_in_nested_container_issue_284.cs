@@ -1,12 +1,11 @@
-﻿using NUnit.Framework;
-using StructureMap.Testing.Acceptance;
+﻿using StructureMap.Testing.Acceptance;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class do_not_allow_policy_changes_in_nested_container_issue_284
     {
-        [Test]
+        [Fact]
         public void do_not_allow()
         {
             var container = new Container();

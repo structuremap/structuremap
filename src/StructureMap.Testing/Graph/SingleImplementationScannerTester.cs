@@ -1,18 +1,16 @@
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Graph;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class SingleImplementationScannerTester
     {
-        private Container _container;
+        private readonly Container container;
 
-        [SetUp]
-        public void Setup()
+        public SingleImplementationScannerTester()
         {
-            _container = new Container(registry => registry.Scan(x =>
+            container = new Container(registry => registry.Scan(x =>
             {
                 x.TheCallingAssembly();
                 x.IncludeNamespaceContainingType<SingleImplementationScannerTester>();
@@ -20,20 +18,20 @@ namespace StructureMap.Testing.Graph
             }));
         }
 
-        [Test]
+        [Fact]
         public void registers_plugins_that_only_have_a_single_implementation()
         {
-            _container.GetInstance<IOnlyHaveASingleConcreteImplementation>()
+            container.GetInstance<IOnlyHaveASingleConcreteImplementation>()
                 .ShouldBeOfType<MyNameIsNotConventionallyRelatedToMyInterface>();
         }
 
-        [Test]
+        [Fact]
         public void should_not_automatically_register_plugins_that_have_multiple_implementations()
         {
-            _container.TryGetInstance<IHaveMultipleConcreteImplementations>().ShouldBeNull();
+            container.TryGetInstance<IHaveMultipleConcreteImplementations>().ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void can_configure_plugin_families_via_dsl()
         {
             var differentContainer = new Container(registry => registry.Scan(x =>
@@ -48,7 +46,6 @@ namespace StructureMap.Testing.Graph
             secondInstance.ShouldBeTheSameAs(firstInstance);
         }
     }
-
 
     public interface IOnlyHaveASingleConcreteImplementation
     {

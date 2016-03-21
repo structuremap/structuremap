@@ -1,26 +1,15 @@
-using System;
-using NUnit.Framework;
 using Shouldly;
-using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
     public class profiles_acceptance_tester : Registry
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
-        [Test]
+        [Fact]
         public void Add_default_instance_by_lambda()
         {
             var theProfileName = "something";
@@ -40,8 +29,7 @@ namespace StructureMap.Testing.Configuration.DSL
             profile.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
         }
 
-
-        [Test]
+        [Fact]
         public void Add_default_instance_by_lambda2()
         {
             var theProfileName = "something";
@@ -62,7 +50,7 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         // SAMPLE: profile-in-action
-        [Test]
+        [Fact]
         public void Add_default_instance_with_concrete_type()
         {
             IContainer container = new Container(registry =>
@@ -79,9 +67,10 @@ namespace StructureMap.Testing.Configuration.DSL
             profile.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
             profile.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
         }
+
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void Add_default_instance_with_concrete_type_with_a_non_transient_lifecycle()
         {
             var theProfileName = "something";
@@ -106,7 +95,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .ShouldBeOfType<AWidget>();
         }
 
-        [Test]
+        [Fact]
         public void Add_default_instance_with_literal()
         {
             var registry = new Registry();
@@ -115,9 +104,8 @@ namespace StructureMap.Testing.Configuration.DSL
             var theProfileName = "something";
             registry.Profile(theProfileName, p => { p.For<IWidget>().Use(theWidget); });
 
-
             var graph = registry.Build();
-            graph.Profile("something").Families[typeof (IWidget)].GetDefaultInstance()
+            graph.Profile("something").Families[typeof(IWidget)].GetDefaultInstance()
                 .ShouldBeOfType<ObjectInstance<AWidget, IWidget>>()
                 .Object.ShouldBeTheSameAs(theWidget);
         }
@@ -142,7 +130,7 @@ namespace StructureMap.Testing.Configuration.DSL
             }
         }
 
-        [Test]
+        [Fact]
         public void AddAProfileWithANamedDefault()
         {
             var theProfileName = "TheProfile";
@@ -164,7 +152,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .Name.ShouldBe(theDefaultName);
         }
 
-        [Test]
+        [Fact]
         public void AddAProfileWithInlineInstanceDefinition()
         {
             var theProfileName = "TheProfile";
@@ -179,7 +167,6 @@ namespace StructureMap.Testing.Configuration.DSL
             container.GetProfile(theProfileName).GetInstance<IWidget>().ShouldBeOfType<AWidget>();
         }
 
-
         public interface IFoo<T>
         {
         }
@@ -192,14 +179,14 @@ namespace StructureMap.Testing.Configuration.DSL
         {
         }
 
-        [Test]
+        [Fact]
         public void respects_open_generics_in_the_profile()
         {
             var container = new Container(x =>
             {
-                x.For(typeof (IFoo<>)).Use(typeof (DefaultFoo<>));
+                x.For(typeof(IFoo<>)).Use(typeof(DefaultFoo<>));
 
-                x.Profile("Azure", cfg => { cfg.For(typeof (IFoo<>)).Use(typeof (AzureFoo<>)); });
+                x.Profile("Azure", cfg => { cfg.For(typeof(IFoo<>)).Use(typeof(AzureFoo<>)); });
             });
 
             container.GetInstance<IFoo<string>>().ShouldBeOfType<DefaultFoo<string>>();

@@ -1,18 +1,14 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Web;
+using Xunit;
 
 namespace StructureMap.Testing.Web
 {
-    [TestFixture]
     public class ThreadLocalStorageLifecycleTester_with_nested_containers
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public ThreadLocalStorageLifecycleTester_with_nested_containers()
         {
             lifecycle = new ThreadLocalStorageLifecycle();
 
@@ -33,13 +29,11 @@ namespace StructureMap.Testing.Web
             });
         }
 
-        #endregion
-
         private Container container;
         private IContainer nestedContainer;
         private ThreadLocalStorageLifecycle lifecycle;
 
-        [Test]
+        [Fact]
         public void Overrides_Lifecycle()
         {
             var rule1 = container.GetInstance<Rule>();
@@ -48,7 +42,7 @@ namespace StructureMap.Testing.Web
             rule1.ShouldNotBeTheSameAs(rule2);
         }
 
-        [Test]
+        [Fact]
         public void Does_not_cache_item()
         {
             var initial = lifecycle.FindCache(null).Count;

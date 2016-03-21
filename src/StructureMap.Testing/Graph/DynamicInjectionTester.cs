@@ -1,20 +1,18 @@
-using System;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class DynamicInjectionTester
     {
         private readonly IService _red = new ColorService("Red");
         private readonly IService _blue = new ColorService("Blue");
         private readonly IService _orange = new ColorService("Orange");
-
 
         public interface IService<T>
         {
@@ -50,7 +48,6 @@ namespace StructureMap.Testing.Graph
         {
         }
 
-
         public class TheWidget : IWidget
         {
             #region IWidget Members
@@ -60,10 +57,10 @@ namespace StructureMap.Testing.Graph
                 throw new NotImplementedException();
             }
 
-            #endregion
+            #endregion IWidget Members
         }
 
-        [Test]
+        [Fact]
         public void AddANewDefaultTypeForAPluginTypeThatAlreadyExists()
         {
             var container = new Container(x => x.For<ISomething>().Use<SomethingTwo>());
@@ -73,8 +70,7 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
 
-
-        [Test]
+        [Fact]
         public void AddANewDefaultTypeForAPluginTypeThatAlreadyExists2()
         {
             var container = new Container(x => { x.For<ISomething>(); });
@@ -84,7 +80,7 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
 
-        [Test]
+        [Fact]
         public void AddInstanceFromContainer()
         {
             var one = new SomethingOne();
@@ -94,7 +90,7 @@ namespace StructureMap.Testing.Graph
             one.ShouldBeTheSameAs(container.GetInstance<ISomething>());
         }
 
-        [Test]
+        [Fact]
         public void AddInstanceToInstanceManagerWhenTheInstanceFactoryDoesNotExist()
         {
             IContainer container = new Container(PluginGraph.CreateRoot());
@@ -107,12 +103,11 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-            _red.ShouldBeTheSameAs(container.GetInstance(typeof (IService), "Red"));
-            _blue.ShouldBeTheSameAs(container.GetInstance(typeof (IService), "Blue"));
+            _red.ShouldBeTheSameAs(container.GetInstance(typeof(IService), "Red"));
+            _blue.ShouldBeTheSameAs(container.GetInstance(typeof(IService), "Blue"));
         }
 
-
-        [Test]
+        [Fact]
         public void AddNamedInstanceByType()
         {
             var container = new Container(r =>
@@ -128,7 +123,7 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<ISomething>("Two").ShouldBeOfType<SomethingTwo>();
         }
 
-        [Test]
+        [Fact]
         public void AddNamedInstanceToobjectFactory()
         {
             var one = new SomethingOne();
@@ -147,8 +142,7 @@ namespace StructureMap.Testing.Graph
             two.ShouldBeTheSameAs(container.GetInstance<ISomething>("Two"));
         }
 
-
-        [Test]
+        [Fact]
         public void AddPluginForTypeWhenThePluginDoesNotAlreadyExistsDoesNothing()
         {
             var pluginGraph = PluginGraph.CreateRoot();
@@ -161,7 +155,7 @@ namespace StructureMap.Testing.Graph
                 .ShouldBeOfType<SomethingOne>();
         }
 
-        [Test]
+        [Fact]
         public void AddTypeThroughContainer()
         {
             var container = new Container(x => { x.For<ISomething>().Use<SomethingOne>(); });
@@ -169,7 +163,7 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
 
-        [Test]
+        [Fact]
         public void Add_an_assembly_in_the_Configure()
         {
             var container = new Container();
@@ -183,11 +177,10 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-
             container.GetInstance<IThingy>().ShouldBeOfType<TheThingy>();
         }
 
-        [Test]
+        [Fact]
         public void Add_an_assembly_on_the_fly_and_pick_up_plugins()
         {
             var container = new Container();
@@ -201,7 +194,7 @@ namespace StructureMap.Testing.Graph
             container.GetAllInstances<IWidget>().OfType<TheWidget>().Any().ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void Add_an_assembly_on_the_fly_and_pick_up_plugins3()
         {
             var container = new Container();
@@ -212,7 +205,7 @@ namespace StructureMap.Testing.Graph
                     registry.Scan(x =>
                     {
                         x.TheCallingAssembly();
-                        x.AddAllTypesOf(typeof (IWidget));
+                        x.AddAllTypesOf(typeof(IWidget));
                     });
                 }
                 );
@@ -222,7 +215,7 @@ namespace StructureMap.Testing.Graph
                 .Any().ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void Add_an_assembly_on_the_fly_and_pick_up_plugins4()
         {
             var container = new Container();
@@ -230,29 +223,28 @@ namespace StructureMap.Testing.Graph
                 registry => registry.Scan(
                     x =>
                     {
-                        x.AssemblyContainingType(typeof (IOtherService<>));
-                        x.AddAllTypesOf(typeof (IOtherService<>));
+                        x.AssemblyContainingType(typeof(IOtherService<>));
+                        x.AddAllTypesOf(typeof(IOtherService<>));
                     }));
 
             var instances = container.GetAllInstances<IOtherService<string>>();
             instances.Any(s => s is Service4).ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void Add_generic_stuff_in_configure()
         {
             var container = new Container();
             container.Configure(registry =>
             {
-                registry.For(typeof (IService<>)).Add(typeof (Service1<>));
-                registry.For(typeof (IService<>)).Add(typeof (Service2<>));
+                registry.For(typeof(IService<>)).Add(typeof(Service1<>));
+                registry.For(typeof(IService<>)).Add(typeof(Service2<>));
             });
 
             container.GetAllInstances<IService<string>>().Count().ShouldBe(2);
         }
 
-
-        [Test]
+        [Fact]
         public void InjectType()
         {
             var container = new Container(
@@ -263,7 +255,7 @@ namespace StructureMap.Testing.Graph
                 .ShouldBeOfType<SomethingOne>();
         }
 
-        [Test]
+        [Fact]
         public void JustAddATypeWithNoNameAndDefault()
         {
             var container = new Container(x => { x.For<ISomething>().Use<SomethingOne>(); });
@@ -271,7 +263,7 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
 
-        [Test]
+        [Fact]
         public void OverwriteInstanceFromObjectFactory()
         {
             var one = new SomethingOne();
@@ -283,7 +275,6 @@ namespace StructureMap.Testing.Graph
             two.ShouldBeTheSameAs(container.GetInstance<ISomething>());
         }
     }
-
 
     public class SomethingOne : ISomething
     {

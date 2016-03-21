@@ -1,40 +1,38 @@
-﻿using System;
+﻿using StructureMap.Testing.Widget;
+using System;
 using System.Diagnostics;
-using NUnit.Framework;
-using StructureMap.Testing.Widget;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_248_do_not_allow_lifecycle_registrations_to_nested_container
     {
-        private Container container;
+        private readonly Container container;
 
-        [SetUp]
-        public void SetUp()
+        public Bug_248_do_not_allow_lifecycle_registrations_to_nested_container()
         {
             container = new Container(x => { x.For<IWidget>().Use<AWidget>(); });
         }
 
-        [Test]
+        [Fact]
         public void okay_to_register_default()
         {
             container.GetNestedContainer().Configure(x => { x.For<IWidget>().Use<MoneyWidget>(); });
         }
 
-        [Test]
+        [Fact]
         public void okay_to_register_unique()
         {
             container.GetNestedContainer().Configure(x => { x.For<IWidget>().Use<MoneyWidget>().AlwaysUnique(); });
         }
 
-        [Test]
+        [Fact]
         public void okay_to_register_a_pre_built_object()
         {
             container.GetNestedContainer().Configure(x => { x.For<IWidget>().Use(new MoneyWidget()); });
         }
 
-        [Test]
+        [Fact]
         public void not_okay_to_register_a_singleton()
         {
             var nestedContainer = container.GetNestedContainer();

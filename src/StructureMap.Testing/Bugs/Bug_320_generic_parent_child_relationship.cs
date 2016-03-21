@@ -1,11 +1,10 @@
-﻿using System.Diagnostics;
+﻿using StructureMap.Graph;
+using System.Diagnostics;
 using System.Linq;
-using NUnit.Framework;
-using StructureMap.Graph;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_320_generic_parent_child_relationship
     {
         public class Parent
@@ -34,11 +33,11 @@ namespace StructureMap.Testing.Bugs
 
         //public class GenericClass3 : IGeneric<ConcreteChild> { }
 
-        [Test]
+        [Fact]
         public void StructureMap_Resolves_Generic_Child_Classes()
         {
-            typeof (IGeneric<ConcreteChild>).IsAssignableFrom(typeof (GenericClass1)).ShouldBeTrue();
-            typeof (IGeneric<ConcreteChild>).IsAssignableFrom(typeof (GenericClass2)).ShouldBeTrue();
+            typeof(IGeneric<ConcreteChild>).IsAssignableFrom(typeof(GenericClass1)).ShouldBeTrue();
+            typeof(IGeneric<ConcreteChild>).IsAssignableFrom(typeof(GenericClass2)).ShouldBeTrue();
             //Assert.ShouldBeTrue(typeof(IGeneric<ConcreteChild>).IsAssignableFrom(typeof(GenericClass3)));
 
             var container = new Container(cfg =>
@@ -46,7 +45,7 @@ namespace StructureMap.Testing.Bugs
                 cfg.Scan(scan =>
                 {
                     scan.TheCallingAssembly();
-                    scan.ConnectImplementationsToTypesClosing(typeof (IGeneric<>));
+                    scan.ConnectImplementationsToTypesClosing(typeof(IGeneric<>));
                 });
             });
 
@@ -55,8 +54,8 @@ namespace StructureMap.Testing.Bugs
 
             var instances = container.GetAllInstances<IGeneric<ConcreteChild>>();
 
-            instances.Any(t => t.GetType() == typeof (GenericClass1)).ShouldBeTrue();
-            instances.Any(t => t.GetType() == typeof (GenericClass2)).ShouldBeTrue();
+            instances.Any(t => t.GetType() == typeof(GenericClass1)).ShouldBeTrue();
+            instances.Any(t => t.GetType() == typeof(GenericClass2)).ShouldBeTrue();
         }
     }
 }

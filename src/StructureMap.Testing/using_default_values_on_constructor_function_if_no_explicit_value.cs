@@ -1,9 +1,8 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
     public class using_default_values_on_constructor_function_if_no_explicit_value
     {
         // SAMPLE: GuyWithName-defaults
@@ -19,7 +18,7 @@ namespace StructureMap.Testing
             public string Name { get; set; }
         }
 
-        [Test]
+        [Fact]
         public void uses_the_default_value_if_one_exists()
         {
             var container = new Container();
@@ -30,7 +29,7 @@ namespace StructureMap.Testing
                 .Name.ShouldBe("Jim Croce");
         }
 
-        [Test]
+        [Fact]
         public void uses_the_default_value_if_one_exists_2()
         {
             var container = new Container(_ =>
@@ -44,7 +43,7 @@ namespace StructureMap.Testing
                 .Name.ShouldBe("Jim Croce");
         }
 
-        [Test]
+        [Fact]
         public void use_explicit_dependency_if_one_exists()
         {
             var container = new Container(_ =>
@@ -56,10 +55,8 @@ namespace StructureMap.Testing
             container.GetInstance<GuyWithName>()
                 .Name.ShouldBe("Eric Clapton");
         }
+
         // ENDSAMPLE
-
-
-
 
         // SAMPLE: GuyWithNoDefaultName
         public class GuyWithNoDefaultName
@@ -71,7 +68,7 @@ namespace StructureMap.Testing
             }
         }
 
-        [Test]
+        [Fact]
         public void cannot_build_simple_arguments()
         {
             var container = new Container();
@@ -81,10 +78,11 @@ namespace StructureMap.Testing
                 container.GetInstance<GuyWithNoDefaultName>();
             });
         }
+
         // ENDSAMPLE
 
         // SAMPLE: GuyWithNoDefaultName-explicit-argument
-        [Test]
+        [Fact]
         public void can_build_with_explicit_argument()
         {
             var container = new Container(_ =>
@@ -96,7 +94,7 @@ namespace StructureMap.Testing
             container.GetInstance<GuyWithNoDefaultName>()
                 .ShouldNotBeNull();
         }
+
         // ENDSAMPLE
-        
     }
 }

@@ -1,12 +1,11 @@
-using System;
-using System.Linq.Expressions;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.AutoMocking;
+using System;
+using System.Linq.Expressions;
+using Xunit;
 
 namespace StructureMap.Testing.AutoMocking.Moq
 {
-    [TestFixture]
     public abstract class AutoMockerTester
     {
         protected abstract AutoMocker<T> createAutoMocker<T>() where T : class;
@@ -23,13 +22,11 @@ namespace StructureMap.Testing.AutoMocking.Moq
             private readonly IMockedService _service;
             private readonly IMockedService2 _service2;
 
-
             public ConcreteThing(IMockedService service, IMockedService2 service2)
             {
                 _service = service;
                 _service2 = service2;
             }
-
 
             public IMockedService Service
             {
@@ -84,6 +81,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
         public interface IMockedService
         {
             string Name { get; }
+
             void Go();
         }
 
@@ -96,7 +94,6 @@ namespace StructureMap.Testing.AutoMocking.Moq
         {
             void Go();
         }
-
 
         public class StubService : IMockedService
         {
@@ -123,7 +120,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
                 throw new NotImplementedException();
             }
 
-            #endregion
+            #endregion IMockedService Members
         }
 
         public class ClassWithArray
@@ -145,7 +142,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
         {
         }
 
-        [Test]
+        [Fact]
         public void CanInjectAnArrayOfMockServices1()
         {
             var mocker = createAutoMocker<ClassWithArray>();
@@ -156,7 +153,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
             theClass.Services.Length.ShouldBe(3);
         }
 
-        [Test]
+        [Fact]
         public void CanInjectAnArrayOfMockServices3()
         {
             var mocker = createAutoMocker<ClassWithArray>();
@@ -169,8 +166,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
             theClass.Services.Length.ShouldBe(3);
         }
 
-
-        [Test]
+        [Fact]
         public void GetTheSameConcreteClassTwiceFromCreate()
         {
             var autoMocker = createAutoMocker<ConcreteClass>();
@@ -181,7 +177,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
             concreteClass.ShouldBeTheSameAs(autoMocker.ClassUnderTest);
         }
 
-        [Test]
+        [Fact]
         public void TheAutoMockerPushesInMocksAndAPreBuiltStubForAllOfTheConstructorArguments()
         {
             var autoMocker = createAutoMocker<ConcreteClass>();
@@ -198,7 +194,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
             service3.ShouldBeTheSameAs(concreteClass.Service3);
         }
 
-        [Test]
+        [Fact]
         public void TheAutoMockerPushesInMocksForAllOfTheConstructorArgumentsForAPartialMock()
         {
             var autoMocker = createAutoMocker<ConcreteClass>();
@@ -215,7 +211,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
             service3.ShouldBeTheSameAs(concreteClass.Service3);
         }
 
-        [Test]
+        [Fact]
         public void UseConcreteClassFor()
         {
             var mocker = createAutoMocker<ConcreteClass>();
@@ -228,7 +224,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
             mocker.Get<IMockedService2>().ShouldBeTheSameAs(thing.Service2);
         }
 
-        [Test]
+        [Fact]
         public void UseTheAutoMockerToStartUpTheConcreteClass()
         {
             var autoMocker = createAutoMocker<ConcreteClass>();
@@ -236,7 +232,7 @@ namespace StructureMap.Testing.AutoMocking.Moq
             autoMocker.ClassUnderTest.Name.ShouldBe("Jeremy");
         }
 
-        [Test]
+        [Fact]
         public void UseTheAutoMockerToStartUpTheConcreteClassAsAPartialMockAndSetTheNameMethodUp()
         {
             var autoMocker = createAutoMocker<ConcreteClass>();
@@ -247,14 +243,14 @@ namespace StructureMap.Testing.AutoMocking.Moq
             concreteClass.Name.ShouldBe("Max");
         }
 
-        [Test]
+        [Fact]
         public void GetTheConcreteTypeFromTheMockerWhenTypeHasNoConstructorArguments()
         {
             var autoMocker = createAutoMocker<ConcreteThingWithNoConstructor>();
 
             var thing = autoMocker.ClassUnderTest;
 
-            thing.GetType().ShouldBe(typeof (ConcreteThingWithNoConstructor));
+            thing.GetType().ShouldBe(typeof(ConcreteThingWithNoConstructor));
         }
     }
 }

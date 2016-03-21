@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using StructureMap.Testing.Widget3;
 using StructureMap.Web;
+using Xunit;
 
 namespace StructureMap.Testing.Web
 {
-    [TestFixture]
     public class HttpSessionNullRefBug
     {
-        [Test]
+        [Fact]
         public void SetUp()
         {
             var container = new Container(x => x.For<IGateway>(WebLifecycles.HybridSession).Use<DefaultGateway>());

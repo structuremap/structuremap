@@ -1,7 +1,7 @@
+using Shouldly;
 using System;
 using System.Diagnostics;
-using NUnit.Framework;
-using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing
 {
@@ -36,7 +36,7 @@ namespace StructureMap.Testing
 
     public class UsingCrossover
     {
-        [Test]
+        [Fact]
         public void showing_auto_wiring()
         {
             var container = new Container(x =>
@@ -45,8 +45,8 @@ namespace StructureMap.Testing
                 x.For<Avenger>().Use<IronMan>();
             });
 
-            // Notice that at no point did we define how to 
-            // build CrossoverEvent.  
+            // Notice that at no point did we define how to
+            // build CrossoverEvent.
             var @event = container.GetInstance<CrossoverEvent>();
             @event.Avenger.ShouldBeOfType<IronMan>();
             @event.Xman.ShouldBeOfType<Cyclops>();
@@ -92,13 +92,9 @@ namespace StructureMap.Testing
         }
     }
 
-    [TestFixture]
     public class ValidatorExamples
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public ValidatorExamples()
         {
             container = new Container(x =>
             {
@@ -126,10 +122,7 @@ namespace StructureMap.Testing
             });
         }
 
-        #endregion
-
-        private Container container;
-
+        private readonly Container container;
 
         public class DataContext
         {
@@ -190,14 +183,14 @@ namespace StructureMap.Testing
             }
         }
 
-        [Test]
+        [Fact]
         public void demonstrate_session_identity()
         {
             var class3 = container.GetInstance<Class3>();
             Debug.WriteLine(class3);
         }
 
-        [Test]
+        [Fact]
         public void demonstrate_session_identity_with_explicit_argument()
         {
             var context = new DataContext();
@@ -207,7 +200,7 @@ namespace StructureMap.Testing
             Debug.WriteLine(class3);
         }
 
-        [Test]
+        [Fact]
         public void what_are_the_validators()
         {
             Debug.WriteLine("With Auto Wiring");

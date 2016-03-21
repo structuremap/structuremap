@@ -2,4 +2,5 @@ Castle.Core
 RhinoMocks
 Shouldly
 Moq
-Fixie
+xunit
+xunit.runner.visualstudio

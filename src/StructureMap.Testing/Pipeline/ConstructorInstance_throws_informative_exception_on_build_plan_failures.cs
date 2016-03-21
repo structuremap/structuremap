@@ -1,22 +1,21 @@
-﻿using System.Diagnostics;
-using NUnit.Framework;
-using StructureMap.Pipeline;
+﻿using StructureMap.Pipeline;
 using StructureMap.Testing.Building;
+using System.Diagnostics;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class ConstructorInstance_throws_informative_exception_on_build_plan_failures
     {
-        [Test]
+        [Fact]
         public void try_the_exception_message()
         {
-            var instance = new ConstructorInstance(typeof (GuyWithPrimitives));
+            var instance = new ConstructorInstance(typeof(GuyWithPrimitives));
             instance.Dependencies.Add("name", "Jeremy");
 
             var ex =
                 Exception<StructureMapBuildPlanException>.ShouldBeThrownBy(
-                    () => { instance.ToBuilder(typeof (GuyWithPrimitives), Policies.Default()); });
+                    () => { instance.ToBuilder(typeof(GuyWithPrimitives), Policies.Default()); });
 
             ex.ToString()
                 .ShouldContain(

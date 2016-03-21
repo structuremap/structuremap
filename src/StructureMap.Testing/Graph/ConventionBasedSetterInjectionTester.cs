@@ -1,11 +1,10 @@
-using System.Diagnostics;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Testing.Widget3;
+using System.Diagnostics;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class ConventionBasedSetterInjectionTester
     {
         // SAMPLE: using-setter-policy
@@ -18,8 +17,7 @@ namespace StructureMap.Testing.Graph
             public IService Service { get; set; }
         }
 
-
-        [Test]
+        [Fact]
         public void specify_setter_policy_and_construct_an_object()
         {
             var theService = new ColorService("red");
@@ -42,10 +40,10 @@ namespace StructureMap.Testing.Graph
             target.Service.ShouldBeTheSameAs(theService);
             target.Gateway.ShouldBeOfType<DefaultGateway>();
         }
+
         // ENDSAMPLE
 
-
-        [Test]
+        [Fact]
         public void specify_setter_policy_by_of_type_and_construct_an_object()
         {
             var theService = new ColorService("red");
@@ -68,7 +66,7 @@ namespace StructureMap.Testing.Graph
             target.Gateway.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void specify_setter_policy_by_a_predicate_on_property_type()
         {
             var theService = new ColorService("red");
@@ -78,7 +76,7 @@ namespace StructureMap.Testing.Graph
                 x.For<IService>().Use(theService);
                 x.For<IGateway>().Use<DefaultGateway>();
 
-                x.Policies.SetAllProperties(policy => { policy.TypeMatches(type => type == typeof (IService)); });
+                x.Policies.SetAllProperties(policy => { policy.TypeMatches(type => type == typeof(IService)); });
             });
 
             var target = container.GetInstance<ClassWithNamedProperties>();

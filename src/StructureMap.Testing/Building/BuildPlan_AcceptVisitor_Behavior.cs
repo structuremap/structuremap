@@ -1,25 +1,24 @@
-﻿using NUnit.Framework;
-using Rhino.Mocks;
+﻿using Rhino.Mocks;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
+using Xunit;
 
 namespace StructureMap.Testing.Building
 {
-    [TestFixture]
     public class BuildPlan_AcceptVisitor_Behavior
     {
-        [Test]
+        [Fact]
         public void accept_a_visitor_with_no_interception_and_a_visitable_inner()
         {
             var mocks = new MockRepository();
 
             var visitor = mocks.StrictMock<IBuildPlanVisitor>();
-            var inner = mocks.StrictMultiMock<IDependencySource>(typeof (IBuildPlanVisitable));
+            var inner = mocks.StrictMultiMock<IDependencySource>(typeof(IBuildPlanVisitable));
 
-            var plan = new BuildPlan(typeof (IGateway), new ObjectInstance(new StubbedGateway()), inner, null);
+            var plan = new BuildPlan(typeof(IGateway), new ObjectInstance(new StubbedGateway()), inner, null);
 
             using (mocks.Ordered())
             {
@@ -35,7 +34,7 @@ namespace StructureMap.Testing.Building
             }
         }
 
-        [Test]
+        [Fact]
         public void accept_a_visitor_with_no_interception_and_a_simpler_inner_builder()
         {
             var mocks = new MockRepository();
@@ -43,7 +42,7 @@ namespace StructureMap.Testing.Building
             var visitor = mocks.StrictMock<IBuildPlanVisitor>();
             var inner = mocks.StrictMock<IDependencySource>();
 
-            var plan = new BuildPlan(typeof (IGateway), new ObjectInstance(new StubbedGateway()), inner, null);
+            var plan = new BuildPlan(typeof(IGateway), new ObjectInstance(new StubbedGateway()), inner, null);
 
             using (mocks.Ordered())
             {
@@ -59,16 +58,16 @@ namespace StructureMap.Testing.Building
             }
         }
 
-        [Test]
+        [Fact]
         public void accept_a_visitor_with_interception_and_a_visitable_inner()
         {
             var mocks = new MockRepository();
 
             var visitor = mocks.StrictMock<IBuildPlanVisitor>();
-            var inner = mocks.StrictMultiMock<IDependencySource>(typeof (IBuildPlanVisitable));
+            var inner = mocks.StrictMultiMock<IDependencySource>(typeof(IBuildPlanVisitable));
             var interception = mocks.StrictMock<IInterceptionPlan>();
 
-            var plan = new BuildPlan(typeof (IGateway), new ObjectInstance(new StubbedGateway()), inner, interception);
+            var plan = new BuildPlan(typeof(IGateway), new ObjectInstance(new StubbedGateway()), inner, interception);
 
             using (mocks.Ordered())
             {
@@ -85,8 +84,7 @@ namespace StructureMap.Testing.Building
             }
         }
 
-
-        [Test]
+        [Fact]
         public void accept_a_visitor_with_interception_and_a_simpler_inner_builder()
         {
             var mocks = new MockRepository();
@@ -95,8 +93,7 @@ namespace StructureMap.Testing.Building
             var inner = mocks.StrictMock<IDependencySource>();
             var interception = mocks.StrictMock<IInterceptionPlan>();
 
-
-            var plan = new BuildPlan(typeof (IGateway), new ObjectInstance(new StubbedGateway()), inner, interception);
+            var plan = new BuildPlan(typeof(IGateway), new ObjectInstance(new StubbedGateway()), inner, interception);
 
             using (mocks.Ordered())
             {

@@ -1,16 +1,14 @@
-﻿using System;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
-using StructureMap.Query;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class try_get_instance
     {
-        [Test]
+        [Fact]
         public void complete_miss()
         {
             var container = new Container();
@@ -18,7 +16,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void force_the_cached_miss_behavior()
         {
             var container = new Container();
@@ -29,7 +27,7 @@ namespace StructureMap.Testing.Acceptance
             container.TryGetInstance<IFancy>().ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void miss_then_hit_after_configure_with_policy_change()
         {
             var container = new Container();
@@ -41,7 +39,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<Very>();
         }
 
-        [Test]
+        [Fact]
         public void miss_then_hit_after_configure_adds_it()
         {
             var container = new Container();
@@ -55,23 +53,21 @@ namespace StructureMap.Testing.Acceptance
             container.TryGetInstance<IFancy>()
                 .ShouldBeOfType<NotReally>();
         }
-
-        
     }
 
     public interface IFancy
     {
-        
     }
 
     public class Very : IFancy { }
+
     public class NotReally : IFancy { }
 
     public class FancyFamily : IFamilyPolicy
     {
         public PluginFamily Build(Type type)
         {
-            if (type != typeof (IFancy)) return null;
+            if (type != typeof(IFancy)) return null;
 
             var family = new PluginFamily(type);
             family.SetDefault(new SmartInstance<Very>());

@@ -1,18 +1,16 @@
 using System.Collections.Generic;
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug
     {
-        [Test]
+        [Fact]
         public void Structuremap_should_autowire_setter_dependencies_regardless_of_order()
         {
             var container = new Container();
 
             container.Configure(x => { x.ForConcreteType<ClassWithSetterDependency>(); });
-
 
             container.Configure(x =>
             {
@@ -22,11 +20,9 @@ namespace StructureMap.Testing.Bugs
                 x.Policies.FillAllPropertiesOfType<ISomeDependency>();
             });
 
-
             container.GetInstance<ClassWithSetterDependency>().Dependency.ShouldNotBeNull();
         }
     }
-
 
     public class ClassWithSetterDependency
     {

@@ -1,9 +1,8 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing.Examples.MultiTenancy
 {
-    [TestFixture]
     public class missing_instance_rule_overrides
     {
         // SAMPLE: missing-instance-mt-domain
@@ -26,7 +25,7 @@ namespace StructureMap.Testing.Examples.MultiTenancy
         // ENDSAMPLE
 
         // SAMPLE: missing-instance-mt-fallthrough
-        [Test]
+        [Fact]
         public void use_customer_overrides()
         {
             var container = new Container(_ =>
@@ -41,7 +40,7 @@ namespace StructureMap.Testing.Examples.MultiTenancy
             container.GetInstance<Rule>("client1").ShouldBeOfType<Client1Rule>();
             container.GetInstance<Rule>("client2").ShouldBeOfType<Client2Rule>();
 
-            // Client3 has no explicit registration, so falls through to 
+            // Client3 has no explicit registration, so falls through to
             // DefaultRule
             container.GetInstance<Rule>("client3").ShouldBeOfType<DefaultRule>();
         }
@@ -68,7 +67,7 @@ namespace StructureMap.Testing.Examples.MultiTenancy
             }
         }
 
-        [Test]
+        [Fact]
         public void register_by_looking_up_data()
         {
             var container = new Container(_ =>

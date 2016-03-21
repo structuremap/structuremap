@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Shouldly;
+using System;
 using System.Diagnostics;
-using NUnit.Framework;
-using Shouldly;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_295_named_registrations_to_nested_container
     {
-        [Test]
+        [Fact]
         public void named_registrations_should_be_isolated_on_child_containers()
         {
             var container = new Container(_ => { }); //Parent Container doesnt contain the named instance
@@ -32,15 +31,13 @@ namespace StructureMap.Testing.Bugs
             child2.TryGetInstance<IThing>("A")
                 .ShouldBeTheSameAs(child2Thing);
 
-
             child2.TryGetInstance<IThing>("A")
                 .ShouldBeTheSameAs(child2Thing);
-
 
             container.TryGetInstance<IThing>("A").ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void named_registrations_with_singleton_should_be_isolated_on_child_containers()
         {
             var container = new Container(_ => { }); //Parent Container doesnt contain the named instance
@@ -53,15 +50,13 @@ namespace StructureMap.Testing.Bugs
             child2.Configure(_ => _.For<IThing>().Singleton().Add<Thing1>().Named("A"));
             var containerChild2Thing = child2.TryGetInstance<IThing>("A");
 
-
             containerChild2Thing.ShouldNotBe(containerChild1Thing);
 
             var parentContainerThing = container.TryGetInstance<IThing>("A");
             parentContainerThing.ShouldBeNull();
         }
 
-
-        [Test]
+        [Fact]
         public void named_registrations_should_be_isolated_on_nested_containers()
         {
             var container = new Container(_ => { }); //Parent Container doesnt contain the named instance
@@ -83,12 +78,11 @@ namespace StructureMap.Testing.Bugs
             parentContainerThing.ShouldBeNull();
         }
 
-
         // ******** THIS ONE IS NOT VALID. SINGLETON MAKE NO SENSE IN THIS CONTEXT ************
         // As of now, I've tightened the validation logic to make Configure() blow up
         // if you try to register a SingletonThing to a nested container
         /*
-        [Test]
+        [Fact]
         public void named_registrations_with_singleton_should_be_isolated_on_nested_containers()
         {
             var container = new Container(_ => { }); //Parent Container doesnt contain the named instance
@@ -107,7 +101,6 @@ namespace StructureMap.Testing.Bugs
             parentContainerThing.ShouldBeNull();
         }
         */
-
 
         public interface IThing
         {
@@ -137,7 +130,7 @@ namespace StructureMap.Testing.Bugs
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != this.GetType()) return false;
-                return Equals((Thing1) obj);
+                return Equals((Thing1)obj);
             }
 
             public override int GetHashCode()
@@ -162,7 +155,6 @@ namespace StructureMap.Testing.Bugs
                     Value = source,
                 };
             }
-
 
             public string Value { get; private set; }
         }

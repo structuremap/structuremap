@@ -1,16 +1,15 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Testing.Acceptance;
+using Xunit;
 
 namespace StructureMap.Testing.Examples
 {
-    [TestFixture]
     public class ChildContainers
     {
         public class ChildSpecialService : IService { }
 
         // SAMPLE: show_a_child_container_in_action
-        [Test]
+        [Fact]
         public void show_a_child_container_in_action()
         {
             var parent = new Container(_ =>
@@ -38,10 +37,11 @@ namespace StructureMap.Testing.Examples
             child.GetInstance<IWidget>()
                 .ShouldBeOfType<AWidget>();
         }
+
         // ENDSAMPLE
 
         // SAMPLE: nested_container_from_child
-        [Test]
+        [Fact]
         public void nested_container_from_child()
         {
             var parent = new Container(_ =>
@@ -64,6 +64,7 @@ namespace StructureMap.Testing.Examples
                     .ShouldBeOfType<ChildSpecialService>();
             }
         }
+
         // ENDSAMPLE
 
         // SAMPLE: stubs-with-child-containers
@@ -71,7 +72,7 @@ namespace StructureMap.Testing.Examples
 
         public class StubbedService : IService { }
 
-        [Test]
+        [Fact]
         public void in_testing()
         {
             var container = new Container(_ =>
@@ -89,6 +90,7 @@ namespace StructureMap.Testing.Examples
             // Now, continue with the test resolving application
             // services through the new child container....
         }
+
         // ENDSAMPLE
     }
 }

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using StructureMap.Testing.Widget3;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Specify_Lifecycle_in_Configure_TesterTester
     {
-        [Test]
+        [Fact]
         public void specify_the_lifecycle_in_a_Configure_if_it_is_not_already_set()
         {
             var container = new Container(x => { });

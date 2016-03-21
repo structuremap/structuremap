@@ -1,20 +1,16 @@
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
-using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
-using StructureMap.Testing.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget5;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
     public class RegistryIntegratedTester
     {
-        [Test]
+        [Fact]
         public void AutomaticallyFindRegistryFromAssembly()
         {
             var container = new Container(x =>
@@ -34,7 +30,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     continue;
                 }
 
-                var color = (ColorWidget) widget;
+                var color = (ColorWidget)widget;
                 colors.Add(color.Color);
             }
 
@@ -42,8 +38,7 @@ namespace StructureMap.Testing.Configuration.DSL
             colors.ShouldHaveTheSameElementsAs("Black", "Blue", "Brown", "Green", "Red", "Yellow");
         }
 
-
-        [Test]
+        [Fact]
         public void FindRegistriesWithinPluginGraphSeal()
         {
             var container = new Container(_ =>
@@ -60,7 +55,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .ShouldHaveTheSameElementsAs("Black", "Blue", "Brown", "Green", "Red", "Yellow");
         }
 
-        [Test]
+        [Fact]
         public void clear_all_via_strong_typed_expression()
         {
             var registry = new Registry();
@@ -78,8 +73,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .ShouldHaveTheSameElementsAs("Blue", "Green", "Purple");
         }
 
-
-        [Test]
+        [Fact]
         public void clear_all_via_generic_family_expression()
         {
             var registry = new Registry();
@@ -97,7 +91,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .ShouldHaveTheSameElementsAs("Blue", "Green", "Purple");
         }
 
-        [Test]
+        [Fact]
         public void configure_via_strong_typed_expression()
         {
             var registry = new Registry();
@@ -107,7 +101,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .Color.ShouldBe("Blue");
         }
 
-        [Test]
+        [Fact]
         public void configure_via_generic_type_expression()
         {
             var registry = new Registry();

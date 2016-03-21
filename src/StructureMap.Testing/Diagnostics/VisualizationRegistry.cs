@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using StructureMap.Attributes;
+﻿using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Acceptance;
 using StructureMap.Testing.Widget;
+using System.Collections.Generic;
 
 namespace StructureMap.Testing.Diagnostics
 {
@@ -43,8 +43,8 @@ namespace StructureMap.Testing.Diagnostics
 
             For<IDevice>().Add<CDevice>().Named("Activated");
 
-//            For<IDevice>().Add<CDevice>().Named("DecoratedWithFunc")
-//                .DecorateWith(x => new DeviceDecorator(x));
+            //            For<IDevice>().Add<CDevice>().Named("DecoratedWithFunc")
+            //                .DecorateWith(x => new DeviceDecorator(x));
 
             For<Activateable>().OnCreationForAll(x => x.Activate());
 
@@ -147,7 +147,6 @@ namespace StructureMap.Testing.Diagnostics
         [SetterProperty]
         public int Order { get; set; }
     }
-
 
     public class DeviceWrapper
     {

@@ -1,13 +1,12 @@
-using System;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class MissingInstanceTester
     {
         // SAMPLE: missing-instance-objects
@@ -28,7 +27,7 @@ namespace StructureMap.Testing.Pipeline
         // ENDSAMPLE
 
         // SAMPLE: missing-instance-simple-usage
-        [Test]
+        [Fact]
         public void configure_and_use_missing_instance()
         {
             var container = new Container(x =>
@@ -50,7 +49,7 @@ namespace StructureMap.Testing.Pipeline
         // ENDSAMPLE
 
         // SAMPLE: missing-instance-does-not-override-explicit
-        [Test]
+        [Fact]
         public void does_not_override_explicit_registrations()
         {
             var container = new Container(x =>
@@ -69,14 +68,14 @@ namespace StructureMap.Testing.Pipeline
         // ENDSAMPLE
 
         // SAMPLE: missing-instance-with-Instance-registration
-        [Test]
+        [Fact]
         public void configure_and_use_missing_instance_by_generic_registration()
         {
             var instance = new LambdaInstance<ColorRule>(c => new ColorRule(c.RequestedName));
 
             var container = new Container(x =>
             {
-                x.For(typeof (Rule))
+                x.For(typeof(Rule))
                     .MissingNamedInstanceIs(instance);
             });
 
@@ -87,16 +86,16 @@ namespace StructureMap.Testing.Pipeline
 
         // ENDSAMPLE
 
-        [Test]
+        [Fact]
         public void returns_missing_instance_if_it_exists_and_the_requested_instance_is_not_found()
         {
             var graph = PluginGraph.CreateRoot();
-            var family = graph.Families[typeof (IWidget)];
+            var family = graph.Families[typeof(IWidget)];
             var missing = new ObjectInstance(new AWidget());
             family.MissingInstance = missing;
 
-            graph.FindInstance(typeof (IWidget), "anything").ShouldNotBeNull();
-            graph.FindInstance(typeof (IWidget), Guid.NewGuid().ToString()).ShouldNotBeNull();
+            graph.FindInstance(typeof(IWidget), "anything").ShouldNotBeNull();
+            graph.FindInstance(typeof(IWidget), Guid.NewGuid().ToString()).ShouldNotBeNull();
         }
     }
 }

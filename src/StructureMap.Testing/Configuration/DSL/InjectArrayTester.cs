@@ -1,23 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Pipeline;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
     public class InjectArrayTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
         public class Processor
         {
             private readonly IHandler[] _handlers;
@@ -29,12 +19,10 @@ namespace StructureMap.Testing.Configuration.DSL
                 _name = name;
             }
 
-
             public IHandler[] Handlers
             {
                 get { return _handlers; }
             }
-
 
             public string Name
             {
@@ -53,12 +41,10 @@ namespace StructureMap.Testing.Configuration.DSL
                 _name = name;
             }
 
-
             public IList<IHandler> Handlers
             {
                 get { return _handlers; }
             }
-
 
             public string Name
             {
@@ -77,12 +63,10 @@ namespace StructureMap.Testing.Configuration.DSL
                 _name = name;
             }
 
-
             public IList<IHandler> Handlers
             {
                 get { return _handlers; }
             }
-
 
             public string Name
             {
@@ -101,12 +85,10 @@ namespace StructureMap.Testing.Configuration.DSL
                 _name = name;
             }
 
-
             public IList<IHandler> Handlers
             {
                 get { return _handlers; }
             }
-
 
             public string Name
             {
@@ -119,13 +101,11 @@ namespace StructureMap.Testing.Configuration.DSL
             private readonly IHandler[] _first;
             private readonly IHandler[] _second;
 
-
             public Processor2(IHandler[] first, IHandler[] second)
             {
                 _first = first;
                 _second = second;
             }
-
 
             public IHandler[] First
             {
@@ -154,7 +134,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
         }
 
-        [Test]
+        [Fact]
         public void CanStillAddOtherPropertiesAfterTheCallToChildArray()
         {
             var container = new Container(x =>
@@ -171,7 +151,7 @@ namespace StructureMap.Testing.Configuration.DSL
             container.GetInstance<Processor>().Name.ShouldBe("Jeremy");
         }
 
-        [Test]
+        [Fact]
         public void get_a_configured_list()
         {
             var container = new Container(x =>
@@ -187,10 +167,10 @@ namespace StructureMap.Testing.Configuration.DSL
 
             container.GetInstance<ProcessorWithList>()
                 .Handlers.Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (Handler1), typeof (Handler2), typeof (Handler3));
+                .ShouldHaveTheSameElementsAs(typeof(Handler1), typeof(Handler2), typeof(Handler3));
         }
 
-        [Test]
+        [Fact]
         public void get_a_configured_concrete_list()
         {
             var container = new Container(x =>
@@ -206,11 +186,10 @@ namespace StructureMap.Testing.Configuration.DSL
 
             container.GetInstance<ProcessorWithConcreteList>()
                 .Handlers.Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (Handler1), typeof (Handler2), typeof (Handler3));
+                .ShouldHaveTheSameElementsAs(typeof(Handler1), typeof(Handler2), typeof(Handler3));
         }
 
-
-        [Test]
+        [Fact]
         public void get_a_configured_ienumerable()
         {
             var container = new Container(x =>
@@ -226,10 +205,10 @@ namespace StructureMap.Testing.Configuration.DSL
 
             container.GetInstance<ProcessorWithEnumerable>()
                 .Handlers.Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (Handler1), typeof (Handler2), typeof (Handler3));
+                .ShouldHaveTheSameElementsAs(typeof(Handler1), typeof(Handler2), typeof(Handler3));
         }
 
-        [Test]
+        [Fact]
         public void InjectPropertiesByName()
         {
             var container = new Container(r =>
@@ -247,7 +226,6 @@ namespace StructureMap.Testing.Configuration.DSL
                     });
             });
 
-
             var processor = container.GetInstance<Processor2>();
 
             processor.First[0].ShouldBeOfType<Handler1>();
@@ -256,8 +234,7 @@ namespace StructureMap.Testing.Configuration.DSL
             processor.Second[1].ShouldBeOfType<Handler3>();
         }
 
-
-        [Test]
+        [Fact]
         public void inline_definition_of_enumerable_child_respects_order_of_registration()
         {
             IContainer container = new Container(r =>
@@ -279,15 +256,13 @@ namespace StructureMap.Testing.Configuration.DSL
             processor.Handlers[1].ShouldBeOfType<Handler1>();
         }
 
-
-        [Test]
+        [Fact]
         public void PlaceMemberInArrayByReference_with_SmartInstance()
         {
             IContainer manager = new Container(registry =>
             {
                 registry.For<IHandler>().Add<Handler1>().Named("One");
                 registry.For<IHandler>().Add<Handler2>().Named("Two");
-
 
                 registry.For<Processor>().Use<Processor>()
                     .Ctor<string>("name").Is("Jeremy")
@@ -304,7 +279,7 @@ namespace StructureMap.Testing.Configuration.DSL
             processor.Handlers[1].ShouldBeOfType<Handler1>();
         }
 
-        [Test]
+        [Fact]
         public void ProgrammaticallyInjectArrayAllInline()
         {
             var container = new Container(x =>
@@ -319,7 +294,6 @@ namespace StructureMap.Testing.Configuration.DSL
                     });
             });
 
-
             var processor = container.GetInstance<Processor>();
 
             processor.Handlers[0].ShouldBeOfType<Handler1>();
@@ -327,7 +301,7 @@ namespace StructureMap.Testing.Configuration.DSL
             processor.Handlers[2].ShouldBeOfType<Handler3>();
         }
 
-        [Test]
+        [Fact]
         public void ProgrammaticallyInjectArrayAllInline_with_smart_instance()
         {
             IContainer container = new Container(r =>

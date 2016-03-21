@@ -1,19 +1,16 @@
-﻿using NUnit.Framework;
-using StructureMap.Configuration.DSL;
+﻿using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug_318
     {
-        [Test]
+        [Fact]
         public void recreate_the_problem()
         {
             var container = Container.For<TestStructureMapRegistry>();
 
             var service1 = container.GetInstance<MyService1>();
             service1.Dep1.ShouldNotBeTheSameAs(service1.Dep2);
-
 
             var service2 = container.GetInstance<MyService2>();
             service2.Dep1.ShouldNotBeTheSameAs(service2.Dep2);
@@ -41,6 +38,7 @@ namespace StructureMap.Testing.Bugs
         {
             // Just mark these two as private setters and the test above passes
             public MyDependency Dep1 { get; private set; }
+
             public MyDependency Dep2 { get; private set; }
 
             public MyService1(MyDependency dep1, MyDependency dep2)

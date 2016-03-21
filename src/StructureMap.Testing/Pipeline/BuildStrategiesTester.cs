@@ -1,20 +1,18 @@
-using System;
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class BuildStrategiesTester
     {
         public class StubInstance : Instance
         {
             private readonly object _constructedObject;
-
 
             public StubInstance(object constructedObject)
             {
@@ -37,8 +35,7 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-
-        [Test]
+        [Fact]
         public void Singleton_build_policy()
         {
             var container = new Container(x =>
@@ -49,7 +46,6 @@ namespace StructureMap.Testing.Pipeline
                     o.Is.ConstructedBy(() => new ColorService("Green")).Named("Green");
                 });
             });
-
 
             var red1 = container.GetInstance<IService>("Red");
             var green1 = container.GetInstance<IService>("Green");
@@ -65,13 +61,9 @@ namespace StructureMap.Testing.Pipeline
         }
     }
 
-    [TestFixture]
     public class when_the_singleton_Lifecycle_ejects_all
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        public when_the_singleton_Lifecycle_ejects_all()
         {
             lifecycle = new SingletonLifecycle();
 
@@ -82,19 +74,16 @@ namespace StructureMap.Testing.Pipeline
 
             lifecycle.FindCache(pipeline)
                 .As<LifecycleObjectCache>()
-                .Set(typeof (IGateway), new StubInstance("a"), disposable1);
+                .Set(typeof(IGateway), new StubInstance("a"), disposable1);
             lifecycle.FindCache(pipeline)
                 .As<LifecycleObjectCache>()
-                .Set(typeof (IGateway), new StubInstance("b"), disposable2);
+                .Set(typeof(IGateway), new StubInstance("b"), disposable2);
             lifecycle.FindCache(pipeline)
                 .As<LifecycleObjectCache>()
-                .Set(typeof (IGateway), new StubInstance("c"), new object());
-
+                .Set(typeof(IGateway), new StubInstance("c"), new object());
 
             lifecycle.EjectAll(pipeline);
         }
-
-        #endregion
 
         private SingletonLifecycle lifecycle;
         private StubDisposable disposable1;
@@ -124,14 +113,14 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-        [Test]
+        [Fact]
         public void should_have_called_dispose_if_it_was_there()
         {
             disposable1.DisposedWasCalled.ShouldBeTrue();
             disposable2.DisposedWasCalled.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void the_count_should_be_zero()
         {
             lifecycle.FindCache(pipeline).Count.ShouldBe(0);

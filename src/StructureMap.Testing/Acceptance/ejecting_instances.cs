@@ -1,17 +1,16 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 using StructureMap.Query;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class ejecting_instances
     {
-        [Test]
+        [Fact]
         public void ejecting_all_from_a_family()
         {
             var container = new Container(x =>
@@ -43,7 +42,7 @@ namespace StructureMap.Testing.Acceptance
                 .Any().ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void eject_and_remove_a_single_instance()
         {
             var container = new Container(x =>
@@ -74,7 +73,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldHaveTheSameElementsAs(guyB, guyC);
         }
 
-        [Test]
+        [Fact]
         public void eject_and_remove_a_single_instance_2()
         {
             var container = new Container(x =>
@@ -105,7 +104,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldHaveTheSameElementsAs(guyB, guyC);
         }
 
-        [Test]
+        [Fact]
         public void obly_eject_a_single_instance()
         {
             var container = new Container(x => { x.For<DisposedGuy>().Singleton().Use<DisposedGuy>(); });
@@ -123,7 +122,7 @@ namespace StructureMap.Testing.Acceptance
             third.ShouldNotBeTheSameAs(first);
         }
 
-        [Test]
+        [Fact]
         public void eject_with_custom_lifecycle()
         {
             CustomLifecycle.Cache.DisposeAndClear();
@@ -160,7 +159,7 @@ namespace StructureMap.Testing.Acceptance
                 .Any().ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void eject_and_remove_will_eject_from_a_per_instance_lifecycle()
         {
             CustomLifecycle.Cache.DisposeAndClear();

@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Pipeline;
 using System;
 using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture]
     public class TestExplicitArguments
     {
         public interface IExplicitTarget
@@ -81,7 +80,7 @@ namespace StructureMap.Testing.Graph
         {
         }
 
-        [Test]
+        [Fact]
         public void can_build_a_concrete_class_with_constructor_args_that_is_not_previously_registered()
         {
             var container = new Container();
@@ -89,7 +88,7 @@ namespace StructureMap.Testing.Graph
                 .Name.ShouldBe("Jeremy");
         }
 
-        [Test]
+        [Fact]
         public void can_build_a_concrete_class_with_constructor_args_that_is_not_previously_registered_2()
         {
             var container = new Container();
@@ -98,7 +97,7 @@ namespace StructureMap.Testing.Graph
                 ShouldBe("Jeremy");
         }
 
-        [Test]
+        [Fact]
         public void can_build_a_concrete_type_from_explicit_args_passed_into_a_named_instance()
         {
             var container = new Container(x =>
@@ -118,7 +117,7 @@ namespace StructureMap.Testing.Graph
             colorLump.Color.ShouldBe("red");
         }
 
-        [Test]
+        [Fact]
         public void Example()
         {
             IContainer container = new Container();
@@ -129,7 +128,7 @@ namespace StructureMap.Testing.Graph
             view.Trade.ShouldBeTheSameAs(theTrade);
         }
 
-        [Test]
+        [Fact]
         public void Explicit_services_are_used_throughout_the_object_graph()
         {
             var theTrade = new Trade();
@@ -147,7 +146,7 @@ namespace StructureMap.Testing.Graph
             command.View.IsType<TradeView>().Trade.ShouldBeTheSameAs(theTrade);
         }
 
-        [Test]
+        [Fact]
         public void ExplicitArguments_can_return_child_by_name()
         {
             var theNode = new Node();
@@ -155,7 +154,7 @@ namespace StructureMap.Testing.Graph
             container.With("node").EqualTo(theNode).GetInstance<Command>().Node.ShouldBeTheSameAs(theNode);
         }
 
-        [Test]
+        [Fact]
         public void Fill_in_argument_by_name()
         {
             var container = new Container(x => x.For<IView>().Use<View>());
@@ -173,7 +172,7 @@ namespace StructureMap.Testing.Graph
             theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
-        [Test]
+        [Fact]
         public void Fill_in_argument_by_type()
         {
             var container = new Container(x => x.For<IView>().Use<View>());
@@ -191,7 +190,7 @@ namespace StructureMap.Testing.Graph
             theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
-        [Test]
+        [Fact]
         public void Fill_in_argument_by_type_with_Container()
         {
             var container = new Container(x => x.For<IView>().Use<View>());
@@ -209,7 +208,7 @@ namespace StructureMap.Testing.Graph
             theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
-        [Test]
+        [Fact]
         public void NowDoItWithObjectFactoryItself()
         {
             var container = new Container(x =>
@@ -229,7 +228,7 @@ namespace StructureMap.Testing.Graph
             theBlueProvider.ShouldBeTheSameAs(secondTarget.Provider);
         }
 
-        [Test]
+        [Fact]
         public void NowDoItWith_Container_Itself_with_new_API()
         {
             var container = new Container(x =>
@@ -248,7 +247,7 @@ namespace StructureMap.Testing.Graph
                 .Provider.ShouldBeTheSameAs(theBlueProvider);
         }
 
-        [Test]
+        [Fact]
         public void override_a_primitive()
         {
             var container = new Container(x =>
@@ -267,7 +266,7 @@ namespace StructureMap.Testing.Graph
                 .Name.ShouldBe("Lindsey");
         }
 
-        [Test]
+        [Fact]
         public void pass_explicit_service_into_all_instances()
         {
             // The Container is constructed with 2 instances
@@ -285,7 +284,7 @@ namespace StructureMap.Testing.Graph
             views.ElementAt(1).Trade.ShouldBeTheSameAs(theTrade);
         }
 
-        [Test]
+        [Fact]
         public void pass_explicit_service_into_all_instances_and_retrieve_without_generics()
         {
             // The Container is constructed with 2 instances
@@ -305,7 +304,7 @@ namespace StructureMap.Testing.Graph
             views.ElementAt(1).Trade.ShouldBeTheSameAs(theTrade);
         }
 
-        [Test]
+        [Fact]
         public void Pass_in_arguments_as_dictionary()
         {
             var container = new Container(x => { x.For<IView>().Use<View>(); });
@@ -324,7 +323,7 @@ namespace StructureMap.Testing.Graph
             theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
-        [Test]
+        [Fact]
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterface()
         {
             IContainer manager =
@@ -339,7 +338,7 @@ namespace StructureMap.Testing.Graph
             theLump.ShouldBeTheSameAs(instance.Lump);
         }
 
-        [Test]
+        [Fact]
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterfaceUsing_Container()
         {
             var container = new Container(x => x.For<IProvider>().Use<LumpProvider>());
@@ -350,7 +349,7 @@ namespace StructureMap.Testing.Graph
             theLump.ShouldBeTheSameAs(provider.Lump);
         }
 
-        [Test]
+        [Fact]
         public void PassAnArgumentIntoExplicitArgumentsThatMightNotAlreadyBeRegistered()
         {
             var container = new Container();
@@ -360,7 +359,7 @@ namespace StructureMap.Testing.Graph
             theLump.ShouldBeTheSameAs(provider.Lump);
         }
 
-        [Test]
+        [Fact]
         public void PassExplicitArgsIntoInstanceManager()
         {
             var container = new Container(r =>
@@ -382,7 +381,7 @@ namespace StructureMap.Testing.Graph
             secondTarget.Provider.ShouldBeOfType<BlueProvider>();
         }
 
-        [Test]
+        [Fact]
         public void RegisterAndFindServicesOnTheExplicitArgument()
         {
             var args = new ExplicitArguments();
@@ -397,7 +396,7 @@ namespace StructureMap.Testing.Graph
             args.Get<IExplicitTarget>().ShouldBeOfType<RedTarget>();
         }
 
-        [Test]
+        [Fact]
         public void RegisterAndRetrieveArgs()
         {
             var args = new ExplicitArguments();
@@ -410,7 +409,7 @@ namespace StructureMap.Testing.Graph
             args.GetArg("age").ShouldBe(34);
         }
 
-        [Test]
+        [Fact]
         public void use_a_type_that_is_not_part_of_the_constructor_in_the_with()
         {
             var container = new Container();
@@ -418,7 +417,7 @@ namespace StructureMap.Testing.Graph
                 .ShouldBeOfType<ClassWithNoArgs>();
         }
 
-        [Test]
+        [Fact]
         public void use_explicit_type_arguments_with_custom_instance()
         {
             var container =
@@ -430,14 +429,14 @@ namespace StructureMap.Testing.Graph
                 .TheAddress.ShouldBeTheSameAs(address);
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_ReturnsNull_IfTypeNotFound()
         {
             var container = new Container();
             container.TryGetInstance<IProvider>(new ExplicitArguments()).ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_ReturnsNull_IfUseWithAndTypeNotFound()
         {
             var container = new Container();
@@ -447,7 +446,7 @@ namespace StructureMap.Testing.Graph
                 .ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_ReturnsInstance_IfTypeFound()
         {
             var container = new Container(cfg => cfg.For<IProvider>().Use<LumpProvider>());
@@ -458,7 +457,7 @@ namespace StructureMap.Testing.Graph
             theLump.ShouldBeTheSameAs(instance.Lump);
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_ReturnsInstance_IfUseWithAndTypeFound()
         {
             var container = new Container(cfg => cfg.For<IProvider>().Use<LumpProvider>());
@@ -471,7 +470,7 @@ namespace StructureMap.Testing.Graph
             theLump.ShouldBeTheSameAs(instance.Lump);
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_ReturnsNull_IfNamedInstanceNotFound()
         {
             const string providerName = "lump";
@@ -479,7 +478,7 @@ namespace StructureMap.Testing.Graph
             container.TryGetInstance<IProvider>(new ExplicitArguments(), providerName).ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_ReturnsNull_IfUseWithAndNamedInstanceNotFound()
         {
             const string providerName = "lump";
@@ -490,7 +489,7 @@ namespace StructureMap.Testing.Graph
                 .ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_ReturnsInstance_IfNamedInstanceFound()
         {
             const string providerName = "lump";
@@ -506,7 +505,7 @@ namespace StructureMap.Testing.Graph
             theLump.ShouldBeTheSameAs(instance.Lump);
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_ReturnsInstance_IfUseWithAndNamedInstanceFound()
         {
             const string providerName = "lump";
@@ -524,7 +523,7 @@ namespace StructureMap.Testing.Graph
             theLump.ShouldBeTheSameAs(instance.Lump);
         }
 
-        [Test]
+        [Fact]
         public void TryGetInstance_ThrowsException_IfInstanceConstructorThrows()
         {
             var container = new Container(cfg => cfg.For<IProvider>().Use<ExceptionalLumpProvider>());

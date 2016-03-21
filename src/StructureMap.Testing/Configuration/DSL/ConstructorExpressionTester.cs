@@ -1,10 +1,8 @@
 using System.Linq;
-using NUnit.Framework;
-using StructureMap.Configuration.DSL;
+using Xunit;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
     public class ConstructorExpressionTester : Registry
     {
         public interface Abstraction
@@ -15,7 +13,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
         }
 
-        [Test]
+        [Fact]
         public void AddTwoConstructorsConsecutively()
         {
             var concretion1 = new Concretion();
@@ -32,7 +30,7 @@ namespace StructureMap.Testing.Configuration.DSL
             concretion2.ShouldBeTheSameAs(container.GetInstance<Abstraction>("Two"));
         }
 
-        [Test]
+        [Fact]
         public void ConstructSomething()
         {
             var concretion = new Concretion();
@@ -43,7 +41,7 @@ namespace StructureMap.Testing.Configuration.DSL
             container.GetInstance<Abstraction>().ShouldBeTheSameAs(concretion);
         }
 
-        [Test]
+        [Fact]
         public void ConstructSomethingByName()
         {
             var concretion1 = new Concretion();
@@ -62,7 +60,7 @@ namespace StructureMap.Testing.Configuration.DSL
             manager.GetInstance<Abstraction>("Two").ShouldBeTheSameAs(concretion2);
         }
 
-        [Test]
+        [Fact]
         public void ConstructSomethingNotByDefault()
         {
             var concretion = new Concretion();

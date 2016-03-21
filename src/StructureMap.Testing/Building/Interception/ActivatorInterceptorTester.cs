@@ -1,30 +1,28 @@
-﻿using System;
-using System.Linq.Expressions;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
+using System;
+using System.Linq.Expressions;
+using Xunit;
 
 namespace StructureMap.Testing.Building.Interception
 {
-    [TestFixture]
     public class ActivatorInterceptorTester
     {
         private ActivatorInterceptor<ITarget> theActivator;
 
-        [SetUp]
-        public void SetUp()
+        public ActivatorInterceptorTester()
         {
             theActivator = new ActivatorInterceptor<ITarget>(x => x.Activate());
         }
 
-        [Test]
+        [Fact]
         public void the_description()
         {
             theActivator.Description.ShouldContain("ITarget.Activate()");
         }
 
-        [Test]
+        [Fact]
         public void description_is_set_explicitly()
         {
             theActivator = new ActivatorInterceptor<ITarget>(x => x.Activate(), "gonna start it up");
@@ -32,7 +30,7 @@ namespace StructureMap.Testing.Building.Interception
             theActivator.Description.ShouldContain("gonna start it up");
         }
 
-        [Test]
+        [Fact]
         public void the_description_using_session()
         {
             var activator = new ActivatorInterceptor<Target>((s, t) => t.UseSession(s));
@@ -40,7 +38,7 @@ namespace StructureMap.Testing.Building.Interception
             activator.Description.ShouldContain("Target.UseSession(IContext)");
         }
 
-        [Test]
+        [Fact]
         public void the_description_using_session_and_explicit_description()
         {
             var activator = new ActivatorInterceptor<Target>((s, t) => t.UseSession(s), "use the Force Luke!");
@@ -48,42 +46,42 @@ namespace StructureMap.Testing.Building.Interception
             activator.Description.ShouldContain("use the Force Luke!");
         }
 
-        [Test]
+        [Fact]
         public void the_role_is_activates()
         {
             theActivator.Role.ShouldBe(InterceptorRole.Activates);
         }
 
-        [Test]
+        [Fact]
         public void the_accepts_type()
         {
-            theActivator.Accepts.ShouldBe(typeof (ITarget));
+            theActivator.Accepts.ShouldBe(typeof(ITarget));
         }
 
-        [Test]
+        [Fact]
         public void the_return_type()
         {
-            theActivator.Returns.ShouldBe(typeof (ITarget));
+            theActivator.Returns.ShouldBe(typeof(ITarget));
         }
 
-        [Test]
+        [Fact]
         public void create_the_expression_when_the_variable_is_the_right_type()
         {
-            var variable = Expression.Variable(typeof (ITarget), "target");
+            var variable = Expression.Variable(typeof(ITarget), "target");
 
             var expression = theActivator.ToExpression(Policies.Default(), Parameters.Session, variable);
 
             expression.ToString().ShouldBe("target.Activate()");
         }
 
-        [Test]
+        [Fact]
         public void compile_and_use_by_itself()
         {
-            var variable = Expression.Variable(typeof (ITarget), "target");
+            var variable = Expression.Variable(typeof(ITarget), "target");
 
             var expression = theActivator.ToExpression(Policies.Default(), Parameters.Context, variable);
 
-            var lambdaType = typeof (Action<ITarget>);
+            var lambdaType = typeof(Action<ITarget>);
             var lambda = Expression.Lambda(lambdaType, expression, variable);
 
             var action = lambda.Compile().As<Action<ITarget>>();
@@ -94,16 +92,15 @@ namespace StructureMap.Testing.Building.Interception
             target.HasBeenActivated.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void compile_and_use_by_itself_with_session()
         {
             var activator = new ActivatorInterceptor<Target>((s, t) => t.UseSession(s));
-            var variable = Expression.Variable(typeof (Target), "target");
-
+            var variable = Expression.Variable(typeof(Target), "target");
 
             var expression = activator.ToExpression(Policies.Default(), Parameters.Context, variable);
 
-            var lambdaType = typeof (Action<IContext, Target>);
+            var lambdaType = typeof(Action<IContext, Target>);
             var lambda = Expression.Lambda(lambdaType, expression, Parameters.Context, variable);
 
             var action = lambda.Compile().As<Action<IContext, Target>>();
@@ -119,6 +116,7 @@ namespace StructureMap.Testing.Building.Interception
     public interface ITarget
     {
         void Activate();
+
         void Debug();
     }
 

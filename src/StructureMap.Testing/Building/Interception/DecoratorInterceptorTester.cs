@@ -1,31 +1,30 @@
-﻿using System;
-using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Building.Interception;
+using System;
+using Xunit;
 
 namespace StructureMap.Testing.Building.Interception
 {
-    [TestFixture]
     public class DecoratorInterceptorTester
     {
-        [Test]
+        [Fact]
         public void accepts_type_is_the_plugin_type()
         {
-            var interceptor = new DecoratorInterceptor(typeof (IWidget), typeof (WidgetDecorator));
-            interceptor.Accepts.ShouldBe(typeof (IWidget));
+            var interceptor = new DecoratorInterceptor(typeof(IWidget), typeof(WidgetDecorator));
+            interceptor.Accepts.ShouldBe(typeof(IWidget));
         }
 
-        [Test]
+        [Fact]
         public void role_is_decorator()
         {
-            var interceptor = new DecoratorInterceptor(typeof (IWidget), typeof (WidgetDecorator));
+            var interceptor = new DecoratorInterceptor(typeof(IWidget), typeof(WidgetDecorator));
             interceptor.Role.ShouldBe(InterceptorRole.Decorates);
         }
 
-        [Test]
+        [Fact]
         public void integrated_test_with_the_expression()
         {
-            var interceptor = new DecoratorInterceptor(typeof (IWidget), typeof (WidgetDecorator));
+            var interceptor = new DecoratorInterceptor(typeof(IWidget), typeof(WidgetDecorator));
 
             var container = new Container(x => { x.For<IWidget>().Use<AWidget>().InterceptWith(interceptor); });
 

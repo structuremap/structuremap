@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 
-using NUnit.Framework;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class nested_registry_declarations
     {
-        [Test]
+        [Fact]
         public void get_registrations_from_all_included_registries()
         {
             var container = new Container(new ARegistry());
@@ -15,11 +14,11 @@ namespace StructureMap.Testing.Acceptance
             container.GetAllInstances<IWidget>()
                 .OrderBy(x => x.GetType().Name)
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget),
-                    typeof (DefaultWidget));
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget),
+                    typeof(DefaultWidget));
         }
 
-        [Test]
+        [Fact]
         public void get_registrations_from_all_included_registries_through_configure()
         {
             var container = new Container();
@@ -28,11 +27,11 @@ namespace StructureMap.Testing.Acceptance
             container.GetAllInstances<IWidget>()
                 .OrderBy(x => x.GetType().Name)
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof (AWidget), typeof (BWidget), typeof (CWidget),
-                    typeof (DefaultWidget));
+                .ShouldHaveTheSameElementsAs(typeof(AWidget), typeof(BWidget), typeof(CWidget),
+                    typeof(DefaultWidget));
         }
 
-        [Test]
+        [Fact]
         public void get_instance_gets_most_recently_registered_type()
         {
             using (var container = new Container(new SecondRegistry()))

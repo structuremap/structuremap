@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using NUnit.Framework;
-using StructureMap.Graph;
+﻿using StructureMap.Graph;
 using StructureMap.Graph.Scanning;
 using StructureMap.Pipeline;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class Bug456_AlwaysUnique_Tests
     {
         public class StructureMapAlwaysUniqueBug
         {
-            [Test]
+            [Fact]
             public void Should_resolve()
             {
                 using (var container = new Container(_ =>
@@ -59,6 +57,7 @@ namespace StructureMap.Testing.Bugs
             public interface IColor { }
 
             public class Blue : IColor { }
+
             public class Red : IColor { }
 
             public class AlwaysUniqueConvention : IRegistrationConvention
@@ -71,7 +70,6 @@ namespace StructureMap.Testing.Bugs
                     }
                 }
             }
-
         }
     }
 }

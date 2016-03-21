@@ -1,27 +1,16 @@
-using System;
-using System.Linq;
-using NUnit.Framework;
 using Shouldly;
-using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
+using System;
+using System.Linq;
+using Xunit;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
     public class CreatePluginFamilyTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
         public interface SomethingElseEntirely : Something, SomethingElse
         {
         }
@@ -53,7 +42,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != this.GetType()) return false;
-                return Equals((OrangeSomething) obj);
+                return Equals((OrangeSomething)obj);
             }
 
             public override int GetHashCode()
@@ -77,7 +66,7 @@ namespace StructureMap.Testing.Configuration.DSL
             }
         }
 
-        [Test]
+        [Fact]
         public void Add_an_instance_by_lambda()
         {
             var container = new Container(r => { r.For<IWidget>().Add(c => new AWidget()); });
@@ -87,7 +76,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .ShouldBeOfType<AWidget>();
         }
 
-        [Test]
+        [Fact]
         public void add_an_instance_by_literal_object()
         {
             var aWidget = new AWidget();
@@ -97,7 +86,7 @@ namespace StructureMap.Testing.Configuration.DSL
             container.GetAllInstances<IWidget>().First().ShouldBeTheSameAs(aWidget);
         }
 
-        [Test]
+        [Fact]
         public void AddInstanceByNameOnlyAddsOneInstanceToStructureMap()
         {
             var container = new Container(r => { r.For<Something>().Add<RedSomething>().Named("Red"); });
@@ -105,7 +94,7 @@ namespace StructureMap.Testing.Configuration.DSL
             container.GetAllInstances<Something>().Count().ShouldBe(1);
         }
 
-        [Test]
+        [Fact]
         public void AddInstanceWithNameOnlyAddsOneInstanceToStructureMap()
         {
             var container = new Container(x => { x.For<Something>().Add<RedSomething>().Named("Red"); });
@@ -114,7 +103,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .Count().ShouldBe(1);
         }
 
-        [Test]
+        [Fact]
         public void as_another_lifecycle()
         {
             var registry = new Registry();
@@ -122,34 +111,33 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var pluginGraph = registry.Build();
 
-            var family = pluginGraph.Families[typeof (IGateway)];
+            var family = pluginGraph.Families[typeof(IGateway)];
 
             family.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
 
-        [Test]
+        [Fact]
         public void BuildInstancesOfType()
         {
             var registry = new Registry();
             registry.For<IGateway>();
             var pluginGraph = registry.Build();
 
-            pluginGraph.Families.Has(typeof (IGateway)).ShouldBeTrue();
+            pluginGraph.Families.Has(typeof(IGateway)).ShouldBeTrue();
         }
 
-
-        [Test]
+        [Fact]
         public void BuildPluginFamilyAsPerRequest()
         {
             var registry = new Registry();
 
             var pluginGraph = registry.Build();
 
-            var family = pluginGraph.Families[typeof (IGateway)];
+            var family = pluginGraph.Families[typeof(IGateway)];
             family.Lifecycle.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void BuildPluginFamilyAsSingleton()
         {
             var registry = new Registry();
@@ -157,11 +145,11 @@ namespace StructureMap.Testing.Configuration.DSL
                 .ShouldNotBeNull();
 
             var pluginGraph = registry.Build();
-            var family = pluginGraph.Families[typeof (IGateway)];
+            var family = pluginGraph.Families[typeof(IGateway)];
             family.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
-        [Test]
+        [Fact]
         public void CanOverrideTheDefaultInstance1()
         {
             var registry = new Registry();
@@ -169,30 +157,30 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For<IGateway>().Use<StubbedGateway>();
 
             var pluginGraph = registry.Build();
-            pluginGraph.Families.Has(typeof (IGateway)).ShouldBeTrue();
+            pluginGraph.Families.Has(typeof(IGateway)).ShouldBeTrue();
 
             var manager = new Container(pluginGraph);
-            var gateway = (IGateway) manager.GetInstance(typeof (IGateway));
+            var gateway = (IGateway)manager.GetInstance(typeof(IGateway));
 
             gateway.ShouldBeOfType<StubbedGateway>();
         }
 
-        [Test]
+        [Fact]
         public void CanOverrideTheDefaultInstanceAndCreateAnAllNewPluginOnTheFly()
         {
             var registry = new Registry();
             registry.For<IGateway>().Use<FakeGateway>();
             var pluginGraph = registry.Build();
 
-            pluginGraph.Families.Has(typeof (IGateway)).ShouldBeTrue();
+            pluginGraph.Families.Has(typeof(IGateway)).ShouldBeTrue();
 
             var container = new Container(pluginGraph);
-            var gateway = (IGateway) container.GetInstance(typeof (IGateway));
+            var gateway = (IGateway)container.GetInstance(typeof(IGateway));
 
             gateway.ShouldBeOfType<FakeGateway>();
         }
 
-        [Test]
+        [Fact]
         public void CreatePluginFamilyWithADefault()
         {
             var container = new Container(r =>
@@ -204,14 +192,14 @@ namespace StructureMap.Testing.Configuration.DSL
             container.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldBe("Red");
         }
 
-        [Test]
+        [Fact]
         public void weird_generics_casting()
         {
-            typeof (SomethingElseEntirely).CanBeCastTo<SomethingElse>()
+            typeof(SomethingElseEntirely).CanBeCastTo<SomethingElse>()
                 .ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void CreatePluginFamilyWithReferenceToAnotherFamily()
         {
             var container = new Container(r =>
@@ -238,7 +226,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .ShouldBe(orangeSomething);
         }
 
-        [Test]
+        [Fact]
         public void PutAnInterceptorIntoTheInterceptionChainOfAPluginFamilyInTheDSL()
         {
             var lifecycle = new StubbedLifecycle();
@@ -248,10 +236,10 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var pluginGraph = registry.Build();
 
-            pluginGraph.Families[typeof (IGateway)].Lifecycle.ShouldBeTheSameAs(lifecycle);
+            pluginGraph.Families[typeof(IGateway)].Lifecycle.ShouldBeTheSameAs(lifecycle);
         }
 
-        [Test]
+        [Fact]
         public void Set_the_default_by_a_lambda()
         {
             var manager =
@@ -261,7 +249,7 @@ namespace StructureMap.Testing.Configuration.DSL
             manager.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
         }
 
-        [Test]
+        [Fact]
         public void Set_the_default_to_a_built_object()
         {
             var aWidget = new AWidget();
@@ -274,7 +262,7 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         // Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en
-        [Test]
+        [Fact]
         public void TheDefaultInstanceIsALambdaForGuidNewGuid()
         {
             var manager =
@@ -284,7 +272,7 @@ namespace StructureMap.Testing.Configuration.DSL
             manager.GetInstance<Guid>().ShouldBeOfType<Guid>();
         }
 
-        [Test]
+        [Fact]
         public void TheDefaultInstanceIsConcreteType()
         {
             IContainer manager = new Container(

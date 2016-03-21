@@ -1,18 +1,16 @@
-﻿using NUnit.Framework;
-using Rhino.Mocks;
+﻿using Rhino.Mocks;
 using StructureMap.Pipeline;
+using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture]
     public class SingletonLifecycleTester
     {
-        private ILifecycleContext theContext;
-        private SingletonLifecycle theLifecycle;
-        private IObjectCache theCache;
+        private readonly ILifecycleContext theContext;
+        private readonly SingletonLifecycle theLifecycle;
+        private readonly IObjectCache theCache;
 
-        [SetUp]
-        public void SetUp()
+        public SingletonLifecycleTester()
         {
             theContext = MockRepository.GenerateMock<ILifecycleContext>();
             theLifecycle = new SingletonLifecycle();
@@ -21,13 +19,13 @@ namespace StructureMap.Testing.Pipeline
             theContext.Stub(x => x.Singletons).Return(theCache);
         }
 
-        [Test]
+        [Fact]
         public void the_cache_is_from_the_transient_of_the_context()
         {
             theLifecycle.FindCache(theContext).ShouldBeTheSameAs(theCache);
         }
 
-        [Test]
+        [Fact]
         public void eject_all_delegates()
         {
             theLifecycle.EjectAll(theContext);

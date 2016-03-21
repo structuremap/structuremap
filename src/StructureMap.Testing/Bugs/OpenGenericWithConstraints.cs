@@ -1,23 +1,22 @@
-﻿using System;
+﻿using Shouldly;
+using StructureMap.Graph;
+using System;
 using System.Collections;
 using System.Linq;
-using NUnit.Framework;
-using Shouldly;
-using StructureMap.Graph;
+using Xunit;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
     public class OpenGenericWithConstraints
     {
-        [Test]
+        [Fact]
         public void RegisterTwoInheritorsWithDifferentTypeConstraints()
         {
             var container = new Container(x =>
             {
                 x.Scan(y => y.TheCallingAssembly());
-                x.For(typeof (IAmOpenGeneric<>)).Add(typeof (ClosedGenericForEnumerable<>));
-                x.For(typeof (IAmOpenGeneric<>)).Add(typeof (ClosedGenericForStruct<>));
+                x.For(typeof(IAmOpenGeneric<>)).Add(typeof(ClosedGenericForEnumerable<>));
+                x.For(typeof(IAmOpenGeneric<>)).Add(typeof(ClosedGenericForStruct<>));
             });
 
             container.GetInstance<IAmOpenGeneric<int>>().ShouldBeOfType<ClosedGenericForStruct<int>>();
@@ -25,8 +24,8 @@ namespace StructureMap.Testing.Bugs
 
             var amOpenGenerics =
                 container.GetAllInstances<IAmOpenGeneric<EnumerableStruct>>();
-            amOpenGenerics.Single(x => x.GetType() == typeof (ClosedGenericForStruct<EnumerableStruct>));
-            amOpenGenerics.Single(x => x.GetType() == typeof (ClosedGenericForEnumerable<EnumerableStruct>));
+            amOpenGenerics.Single(x => x.GetType() == typeof(ClosedGenericForStruct<EnumerableStruct>));
+            amOpenGenerics.Single(x => x.GetType() == typeof(ClosedGenericForEnumerable<EnumerableStruct>));
 
             amOpenGenerics.Count().ShouldBe(2);
         }
@@ -62,7 +61,7 @@ namespace StructureMap.Testing.Bugs
                 throw new NotImplementedException();
             }
 
-            #endregion
+            #endregion IEnumerable Members
         }
     }
 }
