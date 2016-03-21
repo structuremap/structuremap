@@ -56,7 +56,7 @@ namespace StructureMap.Testing.Bugs
 
             // but, child1 and child2 both have a different IRoot
             child1.GetInstance<IRoot>()
-                .ShouldNotBeTheSameAs(child2);
+                .ShouldNotBeTheSameAs(child2.GetInstance<IRoot>());
         }
 
         // ENDSAMPLE
