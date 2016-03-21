@@ -1,4 +1,4 @@
-packages\storyteller\tools\ST.exe doc-export z:\code\structuremap.github.com Website --version 4.1.0
+packages\storyteller\tools\ST.exe doc-export z:\code\structuremap.github.com Website --version 4.1.2
 
 z:
 

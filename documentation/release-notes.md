@@ -8,6 +8,10 @@ StructureMap is attempting to follow a strict [SemVer](http://semver.org) versio
 4.1 was mostly a bugfix release, but also included some new public API calls for type scanning discovery from *.exe files.
 See the [closed GitHub issues](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A4.1+is%3Aclosed) for details.
 
+* 4.1.2 - Bug fix for [GH-461](https://github.com/structuremap/structuremap/issues/461) singleton scoped registrations to a child container
+* 4.1.1 - Bug fix for "AlwaysUnique" lifecycle within enumerable, inline dependencies
+
+
 ## Release Notes 4.0
 
 4.0.1 was strictly a bug fix release. 
