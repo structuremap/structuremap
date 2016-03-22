@@ -1,18 +1,17 @@
-﻿using NUnit.Framework;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.DynamicInterception;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    [TestFixture]
     public class DynamicProxyInterceptorAcceptanceTests
     {
-        [TestCase(111, 10)]
-        [TestCase(16, 4444)]
-        [TestCase(-16, 4444)]
+        [Theory]
+        [InlineData(16, 4444)]
+        [InlineData(-16, 4444)]
         public void CallSyncMethodWithSyncInterceptors(int value, int expectedResult)
         {
             var container = new Container(x =>
@@ -29,9 +28,10 @@ namespace StructureMap.Testing.Acceptance
             service.GetSquareRoot(value).ShouldBe(expectedResult);
         }
 
-        [TestCase(111, 10)]
-        [TestCase(16, 4444)]
-        [TestCase(-16, 4444)]
+        [Theory]
+        [InlineData(111, 10)]
+        [InlineData(16, 4444)]
+        [InlineData(-16, 4444)]
         public void CallSyncMethodWithAsyncInterceptors(int value, int expectedResult)
         {
             var container = new Container(x =>
@@ -49,9 +49,10 @@ namespace StructureMap.Testing.Acceptance
             service.GetSquareRoot(value).ShouldBe(expectedResult);
         }
 
-        [TestCase(111, 10)]
-        [TestCase(16, 4444)]
-        [TestCase(-16, 4444)]
+        [Theory]
+        [InlineData(111, 10)]
+        [InlineData(16, 4444)]
+        [InlineData(-16, 4444)]
         public void CallSyncMethodWithSyncThenAsyncInterceptors(int value, int expectedResult)
         {
             var container = new Container(x =>
@@ -69,9 +70,10 @@ namespace StructureMap.Testing.Acceptance
             service.GetSquareRoot(value).ShouldBe(expectedResult);
         }
 
-        [TestCase(111, 10)]
-        [TestCase(16, 4444)]
-        [TestCase(-16, 4444)]
+        [Theory]
+        [InlineData(111, 10)]
+        [InlineData(16, 4444)]
+        [InlineData(-16, 4444)]
         public void CallSyncMethodWithAsyncThenSyncInterceptors(int value, int expectedResult)
         {
             var container = new Container(x =>
@@ -89,9 +91,10 @@ namespace StructureMap.Testing.Acceptance
             service.GetSquareRoot(value).ShouldBe(expectedResult);
         }
 
-        [TestCase(111, 10)]
-        [TestCase(16, 4444)]
-        [TestCase(-16, 4444)]
+        [Theory]
+        [InlineData(111, 10)]
+        [InlineData(16, 4444)]
+        [InlineData(-16, 4444)]
         public async Task CallAsyncMethodWithSyncInterceptors(int value, int expectedResult)
         {
             var container = new Container(x =>
@@ -109,9 +112,10 @@ namespace StructureMap.Testing.Acceptance
             (await service.GetSquareRootAsync(value).ConfigureAwait(false)).ShouldBe(expectedResult);
         }
 
-        [TestCase(111, 10)]
-        [TestCase(16, 4444)]
-        [TestCase(-16, 4444)]
+        [Theory]
+        [InlineData(111, 10)]
+        [InlineData(16, 4444)]
+        [InlineData(-16, 4444)]
         public async Task CallAsyncMethodWithAsyncInterceptors(int value, int expectedResult)
         {
             var container = new Container(x =>
@@ -129,9 +133,10 @@ namespace StructureMap.Testing.Acceptance
             (await service.GetSquareRootAsync(value).ConfigureAwait(false)).ShouldBe(expectedResult);
         }
 
-        [TestCase(111, 10)]
-        [TestCase(16, 4444)]
-        [TestCase(-16, 4444)]
+        [Theory]
+        [InlineData(111, 10)]
+        [InlineData(16, 4444)]
+        [InlineData(-16, 4444)]
         public async Task CallAsyncMethodWithAsyncThenSyncInterceptors(int value, int expectedResult)
         {
             var container = new Container(x =>
@@ -149,9 +154,10 @@ namespace StructureMap.Testing.Acceptance
             (await service.GetSquareRootAsync(value).ConfigureAwait(false)).ShouldBe(expectedResult);
         }
 
-        [TestCase(111, 10)]
-        [TestCase(16, 4444)]
-        [TestCase(-16, 4444)]
+        [Theory]
+        [InlineData(111, 10)]
+        [InlineData(16, 4444)]
+        [InlineData(-16, 4444)]
         public async Task CallAsyncMethodWithSyncThenAsyncInterceptors(int value, int expectedResult)
         {
             var container = new Container(x =>
@@ -169,7 +175,7 @@ namespace StructureMap.Testing.Acceptance
             (await service.GetSquareRootAsync(value).ConfigureAwait(false)).ShouldBe(expectedResult);
         }
 
-        [Test]
+        [Fact]
         public void CallVoidSyncMethodWithSyncInterceptors()
         {
             var container = new Container(x =>
@@ -187,7 +193,7 @@ namespace StructureMap.Testing.Acceptance
             service.DoNothing();
         }
 
-        [Test]
+        [Fact]
         public void CallVoidSyncMethodWithAsyncInterceptors()
         {
             var container = new Container(x =>
@@ -205,7 +211,7 @@ namespace StructureMap.Testing.Acceptance
             service.DoNothing();
         }
 
-        [Test]
+        [Fact]
         public void CallVoidSyncMethodWithSyncThenAsyncInterceptors()
         {
             var container = new Container(x =>
@@ -223,7 +229,7 @@ namespace StructureMap.Testing.Acceptance
             service.DoNothing();
         }
 
-        [Test]
+        [Fact]
         public void CallVoidSyncMethodWithAsyncThenSyncInterceptors()
         {
             var container = new Container(x =>
@@ -241,7 +247,7 @@ namespace StructureMap.Testing.Acceptance
             service.DoNothing();
         }
 
-        [Test]
+        [Fact]
         public async Task CallVoidAsyncMethodWithSyncInterceptors()
         {
             var container = new Container(x =>
@@ -259,7 +265,7 @@ namespace StructureMap.Testing.Acceptance
             await service.DoNothingAsync().ConfigureAwait(false);
         }
 
-        [Test]
+        [Fact]
         public async Task CallVoidAsyncMethodWithAsyncInterceptors()
         {
             var container = new Container(x =>
@@ -277,7 +283,7 @@ namespace StructureMap.Testing.Acceptance
             await service.DoNothingAsync().ConfigureAwait(false);
         }
 
-        [Test]
+        [Fact]
         public async Task CallVoidAsyncMethodWithAsyncThenSyncInterceptors()
         {
             var container = new Container(x =>
@@ -295,7 +301,7 @@ namespace StructureMap.Testing.Acceptance
             await service.DoNothingAsync().ConfigureAwait(false);
         }
 
-        [Test]
+        [Fact]
         public async Task CallVoidAsyncMethodWithSyncThenAsyncInterceptors()
         {
             var container = new Container(x =>
@@ -313,7 +319,8 @@ namespace StructureMap.Testing.Acceptance
             await service.DoNothingAsync().ConfigureAwait(false);
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallSyncMethodWithFailingSyncInterceptor(int value)
         {
             var container = new Container(x =>
@@ -332,7 +339,8 @@ namespace StructureMap.Testing.Acceptance
             );
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallSyncMethodWithFailingAsyncInterceptor(int value)
         {
             var container = new Container(x =>
@@ -351,7 +359,8 @@ namespace StructureMap.Testing.Acceptance
             );
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallAsyncMethodWithFailingSyncInterceptor(int value)
         {
             var container = new Container(x =>
@@ -370,7 +379,8 @@ namespace StructureMap.Testing.Acceptance
             Should.Throw<ArgumentException>(() => task);
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallAsyncMethodWithFailingAsyncInterceptor(int value)
         {
             var container = new Container(x =>
@@ -389,7 +399,7 @@ namespace StructureMap.Testing.Acceptance
             Should.Throw<ArgumentException>(() => task);
         }
 
-        [TestCase(-13)]
+        [InlineData(-13)]
         public void CallSyncMethodWithThrowingSyncInterceptor(int value)
         {
             var container = new Container(x =>
@@ -408,7 +418,8 @@ namespace StructureMap.Testing.Acceptance
             );
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallSyncMethodWithThrowingAsyncInterceptor(int value)
         {
             var container = new Container(x =>
@@ -427,7 +438,8 @@ namespace StructureMap.Testing.Acceptance
             );
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallAsyncMethodWithThrowingSyncInterceptor(int value)
         {
             var container = new Container(x =>
@@ -446,7 +458,8 @@ namespace StructureMap.Testing.Acceptance
             Should.Throw<ArgumentException>(() => task);
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallAsyncMethodWithThrowingAsyncInterceptor(int value)
         {
             var container = new Container(x =>
@@ -465,7 +478,8 @@ namespace StructureMap.Testing.Acceptance
             Should.Throw<ArgumentException>(() => task);
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallSyncMethodWithSyncThenFailingSyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -485,7 +499,8 @@ namespace StructureMap.Testing.Acceptance
             );
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallSyncMethodWithSyncThenFailingAsyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -505,7 +520,8 @@ namespace StructureMap.Testing.Acceptance
             );
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallSyncMethodWithAsyncThenFailingSyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -525,7 +541,8 @@ namespace StructureMap.Testing.Acceptance
             );
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallSyncMethodWithAsyncThenFailingAsyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -545,7 +562,8 @@ namespace StructureMap.Testing.Acceptance
             );
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallAsyncMethodWithSyncThenFailingSyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -565,7 +583,8 @@ namespace StructureMap.Testing.Acceptance
             Should.Throw<ArgumentException>(() => task);
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallAsyncMethodWithSyncThenFailingAsyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -585,7 +604,8 @@ namespace StructureMap.Testing.Acceptance
             Should.Throw<ArgumentException>(() => task);
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallAsyncMethodWithAsyncThenFailingSyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -605,7 +625,8 @@ namespace StructureMap.Testing.Acceptance
             Should.Throw<ArgumentException>(() => task);
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallAsyncMethodWithAsyncThenFailingAsyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -625,7 +646,8 @@ namespace StructureMap.Testing.Acceptance
             Should.Throw<ArgumentException>(() => task);
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallSyncMethodWithSyncThenThrowingSyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -645,7 +667,8 @@ namespace StructureMap.Testing.Acceptance
             );
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallSyncMethodWithSyncThenThrowingAsyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -665,7 +688,8 @@ namespace StructureMap.Testing.Acceptance
             );
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallSyncMethodWithAsyncThenThrowingSyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -685,7 +709,8 @@ namespace StructureMap.Testing.Acceptance
             );
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallSyncMethodWithAsyncThenThrowingAsyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -705,7 +730,8 @@ namespace StructureMap.Testing.Acceptance
             );
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallAsyncMethodWithSyncThenThrowingSyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -725,7 +751,8 @@ namespace StructureMap.Testing.Acceptance
             Should.Throw<ArgumentException>(() => task);
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallAsyncMethodWithSyncThenThrowingAsyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -745,7 +772,8 @@ namespace StructureMap.Testing.Acceptance
             Should.Throw<ArgumentException>(() => task);
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallAsyncMethodWithAsyncThenThrowingSyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -765,7 +793,8 @@ namespace StructureMap.Testing.Acceptance
             Should.Throw<ArgumentException>(() => task);
         }
 
-        [TestCase(-13)]
+        [Theory]
+        [InlineData(-13)]
         public void CallAsyncMethodWithAsyncThenThrowingAsyncInterceptors(int value)
         {
             var container = new Container(x =>
@@ -785,7 +814,7 @@ namespace StructureMap.Testing.Acceptance
             Should.Throw<ArgumentException>(() => task);
         }
 
-        [Test]
+        [Fact]
         public void UseInterceptionPolicy()
         {
             var container = new Container(x =>
@@ -816,7 +845,7 @@ namespace StructureMap.Testing.Acceptance
 
             public async Task<int> GetSquareRootAsync(int value)
             {
-                await Task.Delay(10).ConfigureAwait(false);
+                await Task.Yield();
                 return (int)Math.Sqrt(value);
             }
         }
@@ -962,7 +991,7 @@ namespace StructureMap.Testing.Acceptance
 
             public async Task DoNothingAsync()
             {
-                await Task.Delay(10).ConfigureAwait(false);
+                await Task.Yield();
             }
         }
 
