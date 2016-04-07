@@ -1,4 +1,4 @@
-type project
+type file
 id structuremap.automocking
 authors Jeremy Miller
 description
