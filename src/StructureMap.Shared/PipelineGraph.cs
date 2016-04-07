@@ -141,7 +141,10 @@ namespace StructureMap
             _transients.DisposeAndClear();
             _pluginGraph.SafeDispose();
 
-            _profiles.AllProfiles().Each(x => x.Dispose());
+            if (Role == ContainerRole.Root)
+            {
+                _profiles.AllProfiles().Each(x => x.Dispose());
+            }
 
             _trackedDisposables.Each(x => x.Dispose());
         }
