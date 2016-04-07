@@ -247,6 +247,7 @@
     <Compile Include="Bugs\ConnectImplementationsToTypesClosing_is_wonky_in_Registry_added_by_Configure.cs" />
     <Compile Include="Bugs\container_configuration_with_generics_inheritance.cs" />
     <Compile Include="Bugs\Defensive_check_for_public_ctors.cs" />
+    <Compile Include="Bugs\disposing_nested_container_created_from_profile.cs" />
     <Compile Include="Bugs\do_not_allow_policy_changes_in_nested_container_issue_284.cs" />
     <Compile Include="Bugs\do_not_allow_recursive_container_configure.cs" />
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
