@@ -12,7 +12,7 @@ See the [closed GitHub issues](https://github.com/structuremap/structuremap/issu
 * 4.1.1 - Bug fix for "AlwaysUnique" lifecycle within enumerable, inline dependencies
 
 
-## Release Notes 4.0
+## Release Notes 4.0.*
 
 4.0.1 was strictly a bug fix release. 
 ## Release Notes 4.0
