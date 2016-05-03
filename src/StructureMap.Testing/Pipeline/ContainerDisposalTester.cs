@@ -1,11 +1,54 @@
 using Shouldly;
 using System;
+using StructureMap.Testing.Acceptance;
 using Xunit;
 
 namespace StructureMap.Testing.Pipeline
 {
     public class ContainerDisposalTester
     {
+
+        [Fact]
+        public void default_lock_is_unlocked()
+        {
+            new Container().DisposalLock.ShouldBe(DisposalLock.Unlocked);
+        }
+
+        [Fact]
+        public void try_to_dispose_when_ignored_should_do_nothing()
+        {
+            var container = new Container(_ =>
+            {
+                _.For<IWidget>().Use<AWidget>();
+            });
+
+            container.DisposalLock = DisposalLock.Ignore;
+
+            container.Dispose();
+            container.Dispose();
+            container.Dispose();
+
+            container.Model.DefaultTypeFor<IWidget>().ShouldBe(typeof(AWidget));
+        }
+
+        [Fact]
+        public void try_to_dispose_when_locked_should_throw_an_invalid_operation_exception()
+        {
+            var container = new Container(_ =>
+            {
+                _.For<IWidget>().Use<AWidget>();
+            });
+
+            container.DisposalLock = DisposalLock.ThrowOnDispose;
+
+            Exception<InvalidOperationException>.ShouldBeThrownBy(() =>
+            {
+                container.Dispose();
+            });
+
+            container.Model.DefaultTypeFor<IWidget>().ShouldBe(typeof(AWidget));
+        }
+
         [Fact]
         public void disposing_a_main_container_will_dispose_an_object_injected_into_the_container()
         {

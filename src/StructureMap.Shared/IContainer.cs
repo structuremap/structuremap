@@ -401,5 +401,32 @@ namespace StructureMap
         /// </summary>
         /// <param name="object">The object to dispose.</param>
         void Release(object @object);
+
+
+        /// <summary>
+        /// Govern the behavior on Dispose() to prevent applications from 
+        /// being prematurely disposed
+        /// </summary>
+        DisposalLock DisposalLock { get; set; }
+    }
+
+
+
+    public enum DisposalLock
+    {
+        /// <summary>
+        /// If a user calls IContainer.Dispose(), ignore the request
+        /// </summary>
+        Ignore,
+
+        /// <summary>
+        /// Default "just dispose the container" behavior
+        /// </summary>
+        Unlocked,
+
+        /// <summary>
+        /// Throws an InvalidOperationException when Dispose() is called
+        /// </summary>
+        ThrowOnDispose
     }
 }

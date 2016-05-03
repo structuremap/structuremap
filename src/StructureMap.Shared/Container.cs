@@ -1086,6 +1086,10 @@ namespace StructureMap
 
         public void Dispose()
         {
+            if (DisposalLock == DisposalLock.Ignore) return;
+
+            if (DisposalLock == DisposalLock.ThrowOnDispose) throw new InvalidOperationException("This Container has DisposalLock = DisposalLock.ThrowOnDispose and cannot be disposed until the lock is cleared");
+
             if (_disposedLatch) return;
             _disposedLatch = true;
 
@@ -1258,5 +1262,7 @@ namespace StructureMap
             assertNotDisposed();
             TransientTracking.Release(@object);
         }
+
+        public DisposalLock DisposalLock { get; set; } = DisposalLock.Unlocked;
     }
 }
