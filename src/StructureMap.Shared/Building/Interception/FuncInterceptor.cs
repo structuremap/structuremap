@@ -27,7 +27,7 @@ namespace StructureMap.Building.Interception
         }
         
 
-        public string Description
+        public virtual string Description
         {
             get
             {
