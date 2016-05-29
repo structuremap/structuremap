@@ -123,19 +123,19 @@ namespace StructureMap.Testing.Acceptance
         {
             var container = new Container(_ => { _.For<IUnitOfWork>().Use<DefaultUnitOfWork>(); });
 
-            var cooridinator = container.GetInstance<WorkerCoordinator>();
+            var coordinator = container.GetInstance<WorkerCoordinator>();
 
             // The IUnitOfWork object instance is the same for
             // all the objects in the object graph that had
             // a constructor dependency on IUnitOfWork
-            cooridinator.Uow
-                .ShouldBeTheSameAs(cooridinator.Worker1.Uow);
+            coordinator.Uow
+                .ShouldBeTheSameAs(coordinator.Worker1.Uow);
 
-            cooridinator.Uow
-                .ShouldBeTheSameAs(cooridinator.Worker2.Uow);
+            coordinator.Uow
+                .ShouldBeTheSameAs(coordinator.Worker2.Uow);
 
-            cooridinator.Worker1.Uow
-                .ShouldBeTheSameAs(cooridinator.Worker2.Uow);
+            coordinator.Worker1.Uow
+                .ShouldBeTheSameAs(coordinator.Worker2.Uow);
         }
 
         // ENDSAMPLE
