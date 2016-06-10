@@ -42,7 +42,7 @@ In our example there is an reoccuring pattern, we are connecting the plugin type
 
 We instruct the scanner to scan through the calling assembly with default conventions on. This wil find and registers the default instance for `IFoo` and `IBar` which are obviously the concrete types `Foo` and `Bar`. Now whenever you add an additional interface `IMoreFoo` and a class `MoreFoo` to your application's code base, it's automatically picked up by the scanner. 
 
-Sometimes classes need to be suplied with some primitive value in its constructor. For example the `System.Data.SqlClient.SqlConnection` needs to be supplied with the connection string in its constructor. No problem, just set up the value of the constructor argument in the bootstrapping:
+Sometimes classes need to be supplied with some primitive value in its constructor. For example the `System.Data.SqlClient.SqlConnection` needs to be supplied with the connection string in its constructor. No problem, just set up the value of the constructor argument in the bootstrapping:
 
 <[sample:quickstart-container-with-primitive-value]>
 
