@@ -58,13 +58,13 @@ To register the default `Instance` of a type, the syntax is one of the `Registry
 
 ## For().Add()
 
-To register additional `Instance's` for a plugin type, use one of the overloads of `For().Add()`:
+To register additional `Instances` for a plugin type, use one of the overloads of `For().Add()`:
 
 <[sample:AdditionalRegistrations]>
 
 ## Add Many Registrations with For().AddInstances()
 
-If you need to add several `Instance's` to a single plugin type, the `AddInstances()` syntax
+If you need to add several `Instances` to a single plugin type, the `AddInstances()` syntax
 shown below may be quicker and easier to use:
 
 <[sample:Using-AddInstances]>
