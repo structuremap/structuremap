@@ -40,11 +40,11 @@ In our example there is an reoccuring pattern, we are connecting the plugin type
 
 <[sample:quickstart-configure-the-container-using-auto-registrations-and-conventions]>
 
-We instruct the scanner to scan through the calling assembly with default conventions on. This wil find and registers the default instance for `IFoo` and `IBar` which are obviously the concrete types `Foo` and `Bar`. Now whenever you add an additional interface `IMoreFoo` and a class `MoreFoo` to your application's code base, it's automatically picked up by the scanner. 
+We instruct the scanner to scan through the calling assembly with default conventions on. This will find and register the default instance for `IFoo` and `IBar` which are obviously the concrete types `Foo` and `Bar`. Now whenever you add an additional interface `IMoreFoo` and a class `MoreFoo` to your application's code base, it's automatically picked up by the scanner. 
 
-Sometimes classes need to be suplied with some primitive value in its constructor. For example the `System.Data.SqlClient.SqlConnection` needs to be supplied with the connection string in its constructor. No problem, just set up the value of the constructor argument in the bootstrapping:
+Sometimes classes need to be supplied with some primitive value in its constructor. For example the `System.Data.SqlClient.SqlConnection` needs to be supplied with the connection string in its constructor. No problem, just set up the value of the constructor argument in the bootstrapping:
 
 <[sample:quickstart-container-with-primitive-value]>
 
-So far you have seen an couple of ways to work with the <linkto:registration/registry-dsl]> and configure an `Container` object. We have seen examples of configuration that allows us to build objects that doesn't depend on anything like the `Bar` class, or do depend on other types like the `Foo` class needs an instance of `IBar`. In our last example we have seen configuration for objects that needs some primitive types like strings in its constructor function.
+So far you have seen an couple of ways to work with the <linkto:registration/registry-dsl]> and configure a `Container` object. We have seen examples of configuration that allow us to build objects that don't depend on anything like the `Bar` class, or do depend on other types like the `Foo` class needs an instance of `IBar`. In our last example we have seen configuration for objects that need some primitive types like strings in its constructor function.
 
