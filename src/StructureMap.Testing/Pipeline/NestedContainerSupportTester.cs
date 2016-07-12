@@ -197,6 +197,25 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void singleton_service_in_childcontainer_is_found_by_nested()
+        {
+            var root = new Container();
+            
+            var child = root.CreateChildContainer();
+            child.Configure(x => x.ForSingletonOf<IWidget>().Use<AWidget>());
+
+            var containerWidget = child.GetInstance<IWidget>();
+
+            var nested = child.GetNestedContainer();
+
+            var nestedWidget1 = nested.GetInstance<IWidget>();
+            var nestedWidget2 = nested.GetInstance<IWidget>();
+
+            containerWidget.ShouldBeTheSameAs(nestedWidget1);
+            containerWidget.ShouldBeTheSameAs(nestedWidget2);
+        }
+
+        [Test]
         public void the_nested_container_delivers_itself_as_the_IContainer()
         {
             var parent = new Container(x => x.For<IWidget>().Use<AWidget>());
@@ -280,4 +299,4 @@ namespace StructureMap.Testing.Pipeline
             child.Name.ShouldBe("Nested-Parent");
         }
     }
-}
+}   
