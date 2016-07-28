@@ -123,10 +123,6 @@
       <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
       <Name>StructureMap</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StructureMap.AutoFactory\StructureMap.AutoFactory.csproj">
-      <Project>{3C6A4946-3CD9-4B74-87C5-A06EF49920FA}</Project>
-      <Name>StructureMap.AutoFactory</Name>
-    </ProjectReference>
     <ProjectReference Include="..\StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj">
       <Project>{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}</Project>
       <Name>StructureMap.Testing.GenericWidgets</Name>
@@ -202,8 +198,6 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AutoFactories\AutoFactoryTester.cs" />
-    <Compile Include="AutoFactories\ProxyFactoryTests.cs" />
     <Compile Include="AutoMocking\AutoMockerTester.cs" />
     <Compile Include="AutoMocking\Moq\AutoMockerTester.cs" />
     <Compile Include="AutoMocking\Moq\MoqAutoMockerTester.cs" />
