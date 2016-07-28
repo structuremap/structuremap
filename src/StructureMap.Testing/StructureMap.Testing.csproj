@@ -107,10 +107,6 @@
       <Project>{3001815e-2766-44d6-afa1-8fd8f4c400d9}</Project>
       <Name>StructureMap.Testing.ExeWidget</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StructureMap.Web\StructureMap.Web.csproj">
-      <Project>{fa8fdbc9-46ed-4976-a554-a5a1079bd765}</Project>
-      <Name>StructureMap.Web</Name>
-    </ProjectReference>
     <ProjectReference Include="..\StructureMap\StructureMap.csproj">
       <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
       <Name>StructureMap</Name>
@@ -433,12 +429,6 @@
     <Compile Include="Graph\Scanning\TypeRepositoryTester.cs" />
     <Compile Include="using_default_values_on_constructor_function_if_no_explicit_value.cs" />
     <Compile Include="Util\LightweightCacheTester.cs" />
-    <Compile Include="Web\EjectingWithHybridScoping.cs" />
-    <Compile Include="Web\Examples.cs" />
-    <Compile Include="Web\HttpSessionNullRefBug.cs" />
-    <Compile Include="Web\HybridBuildLifecycleTester.cs" />
-    <Compile Include="Web\PluginFamilyTester.cs" />
-    <Compile Include="Web\ThreadLocalStorageLifecycleTester_with_nested_containers.cs" />
     <Compile Include="WhatDidIScan_smoke_tester.cs" />
     <Compile Include="WhatDoIHave_Smoke_Tester.cs" />
     <Compile Include="xUnit\ExplicitAttribute.cs" />

@@ -2,7 +2,6 @@
 using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Samples;
-using StructureMap.Web.Pipeline;
 using System.Linq;
 using Xunit;
 
@@ -34,7 +33,7 @@ namespace StructureMap.Testing.Acceptance
             instance.Singleton();
 
             // or supply an ILifecycle type
-            instance.SetLifecycleTo<HttpContextLifecycle>();
+            instance.SetLifecycleTo<ThreadLocalStorageLifecycle>();
 
             // or supply an ILifecycle object
             instance.SetLifecycleTo(new Lifecycles_Samples.MyCustomLifecycle());

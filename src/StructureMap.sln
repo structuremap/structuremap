@@ -23,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.GenericWidgets", "StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj", "{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Web", "StructureMap.Web\StructureMap.Web.csproj", "{FA8FDBC9-46ED-4976-A554-A5A1079BD765}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Net4", "StructureMap.Net4\StructureMap.Net4.csproj", "{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NestedLibrary", "NestedLibrary\NestedLibrary.csproj", "{DCDB6C5F-8D8A-4542-8F50-1A72E4D883E8}"
@@ -254,30 +252,6 @@ Global
 		{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
 		{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}.ReleaseSign|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}.ReleaseSign|Mixed Platforms.Build.0 = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Build|.NET.ActiveCfg = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Build|Any CPU.ActiveCfg = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Build|Any CPU.Build.0 = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Build|Mixed Platforms.Build.0 = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.NET45WP8|.NET.ActiveCfg = Debug|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.NET45WP8|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.NET45WP8|Any CPU.Build.0 = Debug|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.NET45WP8|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Release|.NET.ActiveCfg = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.ReleaseSign|.NET.ActiveCfg = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.ReleaseSign|Any CPU.ActiveCfg = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.ReleaseSign|Mixed Platforms.ActiveCfg = ReleaseSign|Any CPU
-		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.ReleaseSign|Mixed Platforms.Build.0 = ReleaseSign|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Build|.NET.ActiveCfg = Release|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Build|Any CPU.ActiveCfg = Release|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Build|Any CPU.Build.0 = Release|Any CPU
