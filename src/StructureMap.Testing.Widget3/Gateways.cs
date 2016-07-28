@@ -1,5 +1,4 @@
 using System;
-using StructureMap.LegacyAttributeSupport;
 
 namespace StructureMap.Testing.Widget3
 {
@@ -9,7 +8,6 @@ namespace StructureMap.Testing.Widget3
         void DoSomething();
     }
 
-    [Pluggable("Default")]
     public class DefaultGateway : IGateway
     {
         public string Name { get; set; }
@@ -22,24 +20,22 @@ namespace StructureMap.Testing.Widget3
         {
         }
 
-        public string WhoAmI { get { return "Default"; } }
+        public string WhoAmI
+        {
+            get { return "Default"; }
+        }
 
         #endregion
     }
 
     public class DecoratedGateway : IGateway
     {
-        private IGateway _innerGateway;
-
         public DecoratedGateway(IGateway innerGateway)
         {
-            _innerGateway = innerGateway;
+            InnerGateway = innerGateway;
         }
 
-        public IGateway InnerGateway
-        {
-            get { return _innerGateway; }
-        }
+        public IGateway InnerGateway { get; }
 
         #region IGateway Members
 
@@ -48,13 +44,15 @@ namespace StructureMap.Testing.Widget3
             throw new NotImplementedException();
         }
 
-        public string WhoAmI { get { throw new NotImplementedException(); } }
+        public string WhoAmI
+        {
+            get { throw new NotImplementedException(); }
+        }
 
         #endregion
     }
 
 
-    [Pluggable("Stubbed")]
     public class StubbedGateway : IGateway
     {
         #region IGateway Members
@@ -63,7 +61,10 @@ namespace StructureMap.Testing.Widget3
         {
         }
 
-        public string WhoAmI { get { return "Stubbed"; } }
+        public string WhoAmI
+        {
+            get { return "Stubbed"; }
+        }
 
         #endregion
     }

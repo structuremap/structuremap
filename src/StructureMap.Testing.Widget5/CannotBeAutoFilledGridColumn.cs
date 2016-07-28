@@ -1,10 +1,8 @@
 using StructureMap.Attributes;
-using StructureMap.LegacyAttributeSupport;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Widget5
 {
-    [Pluggable("CannotBeAutoFilled")]
     public class CannotBeAutoFilledGridColumn
     {
         private readonly IWidget _widget;

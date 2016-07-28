@@ -1,5 +1,4 @@
 using System;
-using StructureMap.LegacyAttributeSupport;
 
 namespace StructureMap.Testing.GenericWidgets
 {
@@ -15,7 +14,6 @@ namespace StructureMap.Testing.GenericWidgets
     {
     }
 
-    [Pluggable("Default")]
     public class Service<T> : IService<T>
     {
         public Type GetT()
@@ -32,7 +30,6 @@ namespace StructureMap.Testing.GenericWidgets
         }
     }
 
-    [Pluggable("Plugged")]
     public class ServiceWithPlug<T> : IService<T>
     {
         private readonly IPlug<T> _plug;
@@ -51,7 +48,6 @@ namespace StructureMap.Testing.GenericWidgets
         Type PlugType { get; }
     }
 
-    [Pluggable("Default")]
     public class ConcretePlug<T> : IPlug<T>
     {
         #region IPlug<T> Members
@@ -65,12 +61,10 @@ namespace StructureMap.Testing.GenericWidgets
     {
     }
 
-    [Pluggable("Default")]
     public class GenericConcept<T> : IConcept<T>
     {
     }
 
-    [Pluggable("Specific")]
     public class SpecificConcept : IConcept<object>
     {
     }
@@ -81,41 +75,33 @@ namespace StructureMap.Testing.GenericWidgets
 
     public class ColorThing<T, U> : IThing<T, U>
     {
-        private readonly string _color;
-
         public ColorThing(string color)
         {
-            _color = color;
+            Color = color;
         }
 
-        public string Color { get { return _color; } }
+        public string Color { get; }
     }
 
     public class ComplexThing<T, U> : IThing<T, U>
     {
-        private readonly int _age;
-        private readonly string _name;
-        private readonly bool _ready;
-
         public ComplexThing(string name, int age, bool ready)
         {
-            _name = name;
-            _age = age;
-            _ready = ready;
+            Name = name;
+            Age = age;
+            Ready = ready;
         }
 
-        public string Name { get { return _name; } }
+        public string Name { get; }
 
-        public int Age { get { return _age; } }
+        public int Age { get; }
 
-        public bool Ready { get { return _ready; } }
+        public bool Ready { get; }
     }
 
     public abstract class AbstractClass<T>
     {
-        private readonly Guid _id = Guid.NewGuid();
-
-        public Guid Id { get { return _id; } }
+        public Guid Id { get; } = Guid.NewGuid();
 
         public Type GetT()
         {
@@ -123,7 +109,6 @@ namespace StructureMap.Testing.GenericWidgets
         }
     }
 
-    [Pluggable("Default")]
     public class ConcreteClass<T> : AbstractClass<T>
     {
     }
@@ -132,7 +117,6 @@ namespace StructureMap.Testing.GenericWidgets
     {
     }
 
-    [Pluggable("Default")]
     public class LotsOfTemplatedTypes<T, U, V> : ILotsOfTemplatedTypes<T, U, V>
     {
     }

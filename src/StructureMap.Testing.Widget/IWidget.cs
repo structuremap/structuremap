@@ -1,5 +1,4 @@
 using System;
-using StructureMap.LegacyAttributeSupport;
 
 namespace StructureMap.Testing.Widget
 {
@@ -8,7 +7,6 @@ namespace StructureMap.Testing.Widget
         void DoSomething();
     }
 
-    [Pluggable("Color"), Serializable]
     public class ColorWidget : IWidget, ICloneable
     {
         private readonly string _Color;
@@ -56,7 +54,6 @@ namespace StructureMap.Testing.Widget
         }
     }
 
-    [Pluggable("AWidget")]
     public class AWidget : IWidget, ICloneable
     {
         #region ICloneable Members
@@ -99,7 +96,6 @@ namespace StructureMap.Testing.Widget
         #endregion
     }
 
-    [Pluggable("Money")]
     public class MoneyWidget : IWidget
     {
         public double Amount { get; set; }
@@ -114,7 +110,6 @@ namespace StructureMap.Testing.Widget
     }
 
 
-    [Pluggable("Configuration")]
     public class ConfigurationWidget : IWidget
     {
         public ConfigurationWidget(string String, string String2, int Int, long Long, byte Byte, double Double,

@@ -27,8 +27,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Net4", "Struct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NestedLibrary", "NestedLibrary\NestedLibrary.csproj", "{DCDB6C5F-8D8A-4542-8F50-1A72E4D883E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.LegacyAttributeSupport", "StructureMap.LegacyAttributeSupport\StructureMap.LegacyAttributeSupport.csproj", "{840415D3-247D-449A-BC79-605D0A1C6F81}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StructureMap.Shared", "StructureMap.Shared\StructureMap.Shared.shproj", "{6EB495CA-A997-452B-B113-60B8FDC432EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Dotnet", "StructureMap.Dotnet\StructureMap.Dotnet.csproj", "{57144C5D-7614-45EA-8F8E-07C62709FEA9}"
@@ -300,31 +298,6 @@ Global
 		{DCDB6C5F-8D8A-4542-8F50-1A72E4D883E8}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
 		{DCDB6C5F-8D8A-4542-8F50-1A72E4D883E8}.ReleaseSign|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{DCDB6C5F-8D8A-4542-8F50-1A72E4D883E8}.ReleaseSign|Mixed Platforms.Build.0 = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Build|.NET.ActiveCfg = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Build|Any CPU.ActiveCfg = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Build|Any CPU.Build.0 = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Build|Mixed Platforms.Build.0 = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.NET45WP8|.NET.ActiveCfg = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.NET45WP8|Any CPU.ActiveCfg = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.NET45WP8|Any CPU.Build.0 = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.NET45WP8|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.NET45WP8|Mixed Platforms.Build.0 = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Release|.NET.ActiveCfg = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Release|Any CPU.Build.0 = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.ReleaseSign|.NET.ActiveCfg = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.ReleaseSign|Any CPU.ActiveCfg = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.ReleaseSign|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{840415D3-247D-449A-BC79-605D0A1C6F81}.ReleaseSign|Mixed Platforms.Build.0 = Release|Any CPU
 		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Build|.NET.ActiveCfg = Release|Any CPU
 		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Build|.NET.Build.0 = Release|Any CPU
 		{57144C5D-7614-45EA-8F8E-07C62709FEA9}.Build|Any CPU.ActiveCfg = Release|Any CPU

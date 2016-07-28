@@ -1,4 +1,3 @@
-using StructureMap.LegacyAttributeSupport;
 
 namespace StructureMap.Testing.Widget
 {
@@ -7,7 +6,6 @@ namespace StructureMap.Testing.Widget
         int Count { get; }
     }
 
-    [Pluggable("String")]
     public class StringList : IList
     {
         public string[] values;
@@ -24,7 +22,6 @@ namespace StructureMap.Testing.Widget
         #endregion
     }
 
-    [Pluggable("Integer")]
     public class IntegerList : IList
     {
         public int[] values;

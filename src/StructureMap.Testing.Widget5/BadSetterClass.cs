@@ -1,9 +1,7 @@
 using StructureMap.Attributes;
-using StructureMap.LegacyAttributeSupport;
 
 namespace StructureMap.Testing.Widget5
 {
-    [Pluggable("Bad")]
     public class BadSetterClass
     {
         private readonly string _columnName;

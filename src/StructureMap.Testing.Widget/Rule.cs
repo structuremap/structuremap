@@ -1,5 +1,4 @@
 using System;
-using StructureMap.LegacyAttributeSupport;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Widget
@@ -12,27 +11,18 @@ namespace StructureMap.Testing.Widget
         }
     }
 
-    [Pluggable("Complex")]
     public class ComplexRule : Rule
     {
-        private readonly bool _Bool;
-        private readonly byte _Byte;
-        private readonly double _Double;
-        private readonly int _Int;
-        private readonly long _Long;
-        private readonly string _String;
-        private readonly string _String2;
-
         [DefaultConstructor]
         public ComplexRule(string String, string String2, int Int, long Long, byte Byte, double Double, bool Bool)
         {
-            _String = String;
-            _String2 = String2;
-            _Int = Int;
-            _Long = Long;
-            _Byte = Byte;
-            _Double = Double;
-            _Bool = Bool;
+            this.String = String;
+            this.String2 = String2;
+            this.Int = Int;
+            this.Long = Long;
+            this.Byte = Byte;
+            this.Double = Double;
+            this.Bool = Bool;
         }
 
         /// <summary>
@@ -51,21 +41,21 @@ namespace StructureMap.Testing.Widget
         {
         }
 
-        public string String { get { return _String; } }
+        public string String { get; }
 
 
-        public string String2 { get { return _String2; } }
+        public string String2 { get; }
 
 
-        public int Int { get { return _Int; } }
+        public int Int { get; }
 
-        public byte Byte { get { return _Byte; } }
+        public byte Byte { get; }
 
-        public long Long { get { return _Long; } }
+        public long Long { get; }
 
-        public double Double { get { return _Double; } }
+        public double Double { get; }
 
-        public bool Bool { get { return _Bool; } }
+        public bool Bool { get; }
 
         public static IConfiguredInstance GetInstance()
         {
@@ -87,49 +77,43 @@ namespace StructureMap.Testing.Widget
     }
 
 
-    [Pluggable("Color")]
     // SAMPLE: ColorRule
     public class ColorRule : Rule
     {
-        private readonly string _color;
         public string ID = Guid.NewGuid().ToString();
 
         public ColorRule(string color)
         {
-            _color = color;
+            Color = color;
         }
 
         public string Name { get; set; }
         public int Age { get; set; }
 
-        public string Color { get { return _color; } }
+        public string Color { get; }
 
         public override string ToString()
         {
-            return string.Format("The '{0}' Rule", _color);
+            return $"The '{Color}' Rule";
         }
     }
     // ENDSAMPLE
 
 
-    [Pluggable("GreaterThan")]
     public class GreaterThanRule : Rule
     {
-        private readonly string _Attribute;
-        private readonly int _Value;
-
         public GreaterThanRule()
         {
         }
 
         public GreaterThanRule(string Attribute, int Value)
         {
-            _Attribute = Attribute;
-            _Value = Value;
+            this.Attribute = Attribute;
+            this.Value = Value;
         }
 
-        public string Attribute { get { return _Attribute; } }
+        public string Attribute { get; }
 
-        public int Value { get { return _Value; } }
+        public int Value { get; }
     }
 }
