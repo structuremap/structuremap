@@ -99,14 +99,6 @@
       <Project>{dcdb6c5f-8d8a-4542-8f50-1a72e4d883e8}</Project>
       <Name>NestedLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StructureMap.AutoMocking.Moq\StructureMap.AutoMocking.Moq.csproj">
-      <Project>{49d5fb89-a091-47c3-9c08-2058e9c346da}</Project>
-      <Name>StructureMap.AutoMocking.Moq</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\StructureMap.AutoMocking\StructureMap.AutoMocking.csproj">
-      <Project>{0ed1b206-a1c9-4a52-ba87-3ba416c8725c}</Project>
-      <Name>StructureMap.AutoMocking</Name>
-    </ProjectReference>
     <ProjectReference Include="..\StructureMap.Net4\StructureMap.Net4.csproj">
       <Project>{6d812b81-cf2e-4df1-9f73-bc19e5a6a019}</Project>
       <Name>StructureMap.Net4</Name>
@@ -198,12 +190,6 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AutoMocking\AutoMockerTester.cs" />
-    <Compile Include="AutoMocking\Moq\AutoMockerTester.cs" />
-    <Compile Include="AutoMocking\Moq\MoqAutoMockerTester.cs" />
-    <Compile Include="AutoMocking\Moq\MoqFactoryTester.cs" />
-    <Compile Include="AutoMocking\RhinoAutoMockerTester.cs" />
-    <Compile Include="AutoMocking\RhinoMockRepositoryProxyTester.cs" />
     <Compile Include="AutoWiringExamples.cs" />
     <Compile Include="BidirectionalDependencies.cs" />
     <Compile Include="Bugs\AddValueDirectlyWithGenericUsage.cs" />

@@ -23,11 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.GenericWidgets", "StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj", "{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.AutoMocking", "StructureMap.AutoMocking\StructureMap.AutoMocking.csproj", "{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Web", "StructureMap.Web\StructureMap.Web.csproj", "{FA8FDBC9-46ED-4976-A554-A5A1079BD765}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.AutoMocking.Moq", "StructureMap.AutoMocking.Moq\StructureMap.AutoMocking.Moq.csproj", "{49D5FB89-A091-47C3-9C08-2058E9C346DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Net4", "StructureMap.Net4\StructureMap.Net4.csproj", "{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}"
 EndProject
@@ -258,30 +254,6 @@ Global
 		{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
 		{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}.ReleaseSign|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}.ReleaseSign|Mixed Platforms.Build.0 = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Build|.NET.ActiveCfg = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Build|Any CPU.ActiveCfg = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Build|Any CPU.Build.0 = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Build|Mixed Platforms.Build.0 = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.NET45WP8|.NET.ActiveCfg = Debug|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.NET45WP8|Any CPU.ActiveCfg = Debug|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.NET45WP8|Any CPU.Build.0 = Debug|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.NET45WP8|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Release|.NET.ActiveCfg = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.ReleaseSign|.NET.ActiveCfg = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.ReleaseSign|Any CPU.ActiveCfg = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.ReleaseSign|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.ReleaseSign|Mixed Platforms.Build.0 = Release|Any CPU
 		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Build|.NET.ActiveCfg = Release|Any CPU
 		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Build|Any CPU.ActiveCfg = Release|Any CPU
 		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.Build|Any CPU.Build.0 = Release|Any CPU
@@ -306,30 +278,6 @@ Global
 		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
 		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.ReleaseSign|Mixed Platforms.ActiveCfg = ReleaseSign|Any CPU
 		{FA8FDBC9-46ED-4976-A554-A5A1079BD765}.ReleaseSign|Mixed Platforms.Build.0 = ReleaseSign|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Build|.NET.ActiveCfg = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Build|Any CPU.ActiveCfg = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Build|Any CPU.Build.0 = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Build|Mixed Platforms.Build.0 = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.NET45WP8|.NET.ActiveCfg = Debug|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.NET45WP8|Any CPU.ActiveCfg = Debug|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.NET45WP8|Any CPU.Build.0 = Debug|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.NET45WP8|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Release|.NET.ActiveCfg = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.ReleaseSign|.NET.ActiveCfg = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.ReleaseSign|Any CPU.ActiveCfg = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.ReleaseSign|Any CPU.Build.0 = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.ReleaseSign|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{49D5FB89-A091-47C3-9C08-2058E9C346DA}.ReleaseSign|Mixed Platforms.Build.0 = Release|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Build|.NET.ActiveCfg = Release|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Build|Any CPU.ActiveCfg = Release|Any CPU
 		{6D812B81-CF2E-4DF1-9F73-BC19E5A6A019}.Build|Any CPU.Build.0 = Release|Any CPU
