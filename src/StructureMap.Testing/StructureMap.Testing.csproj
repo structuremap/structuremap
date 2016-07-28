@@ -107,10 +107,6 @@
       <Project>{0ed1b206-a1c9-4a52-ba87-3ba416c8725c}</Project>
       <Name>StructureMap.AutoMocking</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StructureMap.DynamicInterception\StructureMap.DynamicInterception.csproj">
-      <Project>{0d61f524-6812-4f33-8582-daee5f563158}</Project>
-      <Name>StructureMap.DynamicInterception</Name>
-    </ProjectReference>
     <ProjectReference Include="..\StructureMap.Net4\StructureMap.Net4.csproj">
       <Project>{6d812b81-cf2e-4df1-9f73-bc19e5a6a019}</Project>
       <Name>StructureMap.Net4</Name>
@@ -184,7 +180,6 @@
     <Compile Include="Acceptance\contextual_building.cs" />
     <Compile Include="Acceptance\custom_policies.cs" />
     <Compile Include="Acceptance\custom_registration_convention.cs" />
-    <Compile Include="Acceptance\DynamicProxyInterceptorAcceptanceTests.cs" />
     <Compile Include="Acceptance\ejecting_instances.cs" />
     <Compile Include="Acceptance\enumerable_instances.cs" />
     <Compile Include="Acceptance\explicit_arguments.cs" />
