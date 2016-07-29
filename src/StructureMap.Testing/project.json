@@ -7,8 +7,9 @@
   },
   "dependencies": {
     "xunit": "2.2.0-beta2-build3300",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "Shouldly": "2.8.1",
-    "NSubstitute": "1.10.0", 
+    "NSubstitute": "1.10.0",
     "StructureMap": { "target": "project" },
     "StructureMap.Testing.Widget": { "target": "project" },
     "StructureMap.Testing.Widget2": { "target": "project" },
@@ -20,7 +21,7 @@
     "NestedLibrary": { "target": "project" }
   },
   "frameworks": {
-    "net45": {
+    "net451": {
       "frameworkAssemblies": {
         "System.Configuration": "",
         "System.Data": "",
