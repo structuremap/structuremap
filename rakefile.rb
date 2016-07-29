@@ -74,6 +74,7 @@ end
 
 desc 'Compile the code'
 task :compile => [:clean, :version] do
+	sh "dotnet restore src/StructureMap.Testing"
 	sh "dotnet build src/StructureMap.Testing"
 end
 
