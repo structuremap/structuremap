@@ -162,7 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StructureMap\StructureMap.csproj">
-      <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
+      <Project>{3f36ea80-2f9a-4dad-ba27-5ac6163a2ee3}</Project>
       <Name>StructureMap</Name>
     </ProjectReference>
   </ItemGroup>

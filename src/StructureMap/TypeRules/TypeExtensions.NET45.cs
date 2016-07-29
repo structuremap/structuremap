@@ -53,6 +53,7 @@ namespace StructureMap.TypeRules
         }
 
 
+        /* These need to be put back for CoreCLR
         public static IEnumerable<MethodInfo> GetMethods(this Type type)
         {
             return type.GetTypeInfo().DeclaredMethods;
@@ -69,6 +70,7 @@ namespace StructureMap.TypeRules
                 .DeclaredProperties
                 .Where(mi => mi.CanWrite && mi.SetMethod.IsPublic && !mi.SetMethod.IsStatic && mi.SetMethod.GetParameters().Length == 1);
         } 
+        */
 
         public static IEnumerable<Type> GetExportedTypes(this Assembly assembly)
         {
@@ -83,6 +85,7 @@ namespace StructureMap.TypeRules
         }
     }
 
+    /*
     public static class AssemblyLoader
     {
         public static Assembly ByName(string assemblyName)
@@ -90,4 +93,5 @@ namespace StructureMap.TypeRules
             return Assembly.Load(new AssemblyName(assemblyName));
         }
     }
+    */
 }
