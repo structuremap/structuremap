@@ -1,4 +1,4 @@
-using Moq;
+using NSubstitute;
 using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Query;
@@ -10,15 +10,15 @@ namespace StructureMap.Testing.Query
     public class InstanceRefTester
     {
         private readonly NullInstance instance;
-        private readonly Mock<IFamily> familyMock;
+        private readonly IFamily familyMock;
         private readonly InstanceRef instanceRef;
 
         public InstanceRefTester()
         {
             instance = new NullInstance();
-            familyMock = new Mock<IFamily>();
+            familyMock = Substitute.For<IFamily>();
 
-            instanceRef = new InstanceRef(instance, familyMock.Object);
+            instanceRef = new InstanceRef(instance, familyMock);
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace StructureMap.Testing.Query
         {
             instanceRef.EjectObject();
 
-            familyMock.Verify(x => x.Eject(instance));
+            familyMock.Received().Eject(instance);
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace StructureMap.Testing.Query
         {
             var widget = new AWidget();
 
-            familyMock.Setup(x => x.Build(instance)).Returns(widget);
+            familyMock.Build(instance).Returns(widget);
 
             instanceRef.Get<IWidget>().ShouldBeTheSameAs(widget);
         }
@@ -42,7 +42,7 @@ namespace StructureMap.Testing.Query
         [Fact]
         public void has_relays_from_IFamily()
         {
-            familyMock.Setup(x => x.HasBeenCreated(instance)).Returns(true);
+            familyMock.HasBeenCreated(instance).Returns(true);
 
             instanceRef.ObjectHasBeenCreated().ShouldBeTrue();
         }
@@ -50,7 +50,7 @@ namespace StructureMap.Testing.Query
         [Fact]
         public void has_relays_from_IFamily_2()
         {
-            familyMock.Setup(x => x.HasBeenCreated(instance)).Returns(false);
+            familyMock.HasBeenCreated(instance).Returns(false);
 
             instanceRef.ObjectHasBeenCreated().ShouldBeFalse();
         }
@@ -64,7 +64,7 @@ namespace StructureMap.Testing.Query
         [Fact]
         public void plugin_type_comes_from_family()
         {
-            familyMock.Setup(x => x.PluginType).Returns(typeof(IWidget));
+            familyMock.PluginType.Returns(typeof(IWidget));
 
             instanceRef.PluginType.ShouldBe(typeof(IWidget));
         }

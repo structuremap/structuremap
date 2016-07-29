@@ -1,6 +1,6 @@
 Castle.Core
 RhinoMocks
 Shouldly
-Moq
 xunit
 xunit.runner.visualstudio
+NSubstitute
