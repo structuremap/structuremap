@@ -1,5 +1,5 @@
 {
-  "version": "4.3.0-51211",
+  "version": "4.3.0-*",
   "title": "StructureMap",
   "description": "The Original IoC Container for .Net",
   "language": "en-US",

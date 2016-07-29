@@ -63,13 +63,7 @@ task :version do
 		file.write "[assembly: AssemblyInformationalVersion(\"#{options[:informational_version]}\")]\n"
 	end
 	
-  puts 'Writing version to project.json'
-  nuget_version = "#{BUILD_VERSION}-#{build_revision}"
-  project_file = load_project_file('src/StructureMap/project.json')
-  File.open('src/StructureMap/project.json', "r+") do |file|
-    project_file["version"] = nuget_version
-    file.write(JSON.pretty_generate project_file)
-  end
+
 end
 
 desc 'Compile the code'
@@ -89,7 +83,7 @@ end
 
 desc 'Build Nuspec packages'
 task :pack => [:compile] do
-	sh "dotnet pack src/StructureMap -o artifacts"
+	sh "dotnet pack src/StructureMap -o artifacts --version-suffix #{build_revision}"
 end
 
 desc "Launches VS to the StructureMap solution file"
