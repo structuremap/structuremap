@@ -185,12 +185,18 @@ namespace StructureMap.Graph
 
         public void TheCallingAssembly()
         {
+
+#if NET45
             var callingAssembly = findTheCallingAssembly();
 
             if (callingAssembly != null)
             {
                 Assembly(callingAssembly);
             }
+#else
+
+            throw new NotSupportedException("This feature is not yet available on CoreCLR, you will have to explicitly specify the Assembly Name");
+#endif
         }
 
         public void AssembliesFromApplicationBaseDirectory()
@@ -286,6 +292,7 @@ namespace StructureMap.Graph
             }
         }
 
+#if NET45
         private static Assembly findTheCallingAssembly()
         {
             var trace = new StackTrace(false);
@@ -306,7 +313,7 @@ namespace StructureMap.Graph
             }
             return callingAssembly;
         }
-
+#endif
     }
 }
 

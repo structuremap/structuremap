@@ -39,6 +39,17 @@
       "dependencies": {
         "Microsoft.NETCore.Platforms": "1.0.1"
       }
+    },
+    "netstandard1.5": {
+      "dependencies": {
+        "System.Collections.Concurrent": "4.0.12",
+        "System.Reflection.TypeExtensions": "4.1.0",
+        "System.Runtime.Loader": "4.0.0",
+        "NETStandard.Library": {
+          "type": "platform",
+          "version": "1.6.0"
+        }
+      }
     }
   }
 }

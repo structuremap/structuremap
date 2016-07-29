@@ -9,6 +9,7 @@ namespace StructureMap.TypeRules
 
     public static partial class TypeExtensions
     {
+#if NET45
         public static IEnumerable<Type> GetInterfaces(this Type type)
         {
             return type.GetTypeInfo().ImplementedInterfaces;
@@ -51,7 +52,7 @@ namespace StructureMap.TypeRules
         {
             return pi.SetMethod;
         }
-
+#endif
 
         /* These need to be put back for CoreCLR
         public static IEnumerable<MethodInfo> GetMethods(this Type type)

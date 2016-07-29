@@ -33,7 +33,11 @@ namespace StructureMap.TypeRules
     {
         public static Assembly ByName(string assemblyName)
         {
+#if NET45
             return Assembly.Load(assemblyName);
+#else
+            return Assembly.Load(new AssemblyName(assemblyName));
+#endif
         }
     }
 }
