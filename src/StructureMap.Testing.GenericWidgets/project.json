@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "debugType": "portable",
+    "emitEntryPoint": false
+  },
+  "dependencies": {
+    "StructureMap": { "target": "project" },
+    "StructureMap.Testing.Widget": { "target": "project" }
+  },
+  "frameworks": {
+    "net45": {
+      "frameworkAssemblies": {
+        "System.Data": "",
+        "System.Numerics": "",
+        "System.Runtime.Serialization": "",
+        "System.Xml": "",
+        "System.Xml.Linq": ""
+      },
+      "dependencies": {
+        "Microsoft.NETCore.Platforms": "1.0.1"
+      }
+    }
+  }
+}

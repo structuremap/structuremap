@@ -1,6 +1,8 @@
+require 'json'
+
 COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
 RESULTS_DIR = "results"
-BUILD_VERSION = '4.2.0'
+BUILD_VERSION = '4.3.0'
 
 tc_build_number = ENV["BUILD_NUMBER"]
 build_revision = tc_build_number || Time.new.strftime('5%H%M')
@@ -60,34 +62,33 @@ task :version do
 		file.write "[assembly: AssemblyFileVersion(\"#{options[:file_version]}\")]\n"
 		file.write "[assembly: AssemblyInformationalVersion(\"#{options[:informational_version]}\")]\n"
 	end
+	
+  puts 'Writing version to project.json'
+  nuget_version = "#{BUILD_VERSION}-#{build_revision}"
+  project_file = load_project_file('src/StructureMap/project.json')
+  File.open('src/StructureMap/project.json', "r+") do |file|
+    project_file["version"] = nuget_version
+    file.write(JSON.pretty_generate project_file)
+  end
 end
 
 desc 'Compile the code'
 task :compile => [:clean, :version] do
-	sh "paket.exe restore"
-	sh "nuget.exe restore src/StructureMap.sln"
-	
-	msbuild = '"C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe"'
-	sh "#{msbuild} src/StructureMap.sln   /property:Configuration=#{COMPILE_TARGET} /v:m /t:rebuild /nr:False /maxcpucount:2"
+	sh "dotnet build src/StructureMap.Testing"
 end
 
 desc 'Run the unit tests'
 task :test => [:compile] do
 	Dir.mkdir RESULTS_DIR
 
-	sh "packages/xunit.runner.console/tools/xunit.console.exe src/StructureMap.Testing/bin/#{COMPILE_TARGET}/StructureMap.Testing.dll -notrait Explicit=true -nunit results/TestResult.xml"
+	sh "dotnet test src/StructureMap.Testing"
 end
 
-desc 'Compile the Signed Version of StructureMap'
-task :compile_signed => [:version, :clean] do
-  sh "C:/Windows/Microsoft.NET/Framework/v4.0.30319/msbuild.exe src/StructureMap.sln   /property:Configuration=ReleaseSign /v:m /t:rebuild /nr:False /maxcpucount:2"
-end
+
 
 desc 'Build Nuspec packages'
 task :pack => [:compile] do
-	sh "paket.exe pack output artifacts version #{build_number}"
-	
-	sh "nuget.exe pack src/StructureMap.nuspec -OutputDirectory artifacts -Version #{build_number}"
+	sh "dotnet pack src/StructureMap -o artifacts"
 end
 
 desc "Launches VS to the StructureMap solution file"
@@ -99,4 +100,11 @@ end
 task :docs do
 	sh "paket.exe restore"
 	sh "packages/Storyteller/tools/st.exe doc-run -v #{BUILD_VERSION}"
+end
+
+def load_project_file(project)
+  File.open(project) do |file|
+    file_contents = File.read(file, :encoding => 'bom|utf-8')
+    JSON.parse(file_contents)
+  end
 end
