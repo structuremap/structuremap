@@ -28,9 +28,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.ExeWidget", "StructureMap.Testing.ExeWidget\StructureMap.Testing.ExeWidget.csproj", "{3001815E-2766-44D6-AFA1-8FD8F4C400D9}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		StructureMap.Shared\StructureMap.Shared.projitems*{3f36ea80-2f9a-4dad-ba27-5ac6163a2ee3}*SharedItemsImports = 4
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Build|.NET = Build|.NET
 		Build|Any CPU = Build|Any CPU
