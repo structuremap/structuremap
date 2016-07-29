@@ -19,7 +19,7 @@ namespace StructureMap.TypeRules
             return false;
         }
 
-        internal static bool HasAttribute<T>(this MemberInfo provider) where T : Attribute
+        public static bool HasAttribute<T>(this MemberInfo provider) where T : Attribute
         {
             var atts = provider.GetCustomAttributes(typeof (T), true);
             return atts.Any();

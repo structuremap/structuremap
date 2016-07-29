@@ -1,0 +1,39 @@
+{
+  "testRunner": "xunit",
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "debugType": "portable",
+    "emitEntryPoint": true
+  },
+  "dependencies": {
+    "xunit": "2.2.0-beta2-build3300",
+    "Shouldly": "2.8.1",
+    "NSubstitute": "1.10.0", 
+    "StructureMap": { "target": "project" },
+    "StructureMap.Testing.Widget": { "target": "project" },
+    "StructureMap.Testing.Widget2": { "target": "project" },
+    "StructureMap.Testing.Widget3": { "target": "project" },
+    "StructureMap.Testing.Widget4": { "target": "project" },
+    "StructureMap.Testing.Widget5": { "target": "project" },
+    "StructureMap.Testing.ExeWidget": { "target": "project" },
+    "StructureMap.Testing.GenericWidgets": { "target": "project" },
+    "NestedLibrary": { "target": "project" }
+  },
+  "frameworks": {
+    "net45": {
+      "frameworkAssemblies": {
+        "System.Configuration": "",
+        "System.Data": "",
+        "System.Numerics": "",
+        "System.Runtime": "",
+        "System.Runtime.Serialization": "",
+        "System.Xml": "",
+        "System.Xml.Linq": ""
+      },
+      "dependencies": {
+        "Microsoft.NETCore.Platforms": "1.0.1"
+      }
+    }
+
+  }
+}

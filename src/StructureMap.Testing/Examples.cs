@@ -1,9 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
-using System.Windows.Forms;
 using StructureMap.Attributes;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Graph.Scanning;
 using StructureMap.Testing.Acceptance;
@@ -413,7 +411,7 @@ namespace StructureMap.Testing.DocumentationExamples
     {
     }
 
-    public class ApplicationShell : Form, IApplicationShell
+    public class ApplicationShell : IApplicationShell
     {
         public IQueryToolBar QueryToolBar
         {
@@ -454,17 +452,10 @@ namespace StructureMap.Testing.DocumentationExamples
             //ObjectFactory.Container.Inject(shell.ExplorerPane);
 
 
-            Application.Run(shell);
         }
     }
 
-    public static class Program
-    {
-        [STAThread]
-        public static void Main(params string[] args)
-        {
-        }
-    }
+
 
     public class RemoteService : IService
     {
