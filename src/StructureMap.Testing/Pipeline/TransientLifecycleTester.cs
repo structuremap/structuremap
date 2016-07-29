@@ -1,4 +1,4 @@
-﻿using Rhino.Mocks;
+﻿using NSubstitute;
 using StructureMap.Pipeline;
 using Xunit;
 
@@ -6,17 +6,17 @@ namespace StructureMap.Testing.Pipeline
 {
     public class TransientLifecycleTester
     {
-        private ILifecycleContext theContext;
-        private TransientLifecycle theLifecycle;
-        private ITransientTracking theCache;
+        private readonly ILifecycleContext theContext;
+        private readonly TransientLifecycle theLifecycle;
+        private readonly ITransientTracking theCache;
 
         public TransientLifecycleTester()
         {
-            theContext = MockRepository.GenerateMock<ILifecycleContext>();
+            theContext = Substitute.For<ILifecycleContext>();
             theLifecycle = new TransientLifecycle();
 
-            theCache = MockRepository.GenerateMock<ITransientTracking>();
-            theContext.Stub(x => x.Transients).Return(theCache);
+            theCache = Substitute.For<ITransientTracking>();
+            theContext.Transients.Returns(theCache);
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace StructureMap.Testing.Pipeline
         {
             theLifecycle.EjectAll(theContext);
 
-            theCache.AssertWasCalled(x => x.DisposeAndClear());
+            theCache.Received().DisposeAndClear();
         }
     }
 }

@@ -20,7 +20,6 @@ NUGET
       System.Runtime.InteropServices (>= 4.0.20) - framework: dnxcore50
       System.Threading (>= 4.0.10) - framework: dnxcore50
     NSubstitute (1.10.0.0)
-    RhinoMocks (3.6.1)
     Shouldly (2.5.0)
     Storyteller (3.0.0.274-alpha)
     System.Collections (4.0.10) - version_in_path: true, framework: dnxcore50

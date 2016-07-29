@@ -251,7 +251,6 @@
     <Compile Include="Building\AllPossibleEnumerableDependency_resolution_Tester.cs" />
     <Compile Include="Building\array_expression_building.cs" />
     <Compile Include="Building\BuildPlanTester.cs" />
-    <Compile Include="Building\BuildPlan_AcceptVisitor_Behavior.cs" />
     <Compile Include="Building\BuildUpPlanTester.cs" />
     <Compile Include="Building\ConcreteBuild_accepts_the_BuildPlanVisitor.cs" />
     <Compile Include="Building\ConcreteBuild_description_building_Tester.cs" />
@@ -531,17 +530,6 @@
       <ItemGroup>
         <Reference Include="NSubstitute">
           <HintPath>..\..\packages\NSubstitute\lib\net45\NSubstitute.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0' Or $(TargetFrameworkVersion) == 'v3.5' Or $(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6')">
-      <ItemGroup>
-        <Reference Include="Rhino.Mocks">
-          <HintPath>..\..\packages\RhinoMocks\lib\net\Rhino.Mocks.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

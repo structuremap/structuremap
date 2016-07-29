@@ -1,9 +1,9 @@
-using Rhino.Mocks;
 using Shouldly;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using System;
 using System.Threading;
+using NSubstitute;
 using Xunit;
 
 namespace StructureMap.Testing.Pipeline
@@ -32,23 +32,23 @@ namespace StructureMap.Testing.Pipeline
         public void get_for_uncached_instance_builds_instance()
         {
             var instance = new ObjectInstance(new AWidget());
-            var mockBuildSession = MockRepository.GenerateMock<IBuildSession>();
+            var mockBuildSession = Substitute.For<IBuildSession>();
 
             cache.Get(typeof(IWidget), instance, mockBuildSession);
 
-            mockBuildSession.AssertWasCalled(session => session.BuildNewInOriginalContext(typeof(IWidget), instance));
+            mockBuildSession.Received().BuildNewInOriginalContext(typeof(IWidget), instance);
         }
 
         [Fact]
         public void get_for_cached_instance_does_not_build_instance()
         {
             var instance = new ObjectInstance(new AWidget());
-            var mockBuildSession = MockRepository.GenerateMock<IBuildSession>();
+            var mockBuildSession = Substitute.For<IBuildSession>();
             cache.Get(typeof(IWidget), instance, new StubBuildSession());
 
             cache.Get(typeof(IWidget), instance, mockBuildSession);
 
-            mockBuildSession.AssertWasNotCalled(session => session.BuildNewInOriginalContext(typeof(IWidget), instance));
+            mockBuildSession.DidNotReceive().BuildNewInOriginalContext(typeof(IWidget), instance);
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Pipeline
         [Fact]
         public void eject_a_disposable_object()
         {
-            var disposable = MockRepository.GenerateMock<IDisposable>();
+            var disposable = Substitute.For<IDisposable>();
             var instance = new ObjectInstance(disposable);
 
             cache.Set(typeof(IWidget), instance, disposable);
@@ -94,7 +94,7 @@ namespace StructureMap.Testing.Pipeline
 
             cache.Has(typeof(IWidget), instance).ShouldBeFalse();
 
-            disposable.AssertWasCalled(x => x.Dispose());
+            disposable.Received().Dispose();
         }
 
         [Fact]

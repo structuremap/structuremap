@@ -1,4 +1,4 @@
-﻿using Rhino.Mocks;
+﻿using NSubstitute;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
@@ -14,7 +14,7 @@ namespace StructureMap.Testing.Building.Interception
 
         public InterceptionPlanTester()
         {
-            theVisitor = MockRepository.GenerateMock<IBuildPlanVisitor>();
+            theVisitor = Substitute.For<IBuildPlanVisitor>();
         }
 
         [Fact]
@@ -275,7 +275,7 @@ namespace StructureMap.Testing.Building.Interception
 
             plan.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.Activator(interceptor));
+            theVisitor.Received().Activator(interceptor);
         }
 
         [Fact]
@@ -289,7 +289,7 @@ namespace StructureMap.Testing.Building.Interception
 
             plan.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.Decorator(decorator));
+            theVisitor.Received().Decorator(decorator);
         }
 
         [Fact]
@@ -303,7 +303,7 @@ namespace StructureMap.Testing.Building.Interception
 
             plan.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.Decorator(decorator));
+            theVisitor.Received().Decorator(decorator);
         }
     }
 }
