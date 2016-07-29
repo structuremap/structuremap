@@ -95,50 +95,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NestedLibrary\NestedLibrary.csproj">
-      <Project>{dcdb6c5f-8d8a-4542-8f50-1a72e4d883e8}</Project>
-      <Name>NestedLibrary</Name>
-    </ProjectReference>
     <ProjectReference Include="..\StructureMap.Net4\StructureMap.Net4.csproj">
       <Project>{6d812b81-cf2e-4df1-9f73-bc19e5a6a019}</Project>
       <Name>StructureMap.Net4</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\StructureMap.Testing.ExeWidget\StructureMap.Testing.ExeWidget.csproj">
-      <Project>{3001815e-2766-44d6-afa1-8fd8f4c400d9}</Project>
-      <Name>StructureMap.Testing.ExeWidget</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\StructureMap\StructureMap.csproj">
-      <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
-      <Name>StructureMap</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj">
-      <Project>{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}</Project>
-      <Name>StructureMap.Testing.GenericWidgets</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\StructureMap.Testing.Widget2\StructureMap.Testing.Widget2.csproj">
-      <Name>StructureMap.Testing.Widget2</Name>
-      <Project>{027E996C-75E8-40F8-9073-0E3B77A6BE1F}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\StructureMap.Testing.Widget3\StructureMap.Testing.Widget3.csproj">
-      <Name>StructureMap.Testing.Widget3</Name>
-      <Project>{C8878328-281F-4F4F-8D6E-88C60F304B89}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\StructureMap.Testing.Widget4\StructureMap.Testing.Widget4.csproj">
-      <Name>StructureMap.Testing.Widget4</Name>
-      <Project>{901D15CB-EF37-4F84-864B-E70F4B5F1DFF}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\StructureMap.Testing.Widget5\StructureMap.Testing.Widget5.csproj">
-      <Name>StructureMap.Testing.Widget5</Name>
-      <Project>{CAB97F7F-FB75-410C-898A-88DCAAC036BE}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\StructureMap.Testing.Widget\StructureMap.Testing.Widget.csproj">
-      <Name>StructureMap.Testing.Widget</Name>
-      <Project>{E21E1651-3E32-47B7-A290-F461E63FEAD2}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
