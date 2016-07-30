@@ -15,11 +15,12 @@ namespace StructureMap.Testing.Examples
         {
             var container = Container.For<VisualizationRegistry>();
 
+#if NET451
             // SAMPLE: find-all-plugin-types-from-the-current-assembly
             container.Model.PluginTypes.Where(x => x.PluginType.Assembly == Assembly.GetExecutingAssembly())
                 .Each(pluginType => Debug.WriteLine(pluginType.PluginType));
             // ENDSAMPLE
-
+#endif
             // SAMPLE: find-default-of-plugintype
             // Finding the concrete type of the default
             // IDevice service
@@ -43,6 +44,7 @@ namespace StructureMap.Testing.Examples
             });
             // ENDSAMPLE
 
+#if NET451
             // SAMPLE: eject-and-remove-configuration
             // Removes all configurations and objects already built as singletons
             // related to types in the current Assembly
@@ -52,7 +54,7 @@ namespace StructureMap.Testing.Examples
             // that were registered to IDevice
             container.Model.EjectAndRemove(typeof(IDevice));
             // ENDSAMPLE
-
+#endif
             /*
             // SAMPLE: eject-an-object
             // ONLY ejects any built object for this Instance from the SingletonThing

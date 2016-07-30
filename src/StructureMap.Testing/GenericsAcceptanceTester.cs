@@ -91,7 +91,7 @@ namespace StructureMap.Testing
         {
             //var builder = new PluginGraphBuilder();
             //var scanner = new AssemblyScanner();
-            //scanner.Assembly(GetType().Assembly);
+            //scanner.Assembly(GetType().GetAssembly());
 
             //builder.AddScanner(scanner);
             var graph = PluginGraph.CreateRoot();
@@ -197,7 +197,7 @@ namespace StructureMap.Testing
         [Fact]
         public void GetGenericTypeByString()
         {
-            var assem = Assembly.GetExecutingAssembly();
+            var assem = GetType().GetAssembly();
             var type = assem.GetType("StructureMap.Testing.ITarget`2");
 
             type.GetGenericTypeDefinition()
@@ -235,7 +235,7 @@ namespace StructureMap.Testing
         [ValidationMethod]
         public void Validate()
         {
-            throw new ApplicationException("Break!");
+            throw new Exception("Break!");
         }
     }
 

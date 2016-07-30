@@ -3,6 +3,7 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Graph.Scanning;
 using System;
+using System.Reflection;
 using Xunit;
 
 namespace StructureMap.Testing.Acceptance

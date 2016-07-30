@@ -7,7 +7,7 @@ namespace StructureMap.Testing.Widget
         void DoSomething();
     }
 
-    public class ColorWidget : IWidget, ICloneable
+    public class ColorWidget : IWidget
     {
         private readonly string _Color;
 
@@ -54,7 +54,7 @@ namespace StructureMap.Testing.Widget
         }
     }
 
-    public class AWidget : IWidget, ICloneable
+    public class AWidget : IWidget
     {
         #region ICloneable Members
 
@@ -158,7 +158,7 @@ namespace StructureMap.Testing.Widget
             // Throw an exception if Long = 5
             if (Long == 5)
             {
-                throw new ApplicationException("Long should not equal 5");
+                throw new Exception("Long should not equal 5");
             }
         }
 

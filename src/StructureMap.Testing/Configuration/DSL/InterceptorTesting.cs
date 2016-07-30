@@ -58,7 +58,7 @@ namespace StructureMap.Testing.Configuration.DSL
                         .Ctor<string>("color").Is("Orange");
 
                     x.Object(new ColorService("Yellow")).Named("Bad")
-                        .OnCreation("throw exception", obj => { throw new ApplicationException("Bad!"); });
+                        .OnCreation("throw exception", obj => { throw new Exception("Bad!"); });
                 });
                 // ENDSAMPLE
             });

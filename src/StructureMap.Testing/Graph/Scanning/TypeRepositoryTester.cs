@@ -6,6 +6,7 @@ using StructureMap.TypeRules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace StructureMap.Testing.Graph.Scanning
@@ -30,7 +31,7 @@ namespace StructureMap.Testing.Graph.Scanning
 
         public TypeRepositoryTester()
         {
-            theInners = GetType().GetNestedTypes();
+            theInners = GetType().GetNestedTypes(BindingFlags.Public);
 
             theTypes = new AssemblyTypes("some name", () => theInners);
         }
@@ -39,7 +40,7 @@ namespace StructureMap.Testing.Graph.Scanning
         public void assert_no_type_scanning_failures_happy_path()
         {
             TypeRepository.ClearAll();
-            TypeRepository.FindTypes(GetType().Assembly, TypeClassification.All).Wait();
+            TypeRepository.FindTypes(GetType().GetAssembly(), TypeClassification.All).Wait();
 
             // SAMPLE: assert-no-type-scanning-failures
             TypeRepository.AssertNoTypeScanningFailures();
@@ -49,8 +50,8 @@ namespace StructureMap.Testing.Graph.Scanning
         [Fact]
         public void successful_assembly_types()
         {
-            var types = new AssemblyTypes(typeof(IContainer).Assembly);
-            types.Record.Name.ShouldBe(typeof(IContainer).Assembly.FullName);
+            var types = new AssemblyTypes(typeof(IContainer).GetTypeInfo().Assembly);
+            types.Record.Name.ShouldBe(typeof(IContainer).GetAssembly().FullName);
             types.Record.LoadException.ShouldBeNull();
         }
 
@@ -93,7 +94,7 @@ namespace StructureMap.Testing.Graph.Scanning
         [Fact]
         public void TypeRepository_mechanics()
         {
-            var task = TypeRepository.FindTypes(GetType().Assembly, TypeClassification.Interfaces);
+            var task = TypeRepository.FindTypes(GetType().GetAssembly(), TypeClassification.Interfaces);
             task.Wait();
 
             task.Result.ShouldContain(typeof(Interface1));
@@ -104,9 +105,9 @@ namespace StructureMap.Testing.Graph.Scanning
         [Fact]
         public void find_type_set()
         {
-            var widget1 = typeof(IWidget).Assembly;
-            var widget2 = typeof(StructureMap.Testing.Widget2.Rule1).Assembly;
-            var widget3 = typeof(StructureMap.Testing.Widget3.ColorService).Assembly;
+            var widget1 = typeof(IWidget).GetAssembly();
+            var widget2 = typeof(StructureMap.Testing.Widget2.Rule1).GetAssembly();
+            var widget3 = typeof(StructureMap.Testing.Widget3.ColorService).GetAssembly();
 
             var task = TypeRepository.FindTypes(new[] { widget1, widget2, widget3 }, type => type.Name.Contains("Color"));
             task.Wait();
@@ -139,15 +140,25 @@ Widget2Color
         [Fact]
         public void find_all_interfaces()
         {
+#if NET451
             theTypes.FindTypes(TypeClassification.Interfaces)
                 .ShouldHaveTypes(theInners.Where(x => x.IsInterface));
+#else
+            theTypes.FindTypes(TypeClassification.Interfaces)
+                .ShouldHaveTypes(theInners.Where(x => x.GetTypeInfo().IsInterface));
+#endif
         }
 
         [Fact]
         public void find_all_concretes()
         {
+#if NET451
             theTypes.FindTypes(TypeClassification.Concretes)
                 .ShouldHaveTypes(theInners.Where(x => x.IsClass && !x.IsAbstract));
+#else
+            theTypes.FindTypes(TypeClassification.Concretes)
+                .ShouldHaveTypes(theInners.Where(x => x.GetTypeInfo().IsClass && !x.GetTypeInfo().IsAbstract));
+#endif
         }
 
         [Fact]

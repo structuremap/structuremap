@@ -4,6 +4,7 @@ using StructureMap.Pipeline;
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using StructureMap.TypeRules;
 using Xunit;
 
 namespace StructureMap.Testing.Acceptance
@@ -22,7 +23,7 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<IRepository<string, int>>()
                 .ShouldBeOfType<Repository<string, int>>();
 
-            Debug.WriteLine(container.WhatDoIHave(assembly: Assembly.GetExecutingAssembly()));
+            Debug.WriteLine(container.WhatDoIHave(assembly: GetType().GetAssembly()));
         }
 
         // ENDSAMPLE

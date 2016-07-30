@@ -3,7 +3,10 @@ using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using System;
 using System.Threading;
+
+#if NET451
 using NSubstitute;
+#endif
 using Xunit;
 
 namespace StructureMap.Testing.Pipeline
@@ -27,7 +30,7 @@ namespace StructureMap.Testing.Pipeline
 
             cachedWidget.ShouldBe(aWidget);
         }
-
+#if NET451
         [Fact]
         public void get_for_uncached_instance_builds_instance()
         {
@@ -50,7 +53,7 @@ namespace StructureMap.Testing.Pipeline
 
             mockBuildSession.DidNotReceive().BuildNewInOriginalContext(typeof(IWidget), instance);
         }
-
+#endif
         [Fact]
         public void get_for_cached_instance_returns_cached_instance()
         {
@@ -82,6 +85,7 @@ namespace StructureMap.Testing.Pipeline
             cachedWidget.ShouldBe(aWidget);
         }
 
+#if NET451
         [Fact]
         public void eject_a_disposable_object()
         {
@@ -96,6 +100,7 @@ namespace StructureMap.Testing.Pipeline
 
             disposable.Received().Dispose();
         }
+#endif
 
         [Fact]
         public void eject_a_non_disposable_object()

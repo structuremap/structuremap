@@ -9,21 +9,21 @@ using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
 using System.Collections.Generic;
-using NSubstitute;
 using Xunit;
 
 namespace StructureMap.Testing.Building
 {
     public class ConcreteTypeTester
     {
+#if NET451
         [Fact]
         public void if_a_dependency_value_is_IDependencySource_just_use_that()
         {
-            var source = Substitute.For<IDependencySource>();
+            var source = NSubstitute.Substitute.For<IDependencySource>();
             ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeArg", typeof(IGateway), source)
                 .ShouldBeTheSameAs(source);
         }
-
+#endif
         [Fact]
         public void no_value_for_non_simple_resolves_to_default_source()
         {

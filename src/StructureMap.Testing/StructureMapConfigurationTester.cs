@@ -62,7 +62,7 @@ namespace StructureMap.Testing
     {
         public Something()
         {
-            throw new ApplicationException("You can't make me!");
+            throw new Exception("You can't make me!");
         }
     }
 }

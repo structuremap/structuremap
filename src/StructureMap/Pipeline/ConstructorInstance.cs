@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using StructureMap.Building;
 using StructureMap.Diagnostics;
-using StructureMap.Graph;
 using StructureMap.TypeRules;
+
 
 namespace StructureMap.Pipeline
 {
@@ -19,10 +19,7 @@ namespace StructureMap.Pipeline
         {
         }
 
-        protected override ConstructorInstance thisInstance
-        {
-            get { return this; }
-        }
+        protected override ConstructorInstance thisInstance => this;
 
         protected override ConstructorInstance thisObject()
         {

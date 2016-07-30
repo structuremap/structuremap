@@ -1,6 +1,7 @@
 ﻿using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using System.Diagnostics;
+using StructureMap.TypeRules;
 using Xunit;
 
 namespace StructureMap.Testing
@@ -148,7 +149,7 @@ namespace StructureMap.Testing
             });
 
             // SAMPLE: whatdoihave-assembly
-            Debug.WriteLine(container.WhatDoIHave(assembly: typeof(IWidget).Assembly));
+            Debug.WriteLine(container.WhatDoIHave(assembly: typeof(IWidget).GetAssembly()));
             // ENDSAMPLE
         }
 
@@ -159,7 +160,7 @@ namespace StructureMap.Testing
             var container = new Container();
 
             // Filter by the Assembly of the Plugin Type
-            var byAssembly = container.WhatDoIHave(assembly: typeof(IWidget).Assembly);
+            var byAssembly = container.WhatDoIHave(assembly: typeof(IWidget).GetAssembly());
 
             // Only report on the specified Plugin Type
             var byPluginType = container.WhatDoIHave(typeof(IWidget));

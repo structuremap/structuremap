@@ -3,6 +3,7 @@ using StructureMap.Building.Interception;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Samples;
 using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace StructureMap.Testing.Acceptance

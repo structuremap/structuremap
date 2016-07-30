@@ -1,8 +1,6 @@
-﻿using Castle.Core.Internal;
+﻿using System;
 using Shouldly;
-using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
-using System;
+using StructureMap.TypeRules;
 using Xunit;
 
 namespace StructureMap.Testing.Acceptance
@@ -29,6 +27,35 @@ namespace StructureMap.Testing.Acceptance
             }
         }
 
+        // ENDSAMPLE
+
+        // SAMPLE: use-if-none-modularity
+        [AttributeUsage(AttributeTargets.Assembly)]
+        public class ProductModuleAttribute : Attribute
+        {
+        }
+
+        public class ApplicationRegistry : Registry
+        {
+            public ApplicationRegistry()
+            {
+                // Use the default services as fallbacks
+                IncludeRegistry<DefaultServices>();
+
+                // Dependending on what assemblies are present,
+                // this might find specific registrations that
+                // will take precedence over the UseIfNone()
+                // registrations in DefaultServices
+                Scan(_ =>
+                {
+                    _.AssembliesFromApplicationBaseDirectory(
+                        assem => assem.HasAttribute<ProductModuleAttribute>());
+
+                    _.LookForRegistries();
+                });
+            }
+        }
+
         [Fact]
         public void see_use_if_none_in_action()
         {
@@ -52,35 +79,6 @@ namespace StructureMap.Testing.Acceptance
             // should win out
             container2.GetInstance<IWidget>()
                 .ShouldBeOfType<BWidget>();
-        }
-
-        // ENDSAMPLE
-
-        // SAMPLE: use-if-none-modularity
-        [AttributeUsage(AttributeTargets.Assembly)]
-        public class ProductModuleAttribute : Attribute { }
-
-        public class ApplicationRegistry : Registry
-        {
-            public ApplicationRegistry()
-            {
-                // Use the default services as fallbacks
-                IncludeRegistry<DefaultServices>();
-
-                // Dependending on what assemblies are present,
-                // this might find specific registrations that
-                // will take precedence over the UseIfNone()
-                // registrations in DefaultServices
-                Scan(_ =>
-                {
-                    _.AssembliesFromApplicationBaseDirectory(assem =>
-                    {
-                        return assem.GetCustomAttributes(typeof(ProductModuleAttribute), false).Length > 0;
-                    });
-
-                    _.LookForRegistries();
-                });
-            }
         }
 
         // ENDSAMPLE

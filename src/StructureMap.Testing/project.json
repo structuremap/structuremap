@@ -9,7 +9,6 @@
     "xunit": "2.2.0-beta2-build3300",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "Shouldly": "2.8.1",
-    "NSubstitute": "1.10.0",
     "StructureMap": { "target": "project" },
     "StructureMap.Testing.Widget": { "target": "project" },
     "StructureMap.Testing.Widget2": { "target": "project" },
@@ -32,9 +31,22 @@
         "System.Xml.Linq": ""
       },
       "dependencies": {
-        "Microsoft.NETCore.Platforms": "1.0.1"
+        "Microsoft.NETCore.Platforms": "1.0.1",
+        "NSubstitute": "1.10.0"
+      }
+    },
+    "netcoreapp1.0": {
+      "dependencies": {
+        "System.Collections.Concurrent": "4.0.12",
+        "System.Reflection.TypeExtensions": "4.1.0",
+        "System.Runtime.Loader": "4.0.0",
+        "NETStandard.Library": {
+          "type": "platform",
+          "version": "1.6.0"
+        }
       }
     }
+
 
   }
 }

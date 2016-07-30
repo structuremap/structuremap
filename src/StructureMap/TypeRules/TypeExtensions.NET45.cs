@@ -9,7 +9,22 @@ namespace StructureMap.TypeRules
 
     public static partial class TypeExtensions
     {
+
+
+
+
 #if NET45
+        public static IReadOnlyList<ConstructorInfo> GetConstructors(this Type type)
+        {
+            return new List<ConstructorInfo>(type.GetTypeInfo().DeclaredConstructors);
+        }
+
+        public static bool HasAttribute<T>(this Assembly assembly) where T : Attribute
+        {
+            return assembly.GetCustomAttributes(typeof(T), true).Any();
+        }
+
+
         public static IEnumerable<Type> GetInterfaces(this Type type)
         {
             return type.GetTypeInfo().ImplementedInterfaces;
@@ -18,11 +33,6 @@ namespace StructureMap.TypeRules
         public static Type[] GetGenericArguments(this Type type)
         {
             return type.GetTypeInfo().GenericTypeArguments;
-        }
-
-        public static IReadOnlyList<ConstructorInfo> GetConstructors(this Type type)
-        {
-            return new List<ConstructorInfo>(type.GetTypeInfo().DeclaredConstructors);
         }
 
         public static ConstructorInfo GetConstructor(this Type type, Type[] argumentTypes)
@@ -52,10 +62,31 @@ namespace StructureMap.TypeRules
         {
             return pi.SetMethod;
         }
+
+        public static Assembly GetAssembly(this Type type)
+        {
+            return type.Assembly;
+        }
+
+
+#else
+
+
+        public static Assembly GetAssembly(this Type type)
+        {
+            return type.GetTypeInfo().Assembly;
+        }
 #endif
 
-        /* These need to be put back for CoreCLR
-        public static IEnumerable<MethodInfo> GetMethods(this Type type)
+        /* Needs to go back, but fixed for CoreCLR
+        public static IEnumerable<PropertyInfo> GetSettableProperties(this Type type)
+        {
+            return type.GetTypeInfo()
+                .DeclaredProperties
+                .Where(mi => mi.CanWrite && mi.SetMethod.IsPublic && !mi.SetMethod.IsStatic && mi.SetMethod.GetParameters().Length == 1);
+        } 
+
+                    public static IEnumerable<MethodInfo> GetMethods(this Type type)
         {
             return type.GetTypeInfo().DeclaredMethods;
         }
@@ -64,14 +95,10 @@ namespace StructureMap.TypeRules
         {
             return type.GetTypeInfo().GetDeclaredProperty(name);
         }
-
-        public static IEnumerable<PropertyInfo> GetSettableProperties(this Type type)
-        {
-            return type.GetTypeInfo()
-                .DeclaredProperties
-                .Where(mi => mi.CanWrite && mi.SetMethod.IsPublic && !mi.SetMethod.IsStatic && mi.SetMethod.GetParameters().Length == 1);
-        } 
         */
+
+
+
 
         public static IEnumerable<Type> GetExportedTypes(this Assembly assembly)
         {
@@ -86,13 +113,5 @@ namespace StructureMap.TypeRules
         }
     }
 
-    /*
-    public static class AssemblyLoader
-    {
-        public static Assembly ByName(string assemblyName)
-        {
-            return Assembly.Load(new AssemblyName(assemblyName));
-        }
-    }
-    */
+
 }

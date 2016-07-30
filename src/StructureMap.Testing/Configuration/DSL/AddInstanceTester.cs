@@ -173,8 +173,7 @@ namespace StructureMap.Testing.Configuration.DSL
         #endregion IWidget Members
     }
 
-    [Serializable]
-    public class CloneableWidget : IWidget, ICloneable
+    public class CloneableWidget : IWidget
     {
         private readonly string _name;
 
@@ -188,23 +187,11 @@ namespace StructureMap.Testing.Configuration.DSL
             get { return _name; }
         }
 
-        #region ICloneable Members
-
-        public object Clone()
-        {
-            return MemberwiseClone();
-        }
-
-        #endregion ICloneable Members
-
-        #region IWidget Members
-
         public void DoSomething()
         {
             throw new NotImplementedException();
         }
 
-        #endregion IWidget Members
     }
 
     public class ARule : Rule

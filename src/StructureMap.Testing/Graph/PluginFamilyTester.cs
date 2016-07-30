@@ -4,8 +4,6 @@ using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using System;
-using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using Xunit;
 
@@ -151,6 +149,9 @@ namespace StructureMap.Testing.Graph
 
             family.Instances.Any().ShouldBeFalse();
         }
+
+        public class DataTable { }
+        public class DataSet { }
 
         [Fact]
         public void add_type_works_if_the_concrete_type_can_be_cast_to_plugintype()

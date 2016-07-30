@@ -84,6 +84,7 @@ namespace StructureMap.Testing.Acceptance
                 .ShouldBeOfType<UniquePerRequestLifecycle>();
         }
 
+#if NET451
         // SAMPLE: AppSettingAttribute
         public class AppSettingAttribute : StructureMapAttribute
         {
@@ -110,6 +111,7 @@ namespace StructureMap.Testing.Acceptance
         }
 
         // ENDSAMPLE
+
 
         // SAMPLE: AppSettingTarget
         public class AppSettingTarget
@@ -147,7 +149,9 @@ namespace StructureMap.Testing.Acceptance
         }
 
         // ENDSAMPLE
+#endif
     }
+
 
     // SAMPLE: using-lifecycle-attributes
     [AlwaysUnique]

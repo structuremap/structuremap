@@ -1,4 +1,6 @@
-﻿using NSubstitute;
+﻿#if NET451
+
+using NSubstitute;
 using StructureMap.Building;
 using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
@@ -102,3 +104,6 @@ namespace StructureMap.Testing.Building
         }
     }
 }
+
+
+#endif

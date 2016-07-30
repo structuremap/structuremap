@@ -1,5 +1,6 @@
 ﻿using StructureMap.Pipeline;
 using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace StructureMap.Testing.Pipeline

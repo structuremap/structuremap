@@ -20,7 +20,6 @@ namespace StructureMap.Testing.Bugs
             });
 
             container.GetInstance<IAmOpenGeneric<int>>().ShouldBeOfType<ClosedGenericForStruct<int>>();
-            container.GetInstance<IAmOpenGeneric<ArrayList>>().ShouldBeOfType<ClosedGenericForEnumerable<ArrayList>>();
 
             var amOpenGenerics =
                 container.GetAllInstances<IAmOpenGeneric<EnumerableStruct>>();

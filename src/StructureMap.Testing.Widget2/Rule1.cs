@@ -8,7 +8,7 @@ namespace StructureMap.Testing.Widget2
         [ValidationMethod]
         public void Validate()
         {
-            throw new ApplicationException("I don't like this");
+            throw new Exception("I don't like this");
         }
     }
 }

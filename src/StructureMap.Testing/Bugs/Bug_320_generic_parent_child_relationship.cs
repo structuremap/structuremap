@@ -1,6 +1,7 @@
 ﻿using StructureMap.Graph;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace StructureMap.Testing.Bugs

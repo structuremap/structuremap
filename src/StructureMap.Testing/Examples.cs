@@ -196,7 +196,7 @@ namespace StructureMap.Testing.DocumentationExamples
                 x.Assembly("StructureMap.Testing.Widget");
 
                 // Add an assembly directly
-                x.Assembly(Assembly.GetExecutingAssembly());
+                x.Assembly(typeof(ScanningRegistry).GetTypeInfo().Assembly);
 
                 // Add the assembly that contains a certain type
                 x.AssemblyContainingType<IService>();

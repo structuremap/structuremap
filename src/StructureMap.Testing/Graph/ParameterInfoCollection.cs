@@ -1,24 +1,22 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace StructureMap.Testing.Graph
 {
     public class ParameterInfoCollection
     {
-        private readonly Hashtable _parameters;
+        private readonly Dictionary<string, ParameterInfo> _parameters;
 
         public ParameterInfoCollection(ConstructorInfo constructor)
         {
-            _parameters = new Hashtable();
+            _parameters = new Dictionary<string, ParameterInfo>();
             foreach (var param in constructor.GetParameters())
             {
                 _parameters.Add(param.Name, param);
             }
         }
 
-        public ParameterInfo this[string name]
-        {
-            get { return _parameters[name] as ParameterInfo; }
-        }
+        public ParameterInfo this[string name] => _parameters[name];
     }
 }

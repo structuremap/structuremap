@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Graph
 
             if (quantity < 0)
             {
-                throw new ApplicationException("cannot be negative");
+                throw new Exception("cannot be negative");
             }
         }
 
@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Graph
         {
             if (!IsValid)
             {
-                throw new ApplicationException("not valid.");
+                throw new Exception("not valid.");
             }
         }
     }

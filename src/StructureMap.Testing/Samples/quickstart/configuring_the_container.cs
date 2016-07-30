@@ -1,9 +1,17 @@
-﻿using System.Data;
-using System.Data.SqlClient;
-using StructureMap.Graph;
-
+﻿
 namespace StructureMap.Docs.samples.quickstart
 {
+    public interface IDbConnection
+    {
+        
+    }
+
+    public class SqlConnection : IDbConnection
+    {
+        
+    }
+
+
     internal class configuring_the_container
     {
         public void configure_the_container()
