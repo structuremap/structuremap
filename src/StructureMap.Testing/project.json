@@ -40,13 +40,11 @@
         "System.Collections.Concurrent": "4.0.12",
         "System.Reflection.TypeExtensions": "4.1.0",
         "System.Runtime.Loader": "4.0.0",
-        "NETStandard.Library": {
+        "Microsoft.NETCore.App": {
           "type": "platform",
-          "version": "1.6.0"
+          "version": "1.0.0"
         }
       }
     }
-
-
   }
 }

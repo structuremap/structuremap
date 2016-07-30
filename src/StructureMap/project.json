@@ -18,8 +18,6 @@
     }
   },
   "buildOptions": {
-    "debugType": "portable",
-    "emitEntryPoint": true,
     "compile": [
       "**/*.cs",
       "../CommonAssemblyInfo.cs"
@@ -35,9 +33,6 @@
         "System.Runtime.Serialization": "",
         "System.Xml": "",
         "System.Xml.Linq": ""
-      },
-      "dependencies": {
-        "Microsoft.NETCore.Platforms": "1.0.1"
       }
     },
     "netstandard1.5": {
@@ -45,10 +40,7 @@
         "System.Collections.Concurrent": "4.0.12",
         "System.Reflection.TypeExtensions": "4.1.0",
         "System.Runtime.Loader": "4.0.0",
-        "NETStandard.Library": {
-          "type": "platform",
-          "version": "1.6.0"
-        }
+        "NETStandard.Library": "1.6.0"
       }
     }
   }
