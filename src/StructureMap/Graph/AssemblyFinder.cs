@@ -33,7 +33,16 @@ namespace StructureMap.Graph
                 return FindAssemblies(path, logFailure, includeExeFiles);
             });
 #else
-            var path = Path.GetFullPath("");
+            string path;
+            try {
+                path = AppContext.BaseDirectory;
+            }
+            catch (Exception) {
+                path = System.IO.Directory.GetCurrentDirectory();
+            }
+
+            Console.WriteLine("The path is: " + path);
+
             return FindAssemblies(path, logFailure, includeExeFiles);
 #endif
 

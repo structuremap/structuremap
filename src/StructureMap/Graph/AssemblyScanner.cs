@@ -185,18 +185,12 @@ namespace StructureMap.Graph
 
         public void TheCallingAssembly()
         {
-
-#if NET45
             var callingAssembly = findTheCallingAssembly();
 
             if (callingAssembly != null)
             {
                 Assembly(callingAssembly);
             }
-#else
-
-            throw new NotSupportedException("This feature is not yet available on CoreCLR, you will have to explicitly specify the Assembly Name");
-#endif
         }
 
         public void AssembliesFromApplicationBaseDirectory()
@@ -313,6 +307,34 @@ namespace StructureMap.Graph
             }
             return callingAssembly;
         }
+#else
+        private static Assembly findTheCallingAssembly()
+        {
+            string trace = Environment.StackTrace;
+
+            var parts = trace.Split('\n');
+            var candidate = parts[4].Trim().Substring(3);
+
+            Assembly assembly = null;
+            var names = candidate.Split('.');
+            for (var i = names.Length - 2; i > 0; i--) {
+                var possibility = string.Join(".", names.Take(i).ToArray());
+
+                try 
+                {
+
+                    assembly = System.Reflection.Assembly.Load(new AssemblyName(possibility));
+                    break;
+                }
+                catch (Exception e)
+                {
+                  // Nothing
+                }
+            }
+
+            return assembly;
+        }
+
 #endif
     }
 }

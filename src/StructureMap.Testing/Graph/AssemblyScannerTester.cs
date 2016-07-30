@@ -141,6 +141,7 @@ namespace StructureMap.Testing.Graph
             typeof(class_outside_namespace).IsInNamespace("StructureMap").ShouldBeFalse();
         }
 
+#if NET451
         // SAMPLE: scan-filesystem
         [Fact]
         public void scan_all_assemblies_in_a_folder()
@@ -161,7 +162,7 @@ namespace StructureMap.Testing.Graph
         }
 
         // ENDSAMPLE
-
+#endif
         // SAMPLE: scan-filesystem-for-exe
         [Fact]
         public void scan_all_assemblies_in_a_folder_including_exe()
