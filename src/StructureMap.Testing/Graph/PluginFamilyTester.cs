@@ -150,8 +150,18 @@ namespace StructureMap.Testing.Graph
             family.Instances.Any().ShouldBeFalse();
         }
 
-        public class DataTable { }
-        public class DataSet { }
+        public class DataTable : IServiceProvider {
+            public object GetService(Type serviceType)
+            {
+                throw new NotImplementedException();
+            }
+        }
+        public class DataSet : IServiceProvider {
+            public object GetService(Type serviceType)
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         [Fact]
         public void add_type_works_if_the_concrete_type_can_be_cast_to_plugintype()
