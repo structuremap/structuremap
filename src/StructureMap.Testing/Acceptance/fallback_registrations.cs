@@ -75,7 +75,7 @@ namespace StructureMap.Testing.Acceptance
                 {
                     _.AssembliesFromApplicationBaseDirectory(assem =>
                     {
-                        return assem.HasAttribute<ProductModuleAttribute>();
+                        return assem.GetCustomAttributes(typeof(ProductModuleAttribute), false).Length > 0;
                     });
 
                     _.LookForRegistries();

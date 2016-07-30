@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<StructureMap MementoStyle="Attribute">
-  <DefaultInstance
-      PluginType="StructureMap.Testing.Pipeline.OptionalSetterTarget, StructureMap.Testing"
-      TPluggedType="StructureMap.Testing.Pipeline.OptionalSetterTarget, StructureMap.Testing"
-      Name="Jeremy" />
-</StructureMap>

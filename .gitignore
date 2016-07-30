@@ -33,4 +33,3 @@ packages
 .vs/
 *.nuget.props
 *.nuget.targets
-project.lock.json

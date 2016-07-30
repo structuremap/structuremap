@@ -1,5 +1,3 @@
-using StructureMap.Configuration.DSL;
-using StructureMap.LegacyAttributeSupport;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Widget5
@@ -57,7 +55,6 @@ namespace StructureMap.Testing.Widget5
     {
     }
 
-    [Pluggable("TheType")]
     public class TypeThatHasAttributeButIsNotInRegistry : ITypeThatHasAttributeButIsNotInRegistry
     {
     }

@@ -1,4 +1,4 @@
-﻿using Rhino.Mocks;
+﻿using NSubstitute;
 using StructureMap.Pipeline;
 using Xunit;
 
@@ -12,11 +12,11 @@ namespace StructureMap.Testing.Pipeline
 
         public SingletonLifecycleTester()
         {
-            theContext = MockRepository.GenerateMock<ILifecycleContext>();
+            theContext = Substitute.For<ILifecycleContext>();
             theLifecycle = new SingletonLifecycle();
 
-            theCache = MockRepository.GenerateMock<IObjectCache>();
-            theContext.Stub(x => x.Singletons).Return(theCache);
+            theCache = Substitute.For<IObjectCache>();
+            theContext.Singletons.Returns(theCache);
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace StructureMap.Testing.Pipeline
         {
             theLifecycle.EjectAll(theContext);
 
-            theCache.AssertWasCalled(x => x.DisposeAndClear());
+            theCache.Received().DisposeAndClear();
         }
     }
 }

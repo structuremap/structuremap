@@ -1,20 +1,16 @@
 using StructureMap.Attributes;
-using StructureMap.LegacyAttributeSupport;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Widget5
 {
-    [Pluggable("Basic")]
     public class BasicGridColumn : IGridColumn
     {
-        private readonly string _headerText;
-
         public BasicGridColumn(string headerText)
         {
-            _headerText = headerText;
+            HeaderText = headerText;
         }
 
-        public string HeaderText { get { return _headerText; } }
+        public string HeaderText { get; }
 
         [SetterProperty]
         public IWidget Widget { get; set; }

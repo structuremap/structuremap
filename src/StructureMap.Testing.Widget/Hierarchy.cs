@@ -1,26 +1,20 @@
-using StructureMap.LegacyAttributeSupport;
 
 namespace StructureMap.Testing.Widget
 {
-    [Pluggable("Default")]
     public class GrandChild
     {
-        private readonly int _BirthYear;
-        private readonly bool _RightHanded;
-
         public GrandChild(bool RightHanded, int BirthYear)
         {
-            _BirthYear = BirthYear;
-            _RightHanded = RightHanded;
+            this.BirthYear = BirthYear;
+            this.RightHanded = RightHanded;
         }
 
-        public bool RightHanded { get { return _RightHanded; } }
+        public bool RightHanded { get; }
 
-        public int BirthYear { get { return _BirthYear; } }
+        public int BirthYear { get; }
     }
 
 
-    [Pluggable("Leftie")]
     public class LeftieGrandChild : GrandChild
     {
         public LeftieGrandChild(int BirthYear)
@@ -30,41 +24,32 @@ namespace StructureMap.Testing.Widget
     }
 
 
-    [Pluggable("Default")]
     public class Child
     {
-        private readonly GrandChild _MyGrandChild;
-        private readonly string _Name;
-
         public Child(string Name, GrandChild MyGrandChild)
         {
-            _Name = Name;
-            _MyGrandChild = MyGrandChild;
+            this.Name = Name;
+            this.MyGrandChild = MyGrandChild;
         }
 
-        public string Name { get { return _Name; } }
+        public string Name { get; }
 
-        public GrandChild MyGrandChild { get { return _MyGrandChild; } }
+        public GrandChild MyGrandChild { get; }
     }
 
-    [Pluggable("Default")]
     public class Parent
     {
-        private readonly int _Age;
-        private readonly string _EyeColor;
-        private readonly Child _MyChild;
-
         public Parent(int Age, string EyeColor, Child MyChild)
         {
-            _Age = Age;
-            _EyeColor = EyeColor;
-            _MyChild = MyChild;
+            this.Age = Age;
+            this.EyeColor = EyeColor;
+            this.MyChild = MyChild;
         }
 
-        public int Age { get { return _Age; } }
+        public int Age { get; }
 
-        public string EyeColor { get { return _EyeColor; } }
+        public string EyeColor { get; }
 
-        public Child MyChild { get { return _MyChild; } }
+        public Child MyChild { get; }
     }
 }

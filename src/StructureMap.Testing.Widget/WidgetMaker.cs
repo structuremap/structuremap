@@ -1,4 +1,3 @@
-using StructureMap.LegacyAttributeSupport;
 
 namespace StructureMap.Testing.Widget
 {
@@ -7,7 +6,6 @@ namespace StructureMap.Testing.Widget
         public abstract IWidget MakeWidget();
     }
 
-    [Pluggable("Color")]
     public class ColorWidgetMaker : WidgetMaker
     {
         private readonly string _Color;
@@ -25,7 +23,6 @@ namespace StructureMap.Testing.Widget
         }
     }
 
-    [Pluggable("Money")]
     public class MoneyWidgetMaker : WidgetMaker
     {
         public double Amount { get; set; }

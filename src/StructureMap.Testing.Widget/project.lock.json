@@ -1,0 +1,72 @@
+{
+  "locked": false,
+  "version": 2,
+  "targets": {
+    ".NETFramework,Version=v4.5": {
+      "Microsoft.NETCore.Platforms/1.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        }
+      },
+      "StructureMap/4.3.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.0.1"
+        },
+        "frameworkAssemblies": [
+          "System.Data",
+          "System.Numerics",
+          "System.Runtime.Serialization",
+          "System.Xml",
+          "System.Xml.Linq"
+        ],
+        "compile": {
+          "net45/StructureMap.dll": {}
+        },
+        "runtime": {
+          "net45/StructureMap.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft.NETCore.Platforms/1.0.1": {
+      "sha512": "ugzoTSED4yBFf7BmoWBkU/3Fk7p/Gu9fjhHvh18DA26lPqjId6qpwy9DXNtVb5QOdqBft83POr9TEOSOzy+eZA==",
+      "type": "package",
+      "path": "Microsoft.NETCore.Platforms/1.0.1",
+      "files": [
+        "Microsoft.NETCore.Platforms.1.0.1.nupkg.sha512",
+        "Microsoft.NETCore.Platforms.nuspec",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "lib/netstandard1.0/_._",
+        "runtime.json"
+      ]
+    },
+    "StructureMap/4.3.0": {
+      "type": "project",
+      "path": "../StructureMap/project.json",
+      "msbuildProject": "../StructureMap/StructureMap.xproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "": [
+      "StructureMap"
+    ],
+    ".NETFramework,Version=v4.5": [
+      "Microsoft.NETCore.Platforms >= 1.0.1",
+      "System.Data",
+      "System.Numerics",
+      "System.Runtime.Serialization",
+      "System.Xml",
+      "System.Xml.Linq"
+    ]
+  },
+  "tools": {},
+  "projectFileToolGroups": {}
+}

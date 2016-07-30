@@ -1,8 +1,6 @@
-﻿using Rhino.Mocks;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Attributes;
 using StructureMap.Building;
-using StructureMap.Building.Interception;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Graph;
@@ -11,6 +9,7 @@ using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
 using System.Collections.Generic;
+using NSubstitute;
 using Xunit;
 
 namespace StructureMap.Testing.Building
@@ -20,7 +19,7 @@ namespace StructureMap.Testing.Building
         [Fact]
         public void if_a_dependency_value_is_IDependencySource_just_use_that()
         {
-            var source = MockRepository.GenerateMock<IDependencySource>();
+            var source = Substitute.For<IDependencySource>();
             ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeArg", typeof(IGateway), source)
                 .ShouldBeTheSameAs(source);
         }

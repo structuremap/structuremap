@@ -1,4 +1,3 @@
-using StructureMap.LegacyAttributeSupport;
 
 namespace StructureMap.Testing.Widget2
 {
@@ -10,7 +9,6 @@ namespace StructureMap.Testing.Widget2
         Beefmaster
     }
 
-    [Pluggable("Cow")]
     public class Cow
     {
         public BreedEnum Breed;

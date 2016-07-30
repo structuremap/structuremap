@@ -1,0 +1,44 @@
+{
+  "version": "4.3.0-*",
+  "title": "StructureMap",
+  "description": "The Original IoC Container for .Net",
+  "language": "en-US",
+  "authors": [
+    "Jeremy D. Miller, Joshua Flanagan, Frank Quednau, Dmytro Dziuma"
+  ],
+  "packOptions": {
+    "projectUrl": "http://structuremap.github.io",
+    "tags": [
+      "IoC"
+    ],
+    "licenseUrl": "https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/structuremap/structuremap"
+    }
+  },
+  "buildOptions": {
+    "debugType": "portable",
+    "emitEntryPoint": true,
+    "compile": [
+      "**/*.cs",
+      "../CommonAssemblyInfo.cs"
+    ]
+  },
+  "dependencies": {
+  },
+  "frameworks": {
+    "net45": {
+      "frameworkAssemblies": {
+        "System.Data": "",
+        "System.Numerics": "",
+        "System.Runtime.Serialization": "",
+        "System.Xml": "",
+        "System.Xml.Linq": ""
+      },
+      "dependencies": {
+        "Microsoft.NETCore.Platforms": "1.0.1"
+      }
+    }
+  }
+}

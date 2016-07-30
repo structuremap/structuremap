@@ -1,4 +1,4 @@
-﻿using Rhino.Mocks;
+﻿using NSubstitute;
 using StructureMap.Building;
 using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
@@ -13,7 +13,7 @@ namespace StructureMap.Testing.Building
 
         public Dependency_Visiting_Tester()
         {
-            theVisitor = MockRepository.GenerateMock<IDependencyVisitor>();
+            theVisitor = Substitute.For<IDependencyVisitor>();
         }
 
         [Fact]
@@ -22,7 +22,7 @@ namespace StructureMap.Testing.Building
             var constant = new Constant(typeof(string), "a");
             constant.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.Constant(constant));
+            theVisitor.Received().Constant(constant);
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Building
             var instance = new LambdaInstance<IGateway>(() => null);
             instance.As<IDependencySource>().AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.Dependency(instance));
+            theVisitor.Received().Dependency(instance);
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace StructureMap.Testing.Building
 
             problem.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.Problem(problem));
+            theVisitor.Received().Problem(problem);
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace StructureMap.Testing.Building
 
             source.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.Referenced(source));
+            theVisitor.Received().Referenced(source);
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace StructureMap.Testing.Building
             var source = new LifecycleDependencySource(typeof(IGateway), new SmartInstance<StubbedGateway>());
             source.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.Lifecycled(source));
+            theVisitor.Received().Lifecycled(source);
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace StructureMap.Testing.Building
 
             source.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.Default(source.ReturnedType));
+            theVisitor.Received().Default(source.ReturnedType);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace StructureMap.Testing.Building
 
             source.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.InlineEnumerable(source));
+            theVisitor.Received().InlineEnumerable(source);
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace StructureMap.Testing.Building
             var build = new ConcreteBuild<StubbedGateway>();
             build.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.Concrete(build));
+            theVisitor.Received().Concrete(build);
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace StructureMap.Testing.Building
             var source = new AllPossibleValuesDependencySource(typeof(IGateway[]));
             source.AcceptVisitor(theVisitor);
 
-            theVisitor.AssertWasCalled(x => x.AllPossibleOf(typeof(IGateway)));
+            theVisitor.Received().AllPossibleOf(typeof(IGateway));
         }
     }
 }

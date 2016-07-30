@@ -1,30 +1,30 @@
-﻿using Moq;
-using Shouldly;
+﻿using Shouldly;
 using StructureMap.Pipeline;
 using System;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace StructureMap.Testing
 {
     public class SessionCacheTester
     {
-        private readonly Mock<IBuildSession> theResolverMock;
+        private readonly IBuildSession theResolverMock;
         private SessionCache theCache;
         private readonly IPipelineGraph thePipeline;
-        private readonly Mock<IInstanceGraph> instanceGraphMock;
+        private readonly IInstanceGraph instanceGraphMock;
 
         public SessionCacheTester()
         {
-            theResolverMock = new Mock<IBuildSession>();
+            theResolverMock = Substitute.For<IBuildSession>();
 
-            theCache = new SessionCache(theResolverMock.Object);
+            theCache = new SessionCache(theResolverMock);
 
-            var thePipelineMock = new Mock<IPipelineGraph>();
-            thePipelineMock.Setup(x => x.ToModel()).Returns(new Container().Model);
-            thePipeline = thePipelineMock.Object;
+            thePipeline = Substitute.For<IPipelineGraph>();
+            thePipeline.ToModel().Returns(new Container().Model);
 
-            instanceGraphMock = new Mock<IInstanceGraph>();
-            thePipelineMock.Setup(x => x.Instances).Returns(instanceGraphMock.Object);
+            instanceGraphMock = Substitute.For<IInstanceGraph>();
+            thePipeline.Instances.Returns(instanceGraphMock);
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace StructureMap.Testing
 
             var foo = new Foo();
 
-            theResolverMock.Setup(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Returns(foo);
+            theResolverMock.ResolveFromLifecycle(typeof(IFoo), instance).Returns(foo);
 
             theCache.GetObject(typeof(IFoo), instance, new TransientLifecycle()).ShouldBeTheSameAs(foo);
         }
@@ -48,9 +48,7 @@ namespace StructureMap.Testing
             var foo = new Foo();
             var foo2 = new Foo();
 
-            theResolverMock.SetupSequence(x => x.BuildUnique(typeof(IFoo), instance))
-                .Returns(foo)
-                .Returns(foo2);
+            theResolverMock.BuildUnique(typeof(IFoo), instance).Returns(foo, foo2);
 
             theCache.GetObject(typeof(IFoo), instance, new UniquePerRequestLifecycle()).ShouldBeTheSameAs(foo);
             theCache.GetObject(typeof(IFoo), instance, new UniquePerRequestLifecycle()).ShouldBeTheSameAs(foo2);
@@ -63,7 +61,7 @@ namespace StructureMap.Testing
 
             var foo = new Foo();
 
-            theResolverMock.Setup(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Returns(foo);
+            theResolverMock.ResolveFromLifecycle(typeof(IFoo), instance).Returns(foo);
 
             theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
             theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
@@ -71,18 +69,19 @@ namespace StructureMap.Testing
             theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
             theCache.GetObject(typeof(IFoo), instance, Lifecycles.Transient).ShouldBeTheSameAs(foo);
 
-            theResolverMock.Verify(x => x.ResolveFromLifecycle(typeof(IFoo), instance), Times.Once());
+            theResolverMock.Received(1).ResolveFromLifecycle(typeof(IFoo), instance);
+
         }
 
         [Fact]
         public void get_default_if_it_does_not_already_exist()
         {
             var instance = new ConfiguredInstance(typeof(Foo));
-            instanceGraphMock.Setup(x => x.GetDefault(typeof(IFoo))).Returns(instance);
+            instanceGraphMock.GetDefault(typeof(IFoo)).Returns(instance);
 
             var foo = new Foo();
 
-            theResolverMock.Setup(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Returns(foo);
+            theResolverMock.ResolveFromLifecycle(typeof(IFoo), instance).Returns(foo);
 
             theCache.GetDefault(typeof(IFoo), thePipeline)
                 .ShouldBeTheSameAs(foo);
@@ -92,18 +91,18 @@ namespace StructureMap.Testing
         public void get_default_is_cached()
         {
             var instance = new ConfiguredInstance(typeof(Foo));
-            instanceGraphMock.Setup(x => x.GetDefault(typeof(IFoo))).Returns(instance);
+            instanceGraphMock.GetDefault(typeof(IFoo)).Returns(instance);
 
             var foo = new Foo();
 
-            theResolverMock.Setup(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Returns(foo);
+            theResolverMock.ResolveFromLifecycle(typeof(IFoo), instance).Returns(foo);
 
             theCache.GetDefault(typeof(IFoo), thePipeline).ShouldBeTheSameAs(foo);
             theCache.GetDefault(typeof(IFoo), thePipeline).ShouldBeTheSameAs(foo);
             theCache.GetDefault(typeof(IFoo), thePipeline).ShouldBeTheSameAs(foo);
             theCache.GetDefault(typeof(IFoo), thePipeline).ShouldBeTheSameAs(foo);
 
-            theResolverMock.Verify(x => x.ResolveFromLifecycle(typeof(IFoo), instance), Times.Once());
+            theResolverMock.Received(1).ResolveFromLifecycle(typeof(IFoo), instance);
         }
 
         [Fact]
@@ -114,9 +113,9 @@ namespace StructureMap.Testing
             var args = new ExplicitArguments();
             args.Set<IFoo>(foo1);
 
-            theCache = new SessionCache(theResolverMock.Object, args);
+            theCache = new SessionCache(theResolverMock, args);
 
-            instanceGraphMock.Setup(x => x.GetDefault(typeof(IFoo))).Throws(new NotImplementedException());
+            instanceGraphMock.GetDefault(typeof(IFoo)).Throws(new NotImplementedException());
 
             theCache.GetDefault(typeof(IFoo), thePipeline)
                 .ShouldBeTheSameAs(foo1);
@@ -136,7 +135,7 @@ namespace StructureMap.Testing
             var args = new ExplicitArguments();
             args.Set<IFoo>(foo1);
 
-            theCache = new SessionCache(theResolverMock.Object, args);
+            theCache = new SessionCache(theResolverMock, args);
 
             theCache.GetDefault(typeof(IFoo), thePipeline)
                 .ShouldBeTheSameAs(foo1);
@@ -146,11 +145,11 @@ namespace StructureMap.Testing
         public void try_get_default_with_a_default()
         {
             var instance = new ConfiguredInstance(typeof(Foo));
-            instanceGraphMock.Setup(x => x.GetDefault(typeof(IFoo))).Returns(instance);
+            instanceGraphMock.GetDefault(typeof(IFoo)).Returns(instance);
 
             var foo = new Foo();
 
-            theResolverMock.Setup(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Returns(foo);
+            theResolverMock.ResolveFromLifecycle(typeof(IFoo), instance).Returns(foo);
 
             theCache.TryGetDefault(typeof(IFoo), thePipeline)
                 .ShouldBeTheSameAs(foo);
@@ -164,14 +163,14 @@ namespace StructureMap.Testing
             var args = new ExplicitArguments();
             args.Set<IFoo>(foo1);
 
-            theCache = new SessionCache(theResolverMock.Object, args);
+            theCache = new SessionCache(theResolverMock, args);
 
             var instance = new ConfiguredInstance(typeof(Foo));
-            instanceGraphMock.Setup(x => x.GetDefault(typeof(IFoo))).Returns(instance);
+            instanceGraphMock.GetDefault(typeof(IFoo)).Returns(instance);
 
             var foo2 = new Foo();
 
-            theResolverMock.Setup(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Returns(foo2);
+            theResolverMock.ResolveFromLifecycle(typeof(IFoo), instance).Returns(foo2);
 
             theCache.GetDefault(typeof(IFoo), thePipeline)
                 .ShouldBeTheSameAs(foo1);
