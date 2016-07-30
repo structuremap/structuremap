@@ -1,5 +1,4 @@
-﻿#if NET451
-using NSubstitute;
+﻿using NSubstitute;
 using Shouldly;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
@@ -308,4 +307,3 @@ namespace StructureMap.Testing.Building.Interception
         }
     }
 }
-#endif

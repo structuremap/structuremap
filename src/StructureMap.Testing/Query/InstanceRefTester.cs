@@ -1,4 +1,3 @@
-#if NET451
 using NSubstitute;
 using Shouldly;
 using StructureMap.Pipeline;
@@ -71,4 +70,3 @@ namespace StructureMap.Testing.Query
         }
     }
 }
-#endif

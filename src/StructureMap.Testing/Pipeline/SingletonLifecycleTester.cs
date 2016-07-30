@@ -1,5 +1,4 @@
-﻿#if NET451
-using NSubstitute;
+﻿using NSubstitute;
 using StructureMap.Pipeline;
 using Xunit;
 
@@ -35,4 +34,3 @@ namespace StructureMap.Testing.Pipeline
         }
     }
 }
-#endif

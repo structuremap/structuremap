@@ -1,28 +1,14 @@
 {
   "version": "1.0.0-*",
-  "buildOptions": {
-    "debugType": "portable",
-    "emitEntryPoint": false
-  },
   "dependencies": {
     "StructureMap": { "target": "project" },
     "StructureMap.Testing.Widget": { "target": "project" }
   },
   "frameworks": {
     "net45": {
-      "frameworkAssemblies": {
-        "System.Data": "",
-        "System.Numerics": "",
-        "System.Runtime.Serialization": "",
-        "System.Xml": "",
-        "System.Xml.Linq": ""
-      }
     },
     "netstandard1.5": {
       "dependencies": {
-        "System.Collections.Concurrent": "4.0.12",
-        "System.Reflection.TypeExtensions": "4.1.0",
-        "System.Runtime.Loader": "4.0.0",
         "NETStandard.Library": "1.6.0"
       }
     }

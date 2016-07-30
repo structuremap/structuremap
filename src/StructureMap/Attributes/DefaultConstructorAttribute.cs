@@ -2,9 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-#if NET45
 using StructureMap.TypeRules;
-#endif
 
 namespace StructureMap
 {
