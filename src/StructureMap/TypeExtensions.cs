@@ -33,11 +33,15 @@ namespace StructureMap.TypeRules
             return assembly.CustomAttributes.OfType<T>().Any();
         }
 
+
+
+#endif
+
+#if NETSTANDARD15
         public static IEnumerable<Type> GetInterfaces(Type type)
         {
             return type.GetTypeInfo().GetInterfaces();
         }
-
 #endif
 
         internal static void ForAttribute<T>(this MemberInfo provider, Action<T> action)

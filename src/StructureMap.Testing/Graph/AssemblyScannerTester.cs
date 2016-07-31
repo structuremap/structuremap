@@ -162,7 +162,7 @@ namespace StructureMap.Testing.Graph
         }
 
         // ENDSAMPLE
-#endif
+
         // SAMPLE: scan-filesystem-for-exe
         [Fact]
         public void scan_all_assemblies_in_a_folder_including_exe()
@@ -173,6 +173,7 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamilyWithSameName<IWorker>();
             shouldHaveFamilyWithSameName<IDefinedInExe>();
         }
+
 
         [Fact]
         public void scan_all_assemblies_in_application_base_directory_including_exe()
@@ -222,6 +223,7 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldNotHaveFamilyWithSameName<IWorker>();
         }
+#endif
 
         // SAMPLE: scan-for-registries
         [Fact]

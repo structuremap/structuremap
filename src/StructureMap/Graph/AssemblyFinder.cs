@@ -69,7 +69,13 @@ namespace StructureMap.Graph
                 {
 #if NET45
                     assembly = AppDomain.CurrentDomain.Load(name);
-#else
+#endif
+
+                    #if NETSTANDARD13
+                    assembly = Assembly.Load(new AssemblyName(name));
+                    #endif
+
+#if NETSTANDARD15
                     assembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(name));
 #endif
                 }
@@ -79,7 +85,12 @@ namespace StructureMap.Graph
                     {
 #if NET45
                         assembly = Assembly.LoadFrom(file);
-#else
+#endif
+
+
+
+
+#if NETSTANDARD15
                         assembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyPath(file);
 #endif
                     }

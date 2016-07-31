@@ -22,9 +22,15 @@ namespace StructureMap.Graph.Scanning
     {
         private readonly AssemblyScanRecord _record = new AssemblyScanRecord();
 
+#if NET45
         public AssemblyTypes(Assembly assembly) : this(assembly.FullName, assembly.GetExportedTypes)
         {
         }
+#else
+        public AssemblyTypes(Assembly assembly) : this(assembly.FullName, () => assembly.ExportedTypes)
+        {
+        }
+#endif
 
         public AssemblyTypes(string name, Func<IEnumerable<Type>> typeSource)
         {
