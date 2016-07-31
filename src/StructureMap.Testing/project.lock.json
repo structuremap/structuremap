@@ -3093,6 +3093,9 @@
           "lib/net45/xunit.runner.utility.desktop.dll": {}
         }
       },
+      "xunit.runner.visualstudio/2.2.0-beta2-build1149": {
+        "type": "package"
+      },
       "NestedLibrary/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5",
@@ -8301,6 +8304,32 @@
         "xunit.runner.utility.nuspec"
       ]
     },
+    "xunit.runner.visualstudio/2.2.0-beta2-build1149": {
+      "sha512": "UgVTWC0IloCzTTGCWb/mDexaaRmZWsa2w0CBpNq5qQb+lL6gxjXGgaCgXPD9FxFuQz0KW7xlHmLVnfPYVBjhfA==",
+      "type": "package",
+      "path": "xunit.runner.visualstudio/2.2.0-beta2-build1149",
+      "files": [
+        "build/_common/xunit.abstractions.dll",
+        "build/_common/xunit.runner.utility.desktop.dll",
+        "build/_common/xunit.runner.utility.dotnet.dll",
+        "build/_common/xunit.runner.visualstudio.testadapter.dll",
+        "build/net20/xunit.runner.visualstudio.props",
+        "build/uap10.0/xunit.runner.visualstudio.props",
+        "build/uap10.0/xunit.runner.visualstudio.targets",
+        "build/uap10.0/xunit.runner.visualstudio.uwp.dll",
+        "build/uap10.0/xunit.runner.visualstudio.uwp.pri",
+        "build/win81/xunit.runner.visualstudio.props",
+        "build/win81/xunit.runner.visualstudio.targets",
+        "build/win81/xunit.runner.visualstudio.win81.dll",
+        "build/win81/xunit.runner.visualstudio.win81.pri",
+        "build/wpa81/xunit.runner.visualstudio.props",
+        "build/wpa81/xunit.runner.visualstudio.targets",
+        "build/wpa81/xunit.runner.visualstudio.wpa81.dll",
+        "build/wpa81/xunit.runner.visualstudio.wpa81.pri",
+        "xunit.runner.visualstudio.2.2.0-beta2-build1149.nupkg.sha512",
+        "xunit.runner.visualstudio.nuspec"
+      ]
+    },
     "NestedLibrary/1.0.0": {
       "type": "project",
       "path": "../NestedLibrary/project.json",
@@ -8370,7 +8399,8 @@
     ".NETFramework,Version=v4.5.1": [
       "Microsoft.NETCore.Platforms >= 1.0.1",
       "NSubstitute >= 1.10.0",
-      "System.Configuration"
+      "System.Configuration",
+      "xunit.runner.visualstudio >= 2.2.0-beta2-build1149"
     ]
   },
   "tools": {},

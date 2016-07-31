@@ -19,73 +19,53 @@ namespace StructureMap.Pipeline
 
     public class ObjectInstance<TReturned, TPluginType> : ExpressedInstance<ObjectInstance<TReturned, TPluginType>, TReturned, TPluginType>, IBuildPlan, IValue, IDisposable where TReturned : class, TPluginType
     {
-        private TReturned _object;
-
         public ObjectInstance(TReturned anObject)
         {
             if (null == anObject)
             {
-                throw new ArgumentNullException("anObject");
+                throw new ArgumentNullException(nameof(anObject));
             }
 
-            _object = anObject;
+            Object = anObject;
 
             SetLifecycleTo<ObjectLifecycle>();
         }
 
         public override Instance ToNamedClone(string name)
         {
-            return new ObjectInstance<TReturned, TPluginType>(_object) {Name = name};
+            return new ObjectInstance<TReturned, TPluginType>(Object) {Name = name};
         }
 
-        object IValue.Value
-        {
-            get
-            {
-                return _object;
-            }
-        }
+        object IValue.Value => Object;
 
-        protected override ObjectInstance<TReturned, TPluginType> thisInstance
-        {
-            get { return this; }
-        }
+        protected override ObjectInstance<TReturned, TPluginType> thisInstance => this;
 
-        public TReturned Object
-        {
-            get { return _object; }
-        }
+        public TReturned Object { get; private set; }
 
         public void Dispose()
         {
-            var isContainer = _object is IContainer;
+            var isContainer = Object is IContainer;
             if (!isContainer)
             {
-                _object.SafeDispose();
+                Object.SafeDispose();
             }
 
-            _object = null;
+            Object = null;
         }
 
-        public override string Description
-        {
-            get { return "Object:  " + _object; }
-        }
+        public override string Description => "Object:  " + Object;
 
         public override string ToString()
         {
-            return string.Format("LiteralInstance: {0}", _object);
+            return $"LiteralInstance: {Object}";
         }
 
         public override IDependencySource ToDependencySource(Type pluginType)
         {
-            return new Constant(pluginType, _object);
+            return new Constant(pluginType, Object);
         }
 
-        public override Type ReturnedType
-        {
-            get { return _object.GetType(); }
-        }
+        public override Type ReturnedType => Object.GetType();
 
         protected override IBuildPlan buildPlan(Type pluginType, Policies policies)
         {
@@ -101,12 +81,12 @@ namespace StructureMap.Pipeline
 
         void IBuildPlanVisitable.AcceptVisitor(IBuildPlanVisitor visitor)
         {
-            visitor.InnerBuilder(new Constant(_object.GetType(), _object));
+            visitor.InnerBuilder(new Constant(Object.GetType(), Object));
         }
 
         object IBuildPlan.Build(IBuildSession session, IContext context)
         {
-            return _object;
+            return Object;
         }
     }
 }

@@ -41,9 +41,6 @@ namespace StructureMap.Pipeline
             return this;
         }
 
-        protected override ConfiguredInstance thisInstance
-        {
-            get { return this; }
-        }
+        protected override ConfiguredInstance thisInstance => this;
     }
 }

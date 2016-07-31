@@ -21,7 +21,10 @@ namespace StructureMap.Testing.Bugs
 
             var serviceName = "Bla";
 
-            var decorator = container.GetInstance<IService>(new ExplicitArguments().Set(Guid.NewGuid()), serviceName) as DecoratorService;
+            var arguments = new ExplicitArguments().Set(Guid.NewGuid());
+
+
+            var decorator = container.GetInstance<IService>(arguments, serviceName) as DecoratorService;
 
             decorator.ShouldNotBeNull();
             decorator.Name.ShouldBe(serviceName);

@@ -31,9 +31,6 @@ namespace StructureMap.Pipeline
     public abstract class ConstructorInstance<TThis> : ExpressedInstance<TThis>, IConfiguredInstance, IOverridableInstance
         where TThis : ConstructorInstance<TThis>
     {
-        private readonly Type _pluggedType;
-        private readonly DependencyCollection _dependencies = new DependencyCollection();
-
         public ConstructorInstance(Type concreteType)
         {
             if (!concreteType.IsConcrete())
@@ -53,9 +50,9 @@ namespace StructureMap.Pipeline
                 Constructor = concreteType.GetConstructors().Single();
             }
 
-            _pluggedType = concreteType;
+            PluggedType = concreteType;
 
-            _pluggedType.GetTypeInfo().ForAttribute<StructureMapAttribute>(x => x.Alter(this));
+            PluggedType.GetTypeInfo().ForAttribute<StructureMapAttribute>(x => x.Alter(this));
         }
 
         public ConstructorInstance(Type pluggedType, string name)
@@ -66,7 +63,7 @@ namespace StructureMap.Pipeline
 
         public override Instance ToNamedClone(string name)
         {
-            return new ConfiguredInstance(_pluggedType, name, _dependencies, Interceptors, Constructor);
+            return new ConfiguredInstance(PluggedType, name, Dependencies, Interceptors, Constructor);
         }
 
         /// <summary>
@@ -75,14 +72,11 @@ namespace StructureMap.Pipeline
         public ConstructorInfo Constructor { get; set; }
 
 
-        public Type PluggedType
-        {
-            get { return _pluggedType; }
-        }
+        public Type PluggedType { get; }
 
         public override IDependencySource ToBuilder(Type pluginType, Policies policies)
         {
-            var plan = ConcreteType.BuildSource(_pluggedType, Constructor, _dependencies, policies);
+            var plan = ConcreteType.BuildSource(PluggedType, Constructor, Dependencies, policies);
             if (!plan.IsValid())
             {
                 var message = "Unable to create a build plan for concrete type " + PluggedType.GetFullName();
@@ -103,34 +97,30 @@ namespace StructureMap.Pipeline
 
         public ConstructorInstance Override(ExplicitArguments arguments)
         {
-            var instance = new ConstructorInstance(_pluggedType) {Name = Name};
+            if (arguments.OnlyNeedsDefaults() && !Dependencies.HasAny())
+            {
+                return this.As<ConstructorInstance>();
+            }
 
-            _dependencies.CopyTo(instance._dependencies);
+            var instance = new ConstructorInstance(PluggedType) {Name = Name};
+
+            Dependencies.CopyTo(instance.Dependencies);
 
             arguments.Configure(instance);
 
             return instance;
         }
 
-        public override string Description
-        {
-            get
-            {
-                return HasExplicitName()
-                    ? "{0} ('{1}')".ToFormat(_pluggedType.GetFullName(), Name)
-                    : _pluggedType.GetFullName();
-            }
-        }
+        public override string Description => HasExplicitName()
+            ? "{0} ('{1}')".ToFormat(PluggedType.GetFullName(), Name)
+            : PluggedType.GetFullName();
 
         public override IDependencySource ToDependencySource(Type pluginType)
         {
             return new LifecycleDependencySource(pluginType, this);
         }
 
-        public override Type ReturnedType
-        {
-            get { return _pluggedType; }
-        }
+        public override Type ReturnedType => PluggedType;
 
 
         public static ConstructorInstance For<T>()
@@ -140,13 +130,13 @@ namespace StructureMap.Pipeline
 
         public override Instance CloseType(Type[] types)
         {
-            if (!_pluggedType.IsOpenGeneric())
+            if (!PluggedType.IsOpenGeneric())
                 return null;
 
             Type closedType;
             try
             {
-                closedType = _pluggedType.MakeGenericType(types);
+                closedType = PluggedType.MakeGenericType(types);
             }
             catch
             {
@@ -155,19 +145,16 @@ namespace StructureMap.Pipeline
 
             var closedInstance = new ConstructorInstance(closedType);
 
-            _dependencies.Each(arg => closedInstance._dependencies.Add(arg.CloseType(types)));
+            Dependencies.Each(arg => closedInstance.Dependencies.Add(arg.CloseType(types)));
 
             return closedInstance;
         }
 
-        public DependencyCollection Dependencies
-        {
-            get { return _dependencies; }
-        }
+        public DependencyCollection Dependencies { get; } = new DependencyCollection();
 
         public override string ToString()
         {
-            return "'{0}' -> {1}".ToFormat(Name, _pluggedType.FullName);
+            return "'{0}' -> {1}".ToFormat(Name, PluggedType.FullName);
         }
 
         /// <summary>

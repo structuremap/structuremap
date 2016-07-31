@@ -13,9 +13,6 @@ namespace StructureMap.Building
 #pragma warning disable 1591
     public class BuildPlan : IBuildPlan
     {
-        private readonly Type _pluginType;
-        private readonly Instance _instance;
-        private readonly IDependencySource _inner;
         private readonly IInterceptionPlan _interceptionPlan;
         private readonly Func<IBuildSession, IContext, object> _func;
 
@@ -23,13 +20,13 @@ namespace StructureMap.Building
         public BuildPlan(Type pluginType, Instance instance, IDependencySource inner, Policies policies,
             IEnumerable<IInterceptor> interceptors)
         {
-            _pluginType = pluginType;
-            _instance = instance;
-            _inner = inner;
+            PluginType = pluginType;
+            Instance = instance;
+            Inner = inner;
 
             if (interceptors.Any())
             {
-                _interceptionPlan = new InterceptionPlan(pluginType, _inner, policies, interceptors);
+                _interceptionPlan = new InterceptionPlan(pluginType, Inner, policies, interceptors);
             }
 
             var @delegate = ToDelegate();
@@ -45,44 +42,29 @@ namespace StructureMap.Building
         /// <param name="interceptionPlan"></param>
         public BuildPlan(Type pluginType, Instance instance, IDependencySource inner, IInterceptionPlan interceptionPlan)
         {
-            _pluginType = pluginType;
-            _instance = instance;
-            _inner = inner;
+            PluginType = pluginType;
+            Instance = instance;
+            Inner = inner;
             _interceptionPlan = interceptionPlan;
         }
 
-        public Type PluginType
-        {
-            get { return _pluginType; }
-        }
+        public Type PluginType { get; }
 
-        public Instance Instance
-        {
-            get { return _instance; }
-        }
+        public Instance Instance { get; }
 
-        public IDependencySource Inner
-        {
-            get { return _inner; }
-        }
+        public IDependencySource Inner { get; }
 
-        public IInterceptionPlan InterceptionPlan
-        {
-            get { return _interceptionPlan; }
-        }
+        public IInterceptionPlan InterceptionPlan => _interceptionPlan;
 
         public void AcceptVisitor(IBuildPlanVisitor visitor)
         {
-            visitor.Instance(_pluginType, _instance);
-            if (_interceptionPlan != null)
-            {
-                _interceptionPlan.AcceptVisitor(visitor);
-            }
+            visitor.Instance(PluginType, Instance);
+            _interceptionPlan?.AcceptVisitor(visitor);
 
-            var visitable = _inner.As<IBuildPlanVisitable>();
+            var visitable = Inner.As<IBuildPlanVisitable>();
             if (visitable == null)
             {
-                visitor.InnerBuilder(_inner);
+                visitor.InnerBuilder(Inner);
             }
             else
             {
@@ -94,23 +76,23 @@ namespace StructureMap.Building
 
         public Delegate ToDelegate()
         {
-            var innerSource = _interceptionPlan ?? _inner;
+            var innerSource = _interceptionPlan ?? Inner;
 
             var builder = innerSource.ToExpression(Parameters.Session, Parameters.Context);
 
-            if (builder.Type != _pluginType)
+            if (builder.Type != PluginType)
             {
-                builder = Expression.Convert(builder, _pluginType);
+                builder = Expression.Convert(builder, PluginType);
             }
 
             var message =
-                "Failure while building '{0}', check the inner exception for details".ToFormat(_instance.Description);
-            var wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(message, _pluginType, builder, _instance);
+                "Failure while building '{0}', check the inner exception for details".ToFormat(Instance.Description);
+            var wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(message, PluginType, builder, Instance);
 
             // Push/Pop for contextual construction and bi-directional dependency checking
-            wrapped = PushPopWrapper.WrapFunc(_pluginType, _instance, wrapped);
+            wrapped = PushPopWrapper.WrapFunc(PluginType, Instance, wrapped);
 
-            wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(message, _pluginType, wrapped, this);
+            wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(message, PluginType, wrapped, this);
 
             if (!wrapped.Type.GetTypeInfo().IsClass)
             {
@@ -129,14 +111,14 @@ namespace StructureMap.Building
         {
             get
             {
-                if (_instance.HasExplicitName())
+                if (Instance.HasExplicitName())
                 {
-                    return "Instance of {0} ('{1}')".ToFormat(_pluginType.GetFullName(), _instance.Name);
+                    return "Instance of {0} ('{1}')".ToFormat(PluginType.GetFullName(), Instance.Name);
                 }
 
-                return _instance.ReturnedType == null || _instance.ReturnedType == _pluginType
-                    ? "Instance of {0}".ToFormat(_pluginType.GetFullName())
-                    : "Instance of {0} ({1})".ToFormat(_pluginType.GetFullName(), _instance.ReturnedType.GetFullName());
+                return Instance.ReturnedType == null || Instance.ReturnedType == PluginType
+                    ? "Instance of {0}".ToFormat(PluginType.GetFullName())
+                    : "Instance of {0} ({1})".ToFormat(PluginType.GetFullName(), Instance.ReturnedType.GetFullName());
             }
         }
 
@@ -148,16 +130,12 @@ namespace StructureMap.Building
             }
             catch (StructureMapException e)
             {
-                e.Instances.Add(_instance.Id);
+                e.Instances.Add(Instance.Id);
                 throw;
             }
         }
 
-        public Type ReturnedType
-        {
-            get { return _pluginType; }
-        }
-
+        public Type ReturnedType => PluginType;
     }
 #pragma warning restore 1591
 }

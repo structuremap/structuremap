@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
     public class ExplicitArguments
     {
         private readonly IDictionary<string, object> _args;
-        private readonly IDictionary<Type, object> _defaults = new Dictionary<Type, object>();
 
         public ExplicitArguments(IDictionary<string, object> args)
         {
@@ -19,10 +19,7 @@ namespace StructureMap.Pipeline
         {
         }
 
-        public IDictionary<Type, object> Defaults
-        {
-            get { return _defaults; }
-        }
+        public IDictionary<Type, object> Defaults { get; } = new Dictionary<Type, object>();
 
         public T Get<T>() where T : class
         {
@@ -31,7 +28,7 @@ namespace StructureMap.Pipeline
 
         public object Get(Type type)
         {
-            return _defaults.ContainsKey(type) ? _defaults[type] : null;
+            return Defaults.ContainsKey(type) ? Defaults[type] : null;
         }
 
         public ExplicitArguments Set<T>(T arg)
@@ -41,7 +38,7 @@ namespace StructureMap.Pipeline
 
         public ExplicitArguments Set(Type pluginType, object arg)
         {
-            _defaults.Add(pluginType, arg);
+            Defaults.Add(pluginType, arg);
 
             return this;
         }
@@ -60,12 +57,12 @@ namespace StructureMap.Pipeline
         {
             _args.Each(pair => instance.Dependencies.Add(pair.Key, pair.Value));
 
-            _defaults.Each(pair => instance.Dependencies.Add(pair.Key, pair.Value));
+            Defaults.Each(pair => instance.Dependencies.Add(pair.Key, pair.Value));
         }
 
         public bool Has(Type type)
         {
-            return _defaults.ContainsKey(type);
+            return Defaults.ContainsKey(type);
         }
 
         public bool Has(string propertyName)
@@ -77,10 +74,16 @@ namespace StructureMap.Pipeline
         {
             var values =
                 _args.Select(x => "{0}={1}".ToFormat(x.Key, x.Value))
-                    .Union(_defaults.Select(x => "{0}={1}".ToFormat(x.Key, x.Value)))
+                    .Union(Defaults.Select(x => "{0}={1}".ToFormat(x.Key, x.Value)))
                     .ToArray();
 
             return "{" + string.Join("; ", values) + "}";
+        }
+
+        public bool OnlyNeedsDefaults()
+        {
+            if (Defaults.Keys.Any(x => x.IsSimple())) return false;
+            return !_args.Any();
         }
     }
 }

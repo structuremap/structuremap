@@ -270,5 +270,10 @@ namespace StructureMap.Pipeline
             var arg = findByAll(propertyType, name);
             return arg == null ? null : arg.Dependency;
         }
+
+        public bool HasAny()
+        {
+            return _dependencies.Any();
+        }
     }
 }

@@ -194,6 +194,8 @@ namespace StructureMap
             ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
             assertNotDisposed();
 
+            args.SetArg("name", instanceKey);
+
             try
             {
                 return (T)DoGetInstance(typeof(T), args, instanceKey);
@@ -260,6 +262,8 @@ namespace StructureMap
             ArgumentChecker.ThrowIfNull("args", args);
             ArgumentChecker.ThrowIfNullOrEmptyString("instanceKey", instanceKey);
             assertNotDisposed();
+
+            args.SetArg("name", instanceKey);
 
             try
             {
