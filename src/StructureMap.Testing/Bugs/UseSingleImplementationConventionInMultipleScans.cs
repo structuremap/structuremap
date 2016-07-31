@@ -1,5 +1,6 @@
 ﻿using StructureMap;
 using StructureMap.Graph;
+using StructureMap.TypeRules;
 using StructureMapBugRepo.NS1;
 using StructureMapBugRepo.NS2;
 
@@ -34,7 +35,7 @@ namespace StructureMapBugRepo.NS1
             {
                 // For this sample, we're using Namespaces, but in my real project,
                 // it's two different assemblies, and has the exact same issue.
-                s.TheCallingAssembly();
+                s.Assembly(GetType().GetAssembly());
                 s.IncludeNamespaceContainingType<IShared>();
                 s.SingleImplementationsOfInterface();
             });
@@ -61,7 +62,7 @@ namespace StructureMapBugRepo.NS2
             {
                 // For this sample, we're using Namespaces, but in my real project,
                 // it's two different assemblies, and has the exact same issue.
-                s.TheCallingAssembly();
+                s.Assembly(GetType().GetAssembly());
                 s.IncludeNamespaceContainingType<IMine>();
                 s.SingleImplementationsOfInterface();
             });

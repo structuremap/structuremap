@@ -197,6 +197,10 @@ namespace StructureMap.Graph
             {
                 Assembly(callingAssembly);
             }
+            else
+            {
+                throw new StructureMapConfigurationException("Could not determine the calling assembly, you may need to explicitly call IAssemblyScanner.Assembly()");
+            }
         }
 
         public void AssembliesFromApplicationBaseDirectory()
