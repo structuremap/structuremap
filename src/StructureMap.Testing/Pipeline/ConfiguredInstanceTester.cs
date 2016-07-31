@@ -22,6 +22,8 @@ namespace StructureMap.Testing.Pipeline
             {
                 x.Assembly("StructureMap.Testing.Widget");
                 x.Assembly("StructureMap.Testing.Widget2");
+
+                x.WithDefaultConventions();
             });
 
             var graph = registry.Build();

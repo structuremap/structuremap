@@ -11,7 +11,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             container = new Container(registry =>
             {
-                registry.Scan(x => x.AssemblyContainingType<ColorWidget>());
+                //registry.Scan(x => x.AssemblyContainingType<ColorWidget>());
 
                 // Add an instance with properties
                 registry.For<IWidget>()
@@ -117,19 +117,19 @@ namespace StructureMap.Testing.Configuration.DSL
         [Fact]
         public void UseAPreBuiltObjectWithAName()
         {
-            // Return the specific instance when an IWidget named "Julia" is requested
-            var julia = new CloneableWidget("Julia");
+            // Return the specific instance when an IWidget named "Lindsey" is requested
+            var lindsey = new CloneableWidget("Lindsey");
 
             container =
-                new Container(x => x.For<IWidget>().Add(julia).Named("Julia"));
+                new Container(x => x.For<IWidget>().Add(lindsey).Named("Lindsey"));
 
-            var widget1 = (CloneableWidget)container.GetInstance<IWidget>("Julia");
-            var widget2 = (CloneableWidget)container.GetInstance<IWidget>("Julia");
-            var widget3 = (CloneableWidget)container.GetInstance<IWidget>("Julia");
+            var widget1 = (CloneableWidget)container.GetInstance<IWidget>("Lindsey");
+            var widget2 = (CloneableWidget)container.GetInstance<IWidget>("Lindsey");
+            var widget3 = (CloneableWidget)container.GetInstance<IWidget>("Lindsey");
 
-            julia.ShouldBeTheSameAs(widget1);
-            julia.ShouldBeTheSameAs(widget2);
-            julia.ShouldBeTheSameAs(widget3);
+            lindsey.ShouldBeTheSameAs(widget1);
+            lindsey.ShouldBeTheSameAs(widget2);
+            lindsey.ShouldBeTheSameAs(widget3);
         }
     }
 

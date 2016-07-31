@@ -225,6 +225,7 @@ namespace StructureMap.Testing.Graph
         }
 #endif
 
+
         // SAMPLE: scan-for-registries
         [Fact]
         public void Search_for_registries_when_explicitly_told()

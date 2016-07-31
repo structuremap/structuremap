@@ -13,7 +13,7 @@ namespace StructureMap.Testing.Graph
         {
             _container = new Container(registry =>
             {
-                registry.Scan(x => x.Assembly("StructureMap.Testing.Widget"));
+                //registry.Scan(x => x.Assembly("StructureMap.Testing.Widget"));
                 registry.For<Rule>();
                 registry.For<IWidget>();
                 registry.For<WidgetMaker>();

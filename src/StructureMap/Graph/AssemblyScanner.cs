@@ -16,7 +16,6 @@ namespace StructureMap.Graph
     public class AssemblyScanner : IAssemblyScanner
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
-        private readonly List<IRegistrationConvention> _conventions = new List<IRegistrationConvention>();
         private readonly CompositeFilter<Type> _filter = new CompositeFilter<Type>();
         private readonly List<AssemblyScanRecord> _records = new List<AssemblyScanRecord>();
 
@@ -36,9 +35,11 @@ namespace StructureMap.Graph
             Assembly(AssemblyLoader.ByName(assemblyName));
         }
 
+        public List<IRegistrationConvention> Conventions { get; } = new List<IRegistrationConvention>();
+
         public void Convention<T>() where T : IRegistrationConvention, new()
         {
-            var previous = _conventions.FirstOrDefault(scanner => scanner is T);
+            var previous = Conventions.FirstOrDefault(scanner => scanner is T);
             if (previous == null)
                 With(new T());
         }
@@ -109,7 +110,7 @@ namespace StructureMap.Graph
 
         public void With(IRegistrationConvention convention)
         {
-            _conventions.Fill(convention);
+            Conventions.Fill(convention);
         }
 
         public ConfigureConventionExpression WithDefaultConventions()
@@ -152,18 +153,23 @@ namespace StructureMap.Graph
 
             writer.WriteLine("Conventions");
             writer.WriteLine("--------");
-            _conventions.Each(x => writer.WriteLine("* " + x));
+            Conventions.Each(x => writer.WriteLine("* " + x));
         }
 
         public Task<Registry> ScanForTypes()
         {
+            if (!Conventions.Any())
+            {
+                throw new StructureMapConfigurationException($"There are no {nameof(IRegistrationConvention)}'s in this scanning operation. ");
+            }
+
             return TypeRepository.FindTypes(_assemblies, type => _filter.Matches(type)).ContinueWith(t =>
             {
                 var registry = new Registry();
 
                 _records.AddRange(t.Result.Records);
 
-                _conventions.Each(x => x.ScanTypes(t.Result, registry));
+                Conventions.Each(x => x.ScanTypes(t.Result, registry));
 
                 return registry;
             });

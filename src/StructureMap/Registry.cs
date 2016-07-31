@@ -155,6 +155,11 @@ namespace StructureMap
 
             action(scanner);
 
+            if (!scanner.Conventions.Any())
+            {
+                throw new StructureMapConfigurationException($"Must be at least one {nameof(IRegistrationConvention)} in the scanning operation");
+            }
+
             Scanners.Add(scanner);
         }
 
