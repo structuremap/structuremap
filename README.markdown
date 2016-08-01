@@ -18,8 +18,11 @@ we love receiving pull requests!
 Building the Source
 -------------------
 
+As of StructureMap 4.3, the codebase uses the new Dotnet CLI to build and run tests. Paket is no longer used
+to resolve nuget dependencies.
+
 1. Clone the repository: `git clone git://github.com/structuremap/structuremap.git`
-2. From the command line, run `paket restore` once to resolve and fetch the nuget dependencies. I disabled the "auto-restore" feature because I felt like it was too slow in normal development. I apologize for the problems that has caused folks in pulling down the code.
+1. From the command line, `dotnet test src/StructureMap.Testing`
 1. Open the solution at src/StructureMap.sln and go to town! 
 
 Note:
