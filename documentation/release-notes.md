@@ -3,6 +3,19 @@
 
 StructureMap is attempting to follow a strict [SemVer](http://semver.org) versioning policy.
 
+## Release Notes 4.3
+
+See the [closed GitHub issues](https://github.com/structuremap/structuremap/issues?q=is%3Aissue+milestone%3A4.3+is%3Aclosed) for
+a complete list of changes.
+
+* Converts the codebase to using the new dotnet CLI tools
+* Targets .Net 4.5, Netstandard 1.3, and Netstandard 1.5
+* Performance improvement for some `IContainer.With()` usages
+
+## Release Notes 4.2
+
+* Added the "disposal lock" feature to prevent a Container from being erroneously disposed
+
 ## Release Notes 4.1
 
 4.1 was mostly a bugfix release, but also included some new public API calls for type scanning discovery from *.exe files.

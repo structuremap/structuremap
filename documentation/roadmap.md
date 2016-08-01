@@ -10,8 +10,7 @@ Please log any suspected bugs or feature requests on [StructureMap's GitHub page
 
 ## Ongoing and upcoming work
 
-1. The StructureMap codebase is going to finally move to xUnit.Net before doing any major new work.
-1. A new package called _StructureMap.DynamicInterception_ for adding support for AOP with Castle.Core dynamic proxies to StructureMap
-1. The StructureMap.AutoFactory library is being rewritten based on Castle Dynamic Proxy to add more robust capabilities similar to what Windsor has
-1. The [StructureMap.DNX](https://github.com/structuremap/structuremap.dnx) package for DNX integration (an early version is already available on Nuget.org)
+1. _StructureMap.DynamicInterception_ 
+1. _StructureMap.AutoFactory_ 
+1. Auto Mocking updates and modernization
 
