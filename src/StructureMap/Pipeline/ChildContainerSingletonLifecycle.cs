@@ -1,3 +1,5 @@
+using System;
+
 namespace StructureMap.Pipeline
 {
     public class ChildContainerSingletonLifecycle : LifecycleBase
