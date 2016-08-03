@@ -5,7 +5,7 @@ namespace StructureMap.Pipeline
 {
     public class TypeArguments
     {
-        internal IDictionary<Type, object> Defaults { get; } = new Dictionary<Type, object>();
+        public IDictionary<Type, object> Defaults { get; } = new Dictionary<Type, object>();
 
         public TypeArguments Set<T>(T arg)
         {
@@ -17,6 +17,13 @@ namespace StructureMap.Pipeline
             Defaults.Add(pluginType, arg);
 
             return this;
+        }
+
+        public bool Has(Type type) => Defaults.ContainsKey(type);
+
+        public T Get<T>()
+        {
+            return (T) Defaults[typeof(T)];
         }
     }
 }
