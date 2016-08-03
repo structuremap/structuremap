@@ -294,6 +294,9 @@ namespace StructureMap.Testing.Acceptance
 
             // fallback to the parent w/ no defaults
             nested.GetInstance<Rule>().ShouldBeOfType<ARule>();
+
+            // main container is not corrupted by the nested registrations
+            container.GetInstance<IWidget>().ShouldBeOfType<DefaultWidget>();
         }
     }
 

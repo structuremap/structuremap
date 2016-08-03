@@ -156,9 +156,17 @@ namespace StructureMap
             _pluginGraph.Families[typeof (IContainer)].SetDefault(containerInstance);
         }
 
-        public IPipelineGraph ToNestedGraph()
+        public IPipelineGraph ToNestedGraph(TypeArguments arguments = null)
         {
             var nestedPluginGraph = _pluginGraph.ToNestedGraph();
+            if (arguments != null)
+            {
+                foreach (var pair in arguments.Defaults)
+                {
+                    nestedPluginGraph.Families[pair.Key].SetDefault(new LightweightObjectInstance(pair.Value));
+                }
+            }
+
 
             var instances = new ComplexInstanceGraph(this, nestedPluginGraph, ContainerRole.Nested);
             return new PipelineGraph(nestedPluginGraph, instances, this, _singletons,

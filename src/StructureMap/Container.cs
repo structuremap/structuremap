@@ -1058,12 +1058,17 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Starts a "Nested" Container using some default services
+        /// Efficiently starts a "Nested" Container using some default services
         /// </summary>
         /// <param name="defaults"></param>
         /// <returns></returns>
         public IContainer GetNestedContainer(TypeArguments arguments)
         {
+            assertNotDisposed();
+            var pipeline = _pipelineGraph.ToNestedGraph(arguments);
+            
+            return GetNestedContainer(pipeline);
+
             throw new NotImplementedException();
         }
 

@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Pipeline;
 using StructureMap.Query;
 
 namespace StructureMap
@@ -24,7 +25,7 @@ namespace StructureMap
 
         Profiles Profiles { get; }
 
-        IPipelineGraph ToNestedGraph();
+        IPipelineGraph ToNestedGraph(TypeArguments arguments = null);
 
         void RegisterContainer(IContainer container);
 

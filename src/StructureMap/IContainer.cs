@@ -408,6 +408,13 @@ namespace StructureMap
         /// being prematurely disposed
         /// </summary>
         DisposalLock DisposalLock { get; set; }
+
+        /// <summary>
+        /// Efficiently starts a "Nested" Container using some default services
+        /// </summary>
+        /// <param name="defaults"></param>
+        /// <returns></returns>
+        IContainer GetNestedContainer(TypeArguments arguments);
     }
 
 

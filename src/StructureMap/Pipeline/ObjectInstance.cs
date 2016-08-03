@@ -10,6 +10,38 @@ namespace StructureMap.Pipeline
         object Value { get; }
     }
 
+    public class LightweightObjectInstance : Instance, IBuildPlan
+    {
+        public object Object { get; set; }
+
+        public LightweightObjectInstance(object @object)
+        {
+            Object = @object;
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            return new Constant(pluginType, Object);
+        }
+
+        public override string Description => Object.ToString();
+        public object Build(IBuildSession session, IContext context)
+        {
+            return Object;
+        }
+
+        public override Type ReturnedType => Object.GetType();
+        public void AcceptVisitor(IBuildPlanVisitor visitor)
+        {
+            visitor.InnerBuilder(new Constant(Object.GetType(), Object));
+        }
+
+        protected override IBuildPlan buildPlan(Type pluginType, Policies policies)
+        {
+            return this;
+        }
+    }
+
     public class ObjectInstance : ObjectInstance<object, object>
     {
         public ObjectInstance(object anObject) : base(anObject)
