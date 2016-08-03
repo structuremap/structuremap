@@ -20,6 +20,11 @@ namespace StructureMap.Graph
         private Lazy<Instance> _defaultInstance;
         private Instance _missingInstance;
 
+        private PluginFamily(Type pluginType, object @default)
+        {
+            _pluginType = pluginType;
+            _defaultInstance = new Lazy<Instance>(() => new LightweightObjectInstance(@default));
+        }
 
         public PluginFamily(Type pluginType)
         {
@@ -289,6 +294,11 @@ namespace StructureMap.Graph
         {
             _instances.ClearAll();
             resetDefault();
+        }
+
+        internal static PluginFamily ExplicitOverride(Type pluginType, object @default)
+        {
+            return new PluginFamily(pluginType, @default);
         }
     }
 }

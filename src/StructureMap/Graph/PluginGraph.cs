@@ -186,10 +186,7 @@ namespace StructureMap.Graph
         /// <summary>
         /// Access to all the known PluginFamily members
         /// </summary>
-        public IFamilyCollection Families
-        {
-            get { return this; }
-        }
+        public IFamilyCollection Families => this;
 
         /// <summary>
         /// The top most PluginGraph.  If this is the root, will return itself.

@@ -163,10 +163,9 @@ namespace StructureMap
             {
                 foreach (var pair in arguments.Defaults)
                 {
-                    nestedPluginGraph.Families[pair.Key].SetDefault(new LightweightObjectInstance(pair.Value));
+                    nestedPluginGraph.Families[pair.Key] = PluginFamily.ExplicitOverride(pair.Key, pair.Value);
                 }
             }
-
 
             var instances = new ComplexInstanceGraph(this, nestedPluginGraph, ContainerRole.Nested);
             return new PipelineGraph(nestedPluginGraph, instances, this, _singletons,
