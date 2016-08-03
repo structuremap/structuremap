@@ -1,5 +1,9 @@
 ﻿using Shouldly;
 using System;
+using System.Collections.Generic;
+using StructureMap.Pipeline;
+using StructureMap.Testing.Configuration.DSL;
+using StructureMap.Testing.Widget;
 using Xunit;
 
 namespace StructureMap.Testing.Acceptance
@@ -267,6 +271,29 @@ namespace StructureMap.Testing.Acceptance
 
             nestedBlue1.WasDisposed.ShouldBeTrue();
             nestedBlue2.WasDisposed.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void build_nested_container_with_defaults()
+        {
+            var container = new Container(_ =>
+            {
+                _.For<Blue>().Use<Blue>();
+                _.For<IWidget>().Use<DefaultWidget>();
+                _.For<Rule>().Use<ARule>();
+            });
+
+            var nestedWidget = new AWidget();
+            var nestedBlue = new Blue();
+            var arguments = new TypeArguments().Set(nestedBlue).Set<IWidget>(nestedWidget);
+
+            var nested = container.GetNestedContainer(arguments);
+
+            nested.GetInstance<IWidget>().ShouldBeTheSameAs(nestedWidget);
+            nested.GetInstance<Blue>().ShouldBeTheSameAs(nestedBlue);
+
+            // fallback to the parent w/ no defaults
+            nested.GetInstance<Rule>().ShouldBeOfType<ARule>();
         }
     }
 

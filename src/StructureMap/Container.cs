@@ -1058,6 +1058,16 @@ namespace StructureMap
         }
 
         /// <summary>
+        /// Starts a "Nested" Container using some default services
+        /// </summary>
+        /// <param name="defaults"></param>
+        /// <returns></returns>
+        public IContainer GetNestedContainer(TypeArguments arguments)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Starts a new "Nested" Container for atomic, isolated service location using that named profile's defaults.
         /// </summary>
         /// <param name="profileName">The profile name.</param>
