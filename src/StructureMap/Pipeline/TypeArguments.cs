@@ -14,7 +14,15 @@ namespace StructureMap.Pipeline
 
         public TypeArguments Set(Type pluginType, object arg)
         {
-            Defaults.Add(pluginType, arg);
+            if (Defaults.ContainsKey(pluginType))
+            {
+                Defaults[pluginType] = arg;
+            }
+            else
+            {
+                Defaults.Add(pluginType, arg);
+            }
+            
 
             return this;
         }
