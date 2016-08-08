@@ -16,7 +16,7 @@ namespace StructureMap
         {
             if (value == null)
             {
-                throw new ArgumentNullException(argumentName, string.Format("[{0}] cannot be null.", argumentName));
+                throw new ArgumentNullException(argumentName, $"[{argumentName}] cannot be null.");
             }
         }
 
@@ -34,7 +34,7 @@ namespace StructureMap
 
             if (value.Length == 0)
             {
-                throw new ArgumentException(string.Format("[{0}] cannot be an empty string.", argumentName), argumentName);
+                throw new ArgumentException($"[{argumentName}] cannot be an empty string.", argumentName);
             }
         }
     }

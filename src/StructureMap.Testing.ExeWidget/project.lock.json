@@ -2028,7 +2028,7 @@
           "lib/netstandard1.3/_._": {}
         }
       },
-      "StructureMap/4.3.0": {
+      "StructureMap/4.4.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.5",
         "dependencies": {
@@ -2060,7 +2060,7 @@
       }
     },
     ".NETFramework,Version=v4.5": {
-      "StructureMap/4.3.0": {
+      "StructureMap/4.4.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5",
         "compile": {
@@ -6677,7 +6677,7 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "StructureMap/4.3.0": {
+    "StructureMap/4.4.0": {
       "type": "project",
       "path": "../StructureMap/project.json",
       "msbuildProject": "../StructureMap/StructureMap.xproj"

@@ -30,6 +30,8 @@
       "dependencies": {
         "NSubstitute": "2.0.0-alpha003",
         "System.Diagnostics.TraceSource": "4.0.0",
+        "System.Reflection.TypeExtensions": "4.1.0",
+        "NETStandard.Library": "1.6.0",
         "Microsoft.NETCore.App": {
           "type": "platform",
           "version": "1.0.0"

@@ -2572,7 +2572,7 @@
           "netstandard1.5/NestedLibrary.dll": {}
         }
       },
-      "StructureMap/4.4.0-alpha": {
+      "StructureMap/4.4.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.5",
         "dependencies": {
@@ -3110,7 +3110,7 @@
           "net45/NestedLibrary.dll": {}
         }
       },
-      "StructureMap/4.4.0-alpha": {
+      "StructureMap/4.4.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5",
         "compile": {
@@ -8335,7 +8335,7 @@
       "path": "../NestedLibrary/project.json",
       "msbuildProject": "../NestedLibrary/NestedLibrary.xproj"
     },
-    "StructureMap/4.4.0-alpha": {
+    "StructureMap/4.4.0": {
       "type": "project",
       "path": "../StructureMap/project.json",
       "msbuildProject": "../StructureMap/StructureMap.xproj"
@@ -8393,8 +8393,10 @@
     ],
     ".NETCoreApp,Version=v1.0": [
       "Microsoft.NETCore.App >= 1.0.0",
+      "NETStandard.Library >= 1.6.0",
       "NSubstitute >= 2.0.0-alpha003",
-      "System.Diagnostics.TraceSource >= 4.0.0"
+      "System.Diagnostics.TraceSource >= 4.0.0",
+      "System.Reflection.TypeExtensions >= 4.1.0"
     ],
     ".NETFramework,Version=v4.5.1": [
       "Microsoft.NETCore.Platforms >= 1.0.1",
