@@ -2,7 +2,7 @@ require 'json'
 
 COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
 RESULTS_DIR = "results"
-BUILD_VERSION = '4.3.0'
+BUILD_VERSION = '4.4.1'
 
 tc_build_number = ENV["BUILD_NUMBER"]
 build_revision = tc_build_number || Time.new.strftime('5%H%M')
@@ -84,7 +84,7 @@ end
 
 desc 'Build Nuspec packages'
 task :pack => [:compile] do
-	sh "dotnet pack src/StructureMap -o artifacts --version-suffix #{build_revision}"
+	sh "dotnet pack src/StructureMap -o artifacts --configuration Release --version-suffix #{build_revision}"
 end
 
 desc "Launches VS to the StructureMap solution file"
