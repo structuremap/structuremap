@@ -2,7 +2,7 @@
 <!--Url: custom-lifecycles-->
 
 
-Lifecycle's in StructureMap are pluggable.  To create your own custom lifecycle, make an implementation of the <code>ILifecycle</code> interface like this one:
+Lifecycles in StructureMap are pluggable.  To create your own custom lifecycle, make an implementation of the <code>ILifecycle</code> interface like this one:
 
 <[sample:CustomLifecycle]>
 
