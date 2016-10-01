@@ -9,7 +9,7 @@ Tools like StructureMap are generally known as *Inversion of Control (IoC) Conta
 
 A container is a tool that can help you composing object graphs and managing their scope (lifecycle). Altough you can do Inversion of Control and Dependecy Injection manually, using tools like StructureMap makes you far more productive and succesfull in doing so.
 
-Obviously there is more to a container then resolving services and managing their scope, but in the core that's just what it is. Before you can do so you need to tell StructureMap, the container, how it must compose those objects graphs and what their lifecycle is. This is called registration and can be done in various mixed ways. The strongly recommend way would be using the <[linkto:registration/registry-dsl]>. In your registration your basicaly mapping abstractions to concrete types and define their lifecycle.
+Obviously there is more to a container then resolving services and managing their scope, but in the core that's just what it is. Before you can do so you need to tell StructureMap, the container, how it must compose those objects graphs and what their lifecycle is. This is called registration and can be done in various mixed ways. The strongly recommend way would be using the <[linkto:registration/registry-dsl]>. In your registration you're basically mapping abstractions to concrete types and defining their lifecycle.
 
 A simple example of a container using the <[linkto:registration/registry-dsl]>:
 
@@ -27,11 +27,11 @@ More advanced features that the container can do are things like: Interception, 
 
 A nested container is used to mark the scope of short lived transactions or web requests and track and clean up objects implementing the `IDisposable` interface for that operation.
 
-You can ask a existing container to create a nested container for you like in the following example:
+You can ask an existing container to create a nested container for you like in the following example:
 
 <[sample:glossary-nested-container]>
 
-For more detailed information about nested containers and their special properties you can read the <linkto:the-container/nested-containers]> topic.
+For more detailed information about nested containers and their special properties you can read the <[linkto:the-container/nested-containers]> topic.
 
 
 ## PluginType and PluggedType
@@ -62,7 +62,7 @@ Before StructureMap 3.0 you have probably seen the term used in an exception mes
 	StructureMap Exception Code:  202
 	No Default Instance defined for PluginFamily [plugin type]
 
-This specific exception message is gone in 3.0 because the exception messages were modernized in version 3.0 and.
+This specific exception message is gone in 3.0 because the exception messages were modernized.
 
 
 ## Plugin Graph
@@ -81,7 +81,7 @@ Our warehouse system might have to interact with three types of shipping:  domes
 
 <[sample:ShippingRegistry]>
 
-In the registration code above, there are three "Instance's."  You can access the various IShippingService Instance's by name:
+In the registration code above, there are three "Instances."  You can access the various IShippingService Instance's by name:
 
 <[sample:getting-ishippingservice]>
 
@@ -98,8 +98,8 @@ A StructureMap "Instance" is a close analogue for what many other IoC tools call
 
 ## Lifecycle (or Scope)
 
-The power of an IoC container isn't just in building object graphs for you, it's also about _scoping_ an object graph to what StructureMap calls a _lifecycle_.  Think of it this way,
-when you ask StructureMap for a service or much more commonly when StructureMap is filling a dependency behind the scenes, do you want:
+The power of an IoC container isn't just in building object graphs for you, it's also about _scoping_ an object graph to what StructureMap calls a _lifecycle_.  Think of it this way:
+when you ask StructureMap for a service or (much more commonly) when StructureMap is filling a dependency behind the scenes, do you want:
 
 * A brand new, unique object each time?
 * The exact same object as the rest of the graph is using?
@@ -112,7 +112,7 @@ A `Registry` or a sub class of `Registry` is a class that let's you create reusa
 ## Profile
 
 StructureMap 3.0 features a complete rewrite of the ancient _Profile_ functionality where you can create your base Container configuration with additional _Profile_ 
-configuration that overrides one or more of the parent Container defaults.  The _Profile_ functionality was originally meant to handle difference between
+configuration that overrides one or more of the parent Container defaults.  The _Profile_ functionality was originally meant to handle differences between
 development, testing, and production environments but has been more commonly used for multi-tenancy situations.  Think of a _Profile_ as an application or tenant mode.
 
 ## Auto wiring
