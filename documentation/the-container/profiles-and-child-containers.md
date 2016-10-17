@@ -14,7 +14,7 @@ The easiest way to explain a child container is to just show it in action:
 
 <[sample:show_a_child_container_in_action]>
 
-_Child Container's_ are a mechanism to make a completely new `Container` that can override some of the parent `Container's` registrations but still
+_Child Containers_ are a mechanism to make a completely new `Container` that can override some of the parent `Container`'s registrations but still
 fall back to the parent `Container` to fulfill any request that is not explicitly configured to the child container. The behavior of a child container
 in how it resolves services and allows you to override the parent container is very similar to a <[linkto:the-container/nested-containers;title=nested container]>, but the crucial difference is in how the two concepts handle lifecycles and <[linkto:the-container/disposing;title=calling IDisposable.Dispose()]>.
 
@@ -31,7 +31,7 @@ A couple salient facts about child containers that **should** (knock on wood) di
 **Profiles were completely redesigned as part of the big 3.0 release**.
 
 _Profiles_ are just named child containers that may be configured upfront through `Registry` configurations. 
-Profiles are one of the oldest features that date back to the very beginning of StructureMap. Originally profile's were conceived of as
+Profiles are one of the oldest features that date back to the very beginning of StructureMap. Originally profiles were conceived of as
 a way to vary StructureMap registrations by development environment as the code moved from running locally on a developer's box to testing
 servers to production. While that usage is still valid, it is probably more common to use profiles to define overrides for how StructureMap
 should resolve services in different modes of the application (connected vs offline) or different types of system users.
