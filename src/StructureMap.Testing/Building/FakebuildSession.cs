@@ -8,13 +8,13 @@ namespace StructureMap.Testing.Building
 {
     public class FakeBuildSession : IBuildSession, IContext
     {
-        public readonly Cache<Type, Cache<Instance, object>> LifecycledObjects =
-            new Cache<Type, Cache<Instance, object>>(type => new Cache<Instance, object>());
+        public readonly LightweightCache<Type, LightweightCache<Instance, object>> LifecycledObjects =
+            new LightweightCache<Type, LightweightCache<Instance, object>>(type => new LightweightCache<Instance, object>());
 
-        public readonly Cache<Type, object> Defaults = new Cache<Type, object>();
+        public readonly LightweightCache<Type, object> Defaults = new LightweightCache<Type, object>();
 
-        public readonly Cache<Type, Cache<string, object>> NamedObjects =
-            new Cache<Type, Cache<string, object>>(type => new Cache<string, object>());
+        public readonly LightweightCache<Type, LightweightCache<string, object>> NamedObjects =
+            new LightweightCache<Type, LightweightCache<string, object>>(type => new LightweightCache<string, object>());
 
         public FakeBuildSession()
         {

@@ -1,24 +1,19 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
-using StructureMap.Util;
 
 namespace StructureMap
 {
     public class Profiles
     {
+        private readonly PluginGraph _pluginGraph;
         private readonly IPipelineGraph _root;
-        private readonly Cache<string, IPipelineGraph> _profiles;
+        private readonly ConcurrentDictionary<string, IPipelineGraph> _profiles = new ConcurrentDictionary<string, IPipelineGraph>();
 
         public Profiles(PluginGraph pluginGraph, IPipelineGraph root)
         {
+            _pluginGraph = pluginGraph;
             _root = root;
-            _profiles = new Cache<string, IPipelineGraph>(name => {
-                var profileGraph = pluginGraph.Profile(name);
-
-                var instances = new ComplexInstanceGraph(root, profileGraph, ContainerRole.ProfileOrChild);
-                return new PipelineGraph(profileGraph, instances, root, root.Singletons, root.Transients);
-            });
         }
 
         public IPipelineGraph NewChild(PluginGraph parent)
@@ -35,12 +30,18 @@ namespace StructureMap
 
         public IEnumerable<IPipelineGraph> AllProfiles()
         {
-            return _profiles;
+            return _profiles.Values;
         }
 
         public IPipelineGraph For(string profileName)
         {
-            return _profiles[profileName];
+            return _profiles.GetOrAdd(profileName, key =>
+            {
+                var profileGraph = _pluginGraph.Profile(profileName);
+
+                var instances = new ComplexInstanceGraph(_root, profileGraph, ContainerRole.ProfileOrChild);
+                return new PipelineGraph(profileGraph, instances, _root, _root.Singletons, _root.Transients);
+            });
         }
     }
 }
