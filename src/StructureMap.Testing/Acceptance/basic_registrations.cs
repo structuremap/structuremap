@@ -58,7 +58,7 @@ namespace StructureMap.Testing.Acceptance
         public AdditionalRegistrations()
         {
             // If you know the plugin type and its a closed type
-            // you can Add this syntax
+            // you can use this syntax
             For<IWidget>().Add<DefaultWidget>();
 
             // By Lambda
@@ -72,10 +72,10 @@ namespace StructureMap.Testing.Acceptance
             For<IWidget>().AddInstance(new MySpecialInstance());
 
             // If you're registering an open generic type
-            // or you just have Type objects, Add this syntax
+            // or you just have Type objects, use this syntax
             For(typeof(IService<>)).Add(typeof(Service<>));
 
-            // This is occasionally Addful for generic types
+            // This is occasionally useful for generic types
             For(typeof(IService<>)).Add(new MySpecialInstance());
         }
     }
