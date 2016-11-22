@@ -37,7 +37,7 @@ namespace StructureMap.TypeRules
 
 #endif
 
-#if NETSTANDARD15
+#if NETSTANDARD1_5
         public static IEnumerable<Type> GetInterfaces(Type type)
         {
             return type.GetTypeInfo().GetInterfaces();

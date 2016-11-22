@@ -71,11 +71,11 @@ namespace StructureMap.Graph
                     assembly = AppDomain.CurrentDomain.Load(name);
 #endif
 
-                    #if NETSTANDARD13
+                    #if NETSTANDARD1_3
                     assembly = Assembly.Load(new AssemblyName(name));
                     #endif
 
-#if NETSTANDARD15
+#if NETSTANDARD1_5
                     assembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(name));
 #endif
                 }
@@ -90,7 +90,7 @@ namespace StructureMap.Graph
 
 
 
-#if NETSTANDARD15
+#if NETSTANDARD1_5
                         assembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyPath(file);
 #endif
                     }
