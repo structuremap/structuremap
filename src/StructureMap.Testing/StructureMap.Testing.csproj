@@ -236,6 +236,7 @@
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
     <Compile Include="Bugs\MemoryLeak_bug_289.cs" />
     <Compile Include="Bugs\MixedConfigureAndInitializeMissingInstanceProblem.cs" />
+    <Compile Include="Bugs\OnCreation_doesnt_work_for_inline_dependencies.cs" />
     <Compile Include="Bugs\OpenGenericWithConstraints.cs" />
     <Compile Include="Bugs\Register_Lambda_against_Type_Bug_274.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
