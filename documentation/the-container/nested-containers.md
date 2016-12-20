@@ -105,7 +105,7 @@ created the <code>FooHandler</code> object. If you do want to use service locati
 
 You can created nested containers from profile containers as shown in the sample below:
 
-<sample:nested-profiles]>
+<[sample:nested-profiles]>
 
 See <[linkto:the-container/profiles-and-child-containers]> for more information about using profiles.
 
