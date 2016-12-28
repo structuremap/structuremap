@@ -58,7 +58,7 @@ namespace StructureMap.Docs.samples
                 .ShouldBeOfType<Foo>()
 
                 // and the IBar dependency too
-                .Bar.ShouldBeOfType<Foo>();
+                .Bar.ShouldBeOfType<Bar>();
 
 
 // ENDSAMPLE
@@ -78,7 +78,7 @@ namespace StructureMap.Docs.samples
 
             container.GetInstance<IFoo>()
                 .ShouldBeOfType<Foo>()
-                .Bar.ShouldBeOfType<Foo>();
+                .Bar.ShouldBeOfType<Bar>();
 
 // ENDSAMPLE
         }
