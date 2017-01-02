@@ -46,5 +46,5 @@ Sometimes classes need to be supplied with some primitive value in its construct
 
 <[sample:quickstart-container-with-primitive-value]>
 
-So far you have seen an couple of ways to work with the <linkto:registration/registry-dsl]> and configure a `Container` object. We have seen examples of configuration that allow us to build objects that don't depend on anything like the `Bar` class, or do depend on other types like the `Foo` class needs an instance of `IBar`. In our last example we have seen configuration for objects that need some primitive types like strings in its constructor function.
+So far you have seen an couple of ways to work with the <[linkto:registration/registry-dsl]> and configure a `Container` object. We have seen examples of configuration that allow us to build objects that don't depend on anything like the `Bar` class, or do depend on other types like the `Foo` class needs an instance of `IBar`. In our last example we have seen configuration for objects that need some primitive types like strings in its constructor function.
 

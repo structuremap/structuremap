@@ -2,7 +2,7 @@
 <!--Url: nested-containers-->
 
 
-<div class="alert alert-info" role="alert"><i>Nested Containers</i> are <b>not</b> interchangeable with <i>Child Containers</i>. See <linkto:the-container/profiles-and-child-containers]> for more information on child containers.</div>
+<div class="alert alert-info" role="alert"><i>Nested Containers</i> are <b>not</b> interchangeable with <i>Child Containers</i>. See <[linkto:the-container/profiles-and-child-containers]> for more information on child containers.</div>
 
 _Nested Container's_ are a powerful feature in StructureMap for service resolution and clean object disposal in the 
 context of short lived operations. Nested Container's were introduced in version 2.6, but greatly improved in both performance (100X reduction in the time to create a nested container in a large application) and _ahem_ [lifecycle
@@ -57,7 +57,7 @@ In the context of a Nested Container however, the `Transient` scoping now applie
 
 <[sample:nested-singletons]>
 
-See <linkto:object-lifecycle]> for more information on supported object lifecycles.
+See <[linkto:object-lifecycle]> for more information on supported object lifecycles.
 
 
 

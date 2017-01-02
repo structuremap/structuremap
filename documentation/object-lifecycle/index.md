@@ -11,7 +11,7 @@ every request to the container for a service originating within the context of a
 In all the cases above, StructureMap will assemble object graphs for you using the correct scoping of each dependency.  Likewise, **in some cases**, StructureMap can help you
 with object cleanup by calling <code>IDisposable.Dispose()</code> as appropriate when an object lifecyle is completed.
 
-<div class="alert alert-info" role="alert">StructureMap isn't magic, you'll still need to be cognizant of the need for object cleanup.  See the section on <linkto:best-practices]> for more guidance.</div>
+<div class="alert alert-info" role="alert">StructureMap isn't magic, you'll still need to be cognizant of the need for object cleanup.  See the section on <[linkto:best-practices]> for more guidance.</div>
  
 
 ## Motivation for Container Managed Scope 
