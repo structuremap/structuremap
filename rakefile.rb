@@ -78,6 +78,8 @@ task :test => [:compile] do
 	Dir.mkdir RESULTS_DIR
 
 	sh "dotnet test src/StructureMap.Testing"
+	
+	sh "dotnet build src/StructureMap --framework netstandard1.3"
 	sh "dotnet test src/StructureMap.AutoFactory.Testing"
 	sh "dotnet test src/StructureMap.DynamicInterception.Testing"
 end
