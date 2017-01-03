@@ -68,9 +68,9 @@ end
 
 desc 'Compile the code'
 task :compile => [:clean, :version] do
-	sh "dotnet restore src/StructureMap"
-	sh "dotnet restore src/StructureMap.Testing"
-	sh "dotnet build src/StructureMap.Testing"
+	sh "dotnet restore src"
+	sh "dotnet build src/StructureMap.AutoFactory.Testing"
+	sh "dotnet build src/StructureMap.DynamicInterception.Testing"
 end
 
 desc 'Run the unit tests'
@@ -78,6 +78,8 @@ task :test => [:compile] do
 	Dir.mkdir RESULTS_DIR
 
 	sh "dotnet test src/StructureMap.Testing"
+	sh "dotnet test src/StructureMap.AutoFactory.Testing"
+	sh "dotnet test src/StructureMap.DynamicInterception.Testing"
 end
 
 
@@ -85,6 +87,8 @@ end
 desc 'Build Nuspec packages'
 task :pack => [:compile] do
 	sh "dotnet pack src/StructureMap -o artifacts --configuration Release --version-suffix #{build_revision}"
+	sh "dotnet pack src/StructureMap.AutoFactory -o artifacts --configuration Release --version-suffix #{build_revision}"
+	sh "dotnet pack src/StructureMap.DynamicInterception -o artifacts --configuration Release --version-suffix #{build_revision}"
 end
 
 desc "Launches VS to the StructureMap solution file"
