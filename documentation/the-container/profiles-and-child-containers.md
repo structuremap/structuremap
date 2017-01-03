@@ -1,7 +1,7 @@
 <!--Title: Profiles and Child Containers-->
 <!--Url: profiles-and-child-containers-->
 
-<div class="alert alert-info" role="alert"><i>Child Containers</i> are <b>not</b> interchangeable with <i>Nested Containers</i>. See <linkto:the-container/nested-containers]> for more information on nested containers.</div>
+<div class="alert alert-info" role="alert"><i>Child Containers</i> are <b>not</b> interchangeable with <i>Nested Containers</i>. See <[linkto:the-container/nested-containers]> for more information on nested containers.</div>
 
 
 The single best source for information about the particulars of child container behavior is to look through the acceptance tests for [child containers](https://github.com/structuremap/structuremap/blob/master/src/StructureMap.Testing/Acceptance/child_containers.cs) and
