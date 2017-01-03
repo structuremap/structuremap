@@ -10,7 +10,7 @@
       "dependencies": {
       }
     },
-    "netstandard1.3": {
+    "netstandard1.5": {
       "dependencies": {
         "System.Collections.Concurrent": "4.0.12",
         "System.Reflection.TypeExtensions": "4.1.0",
