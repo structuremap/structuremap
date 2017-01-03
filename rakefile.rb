@@ -4,6 +4,8 @@ COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
 RESULTS_DIR = "results"
 BUILD_VERSION = '4.4.2'
 
+DOC_LOCATION = ENV['docpath'].nil? ? "z:/code/structuremap.github.com" : ENV['docpath']
+
 tc_build_number = ENV["BUILD_NUMBER"]
 build_revision = tc_build_number || Time.new.strftime('5%H%M')
 build_number = "#{BUILD_VERSION}.#{build_revision}"
@@ -103,8 +105,37 @@ end
 
 "Launches the documentation project in editable mode"
 task :docs do
-	sh "paket.exe restore"
-	sh "packages/Storyteller/tools/st.exe doc-run -v #{BUILD_VERSION}"
+	sh "dotnet restore"
+	sh "dotnet stdocs run -v #{BUILD_VERSION}"
+end
+
+"Exports the documentation to structuremap.github.io - requires Git access to that repo though!"
+task :publish do
+	
+
+	if !Dir.exists? 'doc-target' 
+		Dir.mkdir 'doc-target'
+		sh "git clone https://github.com/structuremap/structuremap.github.com.git doc-target"
+	else
+		Dir.chdir "doc-target" do
+			sh "git checkout --force"
+			sh "git clean -xfd"
+			sh "git pull origin master"
+		end
+	end
+	
+	sh "dotnet restore"
+	sh "dotnet stdocs export doc-target Website --version #{BUILD_VERSION}"
+	
+	Dir.chdir "doc-target" do
+		sh "git add --all"
+		sh "git commit -a -m \"Documentation Update for #{BUILD_VERSION}\" --allow-empty"
+		sh "git push origin master"
+	end
+	
+
+	
+
 end
 
 def load_project_file(project)

@@ -28,8 +28,13 @@ interpreting-exceptions
 
 diagnostics
 
+dynamic-interception
+
+autofactory
+
 best-practices
 
 history
 
 release-notes
+

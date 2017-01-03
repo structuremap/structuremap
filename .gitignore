@@ -33,3 +33,5 @@ packages
 .vs/
 *.nuget.props
 *.nuget.targets
+
+doc-target
