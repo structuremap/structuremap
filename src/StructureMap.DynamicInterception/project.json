@@ -1,6 +1,22 @@
 ﻿{
   "version": "1.0.0-alpha-*",
   "title": "StructureMap.DynamicInterception",
+  "description": "Aspect Oriented Programming Support for StructureMap",
+  "language": "en-US",
+  "authors": [
+    "Dmytro Dziuma, Jeremy D. Miller"
+  ],
+  "packOptions": {
+    "projectUrl": "http://structuremap.github.io",
+    "tags": [
+      "IoC"
+    ],
+    "licenseUrl": "https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/structuremap/structuremap"
+    }
+  },
   "dependencies": {
     "Castle.Core": "4.0.0-beta001"
   },
