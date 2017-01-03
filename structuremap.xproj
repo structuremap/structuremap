@@ -6,11 +6,12 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>cb4b9035-721d-4fec-abc7-51fb4e795ce6</ProjectGuid>
-    <RootNamespace>StructureMap.AutoFactory</RootNamespace>
+    <ProjectGuid>926f0646-ce8a-41c4-92fb-184df153e674</ProjectGuid>
+    <RootNamespace>structuremap</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
   </PropertyGroup>
+
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
