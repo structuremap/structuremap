@@ -2776,19 +2776,19 @@
       },
       "StructureMap.AutoFactory/1.0.0-alpha": {
         "type": "project",
-        "framework": ".NETStandard,Version=v1.5",
+        "framework": ".NETStandard,Version=v1.3",
         "dependencies": {
           "Castle.Core": "4.0.0-beta001",
           "NETStandard.Library": "1.6.0",
-          "StructureMap": "1.0.0",
+          "StructureMap": "(, )",
           "System.Collections.Concurrent": "4.0.12",
           "System.Reflection.TypeExtensions": "4.1.0"
         },
         "compile": {
-          "netstandard1.5/StructureMap.AutoFactory.dll": {}
+          "netstandard1.3/StructureMap.AutoFactory.dll": {}
         },
         "runtime": {
-          "netstandard1.5/StructureMap.AutoFactory.dll": {}
+          "netstandard1.3/StructureMap.AutoFactory.dll": {}
         }
       }
     }

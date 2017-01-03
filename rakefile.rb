@@ -69,6 +69,9 @@ end
 desc 'Compile the code'
 task :compile => [:clean, :version] do
 	sh "dotnet restore src"
+	sh "dotnet build src/StructureMap"
+	sh "dotnet build src/StructureMap.AutoFactory"
+	sh "dotnet build src/StructureMap.DynamicInterception"
 	sh "dotnet build src/StructureMap.AutoFactory.Testing"
 	sh "dotnet build src/StructureMap.DynamicInterception.Testing"
 end
@@ -79,7 +82,7 @@ task :test => [:compile] do
 
 	sh "dotnet test src/StructureMap.Testing"
 	
-	sh "dotnet build src/StructureMap --framework netstandard1.3"
+
 	sh "dotnet test src/StructureMap.AutoFactory.Testing"
 	sh "dotnet test src/StructureMap.DynamicInterception.Testing"
 end

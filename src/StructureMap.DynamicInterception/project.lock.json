@@ -4447,12 +4447,14 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Castle.Core >= 4.0.0-beta001",
+      "Castle.Core >= 4.0.0-beta001"
+    ],
+    ".NETFramework,Version=v4.5": [
       "StructureMap"
     ],
-    ".NETFramework,Version=v4.5": [],
     ".NETStandard,Version=v1.3": [
       "NETStandard.Library >= 1.6.0",
+      "StructureMap",
       "System.Collections.Concurrent >= 4.0.12",
       "System.Reflection.TypeExtensions >= 4.1.0"
     ]

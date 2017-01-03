@@ -23,7 +23,7 @@
         }
       }
     },
-    ".NETStandard,Version=v1.5": {
+    ".NETStandard,Version=v1.3": {
       "Castle.Core/4.0.0-beta001": {
         "type": "package",
         "dependencies": {
@@ -243,7 +243,7 @@
           "System.Threading": "4.0.11"
         },
         "compile": {
-          "ref/netstandard1.3/System.Collections.NonGeneric.dll": {}
+          "ref/netstandard1.3/_._": {}
         },
         "runtime": {
           "lib/netstandard1.3/System.Collections.NonGeneric.dll": {}
@@ -297,26 +297,22 @@
         "type": "package",
         "dependencies": {
           "System.Collections": "4.0.11",
-          "System.Collections.NonGeneric": "4.0.1",
-          "System.Collections.Specialized": "4.0.1",
           "System.ComponentModel": "4.0.1",
           "System.ComponentModel.Primitives": "4.1.0",
           "System.Globalization": "4.0.11",
-          "System.Linq": "4.1.0",
           "System.Reflection": "4.1.0",
           "System.Reflection.Extensions": "4.0.1",
           "System.Reflection.Primitives": "4.0.1",
-          "System.Reflection.TypeExtensions": "4.1.0",
           "System.Resources.ResourceManager": "4.0.1",
           "System.Runtime": "4.1.0",
           "System.Runtime.Extensions": "4.1.0",
           "System.Threading": "4.0.11"
         },
         "compile": {
-          "ref/netstandard1.5/System.ComponentModel.TypeConverter.dll": {}
+          "ref/netstandard1.0/System.ComponentModel.TypeConverter.dll": {}
         },
         "runtime": {
-          "lib/netstandard1.5/System.ComponentModel.TypeConverter.dll": {}
+          "lib/netstandard1.0/System.ComponentModel.TypeConverter.dll": {}
         }
       },
       "System.Console/4.0.0": {
@@ -405,7 +401,7 @@
           "System.Runtime": "4.1.0"
         },
         "compile": {
-          "ref/netstandard1.5/System.Diagnostics.Tracing.dll": {}
+          "ref/netstandard1.3/System.Diagnostics.Tracing.dll": {}
         }
       },
       "System.Dynamic.Runtime/4.0.11": {
@@ -491,7 +487,7 @@
           "System.Threading.Tasks": "4.0.11"
         },
         "compile": {
-          "ref/netstandard1.5/System.IO.dll": {}
+          "ref/netstandard1.3/System.IO.dll": {}
         }
       },
       "System.IO.Compression/4.1.0": {
@@ -679,7 +675,7 @@
           "System.Runtime": "4.1.0"
         },
         "compile": {
-          "ref/netstandard1.5/System.Reflection.dll": {}
+          "ref/netstandard1.3/System.Reflection.dll": {}
         }
       },
       "System.Reflection.Emit/4.0.1": {
@@ -757,10 +753,7 @@
           "System.Runtime": "4.1.0"
         },
         "compile": {
-          "ref/netstandard1.5/System.Reflection.TypeExtensions.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.5/System.Reflection.TypeExtensions.dll": {}
+          "ref/netstandard1.3/System.Reflection.TypeExtensions.dll": {}
         }
       },
       "System.Resources.ResourceManager/4.0.1": {
@@ -783,7 +776,7 @@
           "Microsoft.NETCore.Targets": "1.0.1"
         },
         "compile": {
-          "ref/netstandard1.5/System.Runtime.dll": {}
+          "ref/netstandard1.3/System.Runtime.dll": {}
         }
       },
       "System.Runtime.Extensions/4.1.0": {
@@ -794,7 +787,7 @@
           "System.Runtime": "4.1.0"
         },
         "compile": {
-          "ref/netstandard1.5/System.Runtime.Extensions.dll": {}
+          "ref/netstandard1.3/System.Runtime.Extensions.dll": {}
         }
       },
       "System.Runtime.Handles/4.0.1": {
@@ -819,7 +812,7 @@
           "System.Runtime.Handles": "4.0.1"
         },
         "compile": {
-          "ref/netstandard1.5/System.Runtime.InteropServices.dll": {}
+          "ref/netstandard1.3/System.Runtime.InteropServices.dll": {}
         }
       },
       "System.Runtime.InteropServices.RuntimeInformation/4.0.0": {
@@ -847,20 +840,6 @@
           }
         }
       },
-      "System.Runtime.Loader/4.0.0": {
-        "type": "package",
-        "dependencies": {
-          "System.IO": "4.1.0",
-          "System.Reflection": "4.1.0",
-          "System.Runtime": "4.1.0"
-        },
-        "compile": {
-          "ref/netstandard1.5/System.Runtime.Loader.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.5/System.Runtime.Loader.dll": {}
-        }
-      },
       "System.Runtime.Numerics/4.0.1": {
         "type": "package",
         "dependencies": {
@@ -884,7 +863,7 @@
           "System.Security.Cryptography.Primitives": "4.0.0"
         },
         "compile": {
-          "ref/netstandard1.4/System.Security.Cryptography.Algorithms.dll": {}
+          "ref/netstandard1.3/System.Security.Cryptography.Algorithms.dll": {}
         }
       },
       "System.Security.Cryptography.Encoding/4.0.0": {
@@ -944,7 +923,7 @@
           "System.Security.Cryptography.Encoding": "4.0.0"
         },
         "compile": {
-          "ref/netstandard1.4/System.Security.Cryptography.X509Certificates.dll": {}
+          "ref/netstandard1.3/System.Security.Cryptography.X509Certificates.dll": {}
         }
       },
       "System.Text.Encoding/4.0.11": {
@@ -1128,18 +1107,17 @@
       },
       "StructureMap/4.4.2": {
         "type": "project",
-        "framework": ".NETStandard,Version=v1.5",
+        "framework": ".NETStandard,Version=v1.3",
         "dependencies": {
           "NETStandard.Library": "1.6.0",
           "System.Collections.Concurrent": "4.0.12",
-          "System.Reflection.TypeExtensions": "4.1.0",
-          "System.Runtime.Loader": "4.0.0"
+          "System.Reflection.TypeExtensions": "4.1.0"
         },
         "compile": {
-          "netstandard1.5/StructureMap.dll": {}
+          "netstandard1.3/StructureMap.dll": {}
         },
         "runtime": {
-          "netstandard1.5/StructureMap.dll": {}
+          "netstandard1.3/StructureMap.dll": {}
         }
       }
     }
@@ -3590,30 +3568,6 @@
         "runtimes/win/lib/netstandard1.1/System.Runtime.InteropServices.RuntimeInformation.dll"
       ]
     },
-    "System.Runtime.Loader/4.0.0": {
-      "sha512": "UQHg1CTjgmmfsbhPjhj9eHC4xXvyqKTyyn1nMuttYYG1xUBYktRUiSKQEynej0MNQhrQ/jmapUE2Jhq2Jiv7Tg==",
-      "type": "package",
-      "path": "System.Runtime.Loader/4.0.0",
-      "files": [
-        "System.Runtime.Loader.4.0.0.nupkg.sha512",
-        "System.Runtime.Loader.nuspec",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
-        "lib/net462/_._",
-        "lib/netstandard1.5/System.Runtime.Loader.dll",
-        "ref/netstandard1.5/System.Runtime.Loader.dll",
-        "ref/netstandard1.5/System.Runtime.Loader.xml",
-        "ref/netstandard1.5/de/System.Runtime.Loader.xml",
-        "ref/netstandard1.5/es/System.Runtime.Loader.xml",
-        "ref/netstandard1.5/fr/System.Runtime.Loader.xml",
-        "ref/netstandard1.5/it/System.Runtime.Loader.xml",
-        "ref/netstandard1.5/ja/System.Runtime.Loader.xml",
-        "ref/netstandard1.5/ko/System.Runtime.Loader.xml",
-        "ref/netstandard1.5/ru/System.Runtime.Loader.xml",
-        "ref/netstandard1.5/zh-hans/System.Runtime.Loader.xml",
-        "ref/netstandard1.5/zh-hant/System.Runtime.Loader.xml"
-      ]
-    },
     "System.Runtime.Numerics/4.0.1": {
       "sha512": "70unsxHw5GJzSuZ/6kRRsbHcqc3jCJDzq43LZpxfjQ1WHptXAmzpv2FBJ/u2lwxjiTDlcnBX4u+SMWNQC/8PGw==",
       "type": "package",
@@ -4493,12 +4447,14 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Castle.Core >= 4.0.0-beta001",
+      "Castle.Core >= 4.0.0-beta001"
+    ],
+    ".NETFramework,Version=v4.5": [
       "StructureMap"
     ],
-    ".NETFramework,Version=v4.5": [],
-    ".NETStandard,Version=v1.5": [
+    ".NETStandard,Version=v1.3": [
       "NETStandard.Library >= 1.6.0",
+      "StructureMap",
       "System.Collections.Concurrent >= 4.0.12",
       "System.Reflection.TypeExtensions >= 4.1.0"
     ]

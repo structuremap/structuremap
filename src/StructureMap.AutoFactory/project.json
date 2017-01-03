@@ -2,16 +2,17 @@
   "version": "1.0.0-alpha-*",
   "title": "StructureMap.AutoFactory",
   "dependencies": {
-    "Castle.Core": "4.0.0-beta001",
-    "StructureMap": {"target": "project"}
+    "Castle.Core": "4.0.0-beta001"
   },
   "frameworks": {
     "net45": {
       "dependencies": {
+        "StructureMap": { "target": "project" }
       }
     },
-    "netstandard1.5": {
+    "netstandard1.3": {
       "dependencies": {
+        "StructureMap": { "target": "project" },
         "System.Collections.Concurrent": "4.0.12",
         "System.Reflection.TypeExtensions": "4.1.0",
         "NETStandard.Library": "1.6.0"

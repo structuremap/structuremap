@@ -17,7 +17,7 @@
 	
 	"tools":{
 		"dotnet-stdocs": {
-			"version":  "1.0.0-alpha-441",
+			"version":  "1.0.0-alpha-442",
 			"imports": ["dnxcore50"]
 		}
 	}
