@@ -16,7 +16,7 @@ is quite a bit cleaner.
 
 ## ASP.NET Core
 
-See the [StructureMap.Microsoft.DependencyInjection](https://github.com/structuremapStructureMap.Microsoft.DependencyInjection) project and NuGet package for integration with ASP.NET Core.
+See the [StructureMap.Microsoft.DependencyInjection](https://github.com/structuremap/StructureMap.Microsoft.DependencyInjection) project and NuGet package for integration with ASP.NET Core.
 
 ## NServiceBus
 
