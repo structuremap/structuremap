@@ -35,3 +35,9 @@ packages
 *.nuget.targets
 
 doc-target
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+**/Properties/launchSettings.json
