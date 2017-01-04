@@ -13,7 +13,7 @@ namespace StructureMap.AutoFactory
             if (methodInfo.Name.StartsWith("GetNames", StringComparison.OrdinalIgnoreCase)
                 && methodInfo.IsGenericMethod
                 && methodInfo.GetGenericArguments().Any()
-                && (methodInfo.ReturnType.IsAssignableFrom(typeof(List<string>))))
+                && methodInfo.ReturnType.IsAssignableFrom(typeof(List<string>)))
             {
                 return new AutoFactoryMethodDefinition(AutoFactoryMethodType.GetNames, methodInfo.GetGenericArguments().First(), null, null);
             }
