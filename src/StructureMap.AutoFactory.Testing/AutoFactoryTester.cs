@@ -194,15 +194,21 @@ namespace StructureMap.AutoFactory.Testing
         }
     }
 
+    // SAMPLE: IDummyService
     public interface IDummyService
     {
-        string Name { get; set; }
+        string Name { get; }
     }
 
+    // ENDSAMPLE
+
+    // SAMPLE: DummyService
     public class DummyService : IDummyService
     {
         public string Name { get; set; }
     }
+
+    // ENDSAMPLE
 
     public class DummyServiceWithName : IDummyService
     {
@@ -224,18 +230,28 @@ namespace StructureMap.AutoFactory.Testing
         public string Name { get; set; }
     }
 
+    // SAMPLE: IDummyFactory
     public interface IDummyFactory
     {
-        IDummyService CreateDummyService();
-
-        IDummyService CreateDummyService(string namePart1, string namePart2);
-
-        IDummyService GetNamedDummyService(string serviceName, string namePart1, string namePart2);
-
+        // This method will return the names of all registered implementations of TService.
         IList<string> GetNames<TService>();
 
+        // This method will just create the default IDummyService implementation.
+        IDummyService CreateDummyService();
+
+        // This method will just create the default IDummyService implementation and pass namePart1 and namePart2 as
+        // dependencies.
+        IDummyService CreateDummyService(string namePart1, string namePart2);
+
+        // This method will create IDummyService implementation with serviceName name.
+        IDummyService GetNamedDummyService(string serviceName, string namePart1, string namePart2);
+
+        // Generic methods are also allowed as factory methods.
         TService CreateService<TService>();
 
+        // Something that is common for event-sourcing implementations.
         IHandler<TMessage> CreateHandler<TMessage>();
     }
+
+    // ENDSAMPLE
 }

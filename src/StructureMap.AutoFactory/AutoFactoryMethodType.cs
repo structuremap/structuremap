@@ -2,8 +2,14 @@
 {
     public enum AutoFactoryMethodType
     {
-        GetInstance,
+        /// <summary>
+        /// Method is used to create an instance i.e. factory method.
+        /// </summary>
+        GetInstance = 0,
 
-        GetNames
+        /// <summary>
+        /// Special method to return the list of names of registered implementations.
+        /// </summary>
+        GetNames = 1
     }
 }
