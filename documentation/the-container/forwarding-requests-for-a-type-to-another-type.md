@@ -1,4 +1,4 @@
-<!--Title: Registering a Single Instance Against Multiple PluginType's-->
+<!--Title: Registering a Single Instance Against Multiple PluginTypes-->
 <!--Url: forwarding-requests-for-a-type-to-another-type-->
 
 It's not uncommon to want a single instance registration in StructureMap to be mapped to multiple
