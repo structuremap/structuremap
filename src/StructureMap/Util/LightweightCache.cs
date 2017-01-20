@@ -16,12 +16,12 @@ namespace StructureMap.Util
         };
 
         public LightweightCache()
-            : this(new Dictionary<TKey, TValue>())
+            : this(new ConcurrentDictionary<TKey, TValue>())
         {
         }
 
         public LightweightCache(Func<TKey, TValue> onMissing)
-            : this(new Dictionary<TKey, TValue>(), onMissing)
+            : this(new ConcurrentDictionary<TKey, TValue>(), onMissing)
         {
         }
 
