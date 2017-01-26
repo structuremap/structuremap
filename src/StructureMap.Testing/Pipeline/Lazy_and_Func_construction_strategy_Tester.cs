@@ -122,6 +122,48 @@ namespace StructureMap.Testing.Pipeline
 
         // ENDSAMPLE
 
+        [Fact]
+        public void build_a_func_by_string_from_default()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("green").Named("green");
+                x.For<IWidget>().MissingNamedInstanceIs.ConstructedBy(c => new ColorWidget(c.RequestedName));
+            });
+
+            var func = container.GetInstance<Func<string, IWidget>>();
+            func("red").ShouldBeOfType<ColorWidget>().Color.ShouldBe("red");
+        }
+
+        [Fact]
+        public void build_a_func_by_string_from_parent()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("green").Named("green");
+                x.For<IWidget>().MissingNamedInstanceIs.ConstructedBy(c => new ColorWidget(c.RequestedName));
+                x.ForConcreteType<ConcreteWidgetUser>();
+            });
+
+            var parent = container.GetInstance<ConcreteWidgetUser>();
+            parent.Use("red").ShouldBeOfType<ColorWidget>().Color.ShouldBe("red");
+        }
+
+        public class ConcreteWidgetUser
+        {
+            private readonly Func<string, IWidget> _widgetFactory;
+
+            public ConcreteWidgetUser(Func<string, IWidget> widgetFactory)
+            {
+                _widgetFactory = widgetFactory;
+            }
+
+            public IWidget Use(string color)
+            {
+                return _widgetFactory(color);
+            }
+        }
+
         public class ConcreteClass
         {
         }
