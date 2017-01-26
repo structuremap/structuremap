@@ -44,7 +44,7 @@ namespace StructureMap.Graph
             var container = c.GetInstance<IContainer>();
             var instance = container.Model.Find<T>(name);
 
-            return instance.Lifecycle is UniquePerRequestLifecycle
+            return instance == null || instance.Lifecycle is UniquePerRequestLifecycle
                 ? container.GetInstance<T>(name)
                 : c.GetInstance<T>(name);
         })
