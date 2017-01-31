@@ -27,7 +27,7 @@ to resolve nuget dependencies.
 
 Note:
 
-The StructureMap team uses Rake internally and on the CI server, but **Rake is no longer necessary in any way for developing with the StructureMap codebase**. 
+The StructureMap team uses Rake internally and on the [CI server](http://build.fubu-project.org/project.html?projectId=StructureMap3), but **Rake is no longer necessary in any way for developing with the StructureMap codebase**. 
 
 Please post any questions or bugs to the
 [StructureMap Users mailing list](https://groups.google.com/forum/#!forum/structuremap-users).
