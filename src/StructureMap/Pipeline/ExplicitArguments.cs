@@ -82,7 +82,7 @@ namespace StructureMap.Pipeline
 
         public bool OnlyNeedsDefaults()
         {
-            if (Defaults.Keys.Any(x => x.IsSimple())) return false;
+            if (Defaults.Keys.Any(x => x.IsSimple() || x.IsArray)) return false;
             return !_args.Any();
         }
     }

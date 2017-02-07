@@ -544,6 +544,16 @@ namespace StructureMap.Testing.Graph
                 }
             }
         }
+
+        [Fact]
+        public void GetInstance_WithIntArray_PassesIntArrayToConstructedType()
+        {
+            var container = new Container();
+
+            var instance = container.With(new[] {2}).GetInstance<ServiceThatNeedsIntArray>();
+
+            instance.Ids.Single().ShouldBe(2);
+        }
     }
 
     public class Lump
@@ -682,6 +692,16 @@ namespace StructureMap.Testing.Graph
         public string Name
         {
             get { return _name; }
+        }
+    }
+
+    public class ServiceThatNeedsIntArray
+    {
+        public int[] Ids { get; }
+
+        public ServiceThatNeedsIntArray(params int[] ids)
+        {
+            Ids = ids;
         }
     }
 }
