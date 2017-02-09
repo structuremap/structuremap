@@ -40,7 +40,7 @@ or utilize StructureMap's type scanning conventions to configure the relationshi
 
 At some point you will want to integrate StructureMap into your application. Whether you are using Windows Presentation Foundation (WPF), FubuMVC, ASP.NET WebForms, ASP.NET MVC or any other framework or technology, you will have to do some sort of plumbing and bootstrapping. Depending on the used technology or framework there can be important integration points that you will have to use to fully enable the power of StructureMap.
 
-While StructureMap doesn't provide integration support out of the box for all of the frameworks and technologies out there, we do find it important to help you get started with integrating StructureMap into your application. That said, StructureMap does provide integration support for [FubuMVC](http://fubuworld.com/fubumvc) (a web framework, which is part of the same family as StructureMap).
+While StructureMap doesn't provide integration support out of the box for all of the frameworks and technologies out there, we do find it important to help you get started with integrating StructureMap into your application. That said, StructureMap does provide integration support for [FubuMVC](https://fubumvc.github.io/) (a web framework, which is part of the same family as StructureMap).
 
 
 ## What to do when things go wrong?
