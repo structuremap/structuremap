@@ -12,8 +12,6 @@ namespace StructureMap.Building
 #pragma warning disable 1591
     public class ConcreteBuild : IHasSetters, IDependencySource, IBuildPlanVisitable
     {
-        private readonly Type _concreteType;
-        private readonly ConstructorStep _constructor;
         private readonly IList<Setter> _setters = new List<Setter>();
 
         public ConcreteBuild(Type concreteType) : this(concreteType, new ConstructorSelector(null).Select(concreteType, new DependencyCollection()))
@@ -22,8 +20,8 @@ namespace StructureMap.Building
 
         public ConcreteBuild(Type concreteType, ConstructorStep constructor)
         {
-            _concreteType = concreteType;
-            _constructor = constructor;
+            ConcreteType = concreteType;
+            Constructor = constructor;
         }
 
         protected ConcreteBuild(Type concreteType, ConstructorInfo constructor)
@@ -32,10 +30,7 @@ namespace StructureMap.Building
         }
 
 
-        public Type ConcreteType
-        {
-            get { return _concreteType; }
-        }
+        public Type ConcreteType { get; }
 
         public void Add(Setter setter)
         {
@@ -47,16 +42,13 @@ namespace StructureMap.Building
             _setters.Add(new Setter(setterType, member, value));
         }
 
-        public ConstructorStep Constructor
-        {
-            get { return _constructor; }
-        }
+        public ConstructorStep Constructor { get; }
 
         public object Build(IBuildSession session, IContext context)
         {
             var @delegate = ToDelegate() as Func<IBuildSession, IContext, object>;
 
-            return @delegate != null ? @delegate(session, context) : null;
+            return @delegate?.Invoke(session, context);
         }
 
         public T Build<T>(IBuildSession session) where T : class
@@ -68,9 +60,9 @@ namespace StructureMap.Building
         {
             get
             {
-                var args = _constructor.Arguments.Select(x => x.Dependency.Description).ToArray();
+                var args = Constructor.Arguments.Select(x => x.Dependency.Description).ToArray();
 
-                var description = "new {0}({1})".ToFormat(_concreteType.Name, string.Join(", ", args));
+                var description = "new {0}({1})".ToFormat(ConcreteType.Name, string.Join(", ", args));
 
                 if (_setters.Any())
                 {
@@ -90,7 +82,7 @@ namespace StructureMap.Building
         {
             var inner = ToExpression(Parameters.Session, Parameters.Context);
 
-            var lambdaType = typeof (Func<,,>).MakeGenericType(typeof (IBuildSession), typeof (IContext), _concreteType);
+            var lambdaType = typeof (Func<,,>).MakeGenericType(typeof (IBuildSession), typeof (IContext), ConcreteType);
 
             var lambda = Expression.Lambda(lambdaType, inner, Parameters.Session, Parameters.Context);
 
@@ -103,12 +95,12 @@ namespace StructureMap.Building
             return
                 TryCatchWrapper.WrapFunc<StructureMapBuildException>(
                     "Error while building type {0}.  See the inner exception for details".ToFormat(
-                        _concreteType.GetFullName()), _concreteType, expression, this);
+                        ConcreteType.GetFullName()), ConcreteType, expression, this);
         }
 
         private Expression buildInnerExpression(ParameterExpression session, ParameterExpression context)
         {
-            var newExpr = _constructor.ToExpression(session, context);
+            var newExpr = Constructor.ToExpression(session, context);
 
             if (!_setters.Any())
             {
@@ -121,7 +113,7 @@ namespace StructureMap.Building
 
         public Type ReturnedType
         {
-            get { return _concreteType; }
+            get { return ConcreteType; }
         }
 
         public void AcceptVisitor(IDependencyVisitor visitor)
@@ -131,7 +123,7 @@ namespace StructureMap.Building
 
         public bool IsValid()
         {
-            if (_constructor.Arguments.Any(x => x.Dependency is DependencyProblem)) return false;
+            if (Constructor.Arguments.Any(x => x.Dependency is DependencyProblem)) return false;
 
             if (_setters.Any(x => x.AssignedValue is DependencyProblem)) return false;
 
@@ -140,7 +132,7 @@ namespace StructureMap.Building
 
         public void AcceptVisitor(IBuildPlanVisitor visitor)
         {
-            visitor.Constructor(_constructor);
+            visitor.Constructor(Constructor);
 
             _setters.Each(visitor.Setter);
         }

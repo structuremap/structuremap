@@ -33,12 +33,24 @@ namespace StructureMap.Pipeline
 
         public void Add(IConstructorSelector selector)
         {
-            _selectors.Add(selector);
+            _selectors.Insert(0, selector);
         }
 
         public ConstructorInfo Select(Type pluggedType, DependencyCollection dependencies)
         {
-            return _selectors.Union(_defaults).FirstValue(x => x.Find(pluggedType, dependencies, _graph));
+            foreach (var selector in _selectors)
+            {
+                var ctor = selector.Find(pluggedType, dependencies, _graph);
+                if (ctor != null) return ctor;
+            }
+
+            foreach (var @default in _defaults)
+            {
+                var ctor = @default.Find(pluggedType, dependencies, _graph);
+                if (ctor != null) return ctor;
+            }
+
+            return null;
         }
     }
 
