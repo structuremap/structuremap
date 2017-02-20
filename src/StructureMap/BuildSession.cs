@@ -105,8 +105,8 @@ namespace StructureMap
 
         public object BuildNewInSession(Type pluginType, Instance instance)
         {
-            if (pluginType == null) throw new ArgumentNullException("pluginType");
-            if (instance == null) throw new ArgumentNullException("instance");
+            if (pluginType == null) throw new ArgumentNullException(nameof(pluginType));
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
 
             if (RootType == null) RootType = instance.ReturnedType;
 

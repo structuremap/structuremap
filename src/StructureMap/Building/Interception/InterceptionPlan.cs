@@ -13,8 +13,6 @@ namespace StructureMap.Building.Interception
 
     public class InterceptionPlan : IInterceptionPlan
     {
-        private readonly Type _pluginType;
-        private readonly IDependencySource _inner;
         private readonly Policies _policies;
         private readonly IEnumerable<IInterceptor> _interceptors;
         private readonly ParameterExpression _variable;
@@ -24,11 +22,11 @@ namespace StructureMap.Building.Interception
         public InterceptionPlan(Type pluginType, IDependencySource inner, Policies policies,
             IEnumerable<IInterceptor> interceptors)
         {
-            _pluginType = pluginType;
-            _inner = inner;
+            ReturnedType = pluginType;
+            Inner = inner;
             _policies = policies;
             _interceptors = interceptors;
-            _variable = Expression.Variable(_inner.ReturnedType, "x");
+            _variable = Expression.Variable(Inner.ReturnedType, "x");
 
             
 
@@ -45,10 +43,7 @@ namespace StructureMap.Building.Interception
             }
         }
 
-        public IDependencySource Inner
-        {
-            get { return _inner; }
-        }
+        public IDependencySource Inner { get; }
 
         public Func<IBuildSession, IContext, T> ToBuilder<T>()
         {
@@ -61,7 +56,7 @@ namespace StructureMap.Building.Interception
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)
         {
             // Seed the plan with the inner value
-            var inner = _inner.ToExpression(session, context);
+            var inner = Inner.ToExpression(session, context);
             var plan = new BlockPlan();
             plan.AddVariable(_variable);
             var assignment = Expression.Assign(_variable, inner);
@@ -78,10 +73,7 @@ namespace StructureMap.Building.Interception
             return plan.ToExpression();
         }
 
-        public Type ReturnedType
-        {
-            get { return _pluginType; }
-        }
+        public Type ReturnedType { get; }
 
         void IDependencySource.AcceptVisitor(IDependencyVisitor visitor)
         {
@@ -100,7 +92,7 @@ namespace StructureMap.Building.Interception
                 var decoratedExpression = decorator.ToExpression(_policies, context, pluginTypeVariable);
                 var wrapped =
                     TryCatchWrapper.WrapFunc<StructureMapInterceptorException>(
-                        "Decorator Interceptor failed during object construction.  See the inner exception", _pluginType,
+                        "Decorator Interceptor failed during object construction.  See the inner exception", ReturnedType,
                         decoratedExpression, decorator);
 
                 plan.Add(Expression.Assign(pluginTypeVariable, wrapped));
@@ -109,28 +101,28 @@ namespace StructureMap.Building.Interception
 
         private ParameterExpression addPluginTypeVariable(BlockPlan plan)
         {
-            var pluginTypeVariable = plan.FindVariableOfType(_pluginType);
+            var pluginTypeVariable = plan.FindVariableOfType(ReturnedType);
             if (pluginTypeVariable == null)
             {
-                pluginTypeVariable = Expression.Variable(_pluginType, "returnValue");
+                pluginTypeVariable = Expression.Variable(ReturnedType, "returnValue");
                 plan.AddVariable(pluginTypeVariable);
 
-                plan.Add(Expression.Assign(pluginTypeVariable, Expression.Convert(_variable, _pluginType)));
+                plan.Add(Expression.Assign(pluginTypeVariable, Expression.Convert(_variable, ReturnedType)));
             }
             return pluginTypeVariable;
         }
 
         private void createTheReturnValue(ParameterExpression variable, BlockPlan plan)
         {
-            var label = Expression.Label(_pluginType);
+            var label = Expression.Label(ReturnedType);
             Expression returnTarget = variable;
-            plan.Add(Expression.Return(label, returnTarget, _pluginType));
+            plan.Add(Expression.Return(label, returnTarget, ReturnedType));
             plan.Add(Expression.Label(label, variable));
         }
 
         private void addActivations(BlockPlan plan)
         {
-            plan.AddVariables(_activators.SelectMany(x => x.ToParameterExpressions(_inner.ReturnedType)));
+            plan.AddVariables(_activators.SelectMany(x => x.ToParameterExpressions(Inner.ReturnedType)));
             plan.Add(_activators.SelectMany(x => x.CreateExpressions(_policies, _variable)).ToArray());
         }
 
@@ -190,7 +182,7 @@ namespace StructureMap.Building.Interception
 
         public string Description
         {
-            get { return "Interceptor Plan for " + _inner.Description; }
+            get { return "Interceptor Plan for " + Inner.Description; }
         }
     }
 }

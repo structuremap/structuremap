@@ -15,6 +15,9 @@ namespace StructureMap.Testing.Bugs
 			var container = new Container(_ =>
 			{
 				_.For(typeof(ICmdHandler<>)).DecorateAllWith(typeof(CmdDecorator<>));
+
+			    _.For<ITestLogger>().Use(new TestLogger());
+
 				_.Policies.Add<TestLoggerConstructorPolicy>();
 				_.Scan(a =>
 				{
@@ -23,7 +26,7 @@ namespace StructureMap.Testing.Bugs
 				});
 			});
 
-			Console.WriteLine(container.WhatDoIHave());
+			Console.WriteLine(container.Model.For<ICmdHandler<TestCmd>>().Default.DescribeBuildPlan(20));
 
 			var handler = container.GetInstance<ICmdHandler<TestCmd>>();
 		}
@@ -64,7 +67,7 @@ namespace StructureMap.Testing.Bugs
 	{
 	}
 
-	public class TestLogger
+	public class TestLogger : ITestLogger
 	{
 	}
 

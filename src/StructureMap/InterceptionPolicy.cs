@@ -6,21 +6,16 @@ namespace StructureMap
 {
     internal class InterceptionPolicy : IInstancePolicy
     {
-        private readonly IInterceptorPolicy _inner;
-
         public InterceptionPolicy(IInterceptorPolicy inner)
         {
-            _inner = inner;
+            Inner = inner;
         }
 
         public void Apply(Type pluginType, Instance instance)
         {
-            _inner.DetermineInterceptors(pluginType, instance).Each(instance.AddInterceptor);
+            Inner.DetermineInterceptors(pluginType, instance).Each(instance.AddInterceptor);
         }
 
-        public IInterceptorPolicy Inner
-        {
-            get { return _inner; }
-        }
+        public IInterceptorPolicy Inner { get; }
     }
 }

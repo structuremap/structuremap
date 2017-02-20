@@ -9,12 +9,12 @@ namespace StructureMap.Building.Interception
     public class DecoratorInterceptor : IInterceptor
     {
         private readonly Type _pluginType;
-        private readonly IConfiguredInstance _instance;
+        private bool _hasAppliedPolicies;
 
         public DecoratorInterceptor(Type pluginType, IConfiguredInstance instance)
         {
             _pluginType = pluginType;
-            _instance = instance;
+            Instance = instance;
         }
 
         public DecoratorInterceptor(Type pluginType, Type pluggedType)
@@ -22,20 +22,11 @@ namespace StructureMap.Building.Interception
         {
         }
 
-        public string Description
-        {
-            get { return "Decorator of type " + _instance.PluggedType.GetFullName(); }
-        }
+        public string Description => "Decorator of type " + Instance.PluggedType.GetFullName();
 
-        public IConfiguredInstance Instance
-        {
-            get { return _instance; }
-        }
+        public IConfiguredInstance Instance { get; }
 
-        public InterceptorRole Role
-        {
-            get { return InterceptorRole.Decorates; }
-        }
+        public InterceptorRole Role => InterceptorRole.Decorates;
 
         public Expression ToExpression(Policies policies, ParameterExpression session, ParameterExpression variable)
         {
@@ -49,23 +40,23 @@ namespace StructureMap.Building.Interception
         {
             variable = variable ?? Expression.Variable(_pluginType, "Inner");
 
-            var dependencies = _instance.Dependencies.Clone();
+            if (!_hasAppliedPolicies)
+            {
+                Instance.As<Instance>().ApplyAllPolicies(_pluginType, policies);
+                _hasAppliedPolicies = true;
+            }
+            
+            var dependencies = Instance.Dependencies.Clone();
             dependencies.Add(_pluginType, new LiteralDependencySource(variable, _pluginType));
 
-            var build = ConcreteType.BuildSource(_instance.PluggedType, _instance.Constructor, dependencies, policies);
+            var build = ConcreteType.BuildSource(Instance.PluggedType, Instance.Constructor, dependencies, policies);
             return build;
         }
 
 
-        public Type Accepts
-        {
-            get { return _pluginType; }
-        }
+        public Type Accepts => _pluginType;
 
-        public Type Returns
-        {
-            get { return _pluginType; }
-        }
+        public Type Returns => _pluginType;
 
 
         public class LiteralDependencySource : IDependencySource
@@ -78,10 +69,7 @@ namespace StructureMap.Building.Interception
                 ReturnedType = returnedType;
             }
 
-            public string Description
-            {
-                get { return "The inner " + ReturnedType.GetName(); }
-            }
+            public string Description => "The inner " + ReturnedType.GetName();
 
             public Expression ToExpression(ParameterExpression session, ParameterExpression context)
             {
