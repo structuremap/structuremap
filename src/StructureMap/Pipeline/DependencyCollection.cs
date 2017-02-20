@@ -208,6 +208,16 @@ namespace StructureMap.Pipeline
                 }
             }
 
+            // Making sure you can override the default
+            if (name.IsNotEmpty())
+            {
+                _dependencies.RemoveAll(x => x.Name == name);
+            }
+            else if (type != null)
+            {
+                _dependencies.RemoveAll(x => x.Type == type && x.Name.IsEmpty());
+            }
+
             _dependencies.Add(new Argument
             {
                 Name = name,

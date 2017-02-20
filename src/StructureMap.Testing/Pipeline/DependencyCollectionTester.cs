@@ -62,23 +62,6 @@ namespace StructureMap.Testing.Pipeline
                 .ShouldBe(service1);
         }
 
-        [Fact]
-        public void use_most_specific_criteria_if_possible()
-        {
-            var collection = new DependencyCollection();
-            collection.Add("foo", typeof(IGateway), gateway1);
-            collection.Add("bar", typeof(IGateway), gateway2);
-            collection.Add("bar", typeof(IService), service1);
-
-            collection.FindByTypeOrName(typeof(IGateway), "foo")
-                .ShouldBeTheSameAs(gateway1);
-
-            collection.FindByTypeOrName(typeof(IGateway), "bar")
-                .ShouldBeTheSameAs(gateway2);
-
-            collection.FindByTypeOrName(typeof(IService), "bar")
-                .ShouldBeTheSameAs(service1);
-        }
 
         [Fact]
         public void can_override_and_last_one_in_wins()
