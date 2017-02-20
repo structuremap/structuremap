@@ -244,7 +244,17 @@ namespace StructureMap
 
         public TransientTracking TransientTracking
         {
-            set { alter = graph => graph.TransientTracking = value; }
+            set
+            {
+                _transients = value;
+                alter = graph => graph.TransientTracking = value;
+            }
+            
+        }
+
+        internal TransientTracking? GetTransientTracking()
+        {
+            return _transients;
         }
 
         internal static bool IsPublicRegistry(Type type)
@@ -441,6 +451,7 @@ namespace StructureMap
 
 
         private static int mutation = 0;
+        private TransientTracking? _transients;
 
         public static bool RegistryExists(IEnumerable<Registry> all, Registry registry)
         {

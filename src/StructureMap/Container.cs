@@ -807,6 +807,8 @@ namespace StructureMap
             {
                 _pipelineGraph.Configure(configure);
 
+                
+
                 // Correct the Singleton lifecycle for child containers
                 if (Role == ContainerRole.ProfileOrChild)
                 {

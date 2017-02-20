@@ -23,12 +23,18 @@ namespace StructureMap
 
         public static IPipelineGraph BuildRoot(PluginGraph pluginGraph)
         {
-            ITransientTracking transients = pluginGraph.TransientTracking == TransientTracking.DefaultNotTrackedAtRoot
-                ? (ITransientTracking) new NulloTransientCache()
-                : new TrackingTransientCache();
+            var transients = chooseTransientTracking(pluginGraph);
 
             return new PipelineGraph(pluginGraph, new RootInstanceGraph(pluginGraph), null, pluginGraph.SingletonCache,
                 transients);
+        }
+
+        private static ITransientTracking chooseTransientTracking(PluginGraph pluginGraph)
+        {
+            ITransientTracking transients = pluginGraph.TransientTracking == TransientTracking.DefaultNotTrackedAtRoot
+                ? (ITransientTracking) new NulloTransientCache()
+                : new TrackingTransientCache();
+            return transients;
         }
 
         public static IPipelineGraph BuildEmpty()
@@ -42,7 +48,7 @@ namespace StructureMap
         private readonly IInstanceGraph _instances;
         private readonly IPipelineGraph _root;
         private readonly IObjectCache _singletons;
-        private readonly ITransientTracking _transients;
+        private ITransientTracking _transients;
         private readonly Profiles _profiles;
         private bool _wasDisposed;
         private readonly IList<IDisposable> _trackedDisposables = new List<IDisposable>(); 
@@ -184,6 +190,13 @@ namespace StructureMap
                 var registry = new ConfigurationExpression();
                 configure(registry);
 
+                var transientTracking = registry.GetTransientTracking();
+                if (transientTracking != null &&
+                    transientTracking != _pluginGraph.TransientTracking)
+                {
+                    changeTransientTracking(transientTracking.Value);
+                }
+
                 if (registry.HasPolicyChanges() && Role == ContainerRole.Nested)
                 {
                     throw new StructureMapConfigurationException("Policy changes to a nested container are not allowed. Policies can only be applied to the root container");
@@ -214,6 +227,12 @@ namespace StructureMap
             {
                 _pluginGraph.IsRunningConfigure = false;
             }
+        }
+
+        private void changeTransientTracking(TransientTracking transientTracking)
+        {
+            _pluginGraph.TransientTracking = transientTracking;
+            _transients = chooseTransientTracking(_pluginGraph);
         }
 
         public void ValidateValidNestedScoping()

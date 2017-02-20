@@ -8,6 +8,33 @@ namespace StructureMap.Testing.Acceptance
 {
     public class transient_tracking_mode_specs
     {
+        [Fact]
+        public void Bug_500_release_transient_created_by_root_container()
+        {
+            var container = new Container();
+            container.Configure(_ => _.TransientTracking = TransientTracking.ExplicitReleaseMode);
+
+            container.TransientTracking.ShouldBeOfType<TrackingTransientCache>();
+
+            var transient1 = container.GetInstance<DisposableGuy>();
+            var transient2 = container.GetInstance<DisposableGuy>();
+
+            transient1.WasDisposed.ShouldBeFalse();
+            transient2.WasDisposed.ShouldBeFalse();
+
+            // release ONLY transient2
+            container.Release(transient2);
+
+            transient1.WasDisposed.ShouldBeFalse();
+            transient2.WasDisposed.ShouldBeTrue();
+
+            // transient2 should no longer be
+            // tracked by the container
+            container.TransientTracking.Tracked
+                .Single()
+                .ShouldBeTheSameAs(transient1);
+        }
+
         // SAMPLE: transient_tracking_mode
         [Fact]
         public void release_transient_created_by_root_container()
