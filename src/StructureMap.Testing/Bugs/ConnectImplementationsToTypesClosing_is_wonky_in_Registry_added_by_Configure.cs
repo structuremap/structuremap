@@ -21,6 +21,25 @@ namespace StructureMap.Testing.Bugs
             container.Configure(x => x.AddRegistry<BookRegistry>());
             container.GetAllInstances<IBook<SciFi>>().Count().ShouldBe(1);
         }
+
+        [Fact]
+        public void Bug_525_interception_plus_connect_implementations()
+        {
+            var container = new Container(_ =>
+            {
+                _.Scan(x =>
+                {
+                    x.TheCallingAssembly();
+                    x.Exclude(type => type == typeof(DustCover<>));
+                    x.ConnectImplementationsToTypesClosing(typeof(IBook<>));
+                });
+
+                _.For(typeof(IBook<>)).DecorateAllWith(typeof(DustCover<>));
+            });
+
+            container.GetInstance<IBook<SciFi>>().ShouldBeOfType<DustCover<SciFi>>()
+                .Book.ShouldBeOfType<SciFiBook>();
+        }
     }
 
     public class BookRegistry : Registry
@@ -29,9 +48,21 @@ namespace StructureMap.Testing.Bugs
         {
             Scan(x =>
             {
+                x.Exclude(type => type == typeof(DustCover<>));
                 x.TheCallingAssembly();
                 x.ConnectImplementationsToTypesClosing(typeof(IBook<>));
             });
+        }
+    }
+
+
+    public class DustCover<T> : IBook<T>
+    {
+        public IBook<T> Book { get; }
+
+        public DustCover(IBook<T> book)
+        {
+            Book = book;
         }
     }
 
