@@ -15,12 +15,6 @@ task :ci => [:default, :pack]
 
 task :default => [:test]
 
-desc "Do stupid Nuget stuff for idiotic .Net builds"
-task :csharp do
-	sh "nuget.exe install Microsoft.CSharp -Version 4.0.0"
-	FileUtils.cp "Microsoft.CSharp.4.0.0/Microsoft.CSharp.4.0.0.nupkg", "C:/Users/fubuadmin/.nuget/packages"
-end
-
 desc "Prepares the working directory for a new build"
 task :clean do
 	#TODO: do any other tasks required to clean/prepare the working directory
