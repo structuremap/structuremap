@@ -2,7 +2,7 @@ require 'json'
 
 COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
 RESULTS_DIR = "results"
-BUILD_VERSION = '4.4.2'
+BUILD_VERSION = '4.4.3'
 
 DOC_LOCATION = ENV['docpath'].nil? ? "z:/code/structuremap.github.com" : ENV['docpath']
 
@@ -38,7 +38,7 @@ task :version do
   options = {
 	:description => 'IoC Container for .Net',
 	:product_name => 'StructureMap',
-	:copyright => 'Copyright 2004-2016 Jeremy D. Miller, Joshua Flanagan, Frank Quednau, Tim Kellogg, et al. All rights reserved.',
+	:copyright => 'Copyright 2004-2017 Jeremy D. Miller, Joshua Flanagan, Frank Quednau, Tim Kellogg, et al. All rights reserved.',
 	:trademark => commit,
 	:version => asm_version,
 	:file_version => build_number,
