@@ -49,6 +49,7 @@ namespace StructureMap.DynamicInterception.Testing
             service.GetSquareRoot(value).ShouldBe(expectedResult);
         }
 
+        // SAMPLE: CallSyncMethodWithSyncThenAsyncInterceptors
         [Theory]
         [InlineData(111, 10)]
         [InlineData(16, 4444)]
@@ -69,6 +70,7 @@ namespace StructureMap.DynamicInterception.Testing
 
             service.GetSquareRoot(value).ShouldBe(expectedResult);
         }
+        // ENDSAMPLE
 
         [Theory]
         [InlineData(111, 10)]
@@ -814,6 +816,7 @@ namespace StructureMap.DynamicInterception.Testing
             Should.Throw<ArgumentException>(() => task);
         }
 
+        // SAMPLE: UseInterceptionPolicy
         [Fact]
         public void UseInterceptionPolicy()
         {
@@ -828,14 +831,18 @@ namespace StructureMap.DynamicInterception.Testing
 
             service.GetSquareRoot(-10).ShouldBe(5555);
         }
+        // ENDSAMPLE
 
+        // SAMPLE: IMathService
         public interface IMathService
         {
             int GetSquareRoot(int value);
 
             Task<int> GetSquareRootAsync(int value);
         }
+        // ENDSAMPLE
 
+        // SAMPLE: MathService
         private class MathService : IMathService
         {
             public int GetSquareRoot(int value)
@@ -849,6 +856,7 @@ namespace StructureMap.DynamicInterception.Testing
                 return (int)Math.Sqrt(value);
             }
         }
+        // ENDSAMPLE
 
         private class ValidationInterceptor : ISyncInterceptionBehavior
         {
@@ -908,6 +916,7 @@ namespace StructureMap.DynamicInterception.Testing
             }
         }
 
+        // SAMPLE: NegatingInterceptor
         private class NegatingInterceptor : ISyncInterceptionBehavior
         {
             public IMethodInvocationResult Intercept(ISyncMethodInvocation methodInvocation)
@@ -921,6 +930,7 @@ namespace StructureMap.DynamicInterception.Testing
                 return methodInvocation.InvokeNext();
             }
         }
+        // ENDSAMPLE
 
         private class AsyncNegatingInterceptor : IAsyncInterceptionBehavior
         {
@@ -956,6 +966,7 @@ namespace StructureMap.DynamicInterception.Testing
             }
         }
 
+        // SAMPLE: AsyncCachingInterceptor
         private class AsyncCachingInterceptor : IAsyncInterceptionBehavior
         {
             private static readonly IDictionary<int, int> PrecalculatedValues = new Dictionary<int, int>
@@ -975,6 +986,7 @@ namespace StructureMap.DynamicInterception.Testing
                     : await methodInvocation.InvokeNextAsync().ConfigureAwait(false);
             }
         }
+        // ENDSAMPLE
 
         public interface IBusyService
         {
