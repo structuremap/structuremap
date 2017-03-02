@@ -9,7 +9,7 @@
   "packOptions": {
     "projectUrl": "http://structuremap.github.io",
     "tags": [
-      "IoC"
+      "IoC", "AOP"
     ],
     "licenseUrl": "https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT",
     "repository": {
