@@ -5,7 +5,7 @@ namespace StructureMap.AutoFactory
 {
     public interface IAutoFactoryConventionProvider
     {
-        // SAMPLE: IAutoFactoryConventionProvider-GetMethodDefinition
+        // SAMPLE: GetMethodDefinition
         IAutoFactoryMethodDefinition GetMethodDefinition(MethodInfo methodInfo, IList<object> arguments);
 
         //ENDSAMPLE

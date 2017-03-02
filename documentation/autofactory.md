@@ -36,7 +36,10 @@ It is much easier to see it on an example:
 ## Custom convention
 
 If the default convention doesn't work for you, you can create and use your custom convention. All you need is to implement `IAutoFactoryConventionProvider` and use the corresponding `CreateFactory` overload. `IAutoFactoryConventionProvider` has a single method to implement:
-<[sample:IAutoFactoryConventionProvider-GetMethodDefinition]>
+
+```
+IAutoFactoryMethodDefinition GetMethodDefinition(MethodInfo methodInfo, IList<object> arguments);
+```
 
 `IAutoFactoryMethodDefinition` is defined as follows:
 <[sample:IAutoFactoryMethodDefinition]>
