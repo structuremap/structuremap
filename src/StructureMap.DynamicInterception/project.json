@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "StructureMap.DynamicInterception",
   "description": "Aspect Oriented Programming Support for StructureMap",
   "language": "en-US",
