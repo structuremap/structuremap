@@ -21,7 +21,8 @@
     "compile": [
       "**/*.cs",
       "../CommonAssemblyInfo.cs"
-    ]
+    ],
+    "xmlDoc": true
   },
   "frameworks": {
     "net45": {
