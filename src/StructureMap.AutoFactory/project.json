@@ -6,6 +6,9 @@
   "authors": [
     "Dmytro Dziuma, Jeremy D. Miller"
   ],
+  "buildOptions": {
+    "xmlDoc": true
+  },
   "packOptions": {
     "projectUrl": "http://structuremap.github.io",
     "tags": [
