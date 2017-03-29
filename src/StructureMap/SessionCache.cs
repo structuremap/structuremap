@@ -21,6 +21,7 @@ namespace StructureMap
         private readonly IDictionary<int, object> _cachedObjects = new Dictionary<int, object>();
         private readonly IDictionary<Type, object> _defaults = new Dictionary<Type, object>();
         private readonly IBuildSession _resolver;
+        private readonly bool _hasExplicitArguments;
 
         public SessionCache(IBuildSession resolver)
         {
@@ -30,7 +31,11 @@ namespace StructureMap
         public SessionCache(IBuildSession resolver, ExplicitArguments arguments)
             : this(resolver)
         {
-            if (arguments != null) _defaults = arguments.Defaults;
+            if (arguments != null)
+            {
+                _defaults = arguments.Defaults;
+                _hasExplicitArguments = _defaults.Any();
+            }
         }
 
         public object GetDefault(Type pluginType, IPipelineGraph pipelineGraph)
@@ -82,7 +87,7 @@ namespace StructureMap
                 return _resolver.BuildNewInSession(pluginType, instance);
             }
             
-            if (lifecycle is UniquePerRequestLifecycle)
+            if (lifecycle is UniquePerRequestLifecycle || _hasExplicitArguments)
             {
                 return _resolver.BuildUnique(pluginType, instance);
             }
