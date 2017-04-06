@@ -2,7 +2,7 @@ require 'json'
 
 COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
 RESULTS_DIR = "results"
-BUILD_VERSION = '4.4.3'
+BUILD_VERSION = '4.4.4'
 
 DOC_LOCATION = ENV['docpath'].nil? ? "z:/code/structuremap.github.com" : ENV['docpath']
 
@@ -25,7 +25,7 @@ end
 
 desc "Update the version information for the build"
 task :version do
-  asm_version = build_number
+  asm_version = BUILD_VERSION
   
   begin
     commit = `git log -1 --pretty=format:%H`
@@ -41,7 +41,7 @@ task :version do
 	:copyright => 'Copyright 2004-2017 Jeremy D. Miller, Joshua Flanagan, Frank Quednau, Tim Kellogg, et al. All rights reserved.',
 	:trademark => commit,
 	:version => asm_version,
-	:file_version => build_number,
+	:file_version => BUILD_VERSION,
 	:informational_version => asm_version
 	
   }
