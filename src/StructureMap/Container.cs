@@ -807,27 +807,32 @@ namespace StructureMap
             {
                 _pipelineGraph.Configure(configure);
 
-                
-
-                // Correct the Singleton lifecycle for child containers
-                if (Role == ContainerRole.ProfileOrChild)
-                {
-                    var lifecycle = new ChildContainerSingletonLifecycle(_pipelineGraph.ContainerCache);
-
-                    var singletons = _pipelineGraph.Instances.ImmediateInstances()
-                        .Where(x => x.Lifecycle is SingletonLifecycle);
-
-                    singletons
-                        .Each(x => x.SetLifecycleTo(lifecycle));
-
-                    _pipelineGraph.Instances.ImmediatePluginGraph.Families.ToArray().Where(x => x.Lifecycle is SingletonLifecycle)
-                        .Each(x => x.SetLifecycleTo(lifecycle));
-                }
+                CorrectSingletoneLifecycleForChild(_pipelineGraph);
 
                 if (Role == ContainerRole.Nested)
                 {
                     _pipelineGraph.ValidateValidNestedScoping();
                 }
+            }
+        }
+
+        /// <summary> 
+        /// Correct the Singleton lifecycle for child containers 
+        /// </summary>
+        private static void CorrectSingletoneLifecycleForChild(IPipelineGraph pipelineGraph)
+        {
+            if (pipelineGraph.Role == ContainerRole.ProfileOrChild)
+            {
+                var lifecycle = new ChildContainerSingletonLifecycle(pipelineGraph.ContainerCache);
+
+                var singletons = pipelineGraph.Instances.ImmediateInstances()
+                    .Where(x => x.Lifecycle is SingletonLifecycle);
+
+                singletons
+                    .Each(x => x.SetLifecycleTo(lifecycle));
+
+                pipelineGraph.Instances.ImmediatePluginGraph.Families.ToArray().Where(x => x.Lifecycle is SingletonLifecycle)
+                    .Each(x => x.SetLifecycleTo(lifecycle));
             }
         }
 
@@ -847,6 +852,9 @@ namespace StructureMap
             assertNotDisposed();
 
             var pipeline = _pipelineGraph.Profiles.For(profileName);
+
+            CorrectSingletoneLifecycleForChild(pipeline);
+
             return new Container(pipeline);
         }
 
