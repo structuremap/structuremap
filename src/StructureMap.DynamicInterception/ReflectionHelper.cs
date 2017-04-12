@@ -64,22 +64,6 @@ namespace StructureMap.DynamicInterception
             return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>);
         }
 
-        public static async Task ConvertInvocationResultToTask(IMethodInvocationResult methodInvocationResult)
-        {
-            methodInvocationResult.GetReturnValueOrThrow();
-        }
-
-        public static object ConvertInvocationResultToTask(Type resultType, IMethodInvocationResult methodInvocationResult)
-        {
-            return callPrivateStaticGenericMethod(typeof(ReflectionHelper), "convertInvocationResultToGenericTask", resultType,
-                methodInvocationResult);
-        }
-
-        private static async Task<T> convertInvocationResultToGenericTask<T>(IMethodInvocationResult methodInvocationResult)
-        {
-            return (T)methodInvocationResult.GetReturnValueOrThrow();
-        }
-
         public static async Task ConvertInvocationResultToTask(Task<IMethodInvocationResult> methodInvocationResultTask)
         {
             var methodInvocationResult = await methodInvocationResultTask.ConfigureAwait(false);
@@ -88,8 +72,8 @@ namespace StructureMap.DynamicInterception
 
         public static object ConvertInvocationResultToTask(Type resultType, Task<IMethodInvocationResult> methodInvocationResult)
         {
-            return callPrivateStaticGenericMethod(typeof(ReflectionHelper), "convertInvocationResultTaskToGenericTask", resultType,
-                methodInvocationResult);
+            return callPrivateStaticGenericMethod(typeof(ReflectionHelper),
+                nameof(convertInvocationResultTaskToGenericTask), resultType, methodInvocationResult);
         }
 
         private static async Task<T> convertInvocationResultTaskToGenericTask<T>(Task<IMethodInvocationResult> methodInvocationResultTask)
@@ -99,13 +83,14 @@ namespace StructureMap.DynamicInterception
             return (T)methodInvocationResult.GetReturnValueOrThrow();
         }
 
-        public static object GetTaskResult(Type resultType, object task)
+        public static object GetResultFromTask(Type resultType, object task)
         {
-            return callPrivateStaticGenericMethod(typeof(ReflectionHelper), "getTaskResult", resultType,
+            if (resultType == typeof(void)) return null;
+            return callPrivateStaticGenericMethod(typeof(ReflectionHelper), nameof(getTaskResult), resultType,
                 task);
         }
 
-        public static T GetTaskResult<T>(Task<T> task)
+        public static T GetResultFromTask<T>(Task<T> task)
         {
             return getTaskResult(task);
         }
@@ -121,19 +106,6 @@ namespace StructureMap.DynamicInterception
                 rethrowInnerException(e);
                 return default(T);
             }
-        }
-
-        public static Task<object> GetTaskResultAsync(Type resultType, object task)
-        {
-            return (Task<object>)callPrivateStaticGenericMethod(typeof(ReflectionHelper),
-                "getTaskResultAsync",
-                resultType,
-                task);
-        }
-
-        private static async Task<object> getTaskResultAsync<T>(object task)
-        {
-            return await ((Task<T>)task).ConfigureAwait(false);
         }
     }
 }

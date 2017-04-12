@@ -38,9 +38,7 @@ namespace StructureMap.DynamicInterception
         {
             return (context, instance) => proxyGenerator.CreateInterfaceProxyWithTarget(
                 instance,
-                interceptionBehaviorTypes
-                    .Select(t => WrapInterceptorBehavior((IInterceptionBehavior)context.GetInstance(t)))
-                    .ToArray()
+                wrapInterceptors(interceptionBehaviorTypes.Select(t => (IInterceptionBehavior)context.GetInstance(t)).ToArray())
             );
         }
 
@@ -48,39 +46,30 @@ namespace StructureMap.DynamicInterception
         {
             return instance => proxyGenerator.CreateInterfaceProxyWithTarget(
                 instance,
-                interceptionBehaviors.Select(WrapInterceptorBehavior).ToArray()
+                wrapInterceptors(interceptionBehaviors.ToArray())
             );
+        }
+
+        private static Castle.DynamicProxy.IInterceptor wrapInterceptors(IInterceptionBehavior[] interceptionBehaviors)
+        {
+            foreach (var behavior in interceptionBehaviors)
+            {
+                if (!(behavior is ISyncInterceptionBehavior) &&
+                    !(behavior is IAsyncInterceptionBehavior))
+                {
+                    throw new StructureMapException(
+                        $"{behavior.GetType().GetFullName()} implements neither ISyncInterceptionBehavior nor IAsyncInterceptionBehavior");
+                }
+            }
+            return new CastleInterceptor(interceptionBehaviors);
         }
 
         private static string buildDescription(IEnumerable<Type> interceptionBehaviorTypes)
         {
-            return string.Format("DynamicProxyInterceptor of {0} with interception behaviors: {1}",
-                typeof(TPluginType).GetFullName(),
-                string.Join(", ", interceptionBehaviorTypes.Select(t => t.GetFullName())));
+            return
+                $"DynamicProxyInterceptor of {typeof(TPluginType).GetFullName()} with interception behaviors: {string.Join(", ", interceptionBehaviorTypes.Select(t => t.GetFullName()))}";
         }
 
-        private static Castle.DynamicProxy.IInterceptor WrapInterceptorBehavior(IInterceptionBehavior behavior)
-        {
-            var syncBehavior = behavior as ISyncInterceptionBehavior;
-            if (syncBehavior != null)
-            {
-                return new SyncWrapperInterceptor(syncBehavior);
-            }
-
-            var asyncBehavior = behavior as IAsyncInterceptionBehavior;
-            if (asyncBehavior != null)
-            {
-                return new AsyncWrapperInterceptor(asyncBehavior);
-            }
-
-            throw new StructureMapException(string.Format(
-                    "{0} does not implement neither ISyncInterceptionBehavior nor IAsyncInterceptionBehavior",
-                    behavior.GetType().GetFullName()));
-        }
-
-        public override string Description
-        {
-            get { return _description; }
-        }
+        public override string Description => _description;
     }
 }

@@ -11,24 +11,43 @@ namespace StructureMap.DynamicInterception
     internal class MethodInvocation : ISyncMethodInvocation, IAsyncMethodInvocation
     {
         private readonly IInvocation _invocation;
+        private readonly IInterceptionBehavior[] _interceptors;
+        private readonly int _currentIndex;
         private readonly Lazy<ReadOnlyCollection<IArgument>> _arguments;
         private readonly Lazy<IDictionary<string, IArgument>> _argumentMap;
 
-        public MethodInvocation(IInvocation invocation)
+        public MethodInvocation(IInvocation invocation, IInterceptionBehavior[] interceptors, int currentIndex = 0)
         {
             _invocation = invocation;
+            _interceptors = interceptors;
+            _currentIndex = currentIndex;
             _arguments = new Lazy<ReadOnlyCollection<IArgument>>(() => invocation.Method.GetParameters()
-                                                                                 .Zip(invocation.Arguments, (info, value) => new { info, value })
-                                                                                 .Select((t, i) => new Argument(invocation, i, t.value, t.info))
-                                                                                 .ToList<IArgument>()
-                                                                                 .AsReadOnly());
-            _argumentMap = new Lazy<IDictionary<string, IArgument>>(() => _arguments.Value.ToDictionary(a => a.ParameterInfo.Name));
+                .Zip(invocation.Arguments, (info, value) => new { info, value })
+                .Select((t, i) => new Argument(invocation, i, t.value, t.info))
+                .ToList<IArgument>()
+                .AsReadOnly()
+            );
+            _argumentMap = new Lazy<IDictionary<string, IArgument>>(() => _arguments.Value
+                .ToDictionary(a => a.ParameterInfo.Name)
+            );
         }
 
-        public IList<IArgument> Arguments
+        private MethodInvocation(IInvocation invocation, IInterceptionBehavior[] interceptors, int currentIndex,
+            Lazy<ReadOnlyCollection<IArgument>> arguments, Lazy<IDictionary<string, IArgument>> argumentMap)
         {
-            get { return _arguments.Value; }
+            _invocation = invocation;
+            _interceptors = interceptors;
+            _currentIndex = currentIndex;
+            _arguments = arguments;
+            _argumentMap = argumentMap;
         }
+
+        private MethodInvocation GetNextInvocation()
+        {
+            return new MethodInvocation(_invocation, _interceptors, _currentIndex + 1, _arguments, _argumentMap);
+        }
+
+        public IList<IArgument> Arguments => _arguments.Value;
 
         public IArgument GetArgument(string name)
         {
@@ -36,48 +55,37 @@ namespace StructureMap.DynamicInterception
             return _argumentMap.Value.TryGetValue(name, out result) ? result : null;
         }
 
-        public object TargetInstance
-        {
-            get { return _invocation.InvocationTarget; }
-        }
+        public object TargetInstance => _invocation.InvocationTarget;
 
-        public MethodInfo MethodInfo
-        {
-            get { return _invocation.Method; }
-        }
+        public MethodInfo MethodInfo => _invocation.Method;
 
-        public MethodInfo InstanceMethodInfo
-        {
-            get { return _invocation.MethodInvocationTarget; }
-        }
+        public MethodInfo InstanceMethodInfo => _invocation.MethodInvocationTarget;
 
         public IMethodInvocationResult InvokeNext()
         {
             try
             {
-                _invocation.Proceed();
-
-                if (_invocation.ReturnValue == null)
+                if (_currentIndex >= _interceptors.Length)
                 {
-                    return CreateResult(null);
+                    var result = InstanceMethodInfo.Invoke(TargetInstance, _invocation.Arguments);
+
+                    var actualResult = ReflectionHelper.IsTask(MethodInfo.ReturnType)
+                        ? ReflectionHelper.GetResultFromTask(ActualReturnType, result)
+                        : result;
+
+                    return CreateResult(actualResult);
                 }
 
-                var returnType = _invocation.ReturnValue.GetType();
+                var interceptionBehavior = _interceptors[_currentIndex];
 
-                if (ReflectionHelper.IsNonGenericTask(returnType))
+                var asyncBehavior = interceptionBehavior as IAsyncInterceptionBehavior;
+                if (asyncBehavior != null)
                 {
-                    return CreateResult(null);
+                    var invocationResultTask = asyncBehavior.InterceptAsync(GetNextInvocation());
+                    return invocationResultTask.GetAwaiter().GetResult();
                 }
 
-                if (ReflectionHelper.IsGenericTask(returnType))
-                {
-                    var result = ReflectionHelper.GetTaskResult(ReflectionHelper.GetTypeFromGenericTask(returnType),
-                        _invocation.ReturnValue);
-
-                    return CreateResult(result);
-                }
-
-                return CreateResult(_invocation.ReturnValue);
+                return ((ISyncInterceptionBehavior)interceptionBehavior).Intercept(GetNextInvocation());
             }
             catch (Exception e)
             {
@@ -89,28 +97,28 @@ namespace StructureMap.DynamicInterception
         {
             try
             {
-                _invocation.Proceed();
-
-                if (_invocation.ReturnValue == null)
+                if (_currentIndex >= _interceptors.Length)
                 {
-                    return CreateResult(null);
-                }
+                    var result = InstanceMethodInfo.Invoke(TargetInstance, _invocation.Arguments);
 
-                var returnType = _invocation.ReturnValue.GetType();
+                    if (ReflectionHelper.IsTask(MethodInfo.ReturnType))
+                    {
+                        await ((Task)result).ConfigureAwait(false);
+                        return CreateResult(ReflectionHelper.GetResultFromTask(ActualReturnType, result));
+                    }
 
-                if (ReflectionHelper.IsNonGenericTask(returnType))
-                {
-                    await ((Task)_invocation.ReturnValue).ConfigureAwait(false);
-                    return CreateResult(null);
-                }
-
-                if (ReflectionHelper.IsGenericTask(returnType))
-                {
-                    var result = await ReflectionHelper.GetTaskResultAsync(ReflectionHelper.GetTypeFromGenericTask(returnType), _invocation.ReturnValue).ConfigureAwait(false);
                     return CreateResult(result);
                 }
 
-                return CreateResult(_invocation.ReturnValue);
+                var interceptionBehavior = _interceptors[_currentIndex];
+
+                var asyncBehavior = interceptionBehavior as IAsyncInterceptionBehavior;
+                if (asyncBehavior != null)
+                {
+                    return await asyncBehavior.InterceptAsync(GetNextInvocation()).ConfigureAwait(false);
+                }
+
+                return ((ISyncInterceptionBehavior)interceptionBehavior).Intercept(GetNextInvocation());
             }
             catch (Exception e)
             {
@@ -128,12 +136,6 @@ namespace StructureMap.DynamicInterception
             return new MethodInvocationResult(exception);
         }
 
-        public Type ActualReturnType
-        {
-            get
-            {
-                return ReflectionHelper.GetActualType(MethodInfo.ReturnType);
-            }
-        }
+        public Type ActualReturnType => ReflectionHelper.GetActualType(MethodInfo.ReturnType);
     }
 }
