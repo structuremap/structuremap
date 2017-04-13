@@ -1,5 +1,5 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.3",
   "title": "StructureMap.DynamicInterception",
   "description": "Aspect Oriented Programming Support for StructureMap",
   "language": "en-US",
@@ -12,7 +12,8 @@
   "packOptions": {
     "projectUrl": "http://structuremap.github.io",
     "tags": [
-      "IoC", "AOP"
+      "IoC",
+      "AOP"
     ],
     "licenseUrl": "https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT",
     "repository": {
