@@ -25,10 +25,7 @@ namespace StructureMap.Diagnostics
             _maxLevels = deep ? int.MaxValue : levels;
         }
 
-        public int MaxLevels
-        {
-            get { return _maxLevels; }
-        }
+        public int MaxLevels => _maxLevels;
 
         public void VisitNextLevel(Action action)
         {
@@ -130,7 +127,7 @@ namespace StructureMap.Diagnostics
 
         public void Instance(Type pluginType, Instance instance)
         {
-            if (_instanceStack.Any() && _instanceStack.Peek() == instance) return;
+            if (_instanceStack.Any() && Equals(_instanceStack.Peek(), instance)) return;
 
             if (_instanceStack.Contains(instance))
             {
@@ -163,7 +160,4 @@ namespace StructureMap.Diagnostics
 
 
     }
-
-
-
 }

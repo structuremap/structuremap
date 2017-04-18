@@ -87,7 +87,7 @@ namespace StructureMap
                 return _resolver.BuildNewInSession(pluginType, instance);
             }
             
-            if (lifecycle is UniquePerRequestLifecycle || _hasExplicitArguments)
+            if (lifecycle is UniquePerRequestLifecycle)
             {
                 return _resolver.BuildUnique(pluginType, instance);
             }

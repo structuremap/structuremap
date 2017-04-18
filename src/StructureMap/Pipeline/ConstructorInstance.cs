@@ -95,11 +95,11 @@ namespace StructureMap.Pipeline
             return plan;
         }
 
-        public ConstructorInstance Override(ExplicitArguments arguments)
+        public Instance Override(ExplicitArguments arguments)
         {
             if (arguments.OnlyNeedsDefaults() && !Dependencies.HasAny())
             {
-                return this.As<ConstructorInstance>();
+                return this;
             }
 
             var instance = new ConstructorInstance(PluggedType) {Name = Name};

@@ -139,38 +139,6 @@ namespace StructureMap.Testing.Building
         }
 
         [Fact]
-        public void use_all_possible_for_array()
-        {
-            var enumerableType = typeof(IGateway[]);
-            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
-                .ShouldBe(new AllPossibleValuesDependencySource(enumerableType));
-        }
-
-        [Fact]
-        public void use_all_possible_for_ienumerable()
-        {
-            var enumerableType = typeof(IEnumerable<IGateway>);
-            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
-                .ShouldBe(new AllPossibleValuesDependencySource(enumerableType));
-        }
-
-        [Fact]
-        public void use_all_possible_for_ilist()
-        {
-            var enumerableType = typeof(IList<IGateway>);
-            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
-                .ShouldBe(new AllPossibleValuesDependencySource(enumerableType));
-        }
-
-        [Fact]
-        public void use_all_possible_for_list()
-        {
-            var enumerableType = typeof(List<IGateway>);
-            ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", enumerableType, null)
-                .ShouldBe(new AllPossibleValuesDependencySource(enumerableType));
-        }
-
-        [Fact]
         public void source_for_missing_string_constructor_arg()
         {
             var source = ConcreteType.SourceFor(new Policies(PluginGraph.CreateRoot()), ConcreteType.ConstructorArgument, "SomeProp", typeof(string), null)

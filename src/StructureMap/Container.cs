@@ -1188,7 +1188,7 @@ namespace StructureMap
                 RootType = instance.ReturnedType
             };
 
-            return session.FindObject(pluginType, instance);
+            return session.BuildWithExplicitArgs(pluginType, instance);
         }
 
         /// <summary>

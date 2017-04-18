@@ -145,11 +145,6 @@ namespace StructureMap.Building
                     };
                 }
 
-                if (EnumerableInstance.IsEnumerable(dependencyType))
-                {
-                    return new AllPossibleValuesDependencySource(dependencyType);
-                }
-
                 return new DefaultDependencySource(dependencyType);
             }
 

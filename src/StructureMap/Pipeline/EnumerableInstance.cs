@@ -16,15 +16,9 @@ namespace StructureMap.Pipeline
             typeof (List<>)
         };
 
-        public override Type ReturnedType
-        {
-            get { return null; }
-        }
+        public override Type ReturnedType => null;
 
-        public static IEnumerable<Type> OpenEnumerableTypes
-        {
-            get { return _enumerableTypes; }
-        }
+        public static IEnumerable<Type> OpenEnumerableTypes => _enumerableTypes;
 
         public static Type DetermineElementType(Type pluginType)
         {
@@ -43,10 +37,7 @@ namespace StructureMap.Pipeline
             _children = children;
         }
 
-        public IEnumerable<Instance> Children
-        {
-            get { return _children; }
-        }
+        public IEnumerable<Instance> Children => _children;
 
         public static IEnumerableCoercion DetermineCoercion(Type propertyType)
         {
@@ -98,10 +89,7 @@ namespace StructureMap.Pipeline
                 : new ArrayDependencySource(elementType, items);
         }
 
-        public override string Description
-        {
-            get { return "Enumerable Instance"; }
-        }
+        public override string Description => "Enumerable Instance";
 
         public static bool IsEnumerable(Type type)
         {

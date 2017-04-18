@@ -22,7 +22,8 @@
       "**/*.cs",
       "../CommonAssemblyInfo.cs"
     ],
-    "xmlDoc": true
+    "xmlDoc": true,
+    "nowarn": [ "CS1591" ]
   },
   "frameworks": {
     "net45": {

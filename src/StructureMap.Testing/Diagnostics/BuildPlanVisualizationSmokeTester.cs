@@ -1,4 +1,5 @@
-﻿using StructureMap.Query;
+﻿using System;
+using StructureMap.Query;
 using StructureMap.Testing.Widget;
 using System.Diagnostics;
 using Xunit;
@@ -175,19 +176,6 @@ namespace StructureMap.Testing.Diagnostics
             Debug.WriteLine(description);
 
             description.ShouldContain("┗ IDevice = Instance named 'A'");
-        }
-
-        [Fact]
-        public void inline_all_possible_enumeration()
-        {
-            var description = theContainer.Model
-                .Find<CompositeDevice>("AllPossible")
-                .DescribeBuildPlan();
-
-            Debug.WriteLine(description);
-
-            description.ShouldContain(
-                "┗ IEnumerable<IDevice> = All registered Instances of StructureMap.Testing.Diagnostics.IDevice");
         }
 
         [Fact]

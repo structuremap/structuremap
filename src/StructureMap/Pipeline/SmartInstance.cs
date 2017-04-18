@@ -130,7 +130,7 @@ namespace StructureMap.Pipeline
             }
         }
 
-        ConstructorInstance IOverridableInstance.Override(ExplicitArguments arguments)
+        Instance IOverridableInstance.Override(ExplicitArguments arguments)
         {
             return _inner.Override(arguments);
         }
