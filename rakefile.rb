@@ -76,14 +76,10 @@ desc 'Run the unit tests'
 task :test => [:compile] do
 	Dir.mkdir RESULTS_DIR
 
-	sh "dotnet test src/StructureMap.Testing"
-	
-
-	sh "dotnet test src/StructureMap.AutoFactory.Testing"
-	sh "dotnet test src/StructureMap.DynamicInterception.Testing"
+	sh "dotnet test src/StructureMap.Testing/StructureMap.Testing.csproj"
+	sh "dotnet test src/StructureMap.AutoFactory.Testing/StructureMap.AutoFactory.Testing.csproj"
+	sh "dotnet test src/StructureMap.DynamicInterception.Testing/StructureMap.DynamicInterception.Testing.csproj"
 end
-
-
 
 desc 'Build Nuspec packages'
 task :pack => [:compile] do
