@@ -10,4 +10,4 @@ Once in a while you might want to get an enumerable of all the configured object
 
 <[sample:get-all-instances]>
 
-<div class="alert alert-info" role="alert"><code>GetAllInstances()</code> respects the order in which the actual instances are configured in the Container.  Be warned that some other IoC tools make different assuptions if you are coming from a different tool.</div>
+<div class="alert alert-info" role="alert"><code>GetAllInstances()</code> respects the order in which the actual instances are configured in the Container.  Be warned that some other IoC tools make different assumptions if you are coming from a different tool.</div>
