@@ -1,39 +1,37 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{93877CE0-BA48-4F28-B372-B8E802CEE085}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Widgets", "Widgets", "{E1C10209-160D-4054-ACB7-478A9FDCF84C}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NestedLibrary", "NestedLibrary\NestedLibrary.xproj", "{AEE58B96-8157-48F8-ACF2-384AD1AA2002}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NestedLibrary", "NestedLibrary\NestedLibrary.csproj", "{AEE58B96-8157-48F8-ACF2-384AD1AA2002}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap.Testing.Widget", "StructureMap.Testing.Widget\StructureMap.Testing.Widget.xproj", "{BC79F8DD-E70F-4C43-BAA5-54FB3F2ABF64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap.Testing.Widget", "StructureMap.Testing.Widget\StructureMap.Testing.Widget.csproj", "{BC79F8DD-E70F-4C43-BAA5-54FB3F2ABF64}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap.Testing.Widget2", "StructureMap.Testing.Widget2\StructureMap.Testing.Widget2.xproj", "{7640168E-9450-4BEC-A6BE-44DD38251ED3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap.Testing.Widget2", "StructureMap.Testing.Widget2\StructureMap.Testing.Widget2.csproj", "{7640168E-9450-4BEC-A6BE-44DD38251ED3}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap.Testing.Widget3", "StructureMap.Testing.Widget3\StructureMap.Testing.Widget3.xproj", "{05DF27CF-36B4-4884-9BC8-A5FB2924558E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap.Testing.Widget3", "StructureMap.Testing.Widget3\StructureMap.Testing.Widget3.csproj", "{05DF27CF-36B4-4884-9BC8-A5FB2924558E}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap.Testing.Widget4", "StructureMap.Testing.Widget4\StructureMap.Testing.Widget4.xproj", "{B9E07469-CA6F-4714-9A9A-48EB5430584D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap.Testing.Widget4", "StructureMap.Testing.Widget4\StructureMap.Testing.Widget4.csproj", "{B9E07469-CA6F-4714-9A9A-48EB5430584D}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap.Testing.Widget5", "StructureMap.Testing.Widget5\StructureMap.Testing.Widget5.xproj", "{CDB8D624-1300-4C4D-9D1F-519069B2E89A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap.Testing.Widget5", "StructureMap.Testing.Widget5\StructureMap.Testing.Widget5.csproj", "{CDB8D624-1300-4C4D-9D1F-519069B2E89A}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap.Testing.GenericWidgets", "StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.xproj", "{F98E53E0-60E7-44E5-9FB0-944EFF618542}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap.Testing.GenericWidgets", "StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj", "{F98E53E0-60E7-44E5-9FB0-944EFF618542}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap.Testing.ExeWidget", "StructureMap.Testing.ExeWidget\StructureMap.Testing.ExeWidget.xproj", "{AF2D4999-0F49-454F-B971-C10DCEEA03BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap.Testing.ExeWidget", "StructureMap.Testing.ExeWidget\StructureMap.Testing.ExeWidget.csproj", "{AF2D4999-0F49-454F-B971-C10DCEEA03BE}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap", "StructureMap\StructureMap.xproj", "{05BA5B0A-7680-4FA2-8CC2-64BE5B4D65C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap", "StructureMap\StructureMap.csproj", "{05BA5B0A-7680-4FA2-8CC2-64BE5B4D65C0}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap.Testing", "StructureMap.Testing\StructureMap.Testing.xproj", "{E442AAF0-69BF-422B-8547-667133478C3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap.Testing", "StructureMap.Testing\StructureMap.Testing.csproj", "{E442AAF0-69BF-422B-8547-667133478C3B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap.DynamicInterception", "StructureMap.DynamicInterception\StructureMap.DynamicInterception.xproj", "{71072204-985A-45E5-A7ED-7EB970EF4515}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap.DynamicInterception", "StructureMap.DynamicInterception\StructureMap.DynamicInterception.csproj", "{71072204-985A-45E5-A7ED-7EB970EF4515}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap.AutoFactory", "StructureMap.AutoFactory\StructureMap.AutoFactory.xproj", "{CB4B9035-721D-4FEC-ABC7-51FB4E795CE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap.AutoFactory", "StructureMap.AutoFactory\StructureMap.AutoFactory.csproj", "{CB4B9035-721D-4FEC-ABC7-51FB4E795CE6}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap.AutoFactory.Testing", "StructureMap.AutoFactory.Testing\StructureMap.AutoFactory.Testing.xproj", "{FA9F954B-EE4A-4172-B38B-A342DF9EC15F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap.AutoFactory.Testing", "StructureMap.AutoFactory.Testing\StructureMap.AutoFactory.Testing.csproj", "{FA9F954B-EE4A-4172-B38B-A342DF9EC15F}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StructureMap.DynamicInterception.Testing", "StructureMap.DynamicInterception.Testing\StructureMap.DynamicInterception.Testing.xproj", "{E799A9C9-48B8-45FD-B23A-439E9653049C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap.DynamicInterception.Testing", "StructureMap.DynamicInterception.Testing\StructureMap.DynamicInterception.Testing.csproj", "{E799A9C9-48B8-45FD-B23A-439E9653049C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
