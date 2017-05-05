@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace StructureMap.Util
@@ -16,12 +17,12 @@ namespace StructureMap.Util
         };
 
         public LightweightCache()
-            : this(new Dictionary<TKey, TValue>())
+            : this(new ConcurrentDictionary<TKey, TValue>())
         {
         }
 
         public LightweightCache(Func<TKey, TValue> onMissing)
-            : this(new Dictionary<TKey, TValue>(), onMissing)
+            : this(new ConcurrentDictionary<TKey, TValue>(), onMissing)
         {
         }
 
