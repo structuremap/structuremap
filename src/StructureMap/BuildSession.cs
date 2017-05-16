@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using StructureMap.Building;
 using StructureMap.Diagnostics;
@@ -16,16 +15,18 @@ namespace StructureMap
 
         private readonly ISessionCache _sessionCache;
 
-        private readonly Stack<Instance> _instances = new Stack<Instance>();
+        private readonly Stack<Instance> _instances;
 
-        public BuildSession(IPipelineGraph pipelineGraph, string requestedName = null, ExplicitArguments args = null)
+        public BuildSession(IPipelineGraph pipelineGraph, string requestedName = null, ExplicitArguments args = null,
+            Stack<Instance> buildStack = null)
         {
             this.pipelineGraph = pipelineGraph;
 
             _sessionCache = new SessionCache(this, args);
 
-
             RequestedName = requestedName ?? DEFAULT;
+
+            _instances = buildStack ?? new Stack<Instance>();
         }
 
         protected IPipelineGraph pipelineGraph { get; }
@@ -38,7 +39,8 @@ namespace StructureMap
 
             var pluggedType = target.GetType();
 
-            var plan = pipelineGraph.Policies.ToBuildUpPlan(pluggedType, () => {
+            var plan = pipelineGraph.Policies.ToBuildUpPlan(pluggedType, () =>
+            {
                 return pipelineGraph.Instances.GetDefault(pluggedType) as IConfiguredInstance
                        ?? new ConfiguredInstance(pluggedType);
             });
@@ -48,7 +50,7 @@ namespace StructureMap
 
         public T GetInstance<T>()
         {
-            return (T) GetInstance(typeof (T));
+            return (T)GetInstance(typeof(T));
         }
 
         public object GetInstance(Type pluginType)
@@ -58,7 +60,7 @@ namespace StructureMap
 
         public T GetInstance<T>(string name)
         {
-            return (T) CreateInstance(typeof (T), name);
+            return (T)CreateInstance(typeof(T), name);
         }
 
         public object GetInstance(Type pluginType, string name)
@@ -68,12 +70,12 @@ namespace StructureMap
 
         public T TryGetInstance<T>() where T : class
         {
-            return (T) TryGetInstance(typeof (T));
+            return (T)TryGetInstance(typeof(T));
         }
 
         public T TryGetInstance<T>(string name) where T : class
         {
-            return (T) TryGetInstance(typeof (T), name);
+            return (T)TryGetInstance(typeof(T), name);
         }
 
         public object TryGetInstance(Type pluginType)
@@ -84,7 +86,7 @@ namespace StructureMap
         public object TryGetInstance(Type pluginType, string name)
         {
             return pipelineGraph.Instances.HasInstance(pluginType, name)
-                ? ((IContext) this).GetInstance(pluginType, name)
+                ? ((IContext)this).GetInstance(pluginType, name)
                 : null;
         }
 
@@ -110,13 +112,12 @@ namespace StructureMap
             return plan.Build(this, this);
         }
 
-
         public object BuildUnique(Type pluginType, Instance instance)
         {
             var @object = BuildNewInSession(pluginType, instance);
             if (@object is IDisposable && pipelineGraph.Role == ContainerRole.Nested)
             {
-                pipelineGraph.TrackDisposable((IDisposable) @object);
+                pipelineGraph.TrackDisposable((IDisposable)@object);
             }
 
             return @object;
@@ -124,21 +125,20 @@ namespace StructureMap
 
         public object BuildNewInOriginalContext(Type pluginType, Instance instance)
         {
-            var session = new BuildSession(pipelineGraph.Root(), requestedName: instance.Name);
+            var session = new BuildSession(pipelineGraph.Root(), requestedName: instance.Name, buildStack: _instances);
             return session.BuildNewInSession(pluginType, instance);
         }
 
         public IEnumerable<T> GetAllInstances<T>()
         {
             return
-                pipelineGraph.Instances.GetAllInstances(typeof (T))
-                    .Select(x => (T) FindObject(typeof (T), x))
+                pipelineGraph.Instances.GetAllInstances(typeof(T))
+                    .Select(x => (T)FindObject(typeof(T), x))
                     .ToArray();
         }
 
         public IEnumerable<object> GetAllInstances(Type pluginType)
         {
-            
             var allInstances = pipelineGraph.Instances.GetAllInstances(pluginType);
             return allInstances.Select(x => FindObject(pluginType, x)).ToArray();
         }
@@ -164,7 +164,7 @@ namespace StructureMap
                     new StructureMapConfigurationException("Could not find an Instance named '{0}' for PluginType {1}",
                         name, pluginType.GetFullName());
 
-                ex.Context = new WhatDoIHaveWriter(pipelineGraph).GetText(new ModelQuery {PluginType = pluginType},
+                ex.Context = new WhatDoIHaveWriter(pipelineGraph).GetText(new ModelQuery { PluginType = pluginType },
                     "The current configuration for type {0} is:".ToFormat(pluginType.GetFullName()));
 
                 throw ex;
@@ -183,7 +183,6 @@ namespace StructureMap
                                                      Environment.NewLine + "Check the StructureMap stacktrace below:");
             }
 
-
             _instances.Push(instance);
         }
 
@@ -194,7 +193,6 @@ namespace StructureMap
                 _instances.Pop();
             }
         }
-
 
         public Type ParentType
         {

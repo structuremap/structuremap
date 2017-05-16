@@ -1,32 +1,20 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
-using StructureMap.Building;
+using System.Collections.Concurrent;
+using System.Linq;
 
 namespace StructureMap.Pipeline
 {
     public class LifecycleObjectCache : IObjectCache
     {
-        private readonly ReaderWriterLockSlim _lock;
-        private readonly IDictionary<int, object> _objects = new Dictionary<int, object>();
+        private readonly ConcurrentDictionary<int, object> _objects = new ConcurrentDictionary<int, object>();
 
-        public LifecycleObjectCache()
-        {
-            _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-        }
-
-        public int Count
-        {
-            get { return _lock.Read(() => _objects.Count); }
-        }
+        public int Count => _objects.Count;
 
         public bool Has(Type pluginType, Instance instance)
         {
-            return _lock.Read(() => {
-                var key = instance.InstanceKey(pluginType);
-                return _objects.ContainsKey(key);
-            });
+            var key = instance.InstanceKey(pluginType);
+            object @object;
+            return _objects.TryGetValue(key, out @object);
         }
 
         public void Eject(Type pluginType, Instance instance)
@@ -36,59 +24,19 @@ namespace StructureMap.Pipeline
                 return;
 
             var key = instance.InstanceKey(pluginType);
-            _lock.MaybeWrite(() => {
-                if (!_objects.ContainsKey(key)) return;
 
-                _lock.Write(() => {
-                    var disposable = _objects[key] as IDisposable;
-                    _objects.Remove(key);
-                    disposable.SafeDispose();
-                });
-            });
+            object @object;
+            if (_objects.TryRemove(key, out @object))
+            {
+                @object.SafeDispose();
+            }
         }
-
-        private readonly IList<Instance> _instances = new List<Instance>(); 
 
         public object Get(Type pluginType, Instance instance, IBuildSession session)
         {
-            object result;
             var key = instance.InstanceKey(pluginType);
-            _lock.EnterUpgradeableReadLock();
-            try
-            {
-                if (_instances.Contains(instance))
-                {
-                    throw new StructureMapBuildException("Bi-directional dependency relationship detected!" +
-                                                         Environment.NewLine + "Check the StructureMap stacktrace below:");
-                }
 
-                if (_objects.ContainsKey(key))
-                {
-                    result = _objects[key];
-                }
-                else
-                {
-                    _lock.EnterWriteLock();
-                    try
-                    {
-                        _instances.Add(instance);
-                        result = buildWithSession(pluginType, instance, session);
-
-                        _objects.Add(key, result);
-                    }
-                    finally
-                    {
-                        _instances.Remove(instance);
-                        _lock.ExitWriteLock();
-                    }
-                }
-            }
-            finally
-            {
-                _lock.ExitUpgradeableReadLock();
-            }
-
-            return result;
+            return _objects.GetOrAdd(key, _ => buildWithSession(pluginType, instance, session));
         }
 
         protected virtual object buildWithSession(Type pluginType, Instance instance, IBuildSession session)
@@ -98,33 +46,27 @@ namespace StructureMap.Pipeline
 
         public void DisposeAndClear()
         {
-            _lock.Write(() => {
-                _objects.Values.Each(@object => {
-                    if (@object is Container) return;
+            var keys = _objects.Keys.ToList();
 
-                    if (@object != null) @object.SafeDispose();
-                });
-
-                _objects.Clear();
-            });
+            foreach (var key in keys)
+            {
+                object @object;
+                if (_objects.TryRemove(key, out @object))
+                {
+                    if (@object != null && !(@object is Container))
+                    {
+                        @object.SafeDispose();
+                    }
+                }
+            }
         }
-
 
         public void Set(Type pluginType, Instance instance, object value)
         {
             if (value == null) return;
 
-            _lock.Write(() => {
-                var key = instance.InstanceKey(pluginType);
-                if (_objects.ContainsKey(key))
-                {
-                    _objects[key] = value;
-                }
-                else
-                {
-                    _objects.Add(key, value);
-                }
-            });
+            var key = instance.InstanceKey(pluginType);
+            _objects.AddOrUpdate(key, value, (_, __) => value);
         }
     }
 }
