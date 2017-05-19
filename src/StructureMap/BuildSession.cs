@@ -17,8 +17,13 @@ namespace StructureMap
 
         private readonly Stack<Instance> _instances;
 
-        public BuildSession(IPipelineGraph pipelineGraph, string requestedName = null, ExplicitArguments args = null,
-            Stack<Instance> buildStack = null)
+        public BuildSession(IPipelineGraph pipelineGraph, string requestedName = null, ExplicitArguments args = null)
+            : this(pipelineGraph, requestedName, args, null)
+        {
+        }
+
+        private BuildSession(IPipelineGraph pipelineGraph, string requestedName, ExplicitArguments args,
+            Stack<Instance> buildStack)
         {
             this.pipelineGraph = pipelineGraph;
 
@@ -125,7 +130,7 @@ namespace StructureMap
 
         public object BuildNewInOriginalContext(Type pluginType, Instance instance)
         {
-            var session = new BuildSession(pipelineGraph.Root(), requestedName: instance.Name, buildStack: _instances);
+            var session = new BuildSession(pipelineGraph.Root(), instance.Name, null, _instances);
             return session.BuildNewInSession(pluginType, instance);
         }
 
