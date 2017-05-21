@@ -26,7 +26,7 @@ then use the Fluent API methods exposed by the `Registry` class to describe a `C
 
 Here's a sample `Registry` class used to configure the same types as in our previous example:
 
-<[sample:foobar-registry]>
+<[sample:foobar-registry]>s
 
 When you set up a `Container` , you need to simply direct the `Container` to use the configuration in that `Registry` class.
 
