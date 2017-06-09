@@ -104,7 +104,7 @@ namespace StructureMap.Building
 
             var lambda = Expression.Lambda(lambdaType, wrapped, Parameters.Session, Parameters.Context);
 
-            return lambda.Compile();
+            return StructureMap.Util.ExpressionCompiler.Compile<Func<IBuildSession, IContext, object>>(lambda);
         }
 
         public string Description

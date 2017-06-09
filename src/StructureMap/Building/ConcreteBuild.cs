@@ -86,7 +86,20 @@ namespace StructureMap.Building
 
             var lambda = Expression.Lambda(lambdaType, inner, Parameters.Session, Parameters.Context);
 
-            return lambda.Compile();
+            return typeof(Compiler<>).CloseAndBuildAs<ICompiler>(ConcreteType).Build(lambda);
+        }
+
+        private interface ICompiler
+        {
+            Delegate Build(LambdaExpression lambda);
+        }
+
+        private class Compiler<T> : ICompiler
+        {
+            public Delegate Build(LambdaExpression lambda)
+            {
+                return StructureMap.Util.ExpressionCompiler.Compile<Func<IBuildSession, IContext, T>>(lambda);
+            }
         }
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)

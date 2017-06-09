@@ -50,7 +50,9 @@ namespace StructureMap.Building.Interception
             var lambdaType = typeof (Func<IBuildSession, IContext, T>);
             var lambda = Expression.Lambda(lambdaType, ToExpression(Parameters.Session, Parameters.Context),
                 Parameters.Session, Parameters.Context);
-            return (Func<IBuildSession, IContext, T>) lambda.Compile();
+
+
+            return StructureMap.Util.ExpressionCompiler.Compile<Func<IBuildSession, IContext, T>>(lambda);
         }
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression context)

@@ -72,7 +72,8 @@ namespace StructureMap.Building
                 var target = Expression.Parameter(typeof (T), "target");
                 _actions = setters.Select(x => {
                     var lambda = x.ToSetterLambda(typeof (T), target);
-                    return lambda.Compile().As<Action<IBuildSession, IContext, T>>();
+
+                    return StructureMap.Util.ExpressionCompiler.Compile<Action<IBuildSession, IContext, T>>(lambda);
                 }).ToArray();
             }
 
