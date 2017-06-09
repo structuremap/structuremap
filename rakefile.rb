@@ -83,7 +83,7 @@ end
 
 desc 'Build Nuspec packages'
 task :pack => [:compile] do
-	sh "dotnet pack src/StructureMap -o artifacts --configuration Release --version-suffix #{build_revision}"
+	sh "dotnet pack src/StructureMap -o artifacts --configuration Release"
 	sh "dotnet pack src/StructureMap.AutoFactory -o artifacts --configuration Release --version-suffix #{build_revision}"
 	sh "dotnet pack src/StructureMap.DynamicInterception -o artifacts --configuration Release --version-suffix #{build_revision}"
 end
