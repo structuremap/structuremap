@@ -253,7 +253,7 @@ namespace StructureMap.TypeRules
         {
             if (type == null) return false;
 
-            return type.GetTypeInfo().IsPrimitive || IsString(type) || type.GetTypeInfo().IsEnum;
+            return type.GetTypeInfo().IsPrimitive || IsString(type) || type.GetTypeInfo().IsEnum || IsNullable(type);
         }
 
         public static bool IsInterfaceOrAbstract(this Type type)
