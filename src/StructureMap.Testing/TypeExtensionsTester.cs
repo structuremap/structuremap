@@ -128,6 +128,7 @@ namespace StructureMap.Testing
             typeof(string).IsSimple().ShouldBeTrue();
             typeof(BreedEnum).IsSimple().ShouldBeTrue();
             typeof(IGateway).IsSimple().ShouldBeFalse();
+            typeof(int?).IsSimple().ShouldBeTrue();
         }
 
         [Fact]

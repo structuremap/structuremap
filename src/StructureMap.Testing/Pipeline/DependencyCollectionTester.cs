@@ -62,7 +62,6 @@ namespace StructureMap.Testing.Pipeline
                 .ShouldBe(service1);
         }
 
-
         [Fact]
         public void can_override_and_last_one_in_wins()
         {
@@ -72,6 +71,20 @@ namespace StructureMap.Testing.Pipeline
 
             collection.FindByTypeOrName(typeof(IGateway), "foo")
                 .ShouldBeTheSameAs(gateway2);
+        }
+
+        [Fact]
+        public void nullable_type_found_by_underlying_type()
+        {
+            var collection = new DependencyCollection();
+            collection.Add("foo", 1);
+            collection.Add("bar", 1.1m);
+
+            collection.FindByTypeAndName(typeof(int?), "foo")
+                .ShouldBe(1);
+
+            collection.FindByTypeAndName(typeof(int?), "bar")
+                .ShouldBeNull();
         }
     }
 }
