@@ -89,7 +89,7 @@ namespace StructureMap.Pipeline
         {
             if (argumentType == null) return null;
 
-            var argument = _dependencies.LastOrDefault(x => x.Name == name && x.Type == argumentType);
+            var argument = _dependencies.LastOrDefault(x => x.Name == name && (x.Type == argumentType || (argumentType.IsNullable() && x.Type == argumentType.GetInnerTypeFromNullable())));
             if (argument == null && EnumerableInstance.IsEnumerable(argumentType))
             {
                 var elementType = EnumerableInstance.DetermineElementType(argumentType);
