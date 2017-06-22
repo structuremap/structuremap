@@ -10,9 +10,9 @@ important "<[linkto:the-container/nested-containers;title=nested container]> per
 
 ## ASP.NET Web API
 
-The StructureMap team recommends the [StructureMap.WebApi2](https://www.nuget.org/packages/StructureMap.WebApi2/) NuGet package. 
-The IoC integration in Web API is somewhat better designed than ASP.NET MVC's bolt on mechanism and the StructureMap integration
-is quite a bit cleaner.
+The easiest way to integrate StructureMap with ASP.NET Web API is with the [WebApi.StructureMap](https://www.nuget.org/packages/WebApi.StructureMap) NuGet package. This package requires StructureMap 4.1 or higher.
+For older versions of StructureMap or in projects where you are already using the StructureMap.MVC5 NuGet package, the 
+[StructureMap.WebApi2](https://www.nuget.org/packages/StructureMap.WebApi2/) is available.
 
 ## ASP.NET Core
 
