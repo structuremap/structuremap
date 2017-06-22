@@ -11,8 +11,7 @@ important "<[linkto:the-container/nested-containers;title=nested container]> per
 ## ASP.NET Web API
 
 The easiest way to integrate StructureMap with ASP.NET Web API is with the [WebApi.StructureMap](https://www.nuget.org/packages/WebApi.StructureMap) NuGet package. This package requires StructureMap 4.1 or higher.
-For older versions of StructureMap or in projects where you are already using the StructureMap.MVC5 NuGet package, the 
-[StructureMap.WebApi2](https://www.nuget.org/packages/StructureMap.WebApi2/) is available.
+Use the [StructureMap.WebApi2](https://www.nuget.org/packages/StructureMap.WebApi2/) NuGet package for older versions of StructureMap or combined ASP.NET MVC and Web API projects where you already use the [StructureMap.MVC5](https://www.nuget.org/packages/StructureMap.MVC5/) NuGet package.
 
 ## ASP.NET Core
 
