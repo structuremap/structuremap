@@ -60,6 +60,42 @@ namespace StructureMap.DynamicInterception.Testing
             await Should.ThrowAsync<InvalidOperationException>(() => service.ThrowAsync()).ConfigureAwait(false);
         }
 
+        [Fact]
+        public void ArgumentsReturnsCorrectParameterInfo()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IFilteredParameterService>().Use<FilteredParameterService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IFilteredParameterService>(new IInterceptionBehavior[]
+                    {
+                        new FilterInterfaceParameterInterceptor(), new DummyInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IFilteredParameterService>();
+
+            service.IsInterceptedInInterface(0).ShouldBe(true);
+            service.IsInterceptedInImplementation(0).ShouldBe(false);
+        }
+
+        [Fact]
+        public void ArgumentsReturnsCorrectInstanceParameterInfo()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IFilteredParameterService>().Use<FilteredParameterService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IFilteredParameterService>(new IInterceptionBehavior[]
+                    {
+                        new FilterImplementationParameterInterceptor(), new DummyInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IFilteredParameterService>();
+
+            service.IsInterceptedInInterface(0).ShouldBe(false);
+            //service.IsInterceptedInImplementation(0).ShouldBe(true);
+        }
+
         private class DummyInterceptor : ISyncInterceptionBehavior
         {
             public IMethodInvocationResult Intercept(ISyncMethodInvocation methodInvocation)
@@ -120,6 +156,46 @@ namespace StructureMap.DynamicInterception.Testing
             public async Task ThrowAsync()
             {
                 throw new InvalidOperationException();
+            }
+        }
+
+        public interface IFilteredParameterService
+        {
+            bool IsInterceptedInInterface([Filter]int value);
+
+            bool IsInterceptedInImplementation(int value);
+        }
+
+        private class FilteredParameterService : IFilteredParameterService
+        {
+            public bool IsInterceptedInInterface(int value)
+            {
+                return false;
+            }
+
+            public bool IsInterceptedInImplementation([Filter]int value)
+            {
+                return false;
+            }
+        }
+
+        private class FilterInterfaceParameterInterceptor : ISyncInterceptionBehavior
+        {
+            public IMethodInvocationResult Intercept(ISyncMethodInvocation methodInvocation)
+            {
+                return methodInvocation.Arguments[0].ParameterInfo.GetCustomAttribute<FilterAttribute>() != null
+                    ? methodInvocation.CreateResult(true)
+                    : methodInvocation.InvokeNext();
+            }
+        }
+
+        private class FilterImplementationParameterInterceptor : ISyncInterceptionBehavior
+        {
+            public IMethodInvocationResult Intercept(ISyncMethodInvocation methodInvocation)
+            {
+                return methodInvocation.Arguments[0].InstanceParameterInfo.GetCustomAttribute<FilterAttribute>() != null
+                    ? methodInvocation.CreateResult(true)
+                    : methodInvocation.InvokeNext();
             }
         }
     }

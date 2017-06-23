@@ -9,17 +9,19 @@ namespace StructureMap.DynamicInterception
         private readonly int _index;
         private object _value;
 
-        public Argument(IInvocation invocation, int index, object value, ParameterInfo parameterInfo)
+        public Argument(IInvocation invocation, int index, object value, ParameterInfo parameterInfo,
+            ParameterInfo instanceParameterInfo)
         {
             _invocation = invocation;
             _index = index;
             _value = value;
             ParameterInfo = parameterInfo;
+            InstanceParameterInfo = instanceParameterInfo;
         }
 
         public object Value
         {
-            get { return _value; }
+            get => _value;
             set
             {
                 _invocation.SetArgumentValue(_index, value);
@@ -27,6 +29,8 @@ namespace StructureMap.DynamicInterception
             }
         }
 
-        public ParameterInfo ParameterInfo { get; private set; }
+        public ParameterInfo ParameterInfo { get; }
+
+        public ParameterInfo InstanceParameterInfo { get; }
     }
 }

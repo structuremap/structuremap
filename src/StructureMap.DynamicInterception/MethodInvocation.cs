@@ -21,15 +21,26 @@ namespace StructureMap.DynamicInterception
             _invocation = invocation;
             _interceptors = interceptors;
             _currentIndex = currentIndex;
-            _arguments = new Lazy<ReadOnlyCollection<IArgument>>(() => invocation.Method.GetParameters()
-                .Zip(invocation.Arguments, (info, value) => new { info, value })
-                .Select((t, i) => new Argument(invocation, i, t.value, t.info))
-                .ToList<IArgument>()
-                .AsReadOnly()
+            _arguments = new Lazy<ReadOnlyCollection<IArgument>>(() => CreateArgumentList(invocation)
             );
             _argumentMap = new Lazy<IDictionary<string, IArgument>>(() => _arguments.Value
                 .ToDictionary(a => a.ParameterInfo.Name)
             );
+        }
+
+        private static ReadOnlyCollection<IArgument> CreateArgumentList(IInvocation invocation)
+        {
+            var methodParameters = invocation.Method.GetParameters();
+            var instanceMethodParameters = invocation.MethodInvocationTarget.GetParameters();
+            var arguments = invocation.Arguments;
+
+            var result = new IArgument[methodParameters.Length];
+            for (var i = 0; i < result.Length; ++i)
+            {
+                result[i] = new Argument(invocation, i, arguments[i], methodParameters[i], instanceMethodParameters[i]);
+            }
+
+            return new ReadOnlyCollection<IArgument>(result);
         }
 
         private MethodInvocation(IInvocation invocation, IInterceptionBehavior[] interceptors, int currentIndex,

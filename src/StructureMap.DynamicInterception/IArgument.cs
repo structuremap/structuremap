@@ -7,5 +7,7 @@ namespace StructureMap.DynamicInterception
         object Value { get; set; }
 
         ParameterInfo ParameterInfo { get; }
+
+        ParameterInfo InstanceParameterInfo { get; }
     }
 }
