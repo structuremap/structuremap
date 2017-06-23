@@ -70,7 +70,7 @@ namespace StructureMap.DynamicInterception
                     var result = InstanceMethodInfo.Invoke(TargetInstance, _invocation.Arguments);
 
                     var actualResult = ReflectionHelper.IsTask(MethodInfo.ReturnType)
-                        ? ReflectionHelper.GetResultFromTask(ActualReturnType, result)
+                        ? ReflectionHelper.GetResultFromTask(ActualReturnType, (Task)result)
                         : result;
 
                     return CreateResult(actualResult);
@@ -86,6 +86,10 @@ namespace StructureMap.DynamicInterception
                 }
 
                 return ((ISyncInterceptionBehavior)interceptionBehavior).Intercept(GetNextInvocation());
+            }
+            catch (TargetInvocationException e)
+            {
+                return CreateExceptionResult(e.InnerException);
             }
             catch (Exception e)
             {
@@ -104,7 +108,7 @@ namespace StructureMap.DynamicInterception
                     if (ReflectionHelper.IsTask(MethodInfo.ReturnType))
                     {
                         await ((Task)result).ConfigureAwait(false);
-                        return CreateResult(ReflectionHelper.GetResultFromTask(ActualReturnType, result));
+                        return CreateResult(ReflectionHelper.GetResultFromTask(ActualReturnType, (Task)result));
                     }
 
                     return CreateResult(result);

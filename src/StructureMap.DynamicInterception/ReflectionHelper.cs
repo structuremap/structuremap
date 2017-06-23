@@ -83,9 +83,20 @@ namespace StructureMap.DynamicInterception
             return (T)methodInvocationResult.GetReturnValueOrThrow();
         }
 
-        public static object GetResultFromTask(Type resultType, object task)
+        public static object GetResultFromTask(Type resultType, Task task)
         {
-            if (resultType == typeof(void)) return null;
+            if (resultType == typeof(void))
+            {
+                try
+                {
+                    task.Wait();
+                }
+                catch (AggregateException e)
+                {
+                    rethrowInnerException(e);
+                }
+                return null;
+            }
             return callPrivateStaticGenericMethod(typeof(ReflectionHelper), nameof(getTaskResult), resultType,
                 task);
         }
