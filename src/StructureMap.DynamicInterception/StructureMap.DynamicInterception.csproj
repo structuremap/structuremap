@@ -4,7 +4,7 @@
     <Description>Aspect Oriented Programming Support for StructureMap</Description>
     <AssemblyTitle>StructureMap.DynamicInterception</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <VersionPrefix>1.0.3</VersionPrefix>
+    <VersionPrefix>1.1.0</VersionPrefix>
     <Authors>Dmytro Dziuma, Jeremy D. Miller</Authors>
     <TargetFrameworks>net45;netstandard1.3</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -34,5 +34,4 @@
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.0.0" />
   </ItemGroup>
-
 </Project>
