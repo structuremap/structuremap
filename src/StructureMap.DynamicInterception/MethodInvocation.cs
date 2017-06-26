@@ -135,6 +135,10 @@ namespace StructureMap.DynamicInterception
 
                 return ((ISyncInterceptionBehavior)interceptionBehavior).Intercept(GetNextInvocation());
             }
+            catch (TargetInvocationException e)
+            {
+                return CreateExceptionResult(e.InnerException);
+            }
             catch (Exception e)
             {
                 return CreateExceptionResult(e);

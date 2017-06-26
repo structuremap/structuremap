@@ -27,7 +27,7 @@ namespace StructureMap.DynamicInterception.Testing
         }
 
         [Fact]
-        public void ExceptionReturnsOriginalExceptionTypeForSyncMethod()
+        public void ExceptionReturnsOriginalExceptionTypeForSyncMethodWithSyncInterceptor()
         {
             var container = new Container(x =>
             {
@@ -44,7 +44,7 @@ namespace StructureMap.DynamicInterception.Testing
         }
 
         [Fact]
-        public async Task ExceptionReturnsOriginalExceptionTypeForAsyncMethod()
+        public async Task ExceptionReturnsOriginalExceptionTypeForAsyncMethodWithSyncInterceptor()
         {
             var container = new Container(x =>
             {
@@ -52,6 +52,39 @@ namespace StructureMap.DynamicInterception.Testing
                     .InterceptWith(new DynamicProxyInterceptor<IThrowingService>(new IInterceptionBehavior[]
                     {
                         new DummyInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IThrowingService>();
+
+            await Should.ThrowAsync<InvalidOperationException>(() => service.ThrowAsync()).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public void ExceptionReturnsOriginalExceptionTypeForSyncMethodWithAsyncInterceptor()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IThrowingService>().Use<ThrowingService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IThrowingService>(new IInterceptionBehavior[]
+                    {
+                        new DummyAsyncInterceptor()
+                    }));
+            });
+
+            var service = container.GetInstance<IThrowingService>();
+            Should.Throw<InvalidOperationException>(() => service.Throw());
+        }
+
+        [Fact]
+        public async Task ExceptionReturnsOriginalExceptionTypeForAsyncMethodWithAsyncInterceptor()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IThrowingService>().Use<ThrowingService>()
+                    .InterceptWith(new DynamicProxyInterceptor<IThrowingService>(new IInterceptionBehavior[]
+                    {
+                        new DummyAsyncInterceptor()
                     }));
             });
 
@@ -93,7 +126,7 @@ namespace StructureMap.DynamicInterception.Testing
             var service = container.GetInstance<IFilteredParameterService>();
 
             service.IsInterceptedInInterface(0).ShouldBe(false);
-            //service.IsInterceptedInImplementation(0).ShouldBe(true);
+            service.IsInterceptedInImplementation(0).ShouldBe(true);
         }
 
         private class DummyInterceptor : ISyncInterceptionBehavior
@@ -101,6 +134,14 @@ namespace StructureMap.DynamicInterception.Testing
             public IMethodInvocationResult Intercept(ISyncMethodInvocation methodInvocation)
             {
                 return methodInvocation.InvokeNext();
+            }
+        }
+
+        private class DummyAsyncInterceptor : IAsyncInterceptionBehavior
+        {
+            public Task<IMethodInvocationResult> InterceptAsync(IAsyncMethodInvocation methodInvocation)
+            {
+                return methodInvocation.InvokeNextAsync();
             }
         }
 
