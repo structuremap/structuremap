@@ -1,6 +1,6 @@
 <!--Title: Using Attributes for Configuration-->
 
-In the early days of StructureMap we had several attibutes for basic configuration that we'd just as soon
+In the early days of StructureMap we had several attributes for basic configuration that we'd just as soon
 forget ever existed. Further more, the StructureMap strongly believes that the usage of StructureMap should
 have as little impact on application code as possible -- and forcing users to spray .Net attributes all over 
 their own code is in clear violation of this philosophy. _In other words, we don't want to be MEF._
