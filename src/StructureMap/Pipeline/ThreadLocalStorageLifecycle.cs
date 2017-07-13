@@ -4,7 +4,7 @@ namespace StructureMap.Pipeline
 {
     public class ThreadLocalStorageLifecycle : LifecycleBase
     {
-        private static readonly ThreadLocal<IObjectCache> Cache = new ThreadLocal<IObjectCache>(() => new LifecycleObjectCache());
+        private static readonly ThreadLocal<IObjectCache> Cache = new ThreadLocal<IObjectCache>(() => new ContainerSpecificObjectCache());
 
         public override void EjectAll(ILifecycleContext context)
         {
