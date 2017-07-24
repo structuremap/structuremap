@@ -1,5 +1,3 @@
-using System.IO;
-using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Graph.Scanning;
@@ -8,8 +6,9 @@ using StructureMap.Query;
 using StructureMap.TypeRules;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -816,8 +815,8 @@ namespace StructureMap
             }
         }
 
-        /// <summary> 
-        /// Correct the Singleton lifecycle for child containers 
+        /// <summary>
+        /// Correct the Singleton lifecycle for child containers
         /// </summary>
         private static void CorrectSingletoneLifecycleForChild(IPipelineGraph pipelineGraph)
         {
@@ -850,12 +849,14 @@ namespace StructureMap
         {
             ArgumentChecker.ThrowIfNullOrEmptyString("profileName", profileName);
             assertNotDisposed();
+            lock (_syncLock)
+            {
+                var pipeline = _pipelineGraph.Profiles.For(profileName);
 
-            var pipeline = _pipelineGraph.Profiles.For(profileName);
+                CorrectSingletoneLifecycleForChild(pipeline);
 
-            CorrectSingletoneLifecycleForChild(pipeline);
-
-            return new Container(pipeline);
+                return new Container(pipeline);
+            }
         }
 
         /// <summary>
@@ -920,7 +921,6 @@ namespace StructureMap
             var writer = new StringWriter();
             writer.WriteLine("All Scanners");
             writer.WriteLine("================================================================");
-
 
             scanners.Each(scanner =>
             {
@@ -1076,7 +1076,7 @@ namespace StructureMap
         {
             assertNotDisposed();
             var pipeline = _pipelineGraph.ToNestedGraph(arguments);
-            
+
             return GetNestedContainer(pipeline);
 
             throw new NotImplementedException();
@@ -1169,7 +1169,7 @@ namespace StructureMap
         {
             if (defaultInstance == null && pluginType.IsConcrete())
             {
-                defaultInstance = new ConfiguredInstance(pluginType) {Name = requestedName};
+                defaultInstance = new ConfiguredInstance(pluginType) { Name = requestedName };
             }
 
             var basicInstance = defaultInstance as IOverridableInstance;
