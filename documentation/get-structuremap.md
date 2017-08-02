@@ -12,7 +12,9 @@ The current version of StructureMap will always be available on [Nuget](https://
 
 The original `StructureMap.dll` has been broken up into a couple pieces. The main assembly will be targeting PCL compliance thanks to the diligent efforts of [Frank Quednau](https://twitter.com/fquednau), and that means that anything to do with ASP.Net or falls outside of the PCL core has been devolved into separate assemblies and eventually into different Nuget packages. This means that StructureMap 3.* will *theoretically* support WP8 and other versions of .Net for the very first time.
 
-At this point StructureMap 3.* has been used on .Net 4, 4.5, WP8, and WP8.1. Nobody in the core StructureMap team is currently working with Xamarin mobile runtimes, but we are interested in verifying StructureMap on new platforms if any volunteers are interested in helping us out.
+At this point StructureMap 3.* has been used on .Net 4, 4.5, WP8, and WP8.1. 
+
+StructureMap 4.5+ will not work on Xamarin iOS because it depends on System.Reflection.Emit, [which is not available in MonoTouch](https://developer.xamarin.com/guides/ios/advanced_topics/limitations/). StructureMap 4.4 works for at least basic scenarios on that platform. Nobody in the core StructureMap team is currently working with Xamarin mobile runtimes, but we are interested in verifying StructureMap on new platforms if any volunteers are interested in helping us out.
 
 ## Binaries
 
