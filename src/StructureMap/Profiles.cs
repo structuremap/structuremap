@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -32,15 +33,32 @@ namespace StructureMap
             return _profiles.Values;
         }
 
-        public IPipelineGraph For(string profileName)
+        public IPipelineGraph For(string profileName, object syncLock)
         {
-            return _profiles.GetOrAdd(profileName, key =>
+            if (!_profiles.ContainsKey(profileName))
             {
-                var profileGraph = _pluginGraph.Profile(profileName);
+                lock (syncLock)
+                {
+                    if (!_profiles.ContainsKey(profileName))
+                    {
+                        var profileGraph = _pluginGraph.Profile(profileName);
 
-                var instances = new ComplexInstanceGraph(_root, profileGraph, ContainerRole.ProfileOrChild);
-                return new PipelineGraph(profileGraph, instances, _root, _root.Singletons, _root.Transients);
-            });
+                        var instances = new ComplexInstanceGraph(_root, profileGraph, ContainerRole.ProfileOrChild);
+                        var pipeline = new PipelineGraph(profileGraph, instances, _root, _root.Singletons, _root.Transients);
+
+                        Container.CorrectSingletonLifecycleForChild(pipeline);
+
+                        _profiles[profileName] = pipeline;
+                    }
+                }
+            }
+
+            return _profiles[profileName];
+
+
+
         }
+
+
     }
 }

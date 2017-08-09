@@ -806,7 +806,7 @@ namespace StructureMap
             {
                 _pipelineGraph.Configure(configure);
 
-                CorrectSingletoneLifecycleForChild(_pipelineGraph);
+                CorrectSingletonLifecycleForChild(_pipelineGraph);
 
                 if (Role == ContainerRole.Nested)
                 {
@@ -818,7 +818,7 @@ namespace StructureMap
         /// <summary>
         /// Correct the Singleton lifecycle for child containers
         /// </summary>
-        private static void CorrectSingletoneLifecycleForChild(IPipelineGraph pipelineGraph)
+        internal static void CorrectSingletonLifecycleForChild(IPipelineGraph pipelineGraph)
         {
             if (pipelineGraph.Role == ContainerRole.ProfileOrChild)
             {
@@ -851,9 +851,7 @@ namespace StructureMap
             assertNotDisposed();
             lock (_syncLock)
             {
-                var pipeline = _pipelineGraph.Profiles.For(profileName);
-
-                CorrectSingletoneLifecycleForChild(pipeline);
+                var pipeline = _pipelineGraph.Profiles.For(profileName, _syncLock);
 
                 return new Container(pipeline);
             }
@@ -1096,7 +1094,7 @@ namespace StructureMap
             ArgumentChecker.ThrowIfNullOrEmptyString("profileName", profileName);
             assertNotDisposed();
 
-            var pipeline = _pipelineGraph.Profiles.For(profileName).ToNestedGraph();
+            var pipeline = _pipelineGraph.Profiles.For(profileName, _syncLock).ToNestedGraph();
             return GetNestedContainer(pipeline);
         }
 
