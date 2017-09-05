@@ -7,7 +7,7 @@ namespace StructureMap.Pipeline.Lazy
     {
         public override string Description
         {
-            get { return "Open Generic Template for Func<>"; }
+            get { return "Open Generic Template for Lazy<>"; }
         }
 
         // This should never get called because it starts as an open type
