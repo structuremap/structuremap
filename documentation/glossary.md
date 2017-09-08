@@ -7,7 +7,7 @@ There are some terms that reoccur throughout the documentation and show up in th
 
 Tools like StructureMap are generally known as *Inversion of Control (IoC) Containers* or *Dependency Injection (DI) Containers*. In the Java world they are also known as *Lightweight Containers* to differentiate them from the older *EJB Containers*.
 
-A container is a tool that can help you composing object graphs and managing their scope (lifecycle). Altough you can do Inversion of Control and Dependecy Injection manually, using tools like StructureMap makes you far more productive and succesfull in doing so.
+A container is a tool that can help you composing object graphs and managing their scope (lifecycle). Altough you can do Inversion of Control and Dependency Injection manually, using tools like StructureMap makes you far more productive and succesfull in doing so.
 
 Obviously there is more to a container than resolving services and managing their scope, but in the core that's just what it is. Before you can do so you need to tell StructureMap, the container, how it must compose those objects graphs and what their lifecycle is. This is called registration and can be done in various mixed ways. The strongly recommend way would be using the <[linkto:registration/registry-dsl]>. In your registration you're basically mapping abstractions to concrete types and defining their lifecycle.
 
