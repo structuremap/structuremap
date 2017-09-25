@@ -27,7 +27,7 @@ namespace StructureMap.AutoFactory.Testing
             component.ShouldBeOfType<DummyService>();
         }
 
-        //ENDSAMPLE
+        // ENDSAMPLE
     }
 
     // SAMPLE: ISimpleDummyFactory
@@ -36,5 +36,5 @@ namespace StructureMap.AutoFactory.Testing
         IDummyService CreateDummyService();
     }
 
-    //ENDSAMPLE
+    // ENDSAMPLE
 }
