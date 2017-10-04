@@ -102,6 +102,17 @@ that it implements. You could then build a custom `IRegistrationConvention` clas
 
 <[sample:custom-registration-convention]>
 
+## Composite Decorators
+
+Sometimes you need to have many implementations of an interface, and to have all of them used together, which usually involves creating another implementation of the interface which takes all the others as dependencies.
+
+If you try this in StructureMap, it will throw an exception as it detects a bi-directional dependency.  This is because by default an `IEnumerable<T>` constructor parameter will be populated with all instances of T, which would include the implementation with the `IEnumerable<T>`parameter!
+
+We can use a custom `IRegistrationConvention` however to tell StructureMap that when it constructs a Composite, it should only include implementations which are not the `Composite`:
+
+<[sample:custom-registration-composite]>
+
+
 ## The Default ISomething/Something Convention
 
 The "default" convention simply tries to connect concrete classes to interfaces using
