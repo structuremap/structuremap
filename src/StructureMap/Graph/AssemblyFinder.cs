@@ -40,9 +40,7 @@ namespace StructureMap.Graph
             catch (Exception) {
                 path = System.IO.Directory.GetCurrentDirectory();
             }
-
-            Console.WriteLine("The path is: " + path);
-
+            
             return FindAssemblies(path, logFailure, includeExeFiles);
 #endif
 
