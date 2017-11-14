@@ -5,7 +5,7 @@
     <AssemblyName>StructureMap.Testing.ExeWidget</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>StructureMap.Testing.ExeWidget</PackageId>
-    <RuntimeFrameworkVersion Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">1.0.4</RuntimeFrameworkVersion>
+    
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
   </PropertyGroup>
 
