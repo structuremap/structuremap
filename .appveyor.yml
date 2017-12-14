@@ -14,7 +14,7 @@ nuget:
 install:
   - set PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%
   - ruby --version
-  - gem install bundler
+  - gem install bundler --conservative
   - bundle config --local path vendor/bundle
   - bundle install
   - dotnet --version
