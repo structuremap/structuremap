@@ -3,6 +3,7 @@ using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using NSubstitute;
 using Xunit;
 
@@ -37,6 +38,28 @@ namespace StructureMap.Testing.Pipeline
             cache.Get(typeof(IWidget), instance, mockBuildSession);
 
             mockBuildSession.Received().BuildNewInOriginalContext(typeof(IWidget), instance);
+        }
+
+        [Fact]
+        public void get_for_uncached_instance_on_multiple_threads_builds_instance_once()
+        {
+            var instance = new ObjectInstance(new AWidget());
+            var mockBuildSession = Substitute.For<IBuildSession>();
+            
+            Task.WaitAll(
+                Task.Run(async () =>
+                {
+                    await Task.Yield();
+                    cache.Get(typeof(IWidget), instance, mockBuildSession);
+                }),
+                Task.Run(async () =>
+                {
+                    await Task.Yield();
+                    cache.Get(typeof(IWidget), instance, mockBuildSession);
+                })
+            );
+
+            mockBuildSession.Received(1).BuildNewInOriginalContext(typeof(IWidget), instance);
         }
 
         [Fact]
