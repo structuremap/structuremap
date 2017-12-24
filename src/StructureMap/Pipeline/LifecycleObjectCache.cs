@@ -6,7 +6,7 @@ namespace StructureMap.Pipeline
 {
     public class LifecycleObjectCache : IObjectCache
     {
-        private readonly ConcurrentDictionary<int, object> _objects = new ConcurrentDictionary<int, object>();
+        private readonly ConcurrentDictionary<int, LazyLifecycleObject<object>> _objects = new ConcurrentDictionary<int, LazyLifecycleObject<object>>();
 
         public int Count => _objects.Count;
 
