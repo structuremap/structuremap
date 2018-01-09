@@ -296,7 +296,7 @@ namespace StructureMap.Graph
             }
         }
 
-#if NET45
+#if NET45 || NETSTANDARD2_0
         private static Assembly findTheCallingAssembly()
         {
             var trace = new StackTrace(false);
@@ -332,8 +332,8 @@ namespace StructureMap.Graph
 
                 try 
                 {
-
                     assembly = System.Reflection.Assembly.Load(new AssemblyName(possibility));
+
                     break;
                 }
                 catch (Exception e)
@@ -344,7 +344,6 @@ namespace StructureMap.Graph
 
             return assembly;
         }
-
 #endif
     }
 }
