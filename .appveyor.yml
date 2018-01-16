@@ -1,4 +1,4 @@
-version: 4.5.0.{build}
+version: 4.6.0.{build}
 pull_requests:
   do_not_increment_build_number: true
 skip_tags: true
