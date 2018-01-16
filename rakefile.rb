@@ -2,7 +2,7 @@ require 'json'
 
 COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
 RESULTS_DIR = "results"
-BUILD_VERSION = '4.5.3'
+BUILD_VERSION = '4.6.0'
 
 DOC_LOCATION = ENV['docpath'].nil? ? "z:/code/structuremap.github.com" : ENV['docpath']
 
