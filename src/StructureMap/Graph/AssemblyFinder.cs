@@ -81,7 +81,7 @@ namespace StructureMap.Graph
                 {
                     try
                     {
-#if NET45
+#if NET45 || NETSTANDARD2_0
                         assembly = Assembly.LoadFrom(file);
 #endif
 
