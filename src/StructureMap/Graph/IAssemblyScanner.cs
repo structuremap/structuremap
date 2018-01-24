@@ -141,24 +141,24 @@ namespace StructureMap.Graph
         ConfigureConventionExpression SingleImplementationsOfInterface();
 
         void TheCallingAssembly();
+
         void AssembliesFromApplicationBaseDirectory();
         void AssembliesFromApplicationBaseDirectory(Func<Assembly, bool> assemblyFilter);
+        void AssembliesFromApplicationBaseDirectory(Func<string, bool> pathFilter);
 
         /// <summary>
         /// Choosing option will direct StructureMap to *also* scan files ending in '*.exe'
         /// </summary>
-        /// <param name="scanner"></param>
         /// <param name="assemblyFilter"></param>
-        /// <param name="includeExeFiles"></param>
         void AssembliesAndExecutablesFromApplicationBaseDirectory(Func<Assembly, bool> assemblyFilter = null);
+        void AssembliesAndExecutablesFromApplicationBaseDirectory(Func<string, bool> pathFilter);
 
         void AssembliesAndExecutablesFromPath(string path);
+        void AssembliesAndExecutablesFromPath(string path, Func<Assembly, bool> assemblyFilter);
+        void AssembliesAndExecutablesFromPath(string path, Func<string, bool> pathFilter);
+
         void AssembliesFromPath(string path);
-
-        void AssembliesAndExecutablesFromPath(string path,
-            Func<Assembly, bool> assemblyFilter);
-
-        void AssembliesFromPath(string path,
-            Func<Assembly, bool> assemblyFilter);
+        void AssembliesFromPath(string path, Func<Assembly, bool> assemblyFilter);
+        void AssembliesFromPath(string path, Func<string, bool> pathFilter);
     }
 }
