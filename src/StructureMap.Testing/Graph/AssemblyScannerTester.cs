@@ -153,10 +153,28 @@ namespace StructureMap.Testing.Graph
         }
 
         [Fact]
+        public void scan_all_assemblies_in_a_folder_with_path_filter()
+        {
+            Scan(x => x.AssembliesFromPath(assemblyScanningFolder, path => !path.Contains("Widget5")));
+            shouldNotHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldHaveFamilyWithSameName<IWorker>();
+            shouldNotHaveFamilyWithSameName<IDefinedInExe>();
+        }
+
+        [Fact]
         public void scan_all_assemblies_in_application_base_directory()
         {
             Scan(x => x.AssembliesFromApplicationBaseDirectory());
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldHaveFamilyWithSameName<IWorker>();
+            shouldNotHaveFamilyWithSameName<IDefinedInExe>();
+        }
+
+        [Fact]
+        public void scan_all_assemblies_in_application_base_directory_with_path_filter()
+        {
+            Scan(x => x.AssembliesFromApplicationBaseDirectory(path => !path.Contains("Widget5")));
+            shouldNotHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldHaveFamilyWithSameName<IWorker>();
             shouldNotHaveFamilyWithSameName<IDefinedInExe>();
         }
@@ -174,6 +192,16 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamilyWithSameName<IDefinedInExe>();
         }
 
+        [Fact]
+        public void scan_all_assemblies_in_a_folder_including_exe_with_path_filter()
+        {
+            Scan(x => x.AssembliesAndExecutablesFromPath(assemblyScanningFolder, path => !path.Contains("Widget5")));
+
+            shouldNotHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldHaveFamilyWithSameName<IWorker>();
+            shouldHaveFamilyWithSameName<IDefinedInExe>();
+        }
+
 
         [Fact]
         public void scan_all_assemblies_in_application_base_directory_including_exe()
@@ -181,6 +209,16 @@ namespace StructureMap.Testing.Graph
             Scan(x => x.AssembliesAndExecutablesFromApplicationBaseDirectory());
 
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldHaveFamilyWithSameName<IWorker>();
+            shouldHaveFamilyWithSameName<IDefinedInExe>();
+        }
+
+        [Fact]
+        public void scan_all_assemblies_in_application_base_directory_including_exe_with_path_filter()
+        {
+            Scan(x => x.AssembliesAndExecutablesFromApplicationBaseDirectory(path => !path.Contains("Widget5")));
+
+            shouldNotHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldHaveFamilyWithSameName<IWorker>();
             shouldHaveFamilyWithSameName<IDefinedInExe>();
         }
