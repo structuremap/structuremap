@@ -8,7 +8,7 @@ namespace StructureMap.Graph
 {
     public static class AssemblyFinder
     {
-        public static IEnumerable<Assembly> FindAssemblies(Action<string> logFailure, bool includeExeFiles)
+        public static IEnumerable<Assembly> FindAssemblies(Action<string> logFailure, bool includeExeFiles, Func<string, bool> pathFilter = null)
         {
 #if NET45
             var assemblyPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -16,13 +16,13 @@ namespace StructureMap.Graph
 
             if (string.IsNullOrEmpty(binPath))
             {
-                return FindAssemblies(assemblyPath, logFailure, includeExeFiles);
+                return FindAssemblies(assemblyPath, logFailure, includeExeFiles, pathFilter);
             }
 
 
             if (Path.IsPathRooted(binPath))
             {
-                return FindAssemblies(binPath, logFailure, includeExeFiles);
+                return FindAssemblies(binPath, logFailure, includeExeFiles, pathFilter);
             }
 
 
@@ -30,7 +30,7 @@ namespace StructureMap.Graph
             return binPaths.SelectMany(bin =>
             {
                 var path = Path.Combine(assemblyPath, bin);
-                return FindAssemblies(path, logFailure, includeExeFiles);
+                return FindAssemblies(path, logFailure, includeExeFiles, pathFilter);
             });
 #else
             string path;
@@ -41,18 +41,18 @@ namespace StructureMap.Graph
                 path = System.IO.Directory.GetCurrentDirectory();
             }
             
-            return FindAssemblies(path, logFailure, includeExeFiles);
+            return FindAssemblies(path, logFailure, includeExeFiles, pathFilter);
 #endif
 
 
         }
 
-        public static IEnumerable<Assembly> FindAssemblies(string assemblyPath, Action<string> logFailure, bool includeExeFiles)
+        public static IEnumerable<Assembly> FindAssemblies(string assemblyPath, Action<string> logFailure, bool includeExeFiles, Func<string, bool> pathFilter = null)
         {
             var dllFiles = Directory.EnumerateFiles(assemblyPath, "*.dll", SearchOption.AllDirectories);
             var files = dllFiles;
 
-            if(includeExeFiles)
+            if (includeExeFiles)
             {
                 var exeFiles = Directory.EnumerateFiles(assemblyPath, "*.exe", SearchOption.AllDirectories);
                 files = dllFiles.Concat(exeFiles);
@@ -63,15 +63,21 @@ namespace StructureMap.Graph
                 var name = Path.GetFileNameWithoutExtension(file);
                 Assembly assembly = null;
 
+                if (pathFilter != null)
+                {
+                    if (!pathFilter(file))
+                        continue;
+                }
+
                 try
                 {
 #if NET45 || NETSTANDARD2_0
                     assembly = AppDomain.CurrentDomain.Load(name);
 #endif
 
-                    #if NETSTANDARD1_3
+#if NETSTANDARD1_3
                     assembly = Assembly.Load(new AssemblyName(name));
-                    #endif
+#endif
 
 #if NETSTANDARD1_5
                     assembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(name));
@@ -105,23 +111,15 @@ namespace StructureMap.Graph
             }
         }
 
-
-
-
         public static IEnumerable<Assembly> FindAssemblies(Func<Assembly, bool> filter,
-            Action<string> onDirectoryFound = null, bool includeExeFiles=false)
+            Func<string, bool> pathFilter = null, bool includeExeFiles = false)
         {
             if (filter == null)
             {
                 filter = a => true;
             }
 
-            if (onDirectoryFound == null)
-            {
-                onDirectoryFound = dir => { };
-            }
-
-            return FindAssemblies(file => { }, includeExeFiles: includeExeFiles).Where(filter);
+            return FindAssemblies(file => { }, includeExeFiles: includeExeFiles, pathFilter: pathFilter).Where(filter);
         }
     }
 }
