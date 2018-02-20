@@ -18,6 +18,12 @@ StructureMap is available via NuGet:
 Install-Package StructureMap
 ```
 
+Or alternatively via the .NET Core CLI:
+
+```bash
+dotnet add package structuremap
+```
+
 
 If you want to fix a bug or just want to tinker with an idea,
 we love receiving pull requests!
