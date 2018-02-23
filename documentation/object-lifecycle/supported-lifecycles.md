@@ -13,8 +13,8 @@ Out of the box, the core StructureMap assembly supports these lifecycles:
 ## Transient
 
 Older versions of StructureMap referred to _Transient_ as _PerRequest_, which might be a more accurate reflection of how this lifecycle behaves but 
-causes some confusion with ASP.Net HTTP scoping.  The easiest way to think of _Transient_ is that a single object instance will be created for each top level
-call to `Container.GetInstance()` (or any other object resolution method on the `IContainer` interface). _Transient_ objects resolved from a nested container, _Transient's_ are scoped to the lifecycle
+causes some confusion with ASP.NET HTTP scoping.  The easiest way to think of _Transient_ is that a single object instance will be created for each top level
+call to `Container.GetInstance()` (or any other object resolution method on the `IContainer` interface). _Transient_ objects resolved from a nested container, _Transients_ are scoped to the lifecycle
 of the nested container itself. See <[linkto:the-container/nested-containers]> for more information.
 
 **StructureMap's behavior for transient objects that implement `IDisposable` changed in 4.0 to introduce an "opt-in" tracking mode.** Please see <[linkto:the-container/disposing]> for the details.
