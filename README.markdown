@@ -1,3 +1,10 @@
+# StructureMap has been [sunsetted](https://jeremydmiller.com/2018/01/29/sunsetting-structuremap/) 
+
+See instead the newer [Lamar](https://github.com/jasperfx/lamar) library as a replacement for StructureMap in new applications. I will continue to accept pull requests and try to answer questions, but there will be no new development on StructureMap unless someone else takes over project ownership.
+
+-- [Jeremy](http://twitter.com/jeremydmiller)
+
+
 Welcome to StructureMap, the oldest Inversion of Control container for .Net. 
 
 Getting StructureMap
