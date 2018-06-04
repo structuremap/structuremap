@@ -218,7 +218,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
-        /// Convenience method to mark a PluginFamily as a Singleton
+        /// Convenience method to mark a PluginFamily as ContainerScoped
         /// </summary>
         /// <returns></returns>
         public GenericFamilyExpression ContainerScoped()
