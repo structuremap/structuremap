@@ -60,7 +60,7 @@ namespace StructureMap.Testing.Acceptance
         }
 
         [Fact]
-        public void use_custom_registration_convention()
+        public void use_custom_registration_convention_2()
         {
             var container = new Container(_ =>
             {
