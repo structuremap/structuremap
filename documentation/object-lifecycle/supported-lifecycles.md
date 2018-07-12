@@ -68,25 +68,3 @@ The acceptance test for `ContainerScoped` is shown below:
 The ThreadLocalStorage based lifecycle is seldom used, but the easiest example of using it and explanation is the integration test:
 <[sample:thread-local-storage]>
 
-
-
-## Legacy ASP.Net Lifecycles
-
-<div class="alert alert-info" role="alert">The StructureMap team strongly recommends against using the old ASP.Net lifecycles.  <b>Most</b> modern web frameworks in .Net will use a Nested Container per request to accomplish the same scoping in a better way.</div>
-
-<Nuget name="StructureMap.Web" />
-
-In addition, the StructureMap.Web package adds the legacy ASP.Net related lifecycles for:
-
-* HttpContext
-* HttpSession (requires objects to be `Serializable`, not recommended but still present for legacy code
-* Hybrid -- uses ThreadLocalStorage in the absence of an active HttpContext
-* HybridSession
-
-<[sample:AspNet-Lifecycles]>
-
-If you do use any of the HttpContext lifecycles, make sure you also do:
-
-<[sample:clean-up-http-context]> 
-
-at the end of your HTTP request.
