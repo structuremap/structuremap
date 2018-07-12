@@ -8,7 +8,7 @@ using Xunit;
 
 namespace StructureMap.Testing.Acceptance
 {
-    public class custom_registration_convention
+    public class custom_registration_convention_3
     {
         // SAMPLE: custom-registration-convention
         public interface IFoo
