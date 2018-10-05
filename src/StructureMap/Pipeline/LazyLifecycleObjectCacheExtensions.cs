@@ -32,7 +32,7 @@ namespace StructureMap.Pipeline
             LazyLifecycleObject<TValue> lazy;
             var result = cache.TryRemove(key, out lazy);
 
-            value = result ? lazy.Value : default(TValue);
+            value = result && lazy.IsValueCreated ? lazy.Value : default(TValue);
 
             return result;
         }
