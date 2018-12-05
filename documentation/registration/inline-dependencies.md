@@ -42,7 +42,7 @@ of `SimpleRule` with different combinations of its dependencies:
 
 <[sample:inline-dependencies-simple-ctor-injection]>
 
-The inline dependency configuration using the `Ctor&lt;T&gt;().Is()` syntax supports all the common StructureMap configuration options: define by type, by lambdas, by value, or if you really want to risk severe eye strain, you can use your own Instance objects and define the configuration of your dependency's dependencies.
+The inline dependency configuration using the `Ctor<T>().Is()` syntax supports all the common StructureMap configuration options: define by type, by lambdas, by value, or if you really want to risk severe eye strain, you can use your own Instance objects and define the configuration of your dependency's dependencies.
 
 
 ## Specifying the Argument Name
