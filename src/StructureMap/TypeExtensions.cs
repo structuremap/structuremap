@@ -145,7 +145,9 @@ namespace StructureMap.TypeRules
                 yield return TPluggedType.GetTypeInfo().BaseType;
             }
 
-            if (TPluggedType.GetTypeInfo().BaseType == typeof(object)) yield break;
+            if (TPluggedType.GetTypeInfo().BaseType == typeof(object)
+                || TPluggedType == typeof(object)
+                ) yield break;
 
             foreach (var interfaceType in rawFindInterfacesThatCloses(TPluggedType.GetTypeInfo().BaseType, templateType))
             {
