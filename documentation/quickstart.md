@@ -54,6 +54,6 @@ StructureMap, and any other IoC tool for that matter, is configuration intensive
 ## Need Help?
 
 - There is a [google group](http://groups.google.com/group/structuremap-users?hl=en) for StructureMap support.
-- You can ask questions on [StackOverflow](http://stackoverflow.com/) with the tag "structuremap."
+- You can ask questions on [StackOverflow](https://stackoverflow.com/questions/tagged/structuremap) with the tag "structuremap."
 
 
