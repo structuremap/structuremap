@@ -17,13 +17,13 @@ namespace StructureMap
         /// Examines a System.Type object and determines the ConstructorInfo to use in creating
         /// instances of the Type
         /// </summary>
-        /// <param name="ExportedType"></param>
+        /// <param name="exportedType"></param>
         /// <returns></returns>
-        public static ConstructorInfo GetConstructor(Type ExportedType)
+        public static ConstructorInfo GetConstructor(Type exportedType)
         {
             ConstructorInfo returnValue = null;
 
-            foreach (var constructor in ExportedType.GetConstructors())
+            foreach (var constructor in exportedType.GetPublicAndInternalConstructors())
             {
                 var atts = constructor.GetCustomAttributes(typeof (DefaultConstructorAttribute), true);
 

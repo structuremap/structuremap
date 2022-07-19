@@ -10,8 +10,7 @@ namespace StructureMap.Pipeline
     {
         public ConstructorInfo Find(Type pluggedType, DependencyCollection dependencies, PluginGraph graph)
         {
-            return pluggedType
-                .GetConstructors()
+            return pluggedType.GetPublicAndInternalConstructors()
                 .Where(x => !HasMissingPrimitives(x, dependencies))
                 .OrderByDescending(x => x.GetParameters().Count())
                 .FirstOrDefault();

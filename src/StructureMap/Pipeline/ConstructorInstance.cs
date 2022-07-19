@@ -38,16 +38,16 @@ namespace StructureMap.Pipeline
                 throw new ArgumentOutOfRangeException("concreteType", concreteType,"Only concrete types can be built by ConstructorInstance.");
             }
 
-            if (!concreteType.GetConstructors().Any())
+            if (!concreteType.GetPublicAndInternalConstructors().Any())
             {
                 throw new ArgumentOutOfRangeException(
                     "{0} must have at least one public constructor to be plugged in by StructureMap".ToFormat(
                         concreteType.GetFullName()));
             }
 
-            if (concreteType.GetConstructors().Count() == 1)
+            if (concreteType.GetPublicAndInternalConstructors().Count() == 1)
             {
-                Constructor = concreteType.GetConstructors().Single();
+                Constructor = concreteType.GetPublicAndInternalConstructors().Single();
             }
 
             PluggedType = concreteType;

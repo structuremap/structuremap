@@ -462,7 +462,7 @@ namespace StructureMap
             if (type == typeof (Registry)) return false;
             if (type == typeof (ConfigurationExpression)) return false;
 
-            var constructors = type.GetConstructors();
+            var constructors = type.GetPublicAndInternalConstructors();
             if (constructors.Count() == 1 && !constructors.Single().GetParameters().Any())
             {
                 if (all.Any(x => x.GetType() == type)) return true;

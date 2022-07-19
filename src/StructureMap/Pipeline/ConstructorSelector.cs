@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Graph;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
@@ -58,7 +59,7 @@ namespace StructureMap.Pipeline
     {
         public ConstructorInfo Find(Type pluggedType, DependencyCollection dependencies, PluginGraph graph)
         {
-            return pluggedType.GetConstructors().FirstOrDefault();
+            return pluggedType.GetPublicAndInternalConstructors().FirstOrDefault();
         }
     }
 }

@@ -290,7 +290,31 @@ namespace StructureMap.TypeRules
 
         public static bool HasConstructors(this Type type)
         {
-            return type.GetConstructors().Any();
+            return type.GetPublicAndInternalConstructors().Any();
+        }
+        
+        /// <summary>
+        /// Returns all public and internal (but not internal protected) constructors
+        /// for <paramref name="type"/>,
+        /// but only if <paramref name="type"/> is a non-abstract class.
+        /// </summary>
+        /// <returns>
+        /// An array of zero, or more, <see cref="ConstructorInfo"/> instances.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="type"/> is null.
+        /// </exception>
+        public static ConstructorInfo[] GetPublicAndInternalConstructors(this Type type)
+        {
+            if (type == null) throw new ArgumentNullException("type");
+            
+            if (type.IsInterfaceOrAbstract()) return new ConstructorInfo[0];
+            
+            return type.GetConstructors(BindingFlags.Public
+                                        | BindingFlags.NonPublic
+                                        | BindingFlags.Instance).Where(ci =>
+                ci.IsPublic /* public */
+                || ci.IsAssembly /* internal, but not internal protected */).ToArray();
         }
 
         public static bool IsVoidReturn(this Type type)
