@@ -5,11 +5,11 @@ There are some terms that reoccur throughout the documentation and show up in th
 
 ## Container
 
-Tools like StructureMap are generally known as *Inversion of Control (IoC) Containers* or *Dependency Injection (DI) Containers*. In the Java world they are also known as *Lightweight Containers* to differentiate them from the older *EJB Containers*.
+Tools like StructureMap are generally known as *Inversion of Control (IoC) Containers* or *Dependency Injection (DI) Containers*. In the Java world, they are also known as *Lightweight Containers* to differentiate them from the older *EJB Containers*.
 
-A container is a tool that can help you composing object graphs and managing their scope (lifecycle). Altough you can do Inversion of Control and Dependency Injection manually, using tools like StructureMap makes you far more productive and succesfull in doing so.
+A container is a tool that can help you compose object graphs and managing their scope (lifecycle). Although you can do Inversion of Control and Dependency Injection manually, using tools like StructureMap makes you far more productive and successful in doing so.
 
-Obviously there is more to a container than resolving services and managing their scope, but in the core that's just what it is. Before you can do so you need to tell StructureMap, the container, how it must compose those objects graphs and what their lifecycle is. This is called registration and can be done in various mixed ways. The strongly recommend way would be using the <[linkto:registration/registry-dsl]>. In your registration you're basically mapping abstractions to concrete types and defining their lifecycle.
+Obviously there is more to a container than resolving services and managing their scope, but in the core that's just what it is. Before you can do so you need to tell StructureMap, the container, how it must compose those objects graphs and what their lifecycle is. This is called registration and can be done in various mixed ways. The strongly recommend way would be using the <[linkto:registration/registry-dsl]>. In your registration, you're basically mapping abstractions to concrete types and defining their lifecycle.
 
 A simple example of a container using the <[linkto:registration/registry-dsl]>:
 
@@ -25,22 +25,22 @@ More advanced features that the container can do are things like: Interception, 
 
 ## Nested Container
 
-A nested container is used to mark the scope of short lived transactions or web requests and track and clean up objects implementing the `IDisposable` interface for that operation.
+A nested container is used to mark the scope of short-lived transactions or web requests and track and clean up objects implementing the `IDisposable` interface for that operation.
 
-You can ask an existing container to create a nested container for you like in the following example:
+You can ask an existing container to create a nested container for you, like in the following example:
 
 <[sample:glossary-nested-container]>
 
-For more detailed information about nested containers and their special properties you can read the <[linkto:the-container/nested-containers]> topic.
+For more detailed information about nested containers and their special properties, you can read the <[linkto:the-container/nested-containers]> topic.
 
 
 ## PluginType and PluggedType
 
-The term plugin type is used throughout the code and documentation to mean the type that you want to register or resolve. More generally this type is known as the service type. This type can be a concrete class or in most cases, it will be a form of abstraction like an abstract class or interface. 
+The term plugin type is used throughout the code and documentation to mean the type that you want to register or resolve. More generally, this type is known as the service type. This type can be a concrete class or in most cases, it will be a form of abstraction like an abstract class or interface. 
 
 The term plugged type means the actual concrete type that you get when you request the plugin type. This type must obviously implement the plugin type contract.
 
-In your registration you could have something like this:
+In your registration, you could have something like this:
 
 <[sample:foo-registry]>
 
@@ -53,7 +53,7 @@ If you request an object of `IFoo`, you'll get an instance of the `Foo` class. I
 
 This term you will not see so often because it's mostly used by StructureMap itself. A `PluginFamily` represents a [CLR](http://en.wikipedia.org/wiki/Common_Language_Runtime) type (the plugin type) that StructureMap can build, and all of the possible plugged types that implement the [CLR](http://en.wikipedia.org/wiki/Common_Language_Runtime) type.
 
-In the following code StructureMap internally creates one `PluginFamily` of the plugin type `IFoo` with two instances `Foo` and `SomeOtherFoo`, where `Foo` is the default instance because it's registered through `For<PLUGIN_TYPE>().Use<PLUGGED_TYPE>()`.
+In the following code, StructureMap internally creates one `PluginFamily` of the plugin type `IFoo` with two instances `Foo` and `SomeOtherFoo`, where `Foo` is the default instance because it's registered through `For<PLUGIN_TYPE>().Use<PLUGGED_TYPE>()`.
 
 <[sample:glossary-pluginfamily]> 
 
@@ -107,13 +107,13 @@ when you ask StructureMap for a service or (much more commonly) when StructureMa
 
 ## Registry
 
-A `Registry` or a sub class of `Registry` is a class that let's you create reusable configuration for StructureMap containers.
+A `Registry` or a subclass of `Registry` is a class that lets you create reusable configuration for StructureMap containers.
 
 ## Profile
 
 StructureMap 3.0 features a complete rewrite of the ancient _Profile_ functionality where you can create your base Container configuration with additional _Profile_ 
 configuration that overrides one or more of the parent Container defaults.  The _Profile_ functionality was originally meant to handle differences between
-development, testing, and production environments but has been more commonly used for multi-tenancy situations.  Think of a _Profile_ as an application or tenant mode.
+development, testing, and production environments, but has been more commonly used for multi-tenancy situations.  Think of a _Profile_ as an application or tenant mode.
 
 ## Auto wiring
 
@@ -124,4 +124,3 @@ rules and fill those dependencies with the default configuration for the declare
 Let's just see it in action:
 
 <[sample:auto-wiring-sample]>
-
